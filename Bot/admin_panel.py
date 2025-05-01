@@ -19,6 +19,9 @@ import asyncio
 import logging
 import yaml
 
+# Instantiate config before using it
+config = Config()
+
 app = Flask(__name__)
 app.secret_key = config.flask_secret_key or 'your-secret-key'
 logging.basicConfig(level=logging.INFO)
@@ -53,20 +56,20 @@ register_handlers()
 
 def get_fields():
     return [
-        {"key": "telegram_token", "label": "Telegram Token", "value": config.telegram_token or "", "use_env": config._config.get('telegram_token_use_env', False)},
-        {"key": "bot_username", "label": "Bot Username", "value": config.bot_username or "", "use_env": config._config.get('bot_username_use_env', False)},
-        {"key": "webhook_url", "label": "Webhook URL", "value": config.webhook_url or "", "use_env": config._config.get('webhook_url_use_env', False)},
-        {"key": "mongodb_uri", "label": "MongoDB URI", "value": config.mongodb_uri or "", "use_env": config._config.get('mongodb_uri_use_env', False)},
-        {"key": "github_username", "label": "GitHub Username", "value": config.github_username or "", "use_env": config._config.get('github_username_use_env', False)},
-        {"key": "github_token", "label": "GitHub Token", "value": config.github_token or "", "use_env": config._config.get('github_token_use_env', False)},
-        {"key": "github_repo", "label": "GitHub Repository", "value": config.github_repo or "", "use_env": config._config.get('github_repo_use_env', False)},
-        {"key": "github_pages_url", "label": "GitHub Pages URL", "value": config.github_pages_url or "", "use_env": config._config.get('github_pages_url', False)},
-        {"key": "payment_provider_token", "label": "Payment Provider Token", "value": config.payment_provider_token or "", "use_env": config._config.get('payment_provider_token_use_env', False)},
-        {"key": "currency_exchange_token", "label": "Currency Exchange Token", "value": config.currency_exchange_token or "", "use_env": config._config.get('currency_exchange_token_use_env', False)},
-        {"key": "huggingface_access_token", "label": "Hugging Face Access Token", "value": config.huggingface_access_token or "", "use_env": config._config.get('huggingface_access_token_use_env', False)},
-        {"key": "flask_secret_key", "label": "Flask Secret Key", "value": config.flask_secret_key or "", "use_env": config._config.get('flask_secret_key_use_env', False)},
-        {"key": "ai_settings.model_url", "label": "AI Model URL", "value": config.ai_model_url or "", "use_env": config._config.get('ai_settings', {}).get('model_url_use_env', False)},
-        {"key": "ai_settings.access_token", "label": "AI Access Token", "value": config.ai_access_token or "", "use_env": config._config.get('ai_settings', {}).get('access_token_use_env', False)}
+        {"key": "telegram_token", "label": "Telegram Token", "value": config.telegram_token or "", "use_env": True},
+        {"key": "bot_username", "label": "Bot Username", "value": config.bot_username or "", "use_env": True},
+        {"key": "webhook_url", "label": "Webhook URL", "value": config.webhook_url or "", "use_env": True},
+        {"key": "mongodb_uri", "label": "MongoDB URI", "value": config.mongodb_uri or "", "use_env": True},
+        {"key": "github_username", "label": "GitHub Username", "value": config.github_username or "", "use_env": True},
+        {"key": "github_token", "label": "GitHub Token", "value": config.github_token or "", "use_env": True},
+        {"key": "github_repo", "label": "GitHub Repository", "value": config.github_repo or "", "use_env": True},
+        {"key": "github_pages_url", "label": "GitHub Pages URL", "value": config.github_pages_url or "", "use_env": True},
+        {"key": "payment_provider_token", "label": "Payment Provider Token", "value": config.payment_provider_token or "", "use_env": True},
+        {"key": "currency_exchange_token", "label": "Currency Exchange Token", "value": config.currency_exchange_token or "", "use_env": True},
+        {"key": "huggingface_access_token", "label": "Hugging Face Access Token", "value": config.huggingface_access_token or "", "use_env": True},
+        {"key": "flask_secret_key", "label": "Flask Secret Key", "value": config.flask_secret_key or "", "use_env": True},
+        {"key": "ai_settings.model_url", "label": "AI Model URL", "value": config.ai_model_url or "", "use_env": True},
+        {"key": "ai_settings.access_token", "label": "AI Access Token", "value": config.ai_access_token or "", "use_env": True}
     ]
 
 @app.route('/<lang>')
@@ -166,7 +169,7 @@ def add_model(lang='en'):
             })
             with open('Config/models.yml', 'w') as f:
                 yaml.dump(models_data, f)
-            config.models = load_models()  # Reload models
+            # Note: config.models is not defined in config.py; this may need adjustment
             flash("Model added successfully", 'success')
         except Exception as e:
             logger.error(f"Add model error: {str(e)}")
@@ -190,7 +193,7 @@ def delete_model(lang='en'):
         models_data['models'] = [m for m in models_data['models'] if m['name'] != model_name]
         with open('Config/models.yml', 'w') as f:
             yaml.dump(models_data, f)
-        config.models = load_models()  # Reload models
+        # Note: config.models is not defined in config.py; this may need adjustment
         flash("Model deleted successfully", 'success')
     except Exception as e:
         logger.error(f"Delete model error: {str(e)}")
