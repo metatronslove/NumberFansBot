@@ -38,59 +38,66 @@ class Transliteration:
                 return lang if lang != "arabic_hija" else "arabic"
         return "english"  # Default fallback
 
-    def transliterate(self, text: str, target_lang: str, source_lang: Optional[str] = None) -> Dict[str, any]:
-        """
-        Transliterate text to target language, returning primary and alternative results.
-        Returns: {"primary": str, "alternatives": List[str]}
-        """
-        if target_lang not in self.valid_languages:
-            raise ValueError(f"Invalid target language: {target_lang}")
+	def transliterate(self, text: str, target_lang: str, source_lang: Optional[str] = None) -> Dict[str, any]:
+		"""
+		Transliterate text to target language, returning primary and alternative results.
+		Returns: {"primary": str, "alternatives": List[str]}
+		"""
+		if target_lang not in self.valid_languages:
+			raise ValueError(f"Invalid target language: {target_lang}")
 
-        source_lang = source_lang or self.guess_source_lang(text)
-        if source_lang not in self.valid_languages:
-            raise ValueError(f"Invalid source language: {source_lang}")
+		source_lang = source_lang or self.guess_source_lang(text)
+		if source_lang not in self.valid_languages:
+			raise ValueError(f"Invalid source language: {source_lang}")
 
-        # Check cached transliterations in MongoDB
-        alternatives = self.get_transliteration_alternatives(text, source_lang, target_lang)
-        if alternatives:
-            primary = alternatives[0]["transliterated_name"]
-            alt_names = [alt["transliterated_name"] for alt in alternatives[1:]]
-            return {"primary": primary, "alternatives": alt_names}
+		# Check cached transliterations in MongoDB
+		alternatives = self.get_transliteration_alternatives(text, source_lang, target_lang)
+		if alternatives:
+			primary = alternatives[0]["transliterated_name"]
+			alt_names = [alt["transliterated_name"] for alt in alternatives[1:]]
+			return {"primary": primary, "alternatives": alt_names}
 
-        # Map source and target languages to transliteration_map keys
-        source_key = f"from_{self.language_mapping.get(source_lang, source_lang)}"
-        target_key = self.language_mapping.get(target_lang, target_lang)
-        map_data = self.transliteration_map.get(target_key, {}).get(source_key, {})
+		# Map source and target languages to transliteration_map keys
+		source_key = f"from_{self.language_mapping.get(source_lang, source_lang)}"
+		target_key = self.language_mapping.get(target_lang, target_lang)
+		map_data = self.transliteration_map.get(target_key, {}).get(source_key, {})
 
-        if not map_data:
-            raise ValueError(f"No transliteration mapping from {source_lang} to {target_lang}")
+		if not map_data:
+			raise ValueError(f"No transliteration mapping from {source_lang} to {target_lang}")
 
-        # Generate transliterations
-        results = {text: {"score": 0, "used": []}}  # Start with original text
-        chars = list(text)  # Split into characters
-        for char in chars:
-            mappings = map_data.get(char, map_data.get(char.upper(), map_data.get(char.lower(), [char])))
-            new_results = {}
-            for current, info in results.items():
-                for mapped_char in mappings:
-                    new_str = current + mapped_char
-                    new_score = info["score"] + (-1 if mapped_char in info["used"] else 1)
-                    new_results[new_str] = {
-                        "score": new_score,
-                        "used": info["used"] + [mapped_char]
-                    }
-            results = new_results
+		# Generate transliterations
+		results = {text: {"score": 0, "used": []}}  # Start with original text
+		chars = list(text)  # Split into characters
+		for char in chars:
+			mappings = map_data.get(char, map_data.get(char.upper(), map_data.get(char.lower(), [char])))
+			new_results = {}
+			for current, info in results.items():
+				for mapped_char in mappings:
+					new_str = current + mapped_char
+					new_score = info["score"] + (-1 if mapped_char in info["used"] else 1)
+					new_results[new_str] = {
+						"score": new_score,
+						"used": info["used"] + [mapped_char]
+					}
+			results = new_results
 
-        # Sort by score
-        sorted_results = sorted(results.items(), key=lambda x: x[1]["score"], reverse=True)
-        primary = sorted_results[0][0] if sorted_results else text
-        alternatives = [res[0] for res in sorted_results[1:4]]  # Up to 3 alternatives
+		# Sort by score and filter out original text
+		sorted_results = sorted(
+			[(k, v) for k, v in results.items() if k != text],  # Exclude original text
+			key=lambda x: x[1]["score"],
+			reverse=True
+		)
+		if not sorted_results:
+			raise ValueError(f"No valid transliterations found for '{text}' from {source_lang} to {target_lang}")
 
-        # Store transliterations
-        for translit in [primary] + alternatives:
-            self.store_transliteration(text, source_lang, target_lang, translit)
+		primary = sorted_results[0][0]
+		alternatives = [res[0] for res in sorted_results[1:4]]  # Up to 3 alternatives
 
-        return {"primary": primary, "alternatives": alternatives}
+		# Store transliterations
+		for translit in [primary] + alternatives:
+			self.store_transliteration(text, source_lang, target_lang, translit)
+
+		return {"primary": primary, "alternatives": alternatives}
 
     def store_transliteration(self, source_name: str, source_lang: str, target_lang: str, transliterated_name: str, user_id: int = None):
         """Store transliteration in MongoDB, incrementing score if it exists."""
@@ -177,5 +184,5 @@ class Transliteration:
             "TRANSLITERATION_RESPONSE",
             output_lang,
             lang_name=lang_name,
-            result=" "+transliterated_name
+            result=transliterated_name
         )
