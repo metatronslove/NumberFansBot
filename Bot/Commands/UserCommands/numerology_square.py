@@ -5,7 +5,7 @@ from telegram.constants import ParseMode
 from ...database import Database
 from ...i18n import I18n
 from ...Numerology import UnifiedNumerology
-from ...MagicSquare import MagicSquare
+from ...MagicSquare import MagicSquareGenerator
 from ...config import config
 from datetime import datetime
 import urllib.parse
@@ -88,7 +88,7 @@ async def numerology_square_handle(update: Update, context: CallbackContext):
             raise ValueError(result["error"])
 
         # Generate magic square
-        magic_square = MagicSquare()
+        magic_square = MagicSquareGenerator()
         square = magic_square.generate(result)  # Assumes MagicSquare can handle the numerology value
         square_str = "\n".join(["  ".join(map(str, row)) for row in square])
 
