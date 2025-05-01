@@ -3,8 +3,8 @@ from .config import config
 from .database import Database
 from .i18n import I18n
 from .Commands.UserCommands import (
-    start, help, language, numerology, convert_numbers, magic_square,
-    transliterate, name, cancel, settings
+	start, help, language, numerology, convert_numbers, magic_square,
+	transliterate, name, cancel, settings
 )
 from .Commands.UserCommands.abjad import get_abjad_conversation_handler
 from .Commands.UserCommands.bastet import get_bastet_conversation_handler
@@ -19,40 +19,40 @@ import asyncio
 logger = logging.getLogger(__name__)
 
 async def check_credits(update, context):
-    if not update.message:
-        return True  # Allow callback queries
-    user_id = update.message.from_user.id
-    command = update.message.text.split()[0].lower() if update.message.text else ""
-    db = Database()
-    i18n = I18n()
-    language = db.get_user_language(user_id)
+	if not update.message:
+		return True  # Allow callback queries
+	user_id = update.message.from_user.id
+	command = update.message.text.split()[0].lower() if update.message.text else ""
+	db = Database()
+	i18n = I18n()
+	language = db.get_user_language(user_id)
 
-    # Skip credit check for essential commands
-    if command in ["/start", "/help", "/payment"]:
-        return True
+	# Skip credit check for essential commands
+	if command in ["/start", "/help", "/payment"]:
+		return True
 
-    # Check blacklist
-    if db.is_blacklisted(user_id):
-        await update.message.reply_text(
-            i18n.t("USER_BLACKLISTED", language),
-            parse_mode=filters.ParseMode.HTML
-        )
-        return False
+	# Check blacklist
+	if db.is_blacklisted(user_id):
+		await update.message.reply_text(
+			i18n.t("USER_BLACKLISTED", language),
+			parse_mode=filters.ParseMode.HTML
+		)
+		return False
 
-    # Check credits
-    credits = db.get_user_credits(user_id)
-    if credits <= 0 and not db.is_beta_tester(user_id):
-        await update.message.reply_text(
-            i18n.t("NO_CREDITS", language),
-            parse_mode=filters.ParseMode.HTML
-        )
-        return False
+	# Check credits
+	credits = db.get_user_credits(user_id)
+	if credits <= 0 and not db.is_beta_tester(user_id):
+		await update.message.reply_text(
+			i18n.t("NO_CREDITS", language),
+			parse_mode=filters.ParseMode.HTML
+		)
+		return False
 
-    # Decrement credits if not beta tester
-    if not db.is_beta_tester(user_id):
-        db.decrement_credits(user_id)
+	# Decrement credits if not beta tester
+	if not db.is_beta_tester(user_id):
+		db.decrement_credits(user_id)
 
-    return True
+	return True
 
 def run_bot():
-    raise NotImplementedError("Bot now runs via webhooks in admin_panel.py")
+	raise NotImplementedError("Bot now runs via webhooks in admin_panel.py")

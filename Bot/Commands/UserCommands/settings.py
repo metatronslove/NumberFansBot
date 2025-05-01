@@ -7,39 +7,39 @@ from ...transliteration import Transliteration
 from datetime import datetime
 
 async def register_user_if_not_exists(update: Update, context: CallbackContext, user):
-    db = Database()
-    if not db.check_if_user_exists(user.id):
-        db.add_new_user(
-            user_id=user.id,
-            chat_id=update.message.chat_id,
-            username=user.username or "",
-            first_name=user.first_name or "",
-            last_name=user.last_name or "",
-        )
+	db = Database()
+	if not db.check_if_user_exists(user.id):
+		db.add_new_user(
+			user_id=user.id,
+			chat_id=update.message.chat_id,
+			username=user.username or "",
+			first_name=user.first_name or "",
+			last_name=user.last_name or "",
+		)
 
 async def settings_handle(update: Update, context: CallbackContext):
-    user = update.message.from_user
-    await register_user_if_not_exists(update, context, user)
-    user_id = user.id
-    db = Database()
-    i18n = I18n()
-    language = db.get_user_language(user_id)
-    db.set_user_attribute(user_id, "last_interaction", datetime.now())
+	user = update.message.from_user
+	await register_user_if_not_exists(update, context, user)
+	user_id = user.id
+	db = Database()
+	i18n = I18n()
+	language = db.get_user_language(user_id)
+	db.set_user_attribute(user_id, "last_interaction", datetime.now())
 
-    # Increment command usage
-    db.increment_command_usage("settings", user_id)
+	# Increment command usage
+	db.increment_command_usage("settings", user_id)
 
-    transliteration = Transliteration(db, i18n)
-    valid_languages = transliteration.valid_languages
+	transliteration = Transliteration(db, i18n)
+	valid_languages = transliteration.valid_languages
 
-    buttons = [
-        [InlineKeyboardButton(f"Lang: {lang.upper()}", callback_data=f"settings_lang_{lang}")]
-        for lang in valid_languages
-    ]
-    reply_markup = InlineKeyboardMarkup(buttons)
+	buttons = [
+		[InlineKeyboardButton(f"Lang: {lang.upper()}", callback_data=f"settings_lang_{lang}")]
+		for lang in valid_languages
+	]
+	reply_markup = InlineKeyboardMarkup(buttons)
 
-    await update.message.reply_text(
-        i18n.t("SETTINGS_USAGE", language),
-        parse_mode=ParseMode.HTML,
-        reply_markup=reply_markup
-    )
+	await update.message.reply_text(
+		i18n.t("SETTINGS_USAGE", language),
+		parse_mode=ParseMode.HTML,
+		reply_markup=reply_markup
+	)
