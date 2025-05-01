@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 from pymongo import MongoClient
 from .i18n import I18n
-from .config import config_dir
+from .config import Config
 from .database import Database
 from .unified_numerology import UnifiedNumerology
 
@@ -19,7 +19,7 @@ class Transliteration:
 
 	def load_transliteration_map(self):
 		"""Load transliteration_map.json from Config directory."""
-		map_path = config_dir / "transliteration_map.json"
+		map_path = config.config_dir / "transliteration_map.json"
 		try:
 			with open(map_path, "r", encoding="utf-8") as f:
 				self.transliteration_map = json.load(f)
