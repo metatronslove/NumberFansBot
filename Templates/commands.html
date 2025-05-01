@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" {{ 'dir="rtl"' if lang in ['ar', 'he'] else '' }}>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{ i18n.t('COMMANDS_TITLE', lang) }}</title>
+	<link rel="apple-touch-icon" sizes="180x180" href="/Assets/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/Assets/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/Assets/favicon-16x16.png">
+	<link rel="manifest" href="/Assets/site.webmanifest">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/Assets/styles.css">
+</head>
+<body>
+	<div class="particles" id="particles-js"></div>
+	<div class="language-switcher">
+		<select onchange="window.location.href='/commands/' + this.value">
+			{% for code in ['en', 'tr', 'ar', 'he', 'la'] %}
+				<option value="{{ code }}" {{ 'selected' if code == lang else '' }}>{{ i18n.t('LANGUAGE_NAME_' + code.upper(), lang) }}</option>
+			{% endfor %}
+		</select>
+	</div>
+	<div class="logo-container">
+		<div class="logo">NumberFansBot</div>
+		<div class="tagline">{{ i18n.t('TAGLINE', lang) }}</div>
+	</div>
+	<div class="status-container">
+		<h2>{{ i18n.t('COMMANDS_TITLE', lang) }}</h2>
+		<p>{{ i18n.t('COMMANDS_DESCRIPTION', lang) }}</p>
+		{% if command_usage %}
+			<table class="table table-dark table-striped">
+				<thead>
+					<tr>
+						<th>{{ i18n.t('COMMAND_NAME', lang) }}</th>
+						<th>{{ i18n.t('USAGE_COUNT', lang) }}</th>
+						<th>{{ i18n.t('LAST_USED', lang) }}</th>
+						<th>{{ i18n.t('LAST_USER', lang) }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for usage in command_usage %}
+						<tr>
+							<td>/{{ usage['command'] }}</td>
+							<td>{{ usage['count'] }}</td>
+							<td>{{ usage['last_used'].strftime('%Y-%m-%d %H:%M:%S') if usage.get('last_used') else 'N/A' }}</td>
+							<td>{{ usage['last_user_id'] if usage.get('last_user_id') else 'N/A' }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<p class="text-muted">{{ i18n.t('NO_COMMANDS_USED', lang) }}</p>
+		{% endif %}
+		<a href="{{ url_for('login', lang=lang) }}" class="btn btn-primary mt-3">{{ i18n.t('LOGIN', lang) }}</a>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+	<script>
+		particlesJS('particles-js', {
+			"particles": {
+				"number": {"value": 80, "density": {"enable": true, "value_area": 800}},
+				"color": {"value": "#ffffff"},
+				"shape": {"type": "circle"},
+				"opacity": {"value": 0.5, "random": true, "anim": {"enable": true, "speed": 1, "opacity_min": 0.1, "sync": false}},
+				"size": {"value": 3, "random": true, "anim": {"enable": true, "speed": 2, "size_min": 0.1, "sync": false}},
+				"line_linked": {"enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1},
+				"move": {"enable": true, "speed": 2, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false, "attract": {"enable": true, "rotateX": 600, "rotateY": 1200}}
+			},
+			"interactivity": {
+				"detect_on": "canvas",
+				"events": {"onhover": {"enable": true, "mode": "grab"}, "onclick": {"enable": true, "mode": "push"}, "resize": true},
+				"modes": {"grab": {"distance": 140, "line_linked": {"opacity": 1}}, "push": {"particles_nb": 4}}
+			},
+			"retina_detect": true
+		});
+	</script>
+</body>
+</html>

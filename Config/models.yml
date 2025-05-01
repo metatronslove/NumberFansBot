@@ -1,0 +1,7 @@
+models:
+  - name: mixtral
+    url: https://api-inference.huggingface.co/models/mixtralai/Mixtral-8x7B-Instruct-v0.1
+    access_token_env: HUGGINGFACE_ACCESS_TOKEN
+  - name: bert
+    url: https://api-inference.huggingface.co/models/bert-base-multilingual-cased
+    access_token_env: HUGGINGFACE_ACCESS_TOKEN

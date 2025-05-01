@@ -1,0 +1,8 @@
+python-telegram-bot[rate-limiter]==21.5
+pymongo==4.8.0
+flask==3.0.3
+gunicorn==23.0.0
+requests==2.32.3
+pyyaml==6.0.2
+python-dotenv==1.0.1
+i18n==0.2
