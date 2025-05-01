@@ -30,6 +30,17 @@ logger = logging.getLogger(__name__)
 # Initialize Telegram application
 telegram_app = Application.builder().token(config.telegram_token).build()
 
+# Initialize the application
+loop = asyncio.new_event_loop()
+asyncio.set_event_loop(loop)
+try:
+    loop.run_until_complete(telegram_app.initialize())
+except Exception as e:
+    logger.error(f"Failed to initialize Telegram application: {str(e)}")
+    raise
+finally:
+    loop.close()
+
 # Register handlers
 def register_handlers():
     telegram_app.add_handler(CommandHandler("start", start.start_handle))
@@ -137,11 +148,7 @@ def register(lang='en'):
             flash(i18n.t("REGISTER_ERROR", lang, error="Username already exists"), 'error')
             return render_template('register.html', i18n=i18n, lang=lang)
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        user_id = db.user_collection.insert_one({
-            "username": username,
-            "password": hashed_password,
-            "is_admin": True  # Set as admin for simplicity
-        }).inserted_id
+        user_id = db.user_collection.find_one({"username": username})
         session['username'] = username
         session['user_id'] = str(user_id)
         flash(i18n.t("REGISTER_SUCCESS", lang), 'success')
