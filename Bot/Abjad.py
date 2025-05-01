@@ -577,7 +577,7 @@ class Abjad:
 	def generate_latin_name(self, hpart: Dict[int, str], counts: int) -> str:
 		gh = ""
 		latin_chars = {"1": "a", "2": "b", "3": "c", "4": "d", "5": "e", "6": "f", "7": "g", "8": "h", "9": "i", "0": "j"}
-		syllables = ["am", "an", "ar", "as", "at", "em", "en", "er", "es", "et", "im", "in", "ir", "is", "it", "om", "on", "or", "os", "ot", "um", "un", "ur", "us", "ut", "ba", "be", "bi", "bo", "bu", "ca", "ce", "ci", "co", "cu", "da", "de", "di", "do", "du", "fa", "fe", "fi", "fo", "fu", "ga", "ge", "gi", "go", "gu", "la", "le", "li", "lo", "lu", "ma", "me", "mi", "mo", "mu", "na", "ne", "ni", "no", "nu", "pa", "pe", "pi", "po", "pu", "ra "re", "ri", "ro", "ru", "sa", "se", "si", "so", "su", "ta", "te", "ti", "to", "tu", "va", "ve", "vi", "vo", "vu"]
+		syllables = ["am", "an", "ar", "as", "at", "em", "en", "er", "es", "et", "im", "in", "ir", "is", "it", "om", "on", "or", "os", "ot", "um", "un", "ur", "us", "ut", "ba", "be", "bi", "bo", "bu", "ca", "ce", "ci", "co", "cu", "da", "de", "di", "do", "du", "fa", "fe", "fi", "fo", "fu", "ga", "ge", "gi", "go", "gu", "la", "le", "li", "lo", "lu", "ma", "me", "mi", "mo", "mu", "na", "ne", "ni", "no", "nu", "pa", "pe", "pi", "po", "pu", "ra", "re", "ri", "ro", "ru", "sa", "se", "si", "so", "su", "ta", "te", "ti", "to", "tu", "va", "ve", "vi", "vo", "vu"]
 		endings = ["us", "um", "is", "ix", "ex", "ax", "or", "er", "io", "ius"]
 
 		for counter in range(counts, 0, -1):
