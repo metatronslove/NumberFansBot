@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 from pymongo import MongoClient
 from .i18n import I18n
-from .admin_panel import config
+from .config import config  # Changed import from .admin_panel to .config
 from .database import Database
 from .Numerology import UnifiedNumerology
 import logging
@@ -141,7 +141,7 @@ class Transliteration:
                 "english": "Arabic",
                 "latin": "Arabicus",
                 "arabic": "عربي",
-                "hebrew": "ערבית"
+                "hebrew": "עربית"
             },
             "english": {
                 "turkish": "İngilizce",
