@@ -137,10 +137,14 @@
 	"CONVERTNUMBERS_RESULT": "الرقم {number} تم تحويله إلى صيغة {format} وهو: {result}.",
 	"MAGICSQUARE_USAGE": "الاستخدام: /magicsquare <مجموع_الصف>",
 	"MAGICSQUARE_RESULT": "مربع سحري لمجموع الصف {number}:\n```\n{square}\n```",
-	"SUGGEST_TRANSLITERATION_RESULT": "النقل المقترح لـ '{text}' من {source_lang} إلى {target_lang}: {results}.",
-	"TRANSLITERATION_USAGE": "الاستخدام: /transliterate <لغة_المصدر> <لغة_الهدف> <نص>",
-	"TRANSLITERATION_RESPONSE": "تم النقل إلى {lang_name}: {result}",
-	"TRANSLITERATION_HISTORY_RESULT": "سجل النقل:\n{history}",
+  "TRANSLITERATION_USAGE": "الاستخدام: /transliterate <source_lang> <target_lang> <text>",
+  "TRANSLITERATION_RESPONSE": "تم النقل إلى {lang_name}: {result}",
+  "SUGGEST_TRANSLITERATION_RESULT": "اقتراحات لـ '{text}' من {source_lang} إلى {target_lang}: {results}",
+  "TRANSLITERATION_HISTORY_RESULT": "سجل النقل:\n{history}",
+  "LANGUAGE_INVALID": "لغة غير صالحة. اللغات المتاحة: {languages}",
+  "ERROR_INVALID_INPUT": "إدخال غير صالح: {error}",
+  "SELECT_ALTERNATIVE": "اقتراحات",
+  "TRANSLITERATION_HISTORY_USAGE": "سجل النقل",
 	"CANCEL_USAGE": "الاستخدام: /cancel",
 	"CANCEL_RESULT": "تم إلغاء العملية.",
 	"SETTINGS_USAGE": "الاستخدام: /settings",
@@ -240,6 +244,7 @@
 		"transliterate": ["نقل"],
 		"payment": ["دفع"],
 		"numerology": ["عددية"],
-		"convertnumbers": ["تحويل"]
+		"convertnumbers": ["تحويل"],
+    "transliterate": ["نقل"]
 	}
 }

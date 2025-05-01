@@ -137,9 +137,14 @@
 	"CONVERTNUMBERS_RESULT": "המספר {number} הומר לפורמט {format} והוא: {result}.",
 	"MAGICSQUARE_USAGE": "שימוש: /magicsquare <סכום_שורה>",
 	"MAGICSQUARE_RESULT": "ריבוע קסם לסכום שורה {number}:\n```\n{square}\n```",
-	"SUGGEST_TRANSLITERATION_RESULT": "תרגומים מוצעים עבור '{text}' מ-{source_lang} ל-{target_lang}: {results}.",
-	"TRANSLITERATION_RESPONSE": "תורגם ל-{lang_name}: {result}",
-	"TRANSLITERATION_HISTORY_RESULT": "היסטוריית תרגום:\n{history}",
+  "TRANSLITERATION_USAGE": "שימוש: /transliterate <source_lang> <target_lang> <text>",
+  "TRANSLITERATION_RESPONSE": "תועתק ל-{lang_name}: {result}",
+  "SUGGEST_TRANSLITERATION_RESULT": "הצעות עבור '{text}' מ-{source_lang} ל-{target_lang}: {results}",
+  "TRANSLITERATION_HISTORY_RESULT": "היסטוריית תעתיק:\n{history}",
+  "LANGUAGE_INVALID": "שפה לא תקינה. שפות זמינות: {languages}",
+  "ERROR_INVALID_INPUT": "קלט לא תקין: {error}",
+  "SELECT_ALTERNATIVE": "הצעות",
+  "TRANSLITERATION_HISTORY_USAGE": "היסטוריית תעתיק",
 	"CANCEL_USAGE": "שימוש: /cancel",
 	"CANCEL_RESULT": "הפעולה בוטלה.",
 	"SETTINGS_USAGE": "שימוש: /settings",
@@ -202,6 +207,7 @@
 		"transliterate": ["תרגום"],
 		"payment": ["תשלום"],
 		"numerology": ["נומרולוגיה"],
-		"convertnumbers": ["המרת_מספרים"]
+		"convertnumbers": ["המרת_מספרים"],
+    "transliterate": ["תעתק"]
 	}
 }

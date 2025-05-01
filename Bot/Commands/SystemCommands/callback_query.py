@@ -92,10 +92,17 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 
     try:
         if data.startswith("name_alt_"):
-            parts = data.split("_", 3)
+            parts = data.split("_")
+            if len(parts) < 5:
+                await query.message.reply_text(
+                    i18n.t("ERROR_INVALID_INPUT", language, error="Invalid callback data"),
+                    parse_mode=ParseMode.HTML
+                )
+                await query.answer()
+                return
             encoded_original = parts[2]
             target_lang = parts[3]
-            encoded_transliterated = parts[4] if len(parts) > 4 else parts[3]
+            encoded_transliterated = parts[4]
             original_name = urllib.parse.unquote(encoded_original)
             transliterated_name = urllib.parse.unquote(encoded_transliterated)
             try:
@@ -122,7 +129,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
                 callback_data=f"next_size_{row_sum}_3"
             )]]
             reply_markup = InlineKeyboardMarkup(buttons)
-            await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup)
+            await query.message.reply_text(response, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
         elif data.startswith("indian_square_"):
             parts = data[len("indian_square_"):].split("_")
             row_sum, n = int(parts[0]), int(parts[1])
@@ -140,12 +147,12 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
             if details:
                 await query.message.reply_text(
                     i18n.t("ABJAD_DETAILS", language, details=details),
-                    parse_mode=ParseMode.MARKDOWN
+                    parse_mode=ParseMode.HTML
                 )
             else:
                 await query.message.reply_text(
                     i18n.t("ERROR_GENERAL", language, error="No details available"),
-                    parse_mode=ParseMode.MARKDOWN
+                    parse_mode=ParseMode.HTML
                 )
         elif data.startswith("abjad_text_"):
             parts = data[len("abjad_text_"):].rsplit("_", 1)
@@ -155,7 +162,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
             if isinstance(result, str) and result.startswith("Error"):
                 await query.message.reply_text(
                     i18n.t("ERROR_GENERAL", language, error=result),
-                    parse_mode=ParseMode.MARKDOWN
+                    parse_mode=ParseMode.HTML
                 )
             else:
                 value = result["sum"] if isinstance(result, dict) else result
@@ -176,7 +183,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
                 reply_markup = InlineKeyboardMarkup(keyboard)
                 await query.message.reply_text(
                     response,
-                    parse_mode=ParseMode.MARKDOWN,
+                    parse_mode=ParseMode.HTML,
                     reply_markup=reply_markup
                 )
         elif data.startswith("payment_select_"):
@@ -201,7 +208,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
                     callback_data=f"magic_square_{result}"
                 )])
             reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
-            await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup)
+            await query.message.reply_text(response, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
         elif data.startswith("numerology_"):
             parts = data[len("numerology_"):].split("_", 2)
             encoded_text, alphabet, method = parts[0], parts[1], parts[2]
@@ -222,7 +229,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
                     callback_data=f"magic_square_{result}"
                 )])
             reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
-            await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup)
+            await query.message.reply_text(response, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
         elif data.startswith("convertnumbers_"):
             parts = data[len("convertnumbers_"):].split("_")
             number, format_type = int(parts[0]), parts[1]
@@ -231,7 +238,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
             if format_type not in available_formats:
                 await query.message.reply_text(
                     i18n.t("ERROR_INVALID_INPUT", language, error="Invalid format"),
-                    parse_mode=ParseMode.MARKDOWN
+                    parse_mode=ParseMode.HTML
                 )
             else:
                 result = converter.arabic(str(number)) if format_type == "arabic" else converter.indian(str(number))
@@ -242,19 +249,19 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
                     callback_data=f"convertnumbers_{number}_{alt_format}"
                 )]]
                 reply_markup = InlineKeyboardMarkup(buttons)
-                await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup)
+                await query.message.reply_text(response, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
         elif data.startswith("settings_lang_"):
             new_language = data[len("settings_lang_"):]
             if new_language in transliteration.valid_languages:
                 db.set_user_language(user_id, new_language)
                 await query.message.reply_text(
                     i18n.t("LANGUAGE_CHANGED", language, selected_lang=new_language.upper()),
-                    parse_mode=ParseMode.MARKDOWN
+                    parse_mode=ParseMode.HTML
                 )
             else:
                 await query.message.reply_text(
                     i18n.t("ERROR_INVALID_INPUT", language, error="Invalid language"),
-                    parse_mode=ParseMode.MARKDOWN
+                    parse_mode=ParseMode.HTML
                 )
         elif data.startswith("transliterate_suggest_"):
             parts = data[len("transliterate_suggest_"):].split("_", 2)
@@ -264,7 +271,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
             if not alternatives:
                 await query.message.reply_text(
                     i18n.t("SUGGEST_TRANSLITERATION_RESULT", language, text=text, source_lang=source_lang, target_lang=target_lang, results="No suggestions available"),
-                    parse_mode=ParseMode.MARKDOWN
+                    parse_mode=ParseMode.HTML
                 )
             else:
                 results = ", ".join(alt["transliterated_name"] for alt in alternatives)
@@ -274,7 +281,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
                     for alt in alternatives
                 ]
                 reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
-                await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup)
+                await query.message.reply_text(response, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
         elif data.startswith("transliterate_history_"):
             user_id = int(data[len("transliterate_history_"):])
             history = db.transliteration_collection.find({"user_id": user_id})
@@ -282,12 +289,12 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
             if not history:
                 await query.message.reply_text(
                     i18n.t("TRANSLITERATION_HISTORY_RESULT", language, history="No transliteration history found"),
-                    parse_mode=ParseMode.MARKDOWN
+                    parse_mode=ParseMode.HTML
                 )
             else:
                 history_str = "\n".join([f"{item['source_name']} -> {item['transliterated_name']} ({item['target_lang']})" for item in history])
                 response = i18n.t("TRANSLITERATION_HISTORY_RESULT", language, history=history_str)
-                await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN)
+                await query.message.reply_text(response, parse_mode=ParseMode.HTML)
         elif data == "help_group_chat":
             try:
                 await query.message.reply_video(
@@ -298,13 +305,13 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
             except Exception as e:
                 await query.message.reply_text(
                     i18n.t("ERROR_GENERAL", language, error="Failed to send help video"),
-                    parse_mode=ParseMode.MARKDOWN
+                    parse_mode=ParseMode.HTML
                 )
         await query.answer()
     except Exception as e:
         logger.error(f"Callback error: {str(e)}")
         await query.message.reply_text(
             i18n.t("ERROR_GENERAL", language, error="An error occurred while processing the callback"),
-            parse_mode=ParseMode.MARKDOWN
+            parse_mode=ParseMode.HTML
         )
         await query.answer()

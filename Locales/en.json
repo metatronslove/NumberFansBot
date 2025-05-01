@@ -137,10 +137,14 @@
 	"CONVERTNUMBERS_RESULT": "Number {number} converted to {format} is: {result}.",
 	"MAGICSQUARE_USAGE": "Usage: /magicsquare <row_sum>",
 	"MAGICSQUARE_RESULT": "Magic square for row sum {number}:\n```\n{square}\n```",
-	"SUGGEST_TRANSLITERATION_RESULT": "Suggested transliterations for '{text}' from {source_lang} to {target_lang}: {results}.",
-	"TRANSLITERATION_USAGE": "Usage: /transliterate <source_lang> <target_lang> <text>",
-	"TRANSLITERATION_RESPONSE": "Transliterated to {lang_name}: {result}",
-	"TRANSLITERATION_HISTORY_RESULT": "Transliteration history:\n{history}",
+  "TRANSLITERATION_USAGE": "Usage: /transliterate <source_lang> <target_lang> <text>",
+  "TRANSLITERATION_RESPONSE": "Transliterated to {lang_name}: {result}",
+  "SUGGEST_TRANSLITERATION_RESULT": "Suggestions for '{text}' from {source_lang} to {target_lang}: {results}",
+  "TRANSLITERATION_HISTORY_RESULT": "Transliteration history:\n{history}",
+  "LANGUAGE_INVALID": "Invalid language. Available languages: {languages}",
+  "ERROR_INVALID_INPUT": "Invalid input: {error}",
+  "SELECT_ALTERNATIVE": "Suggestions",
+  "TRANSLITERATION_HISTORY_USAGE": "Transliteration history",
 	"CANCEL_USAGE": "Usage: /cancel",
 	"CANCEL_RESULT": "Operation cancelled.",
 	"SETTINGS_USAGE": "Usage: /settings",
@@ -240,6 +244,7 @@
 		"transliterate": ["translit"],
 		"payment": ["pay"],
 		"numerology": ["numeroloji"],
-		"convertnumbers": ["convert"]
+		"convertnumbers": ["convert"],
+    "transliterate": ["translit"]
 	}
 }

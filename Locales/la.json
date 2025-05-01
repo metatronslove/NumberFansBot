@@ -137,10 +137,14 @@
 	"CONVERTNUMBERS_RESULT": "Numerus {number} conversus ad formatum {format} est: {result}.",
 	"MAGICSQUARE_USAGE": "Usus: /magicsquare <summa_rigae>",
 	"MAGICSQUARE_RESULT": "Quadratum magicum pro summa rigae {number}:\n```\n{square}\n```",
-	"SUGGEST_TRANSLITERATION_RESULT": "Transliterationes suggestae pro '{text}' ab {source_lang} ad {target_lang}: {results}.",
-	"TRANSLITERATION_USAGE": "Usus: /transliterate <lingua_fontis> <lingua_target> <textum>",
-	"TRANSLITERATION_RESPONSE": "Transliteratum ad {lang_name}: {result}",
-	"TRANSLITERATION_HISTORY_RESULT": "Historia transliterationis:\n{history}",
+  "TRANSLITERATION_USAGE": "Usus: /transliterate <source_lang> <target_lang> <text>",
+  "TRANSLITERATION_RESPONSE": "Transliteratum ad {lang_name}: {result}",
+  "SUGGEST_TRANSLITERATION_RESULT": "Suggestiones pro '{text}' ex {source_lang} ad {target_lang}: {results}",
+  "TRANSLITERATION_HISTORY_RESULT": "Historia transliterationis:\n{history}",
+  "LANGUAGE_INVALID": "Lingua non valida. Linguae praesto: {languages}",
+  "ERROR_INVALID_INPUT": "Invalidum initus: {error}",
+  "SELECT_ALTERNATIVE": "Suggestiones",
+  "TRANSLITERATION_HISTORY_USAGE": "Historia transliterationis",
 	"CANCEL_USAGE": "Usus: /cancel",
 	"CANCEL_RESULT": "Operatio cancellata.",
 	"SETTINGS_USAGE": "Usus: /settings",
@@ -240,6 +244,7 @@
 		"transliterate": ["translit"],
 		"payment": ["solutio"],
 		"numerology": ["numerologia"],
-		"convertnumbers": ["converte"]
+		"convertnumbers": ["converte"],
+    "transliterate": ["translit"]
 	}
 }

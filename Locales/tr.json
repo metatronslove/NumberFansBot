@@ -137,10 +137,14 @@
 	"CONVERTNUMBERS_RESULT": "{number} sayısı {format} biçimine dönüştürüldü: {result}.",
 	"MAGICSQUARE_USAGE": "Kullanım: /magicsquare <satır_toplami>",
 	"MAGICSQUARE_RESULT": "Satır toplamı {number} için sihirli kare:\n```\n{square}\n```",
-	"SUGGEST_TRANSLITERATION_RESULT": "'{text}' için {source_lang} dilinden {target_lang} diline önerilen transliterasyonlar: {results}.",
-	"TRANSLITERATION_USAGE": "Kullanım: /transliterate <kaynak_dil> <hedef_dil> <metin>",
-	"TRANSLITERATION_RESPONSE": "{lang_name} diline translitere edildi: {result}",
-	"TRANSLITERATION_HISTORY_RESULT": "Transliterasyon geçmişi:\n{history}",
+  "TRANSLITERATION_USAGE": "Kullanım: /transliterate <source_lang> <target_lang> <text>",
+  "TRANSLITERATION_RESPONSE": "{lang_name} diline translitere edildi: {result}",
+  "SUGGEST_TRANSLITERATION_RESULT": "'{text}' için {source_lang} dilinden {target_lang} diline öneriler: {results}",
+  "TRANSLITERATION_HISTORY_RESULT": "Transliterasyon geçmişi:\n{history}",
+  "LANGUAGE_INVALID": "Geçersiz dil. Mevcut diller: {languages}",
+  "ERROR_INVALID_INPUT": "Geçersiz giriş: {error}",
+  "SELECT_ALTERNATIVE": "Öneriler",
+  "TRANSLITERATION_HISTORY_USAGE": "Transliterasyon geçmişi",
 	"CANCEL_USAGE": "Kullanım: /cancel",
 	"CANCEL_RESULT": "İşlem iptal edildi.",
 	"SETTINGS_USAGE": "Kullanım: /settings",
@@ -240,6 +244,7 @@
 		"transliterate": ["translit"],
 		"payment": ["öde"],
 		"numerology": ["numeroloji"],
-		"convertnumbers": ["dönüştür"]
+		"convertnumbers": ["dönüştür"],
+    "transliterate": ["translit"]
 	}
 }
