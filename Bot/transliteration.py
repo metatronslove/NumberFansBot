@@ -55,7 +55,7 @@ class Transliteration:
         if alternatives:
             primary = alternatives[0]["transliterated_name"]
             alt_names = [alt["transliterated_name"] for alt in alternatives[1:]]
-            return {"primary": primary, " ", "alternatives": alt_names}
+            return {"primary": primary, "alternatives": alt_names}
 
         # Map source and target languages to transliteration_map keys
         source_key = f"from_{self.language_mapping.get(source_lang, source_lang)}"
@@ -90,7 +90,7 @@ class Transliteration:
         for translit in [primary] + alternatives:
             self.store_transliteration(text, source_lang, target_lang, translit)
 
-        return {"primary": primary, " ", "alternatives": alternatives}
+        return {"primary": primary, "alternatives": alternatives}
 
     def store_transliteration(self, source_name: str, source_lang: str, target_lang: str, transliterated_name: str, user_id: int = None):
         """Store transliteration in MongoDB, incrementing score if it exists."""
@@ -177,5 +177,5 @@ class Transliteration:
             "TRANSLITERATION_RESPONSE",
             output_lang,
             lang_name=lang_name,
-            result=transliterated_name
+            result=" "+transliterated_name
         )
