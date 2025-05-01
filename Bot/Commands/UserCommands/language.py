@@ -1,10 +1,12 @@
 from telegram import Update
 from telegram.ext import CallbackContext
 from telegram.constants import ParseMode
+from ...admin_panel import config
 from ...database import Database
 from ...i18n import I18n
-from ...config import Config
 from datetime import datetime
+
+config = config
 
 async def register_user_if_not_exists(update: Update, context: CallbackContext, user):
 	db = Database()
