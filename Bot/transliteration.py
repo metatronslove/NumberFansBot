@@ -5,7 +5,7 @@ from pymongo import MongoClient
 from .i18n import I18n
 from .config import Config
 from .database import Database
-from .unified_numerology import UnifiedNumerology
+from .Numerology import UnifiedNumerology
 
 class Transliteration:
 	def __init__(self, db: Database, i18n: I18n):
