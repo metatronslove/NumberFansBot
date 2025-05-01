@@ -77,6 +77,7 @@ def get_fields():
 def index(lang='en'):
     if 'username' not in session:
         return redirect(url_for('login', lang=lang))
+    config = Config()
     db = Database()
     i18n = I18n()
     if lang not in config.available_languages:
@@ -86,6 +87,7 @@ def index(lang='en'):
 
 @app.route('/<lang>/login', methods=['GET', 'POST'])
 def login(lang='en'):
+	config = Config()
     db = Database()
     i18n = I18n()
     if lang not in config.available_languages:
@@ -107,6 +109,7 @@ def login(lang='en'):
 def logout(lang='en'):
     session.pop('username', None)
     session.pop('user_id', None)
+    config = Config()
     db = Database()
     i18n = I18n()
     if lang not in config.available_languages:
@@ -116,6 +119,7 @@ def logout(lang='en'):
 
 @app.route('/<lang>/save_config', methods=['POST'])
 def save_config_route(lang='en'):
+	config = Config()
     db = Database()
     i18n = I18n()
     if lang not in config.available_languages:
@@ -149,6 +153,7 @@ def add_model(lang='en'):
     if 'username' not in session:
         flash(i18n.t("LOGIN_ERROR", lang), 'error')
         return redirect(url_for('login', lang=lang))
+    config = Config()
     db = Database()
     i18n = I18n()
     if lang not in config.available_languages:
@@ -182,6 +187,7 @@ def delete_model(lang='en'):
     if 'username' not in session:
         flash(i18n.t("LOGIN_ERROR", lang), 'error')
         return redirect(url_for('login', lang=lang))
+    config = Config()
     db = Database()
     i18n = I18n()
     if lang not in config.available_languages:
@@ -203,6 +209,7 @@ def delete_model(lang='en'):
 
 @app.route('/<lang>/github_traffic')
 def github_traffic(lang='en'):
+	config = Config()
     db = Database()
     i18n = I18n()
     if lang not in config.available_languages:
@@ -216,6 +223,7 @@ def manage_beta_tester(lang='en'):
     if 'username' not in session:
         flash(i18n.t("LOGIN_ERROR", lang), 'error')
         return redirect(url_for('login', lang=lang))
+    config = Config()
     db = Database()
     i18n = I18n()
     if lang not in config.available_languages:
@@ -250,6 +258,7 @@ async def webhook():
 
 @app.route('/set_webhook', methods=['GET'])
 async def set_webhook():
+	config = Config()
     webhook_url = f"https://{request.host}/bot{config.telegram_token}"
     try:
         await telegram_app.bot.set_webhook(url=webhook_url)
