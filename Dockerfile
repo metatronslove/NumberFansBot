@@ -25,4 +25,4 @@ RUN echo "{}" > Config/config.yml
 EXPOSE 8000
 
 # Run gunicorn for Flask app
-CMD ["sh", "-c", "python Bot/seed_admin.py && uvicorn Bot.admin_panel:app --host 0.0.0.0 --port 8000"]
+CMD ["sh", "-c", "python Bot/seed_admin.py && gunicorn Bot.admin_panel:app -b 0.0.0.0:8000"]
