@@ -1,10 +1,10 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 from telegram.constants import ParseMode
+from ...config import Config
 from ...database import Database
 from ...i18n import I18n
 from datetime import datetime
-from ...config import Config
 
 async def register_user_if_not_exists(update: Update, context: CallbackContext, user, language):
 	config = Config()
