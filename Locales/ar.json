@@ -1,6 +1,5 @@
 {
 	"START_MESSAGE": "مرحبًا بكم في NumberFansBot! استكشف سحر الأرقام والحروف.",
-	"HELP_MESSAGE": "استخدم /help لعرض الأوامر المتاحة.",
 	"TRANSLITERATION_USAGE": "الاستخدام: /transliterate <اللغة_المصدر> <اللغة_الهدف> <النص>",
 	"ERROR_INVALID_INPUT": "إدخال غير صالح: {error}",
 	"SELECT_ALTERNATIVE": "اختر ترجمة بديلة:",

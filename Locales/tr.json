@@ -1,6 +1,5 @@
 {
 	"START_MESSAGE": "NumberFansBot'a hoş geldiniz! Sayılar ve harflerin büyüsünü keşfedin.",
-	"HELP_MESSAGE": "Kullanılabilir komutları görmek için /help kullanın.",
 	"TRANSLITERATION_USAGE": "Kullanım: /transliterate <kaynak_dil> <hedef_dil> <metin>",
 	"ERROR_INVALID_INPUT": "Geçersiz giriş: {error}",
 	"SELECT_ALTERNATIVE": "Alternatif bir çeviri seçin:",

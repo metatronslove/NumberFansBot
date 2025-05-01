@@ -1,6 +1,5 @@
 {
 	"START_MESSAGE": "ברוכים הבאים ל-NumberFansBot! חקרו את קסם המספרים והאותיות.",
-	"HELP_MESSAGE": "השתמשו ב-/help כדי לראות את הפקודות הזמינות.",
 	"TRANSLITERATION_USAGE": "שימוש: /transliterate <שפת_מקור> <שפת_יעד> <טקסט>",
 	"ERROR_INVALID_INPUT": "קלט לא תקין: {error}",
 	"SELECT_ALTERNATIVE": "בחרו תרגום חלופי:",

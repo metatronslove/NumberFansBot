@@ -1,6 +1,5 @@
 {
 	"START_MESSAGE": "Salvete in NumberFansBot! Explorate magiam numerorum et litterarum.",
-	"HELP_MESSAGE": "Utere /help ut videas mandata praesto.",
 	"TRANSLITERATION_USAGE": "Usus: /transliterate <lingua_fons> <lingua_destinatio> <textus>",
 	"ERROR_INVALID_INPUT": "Input invalida: {error}",
 	"SELECT_ALTERNATIVE": "Elige alternam transliterationem:",

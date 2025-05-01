@@ -1,6 +1,5 @@
 {
 	"START_MESSAGE": "Welcome to NumberFansBot! Explore the magic of numbers and letters.",
-	"HELP_MESSAGE": "Use /help to see available commands.",
 	"TRANSLITERATION_USAGE": "Usage: /transliterate <source_lang> <target_lang> <text>",
 	"ERROR_INVALID_INPUT": "Invalid input: {error}",
 	"SELECT_ALTERNATIVE": "Select an alternative transliteration:",
