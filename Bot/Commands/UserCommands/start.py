@@ -6,7 +6,7 @@ from ...database import Database
 from ...i18n import I18n
 from datetime import datetime
 from .language import language_handle
-from ...admin_panel import config  # Import config from admin_panel
+from ...config import Config
 
 # Set up logging
 logger = logging.getLogger(__name__)
