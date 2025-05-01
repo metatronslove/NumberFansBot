@@ -8,7 +8,7 @@ from ...i18n import I18n
 from ...transliteration import Transliteration
 from ...Abjad import Abjad
 from ...Numerology import UnifiedNumerology
-from ...MagicSquare import MagicSquare
+from ...MagicSquare import MagicSquareGenerator
 from ...NumberConverter import NumberConverter
 from ...config import config
 from .square import square_handle
@@ -111,7 +111,7 @@ async def handle_callback_query(update: Update, context: CallbackContext):
                 )
         elif data.startswith("magic_square_"):
             row_sum = int(data[len("magic_square_"):])
-            magic_square = MagicSquare()
+            magic_square = MagicSquareGenerator()
             square = magic_square.generate(row_sum, n=3)
             square_str = "\n".join(["  ".join(map(str, row)) for row in square])
             response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square_str)
