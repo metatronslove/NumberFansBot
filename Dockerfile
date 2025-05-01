@@ -12,7 +12,10 @@ rm -rf /var/lib/apt/lists/\*
 
 ## Upgrade pip and install dependencies
 
-RUN pip3 install --no-cache-dir -U pip wheel setuptools==69.5.1 COPY ./requirements.txt /tmp/requirements.txt RUN pip3 install --no-cache-dir -r /tmp/requirements.txt && rm /tmp/requirements.txt
+RUN mkdir ./code
+RUN pip3 install --no-cache-dir -U pip wheel setuptools==69.5.1
+COPY ./requirements.txt /tmp/requirements.txt
+RUN pip3 install --no-cache-dir -r /tmp/requirements.txt && rm /tmp/requirements.txt
 
 ## Copy application code
 
