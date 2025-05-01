@@ -6,20 +6,22 @@ from ...i18n import I18n
 from datetime import datetime
 from ...config import Config
 
-config = Config()
-
-async def register_user_if_not_exists(update: Update, context: CallbackContext, user):
+async def register_user_if_not_exists(update: Update, context: CallbackContext, user, language):
+	config = Config()
 	db = Database()
-	if not db.check_if_user_exists(user.id):
-		db.add_new_user(
-			user_id=user.id,
-			chat_id=update.message.chat_id,
-			username=user.username or "",
-			first_name=user.first_name or "",
-			last_name=user.last_name or "",
-		)
+	# Store user in database if not exists
+	if not db.user_collection.find_one({"telegram_id": user.id}):
+		db.user_collection.insert_one({
+			"telegram_id": user.id,
+			"username": user.username,
+			"first_name": user.first_name,
+			"last_name": user.last_name,
+			"language_code": language,
+			"is_beta_tester": False
+		})
 
 async def help_handle(update: Update, context: CallbackContext):
+	config = Config()
 	user = update.message.from_user
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id
