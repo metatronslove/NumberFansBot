@@ -28,4 +28,5 @@ WORKDIR /code
 
 ## Run gunicorn for Flask app
 
-CMD \["gunicorn", "--bind", "0.0.0.0:8000", "Bot.admin_panel:app"\]
+CMD \
+["gunicorn", "--bind", "0.0.0.0:8000", "Bot.admin_panel:app"\]
