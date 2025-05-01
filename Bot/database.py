@@ -1,16 +1,17 @@
 from pymongo import MongoClient
 from datetime import datetime
 from pathlib import Path
-from .config import mongodb_uri
+from .config import Config
 import logging
 
 logger = logging.getLogger(__name__)
 
 class Database:
     def __init__(self):
-        self.client = MongoClient(mongodb_uri)
-        self.db = self.client.get_database()
-        self.user_collection = self.db.users
+        self.client = MongoClient(config.mongodb_uri)
+        self.db = self.client['numberfansbot']
+        self.user_collection = self.db['users']
+        self.command_usage = self.db['command_usage']
         self.command_usage_collection = self.db.command_usage
         self.user_settings_collection = self.db.user_settings
         self.orders_collection = self.db.orders

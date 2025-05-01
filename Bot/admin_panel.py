@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, redirect, url_for, session, flash
 from telegram import Update
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, PreCheckoutQueryHandler, MessageHandler, filters
-from .config import config
+from .config import Config
 from .database import Database
 from .i18n import I18n
 from .Commands.UserCommands import (
