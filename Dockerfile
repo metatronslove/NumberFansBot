@@ -23,5 +23,4 @@ WORKDIR /code
 EXPOSE 8000
 
 # Run gunicorn for Flask app
-RUN python Bot/seed_admin.py
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "Bot.admin_panel:app"]
+CMD ["sh", "-c", "python Bot/seed_admin.py && gunicorn Bot.admin_panel:app -b 0.0.0.0:8000"]
