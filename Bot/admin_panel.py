@@ -27,19 +27,20 @@ app.secret_key = config.flask_secret_key or 'your-secret-key'
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Create a single event loop for async operations
+loop = asyncio.new_event_loop()
+asyncio.set_event_loop(loop)
+
 # Initialize Telegram application
 telegram_app = Application.builder().token(config.telegram_token).build()
 
 # Initialize the application
-loop = asyncio.new_event_loop()
-asyncio.set_event_loop(loop)
 try:
     loop.run_until_complete(telegram_app.initialize())
 except Exception as e:
     logger.error(f"Failed to initialize Telegram application: {str(e)}")
-    raise
-finally:
     loop.close()
+    raise
 
 # Register handlers
 def register_handlers():
@@ -148,7 +149,11 @@ def register(lang='en'):
             flash(i18n.t("REGISTER_ERROR", lang, error="Username already exists"), 'error')
             return render_template('register.html', i18n=i18n, lang=lang)
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        user_id = db.user_collection.find_one({"username": username})
+        user_id = db.user_collection.insert_one({
+            "username": username,
+            "password": hashed_password,
+            "is_admin": True  # Set as admin for simplicity
+        }).inserted_id
         session['username'] = username
         session['user_id'] = str(user_id)
         flash(i18n.t("REGISTER_SUCCESS", lang), 'success')
@@ -298,17 +303,11 @@ def manage_beta_tester(lang='en'):
 def webhook():
     try:
         update = Update.de_json(request.get_json(), telegram_app.bot)
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
         loop.run_until_complete(telegram_app.process_update(update))
-        loop.close()
         return '', 200
     except Exception as e:
         logger.error(f"Webhook error: {str(e)}")
         return '', 500
-    finally:
-        if not loop.is_closed():
-            loop.close()
 
 @app.route('/set_webhook', methods=['GET'])
 def set_webhook():
@@ -323,10 +322,7 @@ def set_webhook():
 
     try:
         # Run async set_webhook in sync context
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
         result = loop.run_until_complete(telegram_app.bot.set_webhook(url=webhook_url))
-        loop.close()
         if result:
             logger.info(f"Webhook set successfully to {webhook_url}")
             return f"Webhook set to {webhook_url}", 200
@@ -336,6 +332,3 @@ def set_webhook():
     except Exception as e:
         logger.error(f"Set webhook error: {str(e)}")
         return f"Failed to set webhook: {str(e)}", 500
-    finally:
-        if not loop.is_closed():
-            loop.close()
