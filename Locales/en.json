@@ -245,6 +245,6 @@
 		"payment": ["pay"],
 		"numerology": ["numeroloji"],
 		"convertnumbers": ["convert"],
-    "transliterate": ["translit"]
+	"transliterate": ["translit"]
 	}
 }

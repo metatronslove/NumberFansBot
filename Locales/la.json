@@ -245,6 +245,6 @@
 		"payment": ["solutio"],
 		"numerology": ["numerologia"],
 		"convertnumbers": ["converte"],
-    "transliterate": ["translit"]
+	"transliterate": ["translit"]
 	}
 }

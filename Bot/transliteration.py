@@ -11,32 +11,32 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Transliteration:
-    def __init__(self, db: Database, i18n: I18n):
-        self.db = db
-        self.i18n = i18n
-        self.numerology = UnifiedNumerology()
-        self.transliteration_map: Dict = {}
-        self.load_transliteration_map()
-        self.valid_languages = ["arabic", "turkish", "english", "hebrew", "latin"]
-        self.language_mapping = {"arabic": "arabic_hija"}
+	def __init__(self, db: Database, i18n: I18n):
+		self.db = db
+		self.i18n = i18n
+		self.numerology = UnifiedNumerology()
+		self.transliteration_map: Dict = {}
+		self.load_transliteration_map()
+		self.valid_languages = ["arabic", "turkish", "english", "hebrew", "latin"]
+		self.language_mapping = {"arabic": "arabic_hija"}
 
-    def load_transliteration_map(self):
-        """Load transliteration_map.json from Config directory."""
-        map_path = config.config_dir / "transliteration_map.json"
-        try:
-            with open(map_path, "r", encoding="utf-8") as f:
-                self.transliteration_map = json.load(f)
-        except Exception as e:
-            logger.error(f"Failed to load transliteration map: {str(e)}")
-            raise ValueError(f"Failed to load transliteration map: {str(e)}")
+	def load_transliteration_map(self):
+		"""Load transliteration_map.json from Config directory."""
+		map_path = config.config_dir / "transliteration_map.json"
+		try:
+			with open(map_path, "r", encoding="utf-8") as f:
+				self.transliteration_map = json.load(f)
+		except Exception as e:
+			logger.error(f"Failed to load transliteration map: {str(e)}")
+			raise ValueError(f"Failed to load transliteration map: {str(e)}")
 
-    def guess_source_lang(self, text: str) -> str:
-        """Guess the source language based on the first character."""
-        first_char = text[0] if text else ""
-        for lang, chars in self.numerology.alphabets.items():
-            if first_char in chars:
-                return lang if lang != "arabic_hija" else "arabic"
-        return "english"  # Default fallback
+	def guess_source_lang(self, text: str) -> str:
+		"""Guess the source language based on the first character."""
+		first_char = text[0] if text else ""
+		for lang, chars in self.numerology.alphabets.items():
+			if first_char in chars:
+				return lang if lang != "arabic_hija" else "arabic"
+		return "english"  # Default fallback
 
 	def transliterate(self, text: str, target_lang: str, source_lang: Optional[str] = None) -> Dict[str, any]:
 		"""
@@ -99,90 +99,90 @@ class Transliteration:
 
 		return {"primary": primary, "alternatives": alternatives}
 
-    def store_transliteration(self, source_name: str, source_lang: str, target_lang: str, transliterated_name: str, user_id: int = None):
-        """Store transliteration in MongoDB, incrementing score if it exists."""
-        try:
-            update_data = {
-                "source_name": source_name,
-                "source_lang": source_lang,
-                "target_lang": target_lang,
-                "transliterated_name": transliterated_name
-            }
-            if user_id:
-                update_data["user_id"] = user_id
-            self.db.transliteration_collection.update_one(
-                {
-                    "source_name": source_name,
-                    "source_lang": source_lang,
-                    "target_lang": target_lang,
-                    "transliterated_name": transliterated_name
-                },
-                {
-                    "$set": update_data,
-                    "$inc": {"score": 1}
-                },
-                upsert=True
-            )
-        except Exception as e:
-            logger.error(f"Failed to store transliteration: {str(e)}")
+	def store_transliteration(self, source_name: str, source_lang: str, target_lang: str, transliterated_name: str, user_id: int = None):
+		"""Store transliteration in MongoDB, incrementing score if it exists."""
+		try:
+			update_data = {
+				"source_name": source_name,
+				"source_lang": source_lang,
+				"target_lang": target_lang,
+				"transliterated_name": transliterated_name
+			}
+			if user_id:
+				update_data["user_id"] = user_id
+			self.db.transliteration_collection.update_one(
+				{
+					"source_name": source_name,
+					"source_lang": source_lang,
+					"target_lang": target_lang,
+					"transliterated_name": transliterated_name
+				},
+				{
+					"$set": update_data,
+					"$inc": {"score": 1}
+				},
+				upsert=True
+			)
+		except Exception as e:
+			logger.error(f"Failed to store transliteration: {str(e)}")
 
-    def get_transliteration_alternatives(self, source_name: str, source_lang: str, target_lang: str) -> List[Dict]:
-        """Retrieve cached transliterations from MongoDB, sorted by score."""
-        try:
-            return list(self.db.transliteration_collection.find(
-                {
-                    "source_name": source_name,
-                    "source_lang": source_lang,
-                    "target_lang": target_lang
-                }
-            ).sort([("score", -1), ("transliterated_name", 1)]))
-        except Exception as e:
-            logger.error(f"Failed to retrieve transliteration alternatives: {str(e)}")
-            return []
+	def get_transliteration_alternatives(self, source_name: str, source_lang: str, target_lang: str) -> List[Dict]:
+		"""Retrieve cached transliterations from MongoDB, sorted by score."""
+		try:
+			return list(self.db.transliteration_collection.find(
+				{
+					"source_name": source_name,
+					"source_lang": source_lang,
+					"target_lang": target_lang
+				}
+			).sort([("score", -1), ("transliterated_name", 1)]))
+		except Exception as e:
+			logger.error(f"Failed to retrieve transliteration alternatives: {str(e)}")
+			return []
 
-    def format_response(self, transliterated_name: str, target_lang: str, output_lang: str) -> str:
-        """Format transliteration response using i18n."""
-        lang_names = {
-            "arabic": {
-                "turkish": "Arapça",
-                "english": "Arabic",
-                "latin": "Arabicus",
-                "arabic": "عربي",
-                "hebrew": "עربית"
-            },
-            "english": {
-                "turkish": "İngilizce",
-                "english": "English",
-                "latin": "Anglicus",
-                "arabic": "إنجليزي",
-                "hebrew": "אנגלית"
-            },
-            "latin": {
-                "turkish": "Latince",
-                "english": "Latin",
-                "latin": "Latinus",
-                "arabic": "لاتيني",
-                "hebrew": "לטינית"
-            },
-            "hebrew": {
-                "turkish": "İbranice",
-                "english": "Hebrew",
-                "latin": "Hebraicus",
-                "arabic": "عبري",
-                "hebrew": "עברית"
-            },
-            "turkish": {
-                "turkish": "Türkçe",
-                "english": "Turkish",
-                "latin": "Turcicus",
-                "arabic": "تركي",
-                "hebrew": "טורקית"
-            }
-        }
-        lang_name = lang_names.get(target_lang, {}).get(output_lang, target_lang)
-        return self.i18n.t(
-            "TRANSLITERATION_RESPONSE",
-            output_lang,
-            lang_name=lang_name,
-            result=transliterated_name
-        )
+	def format_response(self, transliterated_name: str, target_lang: str, output_lang: str) -> str:
+		"""Format transliteration response using i18n."""
+		lang_names = {
+			"arabic": {
+				"turkish": "Arapça",
+				"english": "Arabic",
+				"latin": "Arabicus",
+				"arabic": "عربي",
+				"hebrew": "עربית"
+			},
+			"english": {
+				"turkish": "İngilizce",
+				"english": "English",
+				"latin": "Anglicus",
+				"arabic": "إنجليزي",
+				"hebrew": "אנגלית"
+			},
+			"latin": {
+				"turkish": "Latince",
+				"english": "Latin",
+				"latin": "Latinus",
+				"arabic": "لاتيني",
+				"hebrew": "לטינית"
+			},
+			"hebrew": {
+				"turkish": "İbranice",
+				"english": "Hebrew",
+				"latin": "Hebraicus",
+				"arabic": "عبري",
+				"hebrew": "עברית"
+			},
+			"turkish": {
+				"turkish": "Türkçe",
+				"english": "Turkish",
+				"latin": "Turcicus",
+				"arabic": "تركي",
+				"hebrew": "טורקית"
+			}
+		}
+		lang_name = lang_names.get(target_lang, {}).get(output_lang, target_lang)
+		return self.i18n.t(
+			"TRANSLITERATION_RESPONSE",
+			output_lang,
+			lang_name=lang_name,
+			result=transliterated_name
+		)
