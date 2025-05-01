@@ -30,6 +30,10 @@ async def start_handle(update: Update, context: CallbackContext):
 	db = Database()
 	i18n = I18n()
 
+	# Get user's Telegram language code and normalize it
+	user_language = user.language_code.split('-')[0] if user.language_code else 'en'
+	available_languages = ['en', 'tr', 'ar', 'he', 'la']
+
 	# Store user in database if not exists
 	if not db.user_collection.find_one({"telegram_id": user.id}):
 		db.user_collection.insert_one({
@@ -37,13 +41,9 @@ async def start_handle(update: Update, context: CallbackContext):
 			"username": user.username,
 			"first_name": user.first_name,
 			"last_name": user.last_name,
-			"language_code": lang,
+			"language_code": user_language,
 			"is_beta_tester": False
 		})
-
-	# Get user's Telegram language code and normalize it
-	user_language = user.language_code.split('-')[0] if user.language_code else 'en'
-	available_languages = ['en', 'tr', 'ar', 'he', 'la']
 
 	# Set language: use user's Telegram language if supported, else default to 'en'
 	try:
