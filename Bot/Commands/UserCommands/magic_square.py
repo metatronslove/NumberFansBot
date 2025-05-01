@@ -4,7 +4,7 @@ from telegram.ext import CallbackContext
 from telegram.constants import ParseMode
 from ...database import Database
 from ...i18n import I18n
-from ...MagicSquare import MagicSquare
+from ...MagicSquare import MagicSquareGenerator
 from ...config import config
 from datetime import datetime
 
@@ -69,7 +69,7 @@ async def magic_square_handle(update: Update, context: CallbackContext):
             )
             return
 
-        magic_square = MagicSquare()
+        magic_square = MagicSquareGenerator()
         square = magic_square.generate(row_sum, n=3)
         square_str = "\n".join(["  ".join(map(str, row)) for row in square])
         response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square_str)
