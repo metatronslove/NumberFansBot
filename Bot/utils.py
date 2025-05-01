@@ -1,4 +1,3 @@
-```python
 import json
 import logging
 from pathlib import Path
@@ -30,4 +29,3 @@ def get_warning_description(value, language):
     except Exception as e:
         logger.error(f"Error reading warningNumbers.json: {str(e)}")
         return ""
-```
