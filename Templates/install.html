@@ -1,114 +1,114 @@
 <!DOCTYPE html>
 <html lang="{{ lang }}" {{ 'dir="rtl"' if lang in ['ar', 'he'] else '' }}>
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>{{ i18n.t('INSTALL_TITLE', lang) }}</title>
-	<link rel="apple-touch-icon" sizes="180x180" href="/Assets/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="/Assets/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="/Assets/favicon-16x16.png">
-	<link rel="manifest" href="/Assets/site.webmanifest">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-	<link rel="stylesheet" href="/Assets/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ i18n.t('INSTALL_TITLE', lang) }}</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-	<div class="particles" id="particles-js"></div>
-	<div class="language-switcher">
-		<select onchange="window.location.href='/install?lang=' + this.value">
-			{% for code in ['en', 'tr', 'ar', 'he', 'la'] %}
-				<option value="{{ code }}" {{ 'selected' if code == lang else '' }}>{{ i18n.t('LANGUAGE_NAME_' + code.upper(), lang) }}</option>
-			{% endfor %}
-		</select>
-	</div>
-	<div class="logo-container">
-		<div class="logo">NumberFansBot</div>
-		<div class="tagline">{{ i18n.t('TAGLINE', lang) }}</div>
-	</div>
-	<div class="status-container">
-		<h2>{{ i18n.t('INSTALL_TITLE', lang) }}</h2>
-		<div class="install-form">
-			<form method="POST">
-				<div class="form-group">
-					<label for="telegram_token">{{ i18n.t('TELEGRAM_TOKEN', lang) }}</label>
-					<input type="text" id="telegram_token" name="telegram_token" class="form-control">
-				</div>
-				<div class="form-group">
-					<label for="bot_username">{{ i18n.t('BOT_USERNAME', lang) }}</label>
-					<input type="text" id="bot_username" name="bot_username" class="form-control" value="NumbersFanBot">
-				</div>
-				<div class="form-group">
-					<label for="webhook_url">{{ i18n.t('WEBHOOK_URL', lang) }}</label>
-					<input type="text" id="webhook_url" name="webhook_url" class="form-control">
-				</div>
-				<div class="form-group">
-					<label for="mongodb_uri">{{ i18n.t('MONGODB_URI', lang) }}</label>
-					<input type="text" id="mongodb_uri" name="mongodb_uri" class="form-control">
-				</div>
-				<div class="form-group">
-					<label for="github_username">{{ i18n.t('GITHUB_USERNAME', lang) }}</label>
-					<input type="text" id="github_username" name="github_username" class="form-control">
-				</div>
-				<div class="form-group">
-					<label for="github_token">{{ i18n.t('GITHUB_TOKEN', lang) }}</label>
-					<input type="text" id="github_token" name="github_token" class="form-control">
-				</div>
-				<div class="form-group">
-					<label for="github_repo">{{ i18n.t('GITHUB_REPO', lang) }}</label>
-					<input type="text" id="github_repo" name="github_repo" class="form-control">
-				</div>
-				<div class="form-group">
-					<label for="github_pages_url">{{ i18n.t('GITHUB_PAGES_URL', lang) }}</label>
-					<input type="text" id="github_pages_url" name="github_pages_url" class="form-control">
-				</div>
-				<div class="form-group">
-					<label for="payment_provider_token">{{ i18n.t('PAYMENT_PROVIDER_TOKEN', lang) }}</label>
-					<input type="text" id="payment_provider_token" name="payment_provider_token" class="form-control">
-				</div>
-				<div class="form-group">
-					<label for="currency_exchange_token">{{ i18n.t('CURRENCY_EXCHANGE_TOKEN', lang) }}</label>
-					<input type="text" id="currency_exchange_token" name="currency_exchange_token" class="form-control">
-				</div>
-				<div class="form-group">
-					<label for="huggingface_access_token">{{ i18n.t('HUGGINGFACE_ACCESS_TOKEN', lang) }}</label>
-					<input type="text" id="huggingface_access_token" name="huggingface_access_token" class="form-control">
-				</div>
-				<div class="form-group">
-					<label for="admin_username">{{ i18n.t('ADMIN_USERNAME', lang) }}</label>
-					<input type="text" id="admin_username" name="admin_username" class="form-control" value="admin">
-				</div>
-				<div class="form-group">
-					<label for="admin_password">{{ i18n.t('ADMIN_PASSWORD', lang) }}</label>
-					<input type="text" id="admin_password" name="admin_password" class="form-control" value="password123">
-				</div>
-				<button type="submit" class="btn btn-primary">{{ i18n.t('INSTALL_SUBMIT', lang) }}</button>
-			</form>
-		</div>
-		<div class="install-messages">
-			{% for message in messages %}
-				<div class="error">{{ message }}</div>
-			{% endfor %}
-		</div>
-	</div>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-	<script>
-		particlesJS('particles-js', {
-			"particles": {
-				"number": {"value": 80, "density": {"enable": true, "value_area": 800}},
-				"color": {"value": "#ffffff"},
-				"shape": {"type": "circle"},
-				"opacity": {"value": 0.5, "random": true, "anim": {"enable": true, "speed": 1, "opacity_min": 0.1, "sync": false}},
-				"size": {"value": 3, "random": true, "anim": {"enable": true, "speed": 2, "size_min": 0.1, "sync": false}},
-				"line_linked": {"enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1},
-				"move": {"enable": true, "speed": 2, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false, "attract": {"enable": true, "rotateX": 600, "rotateY": 1200}}
-			},
-			"interactivity": {
-				"detect_on": "canvas",
-				"events": {"onhover": {"enable": true, "mode": "grab"}, "onclick": {"enable": true, "mode": "push"}, "resize": true},
-				"modes": {"grab": {"distance": 140, "line_linked": {"opacity": 1}}, "push": {"particles_nb": 4}}
-			},
-			"retina_detect": true
-		});
-	</script>
+    <div class="particles" id="particles-js"></div>
+    <div class="language-switcher">
+        <select onchange="window.location.href='/install?lang=' + this.value">
+            {% for code in ['en', 'tr', 'ar', 'he', 'la'] %}
+                <option value="{{ code }}" {{ 'selected' if code == lang else '' }}>{{ i18n.t('LANGUAGE_NAME_' + code.upper(), lang) }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="logo-container">
+        <div class="logo">NumberFansBot</div>
+        <div class="tagline">{{ i18n.t('TAGLINE', lang) }}</div>
+    </div>
+    <div class="status-container">
+        <h2>{{ i18n.t('INSTALL_TITLE', lang) }}</h2>
+        <div class="install-form">
+            <form method="POST">
+                <div class="form-group">
+                    <label for="telegram_token">{{ i18n.t('TELEGRAM_TOKEN', lang) }}</label>
+                    <input type="text" id="telegram_token" name="telegram_token" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="bot_username">{{ i18n.t('BOT_USERNAME', lang) }}</label>
+                    <input type="text" id="bot_username" name="bot_username" class="form-control" value="NumbersFanBot">
+                </div>
+                <div class="form-group">
+                    <label for="webhook_url">{{ i18n.t('WEBHOOK_URL', lang) }}</label>
+                    <input type="text" id="webhook_url" name="webhook_url" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="mongodb_uri">{{ i18n.t('MONGODB_URI', lang) }}</label>
+                    <input type="text" id="mongodb_uri" name="mongodb_uri" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="github_username">{{ i18n.t('GITHUB_USERNAME', lang) }}</label>
+                    <input type="text" id="github_username" name="github_username" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="github_token">{{ i18n.t('GITHUB_TOKEN', lang) }}</label>
+                    <input type="text" id="github_token" name="github_token" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="github_repo">{{ i18n.t('GITHUB_REPO', lang) }}</label>
+                    <input type="text" id="github_repo" name="github_repo" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="github_pages_url">{{ i18n.t('GITHUB_PAGES_URL', lang) }}</label>
+                    <input type="text" id="github_pages_url" name="github_pages_url" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="payment_provider_token">{{ i18n.t('PAYMENT_PROVIDER_TOKEN', lang) }}</label>
+                    <input type="text" id="payment_provider_token" name="payment_provider_token" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="currency_exchange_token">{{ i18n.t('CURRENCY_EXCHANGE_TOKEN', lang) }}</label>
+                    <input type="text" id="currency_exchange_token" name="currency_exchange_token" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="huggingface_access_token">{{ i18n.t('HUGGINGFACE_ACCESS_TOKEN', lang) }}</label>
+                    <input type="text" id="huggingface_access_token" name="huggingface_access_token" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="admin_username">{{ i18n.t('ADMIN_USERNAME', lang) }}</label>
+                    <input type="text" id="admin_username" name="admin_username" class="form-control" value="admin">
+                </div>
+                <div class="form-group">
+                    <label for="admin_password">{{ i18n.t('ADMIN_PASSWORD', lang) }}</label>
+                    <input type="text" id="admin_password" name="admin_password" class="form-control" value="password123">
+                </div>
+                <button type="submit" class="btn btn-primary">{{ i18n.t('INSTALL_SUBMIT', lang) }}</button>
+            </form>
+        </div>
+        <div class="install-messages">
+            {% for message in messages %}
+                <div class="error">{{ message }}</div>
+            {% endfor %}
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {"value": 80, "density": {"enable": true, "value_area": 800}},
+                "color": {"value": "#ffffff"},
+                "shape": {"type": "circle"},
+                "opacity": {"value": 0.5, "random": true, "anim": {"enable": true, "speed": 1, "opacity_min": 0.1, "sync": false}},
+                "size": {"value": 3, "random": true, "anim": {"enable": true, "speed": 2, "size_min": 0.1, "sync": false}},
+                "line_linked": {"enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1},
+                "move": {"enable": true, "speed": 2, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false, "attract": {"enable": true, "rotateX": 600, "rotateY": 1200}}
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {"onhover": {"enable": true, "mode": "grab"}, "onclick": {"enable": true, "mode": "push"}, "resize": true},
+                "modes": {"grab": {"distance": 140, "line_linked": {"opacity": 1}}, "push": {"particles_nb": 4}}
+            },
+            "retina_detect": true
+        });
+    </script>
 </body>
 </html>

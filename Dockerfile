@@ -2,12 +2,12 @@ FROM python:3.10-slim
 
 # Install system dependencies
 RUN apt-get update && \
-    DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
-    python3-pip \
-    build-essential \
-    ffmpeg \
-    git && \
-    rm -rf /var/lib/apt/lists/*
+	DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
+	python3-pip \
+	build-essential \
+	ffmpeg \
+	git && \
+	rm -rf /var/lib/apt/lists/*
 
 # Upgrade pip and install dependencies
 RUN mkdir ./code
@@ -23,4 +23,5 @@ WORKDIR /code
 EXPOSE 8000
 
 # Run gunicorn for Flask app
+RUN python Bot/seed_admin.py
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "Bot.admin_panel:app"]

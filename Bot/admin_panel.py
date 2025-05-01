@@ -73,44 +73,74 @@ def get_fields():
 @app.route('/<lang>')
 @app.route('/')
 def index(lang='en'):
-	if 'username' not in session:
-		return redirect(url_for('login', lang=lang))
-	db = Database()
-	i18n = I18n()
-	if lang not in config.available_languages:
-		lang = 'en'
-	users = list(db.user_collection.find())
-	return render_template('dashboard.html', i18n=i18n, lang=lang, users=users, fields=get_fields(), config=config)
+    if 'username' not in session:
+        return redirect(url_for('login', lang=lang))
+    db = Database()
+    i18n = I18n()
+    if lang not in config.available_languages:
+        lang = 'en'
+    users = list(db.user_collection.find())
+    return render_template('dashboard.html', i18n=i18n, lang=lang, users=users, fields=get_fields(), config=config)
 
 @app.route('/<lang>/login', methods=['GET', 'POST'])
 def login(lang='en'):
-	db = Database()
-	i18n = I18n()
-	if lang not in config.available_languages:
-		lang = 'en'
-	if request.method == 'POST':
-		username = request.form.get('username')
-		password = request.form.get('password')
-		user = db.user_collection.find_one({"username": username, "password": password})
-		if user:
-			session['username'] = username
-			session['user_id'] = str(user['_id'])
-			flash(i18n.t("LOGIN_SUCCESS", lang), 'success')
-			return redirect(url_for('index', lang=lang))
-		else:
-			flash(i18n.t("LOGIN_ERROR", lang), 'error')
-	return render_template('login.html', i18n=i18n, lang=lang)
+    db = Database()
+    i18n = I18n()
+    if lang not in config.available_languages:
+        lang = 'en'
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if not username or not password:
+            flash(i18n.t("ERROR_INVALID_INPUT", lang, error="Username and password are required"), 'error')
+            return render_template('login.html', i18n=i18n, lang=lang)
+        user = db.user_collection.find_one({"username": username})
+        if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
+            session['username'] = username
+            session['user_id'] = str(user['_id'])
+            flash(i18n.t("LOGIN_SUCCESS", lang), 'success')
+            return redirect(url_for('index', lang=lang))
+        else:
+            flash(i18n.t("LOGIN_ERROR", lang), 'error')
+    return render_template('login.html', i18n=i18n, lang=lang)
+
+@app.route('/<lang>/register', methods=['GET', 'POST'])
+def register(lang='en'):
+    db = Database()
+    i18n = I18n()
+    if lang not in config.available_languages:
+        lang = 'en'
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if not username or not password:
+            flash(i18n.t("ERROR_INVALID_INPUT", lang, error="Username and password are required"), 'error')
+            return render_template('register.html', i18n=i18n, lang=lang)
+        if db.user_collection.find_one({"username": username}):
+            flash(i18n.t("REGISTER_ERROR", lang, error="Username already exists"), 'error')
+            return render_template('register.html', i18n=i18n, lang=lang)
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        user_id = db.user_collection.insert_one({
+            "username": username,
+            "password": hashed_password,
+            "is_admin": True  # Set as admin for simplicity
+        }).inserted_id
+        session['username'] = username
+        session['user_id'] = str(user_id)
+        flash(i18n.t("REGISTER_SUCCESS", lang), 'success')
+        return redirect(url_for('index', lang=lang))
+    return render_template('register.html', i18n=i18n, lang=lang)
 
 @app.route('/<lang>/logout')
 def logout(lang='en'):
-	session.pop('username', None)
-	session.pop('user_id', None)
-	db = Database()
-	i18n = I18n()
-	if lang not in config.available_languages:
-		lang = 'en'
-	flash(i18n.t("LOGOUT_SUCCESS", lang), 'success')
-	return redirect(url_for('login', lang=lang))
+    session.pop('username', None)
+    session.pop('user_id', None)
+    db = Database()
+    i18n = I18n()
+    if lang not in config.available_languages:
+        lang = 'en'
+    flash(i18n.t("LOGOUT_SUCCESS", lang), 'success')
+    return redirect(url_for('login', lang=lang))
 
 @app.route('/<lang>/save_config', methods=['POST'])
 def save_config_route(lang='en'):

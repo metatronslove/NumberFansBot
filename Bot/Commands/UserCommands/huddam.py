@@ -196,4 +196,5 @@ def get_huddam_conversation_handler():
 			LANGUAGE: [CallbackQueryHandler(huddam_language)],
 		},
 		fallbacks=[CommandHandler("cancel", huddam_cancel)],
+        per_message=True
 	)

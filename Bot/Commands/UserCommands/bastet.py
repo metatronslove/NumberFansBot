@@ -220,4 +220,5 @@ def get_bastet_conversation_handler():
 			LANGUAGE: [CallbackQueryHandler(bastet_language)],
 		},
 		fallbacks=[CommandHandler("cancel", bastet_cancel)],
+        per_message=True
 	)

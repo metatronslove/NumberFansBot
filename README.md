@@ -33,38 +33,38 @@ NumberFansBot, Telegram üzerinden numeroloji, ebced (abjad) ve sihirli kare hes
 2. **Ortam Değişkenlerini Ayarlayın**:
    - Render.com'da yeni bir Web Servisi oluşturun.
    - "Ortam" sekmesinde aşağıdaki ortam değişkenlerini ekleyin:
-     ```plaintext
-     TELEGRAM_TOKEN=123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
-     MONGODB_URI=mongodb+srv://kullanici:sifre@cluster0.mongodb.net/numberfansbot
-     GITHUB_USERNAME=kullanici-adi
-     GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-     PAYMENT_PROVIDER_TOKEN=pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-     CURRENCY_EXCHANGE_TOKEN=doviz-api-anahtari
-     HUGGINGFACE_ACCESS_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-     AI_ACCESS_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-     AI_MODEL_URL=https://api-inference.huggingface.co/models/mixtralai/Mixtral-8x7B-Instruct-v0.1
-     FLASK_SECRET_KEY=benzersiz-gizli-anahtar
-     PORT=8000
-     PYTHONUNBUFFERED=1
-     BOT_USERNAME=@BotKullaniciAdi
-     WEBHOOK_URL=https://<your-render-url>/webhook
-     GITHUB_REPO=kullanici-adi/depo-adi
-     GITHUB_PAGES_URL=https://kullanici-adi.github.io/depo-adi
-     ```
+	 ```plaintext
+	 TELEGRAM_TOKEN=123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
+	 MONGODB_URI=mongodb+srv://kullanici:sifre@cluster0.mongodb.net/numberfansbot
+	 GITHUB_USERNAME=kullanici-adi
+	 GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+	 PAYMENT_PROVIDER_TOKEN=pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+	 CURRENCY_EXCHANGE_TOKEN=doviz-api-anahtari
+	 HUGGINGFACE_ACCESS_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+	 AI_ACCESS_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+	 AI_MODEL_URL=https://api-inference.huggingface.co/models/mixtralai/Mixtral-8x7B-Instruct-v0.1
+	 FLASK_SECRET_KEY=benzersiz-gizli-anahtar
+	 PORT=8000
+	 PYTHONUNBUFFERED=1
+	 BOT_USERNAME=@BotKullaniciAdi
+	 WEBHOOK_URL=https://<your-render-url>/webhook
+	 GITHUB_REPO=kullanici-adi/depo-adi
+	 GITHUB_PAGES_URL=https://kullanici-adi.github.io/depo-adi
+	 ```
    - `FLASK_SECRET_KEY` oluşturmak için:
-     ```bash
-     python -c "import secrets; print(secrets.token_urlsafe(32))"
-     ```
+	 ```bash
+	 python -c "import secrets; print(secrets.token_urlsafe(32))"
+	 ```
 
 3. **Bağımlılıkları Yükleyin**:
    - `requirements.txt` dosyasını kontrol edin:
-     ```plaintext
-     python-telegram-bot>=20.0
-     pymongo>=4.0
-     flask>=2.0
-     gunicorn>=20.0
-     requests>=2.0
-     ```
+	 ```plaintext
+	 python-telegram-bot>=20.0
+	 pymongo>=4.0
+	 flask>=2.0
+	 gunicorn>=20.0
+	 requests>=2.0
+	 ```
    - Render.com otomatik olarak `requirements.txt` üzerinden bağımlılıkları yükler.
 
 4. **Değişiklikleri Yükleyin**:
@@ -93,22 +93,22 @@ NumberFansBot, Telegram üzerinden numeroloji, ebced (abjad) ve sihirli kare hes
 
 2. **Komut Örnekleri**:
    - **Ebced Hesaplama**:
-     ```plaintext
-     /abjad naber
-     ```
-     - Alfabe sırası, tür, şedde ve detay seçeneklerini seçin.
-     - Sonuç: `Naber için ebced değeri: 36\nUyarı: Bu değer (36) önemlidir: İlah isminin ebced değeri (şeddeliler tek)`
+	 ```plaintext
+	 /abjad naber
+	 ```
+	 - Alfabe sırası, tür, şedde ve detay seçeneklerini seçin.
+	 - Sonuç: `Naber için ebced değeri: 36\nUyarı: Bu değer (36) önemlidir: İlah isminin ebced değeri (şeddeliler tek)`
    - **Bastet Hesaplama**:
-     ```plaintext
-     /bastet 37
-     ```
-     - Tekrar sayısı, tablo ve dil seçin.
-     - Sonuç: `37 için Bastet sonucu (tekrar: 1, tablo: 0): 37\nUyarı: Bu değer (37) önemlidir: Evvel isminin ebced değeri (şeddeliler tek)`
+	 ```plaintext
+	 /bastet 37
+	 ```
+	 - Tekrar sayısı, tablo ve dil seçin.
+	 - Sonuç: `37 için Bastet sonucu (tekrar: 1, tablo: 0): 37\nUyarı: Bu değer (37) önemlidir: Evvel isminin ebced değeri (şeddeliler tek)`
    - **Numeroloji Hesaplama**:
-     ```plaintext
-     /numerology naber turkish
-     ```
-     - Sonuç: `Naber için numeroloji (türkçe, normal): 36\nUyarı: Bu değer (36) önemlidir: İlah isminin ebced değeri (şeddeliler tek)`
+	 ```plaintext
+	 /numerology naber turkish
+	 ```
+	 - Sonuç: `Naber için numeroloji (türkçe, normal): 36\nUyarı: Bu değer (36) önemlidir: İlah isminin ebced değeri (şeddeliler tek)`
 
 3. **Yönetici Paneli**:
    - `https://<your-render-url>/en/login` adresine gidin.

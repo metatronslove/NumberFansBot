@@ -275,4 +275,5 @@ def get_abjad_conversation_handler():
 			DETAIL: [CallbackQueryHandler(abjad_detail)],
 		},
 		fallbacks=[CommandHandler("cancel", abjad_cancel)],
+        per_message=True
 	)

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ i18n.t('LOGIN_TITLE', lang) }}</title>
+    <title>{{ i18n.t('REGISTER_TITLE', lang) }}</title>
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
@@ -14,7 +14,7 @@
 <body>
     <div class="particles" id="particles-js"></div>
     <div class="language-switcher">
-        <select onchange="window.location.href='/' + this.value + '/login'">
+        <select onchange="window.location.href='/' + this.value + '/register'">
             {% for code in ['en', 'tr', 'ar', 'he', 'la'] %}
                 <option value="{{ code }}" {{ 'selected' if code == lang else '' }}>{{ i18n.t('LANGUAGE_NAME_' + code.upper(), lang) }}</option>
             {% endfor %}
@@ -26,7 +26,7 @@
     </div>
     <div class="container">
         <div class="bg-gray-800 p-6 rounded-lg max-w-md mx-auto mt-10">
-            <h1 class="text-2xl font-bold mb-4 text-center text-white">{{ i18n.t('LOGIN_TITLE', lang) }}</h1>
+            <h1 class="text-2xl font-bold mb-4 text-center text-white">{{ i18n.t('REGISTER_TITLE', lang) }}</h1>
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
@@ -34,19 +34,19 @@
                     {% endfor %}
                 {% endif %}
             {% endwith %}
-            <form method="POST" action="{{ url_for('login', lang=lang) }}">
+            <form method="POST" action="{{ url_for('register', lang=lang) }}">
                 <div class="mb-4">
-                    <label class="block text-gray-300">{{ i18n.t('LOGIN_USERNAME', lang) }}</label>
+                    <label class="block text-gray-300">{{ i18n.t('REGISTER_USERNAME', lang) }}</label>
                     <input type="text" name="username" class="w-full p-2 border rounded bg-gray-700 text-white" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-300">{{ i18n.t('LOGIN_PASSWORD', lang) }}</label>
+                    <label class="block text-gray-300">{{ i18n.t('REGISTER_PASSWORD', lang) }}</label>
                     <input type="password" name="password" class="w-full p-2 border rounded bg-gray-700 text-white" required>
                 </div>
-                <button type="submit" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 w-full">{{ i18n.t('LOGIN_SUBMIT', lang) }}</button>
+                <button type="submit" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 w-full">{{ i18n.t('REGISTER_SUBMIT', lang) }}</button>
             </form>
             <p class="mt-3 text-center text-gray-300">
-                <a href="{{ url_for('register', lang=lang) }}" class="text-blue-400 hover:underline">{{ i18n.t('REGISTER_LINK', lang) }}</a>
+                <a href="{{ url_for('login', lang=lang) }}" class="text-blue-400 hover:underline">{{ i18n.t('BACK_TO_LOGIN', lang) }}</a>
             </p>
         </div>
     </div>
