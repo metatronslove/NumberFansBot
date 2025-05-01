@@ -2,7 +2,7 @@ import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application, CommandHandler, MessageHandler, CallbackQueryHandler,
-    ConversationHandler, filters
+    ConversationHandler, filters, CallbackContext
 )
 from telegram.constants import ParseMode
 from ...database import Database
