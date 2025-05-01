@@ -27,6 +27,7 @@ class Config:
 
 	def _load_attributes(self):
 		# Standard settings
+		self.config_dir = '../Config'
 		self.telegram_token = self._config.get('telegram_token') or os.getenv('TELEGRAM_TOKEN')
 		self.bot_username = self._config.get('bot_username') or os.getenv('BOT_USERNAME', '@NumberFansBot')
 		self.webhook_url = self._config.get('webhook_url') or os.getenv('WEBHOOK_URL')

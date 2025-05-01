@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 from pymongo import MongoClient
 from .i18n import I18n
-from .config import Config
+from .admin_panel import config
 from .database import Database
 from .Numerology import UnifiedNumerology
 import logging
