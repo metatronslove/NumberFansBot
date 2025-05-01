@@ -5,10 +5,10 @@ from .config import Config
 import logging
 
 logger = logging.getLogger(__name__)
+config = Config()
 
 class Database:
 	def __init__(self):
-		config = Config()
 		self.client = MongoClient(config.mongodb_uri)
 		self.db = self.client['numberfansbot']
 		self.user_collection = self.db['users']
