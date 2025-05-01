@@ -20,7 +20,6 @@ import bcrypt
 import logging
 import yaml
 from pathlib import Path
-from asgiref.wsgi import WsgiToAsgi
 
 app = Flask(__name__, template_folder='../Templates/', static_folder='../Assets', static_url_path='/Assets')
 config = Config()
@@ -248,7 +247,7 @@ def delete_model(lang='en'):
         flash("Model deleted successfully", 'success')
     except Exception as e:
         logger.error(f"Delete model error: {str(e)}")
-        flash(i18n.t("ERROR_GENERAL", lang, error="Failed to add model"), 'error')
+        flash(i18n.t("ERROR_GENERAL", lang, error="Failed to delete model"), 'error')
     users = list(db.user_collection.find())
     return render_template('dashboard.html', i18n=i18n, lang=lang, users=users, fields=get_fields(), config=config)
 
@@ -299,7 +298,7 @@ async def webhook():
         return '', 500
 
 @app.route('/set_webhook', methods=['GET'])
-async def set_webhook():
+def set_webhook():
     if not config.telegram_token:
         logger.error("TELEGRAM_TOKEN is not set")
         return "Failed to set webhook: TELEGRAM_TOKEN is not set", 500
@@ -310,7 +309,11 @@ async def set_webhook():
         webhook_url = f"https://{request.host}/bot{config.telegram_token}"
 
     try:
-        result = await telegram_app.bot.set_webhook(url=webhook_url)
+        # Run async set_webhook in sync context
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result = loop.run_until_complete(telegram_app.bot.set_webhook(url=webhook_url))
+        loop.close()
         if result:
             logger.info(f"Webhook set successfully to {webhook_url}")
             return f"Webhook set to {webhook_url}", 200
@@ -320,6 +323,6 @@ async def set_webhook():
     except Exception as e:
         logger.error(f"Set webhook error: {str(e)}")
         return f"Failed to set webhook: {str(e)}", 500
-
-# Wrap Flask app for ASGI compatibility
-app = WsgiToAsgi(app)
+    finally:
+        if not loop.is_closed():
+            loop.close()
