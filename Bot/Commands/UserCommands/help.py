@@ -4,6 +4,7 @@ from telegram.constants import ParseMode
 from ...database import Database
 from ...i18n import I18n
 from datetime import datetime
+from ...admin_panel import config  # Import config from admin_panel
 
 async def register_user_if_not_exists(update: Update, context: CallbackContext, user):
 	db = Database()

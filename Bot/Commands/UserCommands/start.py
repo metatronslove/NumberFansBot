@@ -6,6 +6,7 @@ from ...database import Database
 from ...i18n import I18n
 from datetime import datetime
 from .language import language_handle
+from ...admin_panel import config  # Import config from admin_panel
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -27,6 +28,17 @@ async def start_handle(update: Update, context: CallbackContext):
 	user_id = user.id
 	db = Database()
 	i18n = I18n()
+
+    # Store user in database if not exists
+    if not db.user_collection.find_one({"telegram_id": user.id}):
+        db.user_collection.insert_one({
+            "telegram_id": user.id,
+            "username": user.username,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "language_code": lang,
+            "is_beta_tester": False
+        })
 
 	# Get user's Telegram language code and normalize it
 	user_language = user.language_code.split('-')[0] if user.language_code else 'en'
