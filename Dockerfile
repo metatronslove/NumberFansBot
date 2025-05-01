@@ -16,7 +16,8 @@ RUN pip3 install --no-cache-dir -U pip wheel setuptools==69.5.1 COPY ./requireme
 
 ## Copy application code
 
-COPY . /code WORKDIR /code
+COPY . /code
+WORKDIR /code
 
 ## Expose port for Render.com
 
