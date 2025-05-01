@@ -2,17 +2,17 @@ import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 from telegram.constants import ParseMode
+from ...config import Config
 from ...database import Database
 from ...i18n import I18n
 from datetime import datetime
 from .language import language_handle
-from ...config import Config
 
 # Set up logging
 logger = logging.getLogger(__name__)
+config = Config()
 
 async def register_user_if_not_exists(update: Update, context: CallbackContext, user, language):
-	config = Config()
 	db = Database()
 	# Store user in database if not exists
 	if not db.user_collection.find_one({"telegram_id": user.id}):
@@ -26,7 +26,6 @@ async def register_user_if_not_exists(update: Update, context: CallbackContext, 
 		})
 
 async def start_handle(update: Update, context: CallbackContext):
-	config = Config()
 	user = update.message.from_user
 
 	# Get user's Telegram language code and normalize it
