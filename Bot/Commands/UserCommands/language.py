@@ -3,7 +3,7 @@ from telegram.ext import CallbackContext
 from telegram.constants import ParseMode
 from ...database import Database
 from ...i18n import I18n
-from ...config import available_languages
+from ...config import Config
 from datetime import datetime
 
 async def register_user_if_not_exists(update: Update, context: CallbackContext, user):
@@ -26,7 +26,7 @@ async def language_handle(update: Update, context: CallbackContext):
 	telegram_lang = user.language_code or "en"
 	current_lang = db.get_user_language(user_id) or telegram_lang
 
-	if current_lang not in available_languages:
+	if current_lang not in config.available_languages:
 		current_lang = "en"
 
 	# Increment command usage
@@ -40,9 +40,9 @@ async def language_handle(update: Update, context: CallbackContext):
 			await show_language_selection(update, current_lang)
 			return
 
-		if lang_code not in available_languages:
+		if lang_code not in config.available_languages:
 			await update.message.reply_text(
-				i18n.t("LANGUAGE_INVALID", current_lang, languages=", ".join(available_languages)),
+				i18n.t("LANGUAGE_INVALID", current_lang, languages=", ".join(config.available_languages)),
 				parse_mode=ParseMode.MARKDOWN
 			)
 			return
