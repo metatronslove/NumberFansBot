@@ -1,24 +1,14 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CallbackContext
+from telegram.ext import ContextTypes
 from telegram.constants import ParseMode
 from ...database import Database
 from ...i18n import I18n
 from ...transliteration import Transliteration
+from ...utils import register_user_if_not_exists
 from datetime import datetime
 import urllib.parse
 
-async def register_user_if_not_exists(update: Update, context: CallbackContext, user):
-	db = Database()
-	if not db.check_if_user_exists(user.id):
-		db.add_new_user(
-			user_id=user.id,
-			chat_id=update.message.chat_id,
-			username=user.username or "",
-			first_name=user.first_name or "",
-			last_name=user.last_name or "",
-		)
-
-async def transliterate_handle(update: Update, context: CallbackContext):
+async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	user = update.message.from_user
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id
@@ -55,6 +45,7 @@ async def transliterate_handle(update: Update, context: CallbackContext):
 	try:
 		result = transliteration.transliterate(text, target_lang, source_lang)
 		primary = result["primary"]
+		response = i18n.t("TRANSLITERATION_RESULT", language, text=text, source_lang=source_lang, target_lang=target_lang, result=primary)
 		transliteration.store_transliteration(text, source_lang, target_lang, primary, user_id=user_id)
 
 		# Add buttons for suggestions and history

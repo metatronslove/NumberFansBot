@@ -2,32 +2,20 @@ import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
 	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
-	ConversationHandler, filters, CallbackContext
+	ConversationHandler, filters, ContextTypes
 )
 from telegram.constants import ParseMode
 from ...database import Database
 from ...i18n import I18n
-from ...config import config
+from ...admin_panel import config
 from ...Abjad import Abjad
+from ...utils import register_user_if_not_exists, get_warning_description
 from datetime import datetime
-from ...utils import get_warning_description  # Import helper
 import requests
 
 logger = logging.getLogger(__name__)
 
-# Conversation states
 REPETITION, TABLE, LANGUAGE = range(3)
-
-async def register_user_if_not_exists(update: Update, context: CallbackContext, user):
-	db = Database()
-	if not db.check_if_user_exists(user.id):
-		db.add_new_user(
-			user_id=user.id,
-			chat_id=update.message.chat_id,
-			username=user.username or "",
-			first_name=user.first_name or "",
-			last_name=user.last_name or "",
-		)
 
 async def get_ai_commentary(response: str, lang: str) -> str:
 	i18n = I18n()
@@ -52,7 +40,7 @@ async def get_ai_commentary(response: str, lang: str) -> str:
 		logger.error(f"AI commentary error: {str(e)}")
 		return ""
 
-async def bastet_start(update: Update, context: CallbackContext):
+async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	user = update.message.from_user
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id
@@ -71,13 +59,12 @@ async def bastet_start(update: Update, context: CallbackContext):
 	number = int(args[0])
 	context.user_data["bastet_number"] = number
 
-	# Prompt for Repetition Amount
 	await update.message.reply_text(
 		i18n.t("BASTET_PROMPT_REPETITION", language)
 	)
 	return REPETITION
 
-async def bastet_repetition(update: Update, context: CallbackContext):
+async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	user_id = update.message.from_user.id
 	db = Database()
 	i18n = I18n()
@@ -104,7 +91,7 @@ async def bastet_repetition(update: Update, context: CallbackContext):
 	)
 	return TABLE
 
-async def bastet_table(update: Update, context: CallbackContext):
+async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	query = update.callback_query
 	user_id = query.from_user.id
 	db = Database()
@@ -127,7 +114,7 @@ async def bastet_table(update: Update, context: CallbackContext):
 	await query.answer()
 	return LANGUAGE
 
-async def bastet_language(update: Update, context: CallbackContext):
+async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	query = update.callback_query
 	user_id = query.from_user.id
 	db = Database()
@@ -200,7 +187,7 @@ async def bastet_language(update: Update, context: CallbackContext):
 		await query.answer()
 		return ConversationHandler.END
 
-async def bastet_cancel(update: Update, context: CallbackContext):
+async def bastet_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	user_id = update.message.from_user.id
 	db = Database()
 	i18n = I18n()
@@ -220,5 +207,5 @@ def get_bastet_conversation_handler():
 			LANGUAGE: [CallbackQueryHandler(bastet_language)],
 		},
 		fallbacks=[CommandHandler("cancel", bastet_cancel)],
-        per_message=True
+		per_message=False
 	)

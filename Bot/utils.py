@@ -1,8 +1,33 @@
 import json
 import logging
 from pathlib import Path
+from telegram import Update
+from telegram.ext import ContextTypes
+from .database import Database
 
 logger = logging.getLogger(__name__)
+
+async def register_user_if_not_exists(update: Update, context: ContextTypes.DEFAULT_TYPE, user: telegram.User) -> None:
+	"""
+	Register a new user in the database if they don't already exist.
+
+	Args:
+		update: The Telegram update object.
+		context: The context object for the Telegram bot.
+		user: The Telegram user object to register.
+	"""
+	if not user or not hasattr(user, 'id'):
+		return  # Silently skip if user is invalid
+
+	db = Database()
+	if not db.check_if_user_exists(user.id):
+		db.add_new_user(
+			user_id=user.id,
+			chat_id=update.message.chat_id,
+			username=user.username or "",
+			first_name=user.first_name or "",
+			last_name=user.last_name or "",
+		)
 
 def get_warning_description(value, language):
 	"""

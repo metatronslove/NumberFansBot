@@ -1,23 +1,13 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CallbackContext
+from telegram.ext import ContextTypes
 from telegram.constants import ParseMode
 from ...database import Database
 from ...i18n import I18n
 from ...transliteration import Transliteration
+from ...utils import register_user_if_not_exists
 from datetime import datetime
 
-async def register_user_if_not_exists(update: Update, context: CallbackContext, user):
-	db = Database()
-	if not db.check_if_user_exists(user.id):
-		db.add_new_user(
-			user_id=user.id,
-			chat_id=update.message.chat_id,
-			username=user.username or "",
-			first_name=user.first_name or "",
-			last_name=user.last_name or "",
-		)
-
-async def suggest_transliteration_handle(update: Update, context: CallbackContext):
+async def suggest_transliteration_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	user = update.message.from_user
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id
@@ -26,7 +16,6 @@ async def suggest_transliteration_handle(update: Update, context: CallbackContex
 	language = db.get_user_language(user_id)
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
 
-	# Increment command usage
 	db.increment_command_usage("suggest_transliteration", user_id)
 
 	args = context.args
@@ -57,7 +46,6 @@ async def suggest_transliteration_handle(update: Update, context: CallbackContex
 		results = ", ".join(suggestions)
 		response = i18n.t("SUGGEST_TRANSLITERATION_RESULT", language, text=text, source_lang=source_lang, target_lang=target_lang, results=results)
 
-		# Add buttons for selecting a suggestion
 		buttons = [
 			[InlineKeyboardButton(s, callback_data=f"name_alt_{text}_{target_lang}_{s}")]
 			for s in suggestions

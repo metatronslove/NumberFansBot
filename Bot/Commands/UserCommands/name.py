@@ -1,36 +1,26 @@
 import requests
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CallbackContext
+from telegram.ext import ContextTypes
 from telegram.constants import ParseMode
 from ...database import Database
 from ...i18n import I18n
 from ...transliteration import Transliteration
-from ...config import config
+from ...config import Config
+from ...utils import register_user_if_not_exists
 from datetime import datetime
 import urllib.parse
-
-async def register_user_if_not_exists(update: Update, context: CallbackContext, user):
-	db = Database()
-	if not db.check_if_user_exists(user.id):
-		db.add_new_user(
-			user_id=user.id,
-			chat_id=update.message.chat_id,
-			username=user.username or "",
-			first_name=user.first_name or "",
-			last_name=user.last_name or "",
-		)
 
 async def get_ai_commentary(response: str, lang: str) -> str:
 	i18n = I18n()
 	prompt = i18n.t("AI_PROMPT", lang, response=response)
 	try:
-		headers = {"Authorization": f"Bearer {config.ai_access_token}"}
+		headers = {"Authorization": f"Bearer {Config.ai_access_token}"}
 		payload = {
 			"inputs": prompt,
 			"parameters": {"max_length": 200, "temperature": 0.7}
 		}
 		response = requests.post(
-			config.ai_model_url,
+			Config.ai_model_url,
 			headers=headers,
 			json=payload
 		)
@@ -41,7 +31,7 @@ async def get_ai_commentary(response: str, lang: str) -> str:
 	except Exception:
 		return ""
 
-async def name_handle(update: Update, context: CallbackContext):
+async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	user = update.message.from_user
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id

@@ -21,38 +21,35 @@ class Database:
 		self.blacklist_collection = self.db.blacklist
 
 	def check_if_user_exists(self, user_id: int) -> bool:
-		return self.user_collection.count_documents({"_id": user_id}) > 0
+		return bool(self.user_collection.find_one({"user_id": user_id}))
 
-	def add_new_user(self, user_id: int, chat_id: int, username: str, first_name: str, last_name: str):
+	def add_new_user(self, user_id: int, chat_id: int, username: str, first_name: str, last_name: str, language_code: str = "en", is_beta_tester: bool = False) -> None:
 		self.user_collection.insert_one({
-			"_id": user_id,
+			"user_id": user_id,
 			"chat_id": chat_id,
 			"username": username,
 			"first_name": first_name,
 			"last_name": last_name,
-			"language": "en",
-			"credits": 100,  # Initial promotion credits
-			"is_beta_tester": False,
-			"last_interaction": datetime.now(),
-			"created_at": datetime.now()
+			"language_code": language_code,
+			"is_beta_tester": is_beta_tester,
+			"created_at": datetime.now(),
+			"last_interaction": datetime.now()
 		})
 
-	def set_user_attribute(self, user_id: int, attribute: str, value):
+	def set_user_attribute(self, user_id: int, attribute: str, value) -> None:
 		self.user_collection.update_one(
-			{"_id": user_id},
-			{"$set": {attribute: value}},
-			upsert=True
+			{"user_id": user_id},
+			{"$set": {attribute: value}}
 		)
 
 	def get_user_language(self, user_id: int) -> str:
-		settings = self.user_settings_collection.find_one({"user_id": user_id})
-		return settings.get("language", "en") if settings else "en"
+		user = self.user_collection.find_one({"user_id": user_id})
+		return user.get("language_code", "en") if user else "en"
 
-	def set_user_language(self, user_id: int, language: str):
-		self.user_settings_collection.update_one(
+	def set_user_language(self, user_id: int, language_code: str) -> None:
+		self.user_collection.update_one(
 			{"user_id": user_id},
-			{"$set": {"language": language}},
-			upsert=True
+			{"$set": {"language_code": language_code}}
 		)
 
 	def get_user_credits(self, user_id: int) -> int:
@@ -97,22 +94,10 @@ class Database:
 	def remove_from_blacklist(self, user_id: int):
 		self.blacklist_collection.delete_one({"user_id": user_id})
 
-	def increment_command_usage(self, command: str, user_id: int):
-		self.command_usage_collection.update_one(
-			{"command": command},
-			{
-				"$inc": {"count": 1},
-				"$set": {
-					"last_used": datetime.now(),
-					"last_user_id": user_id
-				},
-				"$push": {
-					"usage_history": {
-						"user_id": user_id,
-						"timestamp": datetime.now()
-					}
-				}
-			},
+	def increment_command_usage(self, command: str, user_id: int) -> None:
+		self.db.command_usage.update_one(
+			{"user_id": user_id, "command": command},
+			{"$inc": {"count": 1}},
 			upsert=True
 		)
 

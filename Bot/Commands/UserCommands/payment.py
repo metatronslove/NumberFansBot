@@ -1,26 +1,15 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, LabeledPrice
-from telegram.ext import CallbackContext, PreCheckoutQueryHandler, filters, MessageHandler
+from telegram.ext import ContextTypes, PreCheckoutQueryHandler, MessageHandler, filters
 from telegram.constants import ParseMode
 from ...database import Database
 from ...i18n import I18n
-from ...config import config
-from datetime import datetime
+from ...config import Config
+from ...utils import register_user_if_not_exists
 import logging
 
 logger = logging.getLogger(__name__)
 
-async def register_user_if_not_exists(update: Update, context: CallbackContext, user):
-	db = Database()
-	if not db.check_if_user_exists(user.id):
-		db.add_new_user(
-			user_id=user.id,
-			chat_id=update.message.chat_id,
-			username=user.username or "",
-			first_name=user.first_name or "",
-			last_name=user.last_name or "",
-		)
-
-async def payment_handle(update: Update, context: CallbackContext):
+async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	user = update.message.from_user
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id
@@ -41,7 +30,7 @@ async def payment_handle(update: Update, context: CallbackContext):
 	db.increment_command_usage("payment", user_id)
 
 	# Check if payment provider token is set
-	if not config.payment_provider_token:
+	if not Config.payment_provider_token:
 		await update.message.reply_text(
 			i18n.t("PAYMENT_MISSING_PROVIDER_TOKEN", language),
 			parse_mode=ParseMode.HTML
@@ -69,7 +58,7 @@ async def payment_handle(update: Update, context: CallbackContext):
 		reply_markup=reply_markup
 	)
 
-async def handle_payment_callback(update: Update, context: CallbackContext):
+async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	query = update.callback_query
 	user_id = query.from_user.id
 	db = Database()
@@ -86,7 +75,7 @@ async def handle_payment_callback(update: Update, context: CallbackContext):
 			)
 			return
 
-		if not config.payment_provider_token:
+		if not Config.payment_provider_token:
 			await query.message.reply_text(
 				i18n.t("PAYMENT_MISSING_PROVIDER_TOKEN", language),
 				parse_mode=ParseMode.HTML
@@ -104,7 +93,7 @@ async def handle_payment_callback(update: Update, context: CallbackContext):
 				title=i18n.t("PAYMENT_PRODUCTS_CREDIT_PRODUCT_NAME", language),
 				description=i18n.t("PAYMENT_PRODUCTS_CREDIT_PRODUCT_DESCRIPTION", language),
 				payload="credit_500",
-				provider_token=config.payment_provider_token,
+				provider_token=Config.payment_provider_token,
 				currency="USD",
 				prices=[LabeledPrice("500 Credits", 200)],  # $2.00
 				start_parameter="credit-purchase"
@@ -116,7 +105,7 @@ async def handle_payment_callback(update: Update, context: CallbackContext):
 				parse_mode=ParseMode.HTML
 			)
 
-async def handle_pre_checkout(update: Update, context: CallbackContext):
+async def handle_pre_checkout(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	query = update.pre_checkout_query
 	user_id = query.from_user.id
 	db = Database()
@@ -133,7 +122,7 @@ async def handle_pre_checkout(update: Update, context: CallbackContext):
 		logger.error(f"Pre-checkout error: {str(e)}")
 		await query.answer(ok=False, error_message=i18n.t("PAYMENT_FAILED", language))
 
-async def handle_successful_payment(update: Update, context: CallbackContext):
+async def handle_successful_payment(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	user_id = update.message.from_user.id
 	payment = update.message.successful_payment
 	db = Database()

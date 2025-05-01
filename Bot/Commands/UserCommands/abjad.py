@@ -2,33 +2,21 @@ import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
 	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
-	ConversationHandler, filters, CallbackContext
+	ConversationHandler, filters, ContextTypes
 )
 from telegram.constants import ParseMode
 from ...database import Database
 from ...i18n import I18n
-from ...config import config
+from ...admin_panel import config
 from ...Abjad import Abjad
+from ...utils import register_user_if_not_exists, get_warning_description
 from datetime import datetime
-from ...utils import get_warning_description  # Import helper
 import requests
 import re
 
 logger = logging.getLogger(__name__)
 
-# Conversation states
 ALPHABET_ORDER, ABJAD_TYPE, SHADDA, DETAIL = range(4)
-
-async def register_user_if_not_exists(update: Update, context: CallbackContext, user):
-	db = Database()
-	if not db.check_if_user_exists(user.id):
-		db.add_new_user(
-			user_id=user.id,
-			chat_id=update.message.chat_id,
-			username=user.username or "",
-			first_name=user.first_name or "",
-			last_name=user.last_name or "",
-		)
 
 async def get_ai_commentary(response: str, lang: str) -> str:
 	i18n = I18n()
@@ -53,7 +41,7 @@ async def get_ai_commentary(response: str, lang: str) -> str:
 		logger.error(f"AI commentary error: {str(e)}")
 		return ""
 
-async def abjad_start(update: Update, context: CallbackContext):
+async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	user = update.message.from_user
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id
@@ -72,10 +60,7 @@ async def abjad_start(update: Update, context: CallbackContext):
 	text = " ".join(args)
 	context.user_data["abjad_text"] = text
 
-	# Check if text is Arabic (U+0600–U+06FF)
 	is_arabic = bool(re.search(r'[\u0600-\u06FF]', text))
-
-	# Prompt for Alphabet Order
 	keyboard = [
 		[InlineKeyboardButton(lang.capitalize(), callback_data=lang)]
 		for lang in ["arabic", "hebrew", "turkish", "english", "latin"]
@@ -88,7 +73,7 @@ async def abjad_start(update: Update, context: CallbackContext):
 	context.user_data["is_arabic"] = is_arabic
 	return ALPHABET_ORDER
 
-async def abjad_alphabet_order(update: Update, context: CallbackContext):
+async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	query = update.callback_query
 	user_id = query.from_user.id
 	db = Database()
@@ -111,7 +96,7 @@ async def abjad_alphabet_order(update: Update, context: CallbackContext):
 	await query.answer()
 	return ABJAD_TYPE
 
-async def abjad_type(update: Update, context: CallbackContext):
+async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	query = update.callback_query
 	user_id = query.from_user.id
 	db = Database()
@@ -138,7 +123,7 @@ async def abjad_type(update: Update, context: CallbackContext):
 		context.user_data["shadda"] = 1
 		return await abjad_shadda(update, context)
 
-async def abjad_shadda(update: Update, context: CallbackContext):
+async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	query = update.callback_query
 	user_id = query.from_user.id
 	db = Database()
@@ -164,7 +149,7 @@ async def abjad_shadda(update: Update, context: CallbackContext):
 	)
 	return DETAIL
 
-async def abjad_detail(update: Update, context: CallbackContext):
+async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	query = update.callback_query
 	user_id = query.from_user.id
 	db = Database()
@@ -175,8 +160,7 @@ async def abjad_detail(update: Update, context: CallbackContext):
 
 	try:
 		detail = int(query.data)
-		context.user_data["detail"] = detail
-
+		context.user_data["detail"] =yla
 		text = context.user_data["abjad_text"]
 		alphabet_order = context.user_data["alphabet_order"]
 		abjad_type = context.user_data["abjad_type"]
@@ -254,7 +238,7 @@ async def abjad_detail(update: Update, context: CallbackContext):
 		await query.answer()
 		return ConversationHandler.END
 
-async def abjad_cancel(update: Update, context: CallbackContext):
+async def abjad_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	user_id = update.message.from_user.id
 	db = Database()
 	i18n = I18n()
@@ -275,5 +259,5 @@ def get_abjad_conversation_handler():
 			DETAIL: [CallbackQueryHandler(abjad_detail)],
 		},
 		fallbacks=[CommandHandler("cancel", abjad_cancel)],
-        per_message=True
+		per_message=False
 	)
