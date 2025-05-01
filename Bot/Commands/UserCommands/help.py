@@ -6,6 +6,8 @@ from ...i18n import I18n
 from datetime import datetime
 from ...config import Config
 
+config = Config()
+
 async def register_user_if_not_exists(update: Update, context: CallbackContext, user):
 	db = Database()
 	if not db.check_if_user_exists(user.id):

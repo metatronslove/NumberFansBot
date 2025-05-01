@@ -10,6 +10,7 @@ from ...config import Config
 
 # Set up logging
 logger = logging.getLogger(__name__)
+config = Config()
 
 async def register_user_if_not_exists(update: Update, context: CallbackContext, user):
 	db = Database()
