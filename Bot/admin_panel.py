@@ -20,6 +20,7 @@ import logging
 import yaml
 
 app = Flask(__name__)
+config = Config()
 app.secret_key = config.flask_secret_key or 'your-secret-key'
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
