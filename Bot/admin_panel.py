@@ -16,6 +16,7 @@ from .Commands.UserCommands.nutket import nutket_handle
 from .Commands.UserCommands.payment import payment_handle, handle_pre_checkout, handle_successful_payment
 from .Commands.SystemCommands.callback_query import set_language_handle, handle_callback_query
 import asyncio
+import bcrypt
 import logging
 import yaml
 
