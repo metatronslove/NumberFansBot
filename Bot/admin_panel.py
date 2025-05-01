@@ -173,11 +173,11 @@ def save_config_route(lang='en'):
         use_env = request.form.get(f"{key}_use_env") == 'on'
         if key.startswith('ai_settings.'):
             subkey = key.split('.')[1]
+            config_data['ai_settings'][f"{subkey}_use_env"] = use_env
             config_data['ai_settings'][subkey] = value if not use_env else ''
-            config_data['ai_settings'][f"{subkey}_use_env'] = use_env
         else:
             config_data[key] = value if not use_env else ''
-            config_data[f"{key}_use_env'] = use_env
+            config_data[f"{key}_use_env"] = use_env
     try:
         config.save_config(config_data)
         flash(i18n.t("CONFIG_SAVED", lang), 'success')
