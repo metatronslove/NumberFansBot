@@ -2,7 +2,7 @@ import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 from telegram.constants import ParseMode
-from ...config import Config
+from ...admin_panel import config
 from ...database import Database
 from ...i18n import I18n
 from datetime import datetime
@@ -10,7 +10,7 @@ from .language import language_handle
 
 # Set up logging
 logger = logging.getLogger(__name__)
-config = Config()
+config = config
 
 async def register_user_if_not_exists(update: Update, context: CallbackContext, user, language):
 	db = Database()
