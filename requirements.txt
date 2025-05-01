@@ -5,5 +5,3 @@ bcrypt==4.0.1
 python-telegram-bot==20.7
 requests==2.31.0
 PyYAML==6.0.1
-uvicorn==0.24.0
-hypercorn==0.15.0
