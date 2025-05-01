@@ -1,32 +1,26 @@
 FROM python:3.10-slim
 
-## Install system dependencies
-
+# Install system dependencies
 RUN apt-get update && \
-DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
-python3-pip \
-build-essential \
-ffmpeg \
-git && \
-rm -rf /var/lib/apt/lists/\*
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
+    python3-pip \
+    build-essential \
+    ffmpeg \
+    git && \
+    rm -rf /var/lib/apt/lists/*
 
-## Upgrade pip and install dependencies
-
+# Upgrade pip and install dependencies
 RUN mkdir ./code
 RUN pip3 install --no-cache-dir -U pip wheel setuptools==69.5.1
 COPY ./requirements.txt /tmp/requirements.txt
 RUN pip3 install --no-cache-dir -r /tmp/requirements.txt && rm /tmp/requirements.txt
 
-## Copy application code
-
+# Copy application code
 COPY . /code
 WORKDIR /code
 
-## Expose port for Render.com
+# Expose port for Render.com (optional)
+EXPOSE 8000
 
-## EXPOSE 8000
-
-## Run gunicorn for Flask app
-
-CMD \
-["gunicorn", "--bind", "0.0.0.0:8000", "Bot.admin_panel:app"\]
+# Run gunicorn for Flask app
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "admin_panel:app"]
