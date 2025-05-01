@@ -5,7 +5,7 @@ from telegram.constants import ParseMode
 from ...database import Database
 from ...i18n import I18n
 from datetime import datetime
-from ...handlers.language import language_handle
+from .language import language_handle
 
 # Set up logging
 logger = logging.getLogger(__name__)
