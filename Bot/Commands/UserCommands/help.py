@@ -23,7 +23,11 @@ async def register_user_if_not_exists(update: Update, context: CallbackContext, 
 async def help_handle(update: Update, context: CallbackContext):
 	config = Config()
 	user = update.message.from_user
-	await register_user_if_not_exists(update, context, user)
+
+	# Get user's Telegram language code and normalize it
+	user_language = user.language_code.split('-')[0] if user.language_code else 'en'
+	available_languages = ['en', 'tr', 'ar', 'he', 'la']
+	await register_user_if_not_exists(update, context, user, user_language)
 	user_id = user.id
 	db = Database()
 	i18n = I18n()
