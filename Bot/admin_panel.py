@@ -288,14 +288,20 @@ def manage_beta_tester(lang='en'):
     return render_template('dashboard.html', i18n=i18n, lang=lang, users=users, fields=get_fields(), config=config)
 
 @app.route(f'/bot{config.telegram_token}', methods=['POST'])
-async def webhook():
+def webhook():
     try:
         update = Update.de_json(request.get_json(), telegram_app.bot)
-        await telegram_app.process_update(update)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(telegram_app.process_update(update))
+        loop.close()
         return '', 200
     except Exception as e:
         logger.error(f"Webhook error: {str(e)}")
         return '', 500
+    finally:
+        if not loop.is_closed():
+            loop.close()
 
 @app.route('/set_webhook', methods=['GET'])
 def set_webhook():
