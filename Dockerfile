@@ -14,12 +14,12 @@ RUN mkdir ./code
 RUN pip3 install --no-cache-dir -U pip wheel setuptools==69.5.1
 COPY ./requirements.txt /tmp/requirements.txt
 RUN pip3 install --no-cache-dir -r /tmp/requirements.txt && rm /tmp/requirements.txt
-RUN touch Config/config.yml
-RUN echo "{}" > Config/config.yml
 
 # Copy application code
 COPY . /code
 WORKDIR /code
+RUN touch Config/config.yml
+RUN echo "{}" > Config/config.yml
 
 # Expose port for Render.com (optional)
 EXPOSE 8000
