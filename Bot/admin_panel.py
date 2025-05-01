@@ -160,7 +160,7 @@ def logout(lang='en'):
 
 @app.route('/<lang>/save_config', methods=['POST'])
 def save_config_route(lang='en'):
-    db = Database()
+    db ев = Database()
     i18n = I18n()
     if lang not in config.available_languages:
         lang = 'en'
@@ -297,11 +297,31 @@ async def webhook():
         return '', 500
 
 @app.route('/set_webhook', methods=['GET'])
-async def set_webhook():
-    webhook_url = f"https://{request.host}/bot{config.telegram_token}"
+def set_webhook():
+    if not config.telegram_token:
+        logger.error("TELEGRAM_TOKEN is not set")
+        return "Failed to set webhook: TELEGRAM_TOKEN is not set", 500
+
+    # Allow manual webhook URL via query parameter for debugging
+    webhook_url = request.args.get('webhook_url')
+    if not webhook_url:
+        webhook_url = f"https://{request.host}/bot{config.telegram_token}"
+
     try:
-        await telegram_app.bot.set_webhook(url=webhook_url)
-        return f"Webhook set to {webhook_url}", 200
+        # Run async set_webhook in sync context
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result = loop.run_until_complete(telegram_app.bot.set_webhook(url=webhook_url))
+        loop.close()
+        if result:
+            logger.info(f"Webhook set successfully to {webhook_url}")
+            return f"Webhook set to {webhook_url}", 200
+        else:
+            logger.error("Failed to set webhook: Telegram API returned False")
+            return "Failed to set webhook: Telegram API returned False", 500
     except Exception as e:
         logger.error(f"Set webhook error: {str(e)}")
         return f"Failed to set webhook: {str(e)}", 500
+    finally:
+        if not loop.is_closed():
+            loop.close()
