@@ -160,7 +160,7 @@ def logout(lang='en'):
 
 @app.route('/<lang>/save_config', methods=['POST'])
 def save_config_route(lang='en'):
-    db ев = Database()
+    db = Database()
     i18n = I18n()
     if lang not in config.available_languages:
         lang = 'en'
