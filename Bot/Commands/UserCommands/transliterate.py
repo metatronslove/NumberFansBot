@@ -57,12 +57,8 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
     try:
         result = transliteration.transliterate(text, target_lang, source_lang)
         primary = result["primary"]
-        response = i18n.t(
-            "TRANSLITERATION_RESPONSE",
-            language,
-            lang_name=target_lang,
-            result=primary
-        )
+        response = transliteration.format_response(primary, target_lang, language)  # Use format_response for localized name
+
         transliteration.store_transliteration(text, source_lang, target_lang, primary, user_id=user_id)
 
         # Add buttons for suggestions and history
