@@ -70,8 +70,8 @@ async def square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, row_
 		max_n = 100
 		square = None
 
-		square = generator.generate_magic_square(n=n, row_sum=row_sum, 0, False, 'arabic')
-		indian = generator.generate_magic_square(n=n, row_sum=row_sum, 0, False, 'indian')
+		square = generator.generate_magic_square(n, row_sum, 0, False, 'arabic')
+		indian = generator.generate_magic_square(n, row_sum, 0, False, 'indian')
 
 		if square is None:
 			await (update.message.reply_text if update.message else update.callback_query.message.reply_text)(
@@ -101,8 +101,8 @@ async def square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, row_
 		next_n = n + 1
 		next_square = None
 		while next_n <= max_n:
-			square = generator.generate_magic_square(n=next_n, row_sum=row_sum, 0, False, 'arabic')
-			indian = generator.generate_magic_square(n=next_n, row_sum=row_sum, 0, False, 'indian')
+			square = generator.generate_magic_square(next_n, row_sum, 0, False, 'arabic')
+			indian = generator.generate_magic_square(next_n, row_sum, 0, False, 'indian')
 			if not isinstance(square, str):
 				next_square = square
 				if use_indian:
