@@ -57,7 +57,7 @@ class Transliteration:
 		alternatives = self.get_transliteration_alternatives(text, source_lang, target_lang)
 		if alternatives:
 			primary = alternatives[0]["transliterated_name"]
-			alt_names = [alt["transliterated_name"] for alt in alternatives[1:]]
+			alt_names = [get_suffix(alt["transliterated_name"], text) for alt in alternatives[1:]]
 			return {"primary": primary, "alternatives": alt_names}
 
 		# Map source and target languages to transliteration_map keys
@@ -98,7 +98,6 @@ class Transliteration:
 
 		# Store transliterations
 		for translit in [primary] + alternatives:
-			translit = get_suffix(translit, text)
 			self.store_transliteration(text, source_lang, target_lang, translit)
 
 		return {"primary": primary, "alternatives": alternatives}
