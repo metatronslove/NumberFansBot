@@ -125,7 +125,7 @@ class Transliteration:
 					"source_name": source_name,
 					"source_lang": source_lang,
 					"target_lang": target_lang,
-					"transliterated_name": transliterated_name, source_name
+					"transliterated_name": transliterated_name
 				},
 				{
 					"$set": update_data,
