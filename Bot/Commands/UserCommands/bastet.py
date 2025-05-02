@@ -98,7 +98,7 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	i18n = I18n()
 	language = db.get_user_language(user_id)
 
-	table = int(query.data)
+	table = query.data
 	context.user_data["table"] = table
 
 	# Prompt for Language

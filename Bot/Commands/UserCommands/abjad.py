@@ -160,7 +160,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 	try:
 		detail = int(query.data)
-		context.user_data["detail"] =yla
+		context.user_data["detail"] = detail
 		text = context.user_data["abjad_text"]
 		alphabet_order = context.user_data["alphabet_order"]
 		abjad_type = context.user_data["abjad_type"]
