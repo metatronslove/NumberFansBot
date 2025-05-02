@@ -1,5 +1,8 @@
 import json
 from pathlib import Path
+from telegram import Update
+from telegram.ext import ContextTypes
+from telegram.constants import ParseMode
 from typing import Dict, List, Tuple, Optional
 from pymongo import MongoClient
 from .i18n import I18n
@@ -142,25 +145,15 @@ class Transliteration:
 
 	def format_response(self, transliterated_name: str, target_lang: str, output_lang: str) -> str:
 		"""Format transliteration response using i18n."""
-		user = update.message.from_user
-		user_language = user.language_code.split('-')[0] if user.language_code else 'en'
-		available_languages = ['en', 'tr', 'ar', 'he', 'la']
-		user_id = user.id
-		db = Database()
-		i18n = I18n()
-		if user_language in available_languages:
-			language = user_language
-		else:
-			language = 'en'
-		if language == 'en':
+		if output_lang == 'en':
 			nameoflanguage = "english"
-		elif language == 'tr':
+		elif output_lang == 'tr':
 			nameoflanguage = "turkish"
-		elif language == 'ar':
+		elif output_lang == 'ar':
 			nameoflanguage = "arabic"
-		elif language == 'he':
+		elif output_lang == 'he':
 			nameoflanguage = "hebrew"
-		elif language == 'la':
+		elif output_lang == 'la':
 			nameoflanguage = "latin"
 		lang_names = {
 			"arabic": {
@@ -199,7 +192,7 @@ class Transliteration:
 				"hebrew": "טורקית"
 			}
 		}
-		lang_name = nameoflanguage.get(target_lang, {}).get(output_lang, target_lang)
+		lang_name = lang_names.get(nameoflanguage, {}).get(target_lang)
 		return self.i18n.t(
 			"TRANSLITERATION_RESPONSE",
 			output_lang,
