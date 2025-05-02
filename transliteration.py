@@ -1,5 +1,8 @@
 import json
 from pathlib import Path
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import ContextTypes
+from telegram.constants import ParseMode
 from typing import Dict, List, Tuple, Optional
 from pymongo import MongoClient
 from .i18n import I18n
