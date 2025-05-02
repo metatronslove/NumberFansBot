@@ -192,7 +192,7 @@ class Transliteration:
 				"hebrew": "טורקית"
 			}
 		}
-		lang_name = lang_names.get(nameoflanguage, {}).get(target_lang)
+		lang_name = lang_names.get(target_lang, {}).get(nameoflanguage)
 		return self.i18n.t(
 			"TRANSLITERATION_RESPONSE",
 			output_lang,
