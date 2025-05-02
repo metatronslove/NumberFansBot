@@ -15,7 +15,7 @@ import requests
 
 logger = logging.getLogger(__name__)
 
-ENTITY_TYPE, LANGUAGE = range(2)
+ENTITY_TYPE, MULTIPLIAR, LANGUAGE = range(3)
 
 async def get_ai_commentary(response: str, lang: str) -> str:
 	i18n = I18n()
