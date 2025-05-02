@@ -63,7 +63,7 @@ async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	is_arabic = bool(re.search(r'[\u0600-\u06FF]', text))
 	keyboard = [
 		[InlineKeyboardButton(lang.capitalize(), callback_data=lang)]
-		for lang in ["arabic", "hebrew", "turkish", "english", "latin"]
+		for lang in ["0-4", "6-10", "11-15", "16-20", "21-25", "26-30", "31-35", "HE", "TR", "EN", "LA"]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	await update.message.reply_text(
@@ -86,7 +86,7 @@ async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYP
 	# Prompt for Abjad Type
 	keyboard = [
 		[InlineKeyboardButton(typ.capitalize(), callback_data=typ)]
-		for typ in ["standard", "reduced"]
+		for typ in ["-1", "0", "+1", "+2", "+3", "5"]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	await query.message.reply_text(
@@ -109,8 +109,8 @@ async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	# Prompt for Shadda if Arabic text
 	if context.user_data.get("is_arabic"):
 		keyboard = [
-			[InlineKeyboardButton("1 (Include)", callback_data="1")],
-			[InlineKeyboardButton("2 (Exclude)", callback_data="2")]
+			[InlineKeyboardButton("1", callback_data="1")],
+			[InlineKeyboardButton("2", callback_data="2")]
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await query.message.reply_text(
@@ -139,8 +139,8 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 	# Prompt for Detail
 	keyboard = [
-		[InlineKeyboardButton("0 (No Details)", callback_data="0")],
-		[InlineKeyboardButton("1 (Show Details)", callback_data="1")]
+		[InlineKeyboardButton("0", callback_data="0")],
+		[InlineKeyboardButton("1", callback_data="1")]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	await (query.message.reply_text if query else update.message.reply_text)(
@@ -166,13 +166,60 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		abjad_type = context.user_data["abjad_type"]
 		shadda = context.user_data["shadda"]
 
+		if alphabet_order == '0-4':
+			alphabeta = "arabic"
+			tablebase = 1
+		elif alphabet_order == '6-10':
+			alphabeta = "arabic"
+			tablebase = 7
+		elif alphabet_order == '11-15':
+			alphabeta = "arabic"
+			tablebase = 12
+		elif alphabet_order == '16-20':
+			alphabeta = "arabic"
+			tablebase = 17
+		elif alphabet_order == '21-25':
+			alphabeta = "arabic"
+			tablebase = 22
+		elif alphabet_order == '26-30':
+			alphabeta = "arabic"
+			tablebase = 27
+		elif alphabet_order == '31-35':
+			alphabeta = "arabic"
+			tablebase = 32
+		elif alphabet_order == 'HE':
+			alphabeta = "hebrew"
+			tablebase = 1
+		elif alphabet_order == 'TR':
+			alphabeta = "turkish"
+			tablebase = 1
+		elif alphabet_order == 'EN':
+			alphabeta = "english"
+			tablebase = 1
+		elif alphabet_order == 'LA':
+			alphabeta = "latin"
+			tablebase = 1
+
+		if abjad_type == '-1':
+			tablebase -= 1
+		elif abjad_type == '0':
+			tablebase = tablebase
+		elif abjad_type == '+1':
+			tablebase += 1
+		elif abjad_type == '+2':
+			tablebase += 2
+		elif abjad_type == '+3':
+			tablebase += 3
+		elif abjad_type == '5':
+			tablebase = 5
+
 		abjad = Abjad()
 		result = abjad.abjad(
 			text,
-			tablo=1 if abjad_type == "standard" else 2,
+			tablo=tablebase,
 			shadda=shadda,
 			detail=detail,
-			lang=alphabet_order
+			lang=alphabeta
 		)
 
 		if isinstance(result, str) and result.startswith("Error"):
@@ -208,9 +255,13 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 				i18n.t("CREATE_MAGIC_SQUARE", language),
 				callback_data=f"magic_square_{value}"
 			)])
+			keyboard.append([InlineKeyboardButton(
+				i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
+				callback_data=f"indian_square_{value}"
+			)])
 		keyboard.append([InlineKeyboardButton(
 			i18n.t("SPELL_NUMBER", language),
-			callback_data=f"nutket_{value}_{alphabet_order}"
+			callback_data=f"nutket_{value}_{alphabeta}"
 		)])
 		if details:
 			keyboard.append([InlineKeyboardButton(

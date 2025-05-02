@@ -9,6 +9,7 @@ from ...database import Database
 from ...i18n import I18n
 from ...admin_panel import config
 from ...Abjad import Abjad
+from ...element_classifier import ElementClassifier
 from ...utils import register_user_if_not_exists
 from datetime import datetime
 import requests
@@ -77,7 +78,7 @@ async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	# Prompt for Language
 	keyboard = [
 		[InlineKeyboardButton(lang.capitalize(), callback_data=lang)]
-		for lang in ["arabic", "hebrew", "turkish", "english", "latin"]
+		for lang in ['TURKCE', 'ARABI', 'BUNI', 'HUSEYNI', 'HEBREW', 'ENGLISH', 'LATIN', 'GENERAL']
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	await update.message.reply_text(
@@ -96,10 +97,12 @@ async def unsur_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	lang = query.data
 	context.user_data["language"] = lang
 
-	# Prompt for Table (0-35)
+	# List or Quantity
 	keyboard = [
-		[InlineKeyboardButton(str(i), callback_data=str(i)) for i in range(j, min(j + 6, 36))]
-		for j in range(0, 36, 6)
+		[InlineKeyboardButton(i18n.t("ELEMENT_FIRE", language), callback_data="fire")],
+		[InlineKeyboardButton(i18n.t("ELEMENT_WATER", language), callback_data="water")],
+		[InlineKeyboardButton(i18n.t("ELEMENT_AIR", language), callback_data="air")],
+		[InlineKeyboardButton(i18n.t("ELEMENT_EARTH", language), callback_data="earth")]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	await query.message.reply_text(
@@ -116,14 +119,14 @@ async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	i18n = I18n()
 	language = db.get_user_language(user_id)
 
-	table = int(query.data)
+	table = query.data
 	context.user_data["table"] = table
 
 	# Prompt for Shadda if Arabic input
 	if context.user_data.get("is_arabic"):
 		keyboard = [
-			[InlineKeyboardButton("1 (Include)", callback_data="1")],
-			[InlineKeyboardButton("2 (Exclude)", callback_data="2")]
+			[InlineKeyboardButton("1", callback_data="1")],
+			[InlineKeyboardButton("2", callback_data="2")]
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await query.message.reply_text(
@@ -157,32 +160,25 @@ async def unsur_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		lang = context.user_data["language"]
 		table = context.user_data["table"]
 
-		abjad = Abjad()
-		if input_text.replace(" ", "").isdigit():
-			value = int(input_text.replace(" ", ""))
-			output_text = input_text  # Numeric input returns number as text
-		else:
-			result = abjad.abjad(input_text, tablo=table, shadda=shadda, detail=0, lang=lang)
-			if isinstance(result, str) and result.startswith("Error"):
-				await (query.message.reply_text if query else update.message.reply_text)(
-					i18n.t("ERROR_GENERAL", language, error=result),
-					parse_mode=ParseMode.MARKDOWN
-				)
-				return ConversationHandler.END
-			value = result["sum"] if isinstance(result, dict) else result
-			output_text = input_text  # Text input returns input text
-
-		# Map to element (fire=0, water=1, air=2, earth=3)
-		element_index = value % 4
+		unsur = ElementClassifier()
+		result = unsur.classify_elements(input_text, table, shadda, lang)
+		if isinstance(result, str) and result.startswith("Error"):
+			await (query.message.reply_text if query else update.message.reply_text)(
+				i18n.t("ERROR_GENERAL", language, error=result),
+				parse_mode=ParseMode.MARKDOWN
+			)
+			return ConversationHandler.END
+		value = result["adet"] if isinstance(result, dict) else result
+		liste = result["list"] if isinstance(result, dict) else result
 		elements = {
-			0: i18n.t("ELEMENT_FIRE", language),
-			1: i18n.t("ELEMENT_WATER", language),
-			2: i18n.t("ELEMENT_AIR", language),
-			3: i18n.t("ELEMENT_EARTH", language)
+			'fire': i18n.t("ELEMENT_FIRE", language),
+			'water': i18n.t("ELEMENT_WATER", language),
+			'air': i18n.t("ELEMENT_AIR", language),
+			'earth': i18n.t("ELEMENT_EARTH", language)
 		}
-		element = elements.get(element_index, i18n.t("ELEMENT_UNKNOWN", language))
+		element = elements.get(table, i18n.t("ELEMENT_UNKNOWN", language))
 
-		response = i18n.t("UNSUR_RESULT", language, input=input_text, value=value, element=element)
+		response = i18n.t("UNSUR_RESULT", language, input=input_text, liste=liste, value=value, element=element)
 
 		# Get AI commentary
 		commentary = await get_ai_commentary(response, language)

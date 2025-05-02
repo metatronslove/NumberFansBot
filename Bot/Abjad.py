@@ -430,9 +430,29 @@ class Abjad:
 		except Exception as e:
 			return f"Error: {str(e)}"
 
-	def generate_name(self, prefix: Union[str, int], htype: str, method: int = 1, language: str = "arabic", mode: str = "regular") -> str:
+	def generate_name(self, number: Union[str, int], htype: str, method: int = 1, language: str = "arabic", mode: str = "regular") -> str:
 		try:
-			prefix = str(prefix)
+			suffix = ""
+			prefix = 0
+			if language == "arabic":
+				if method in [1, 7, 12, 17, 22, 27, 32]:
+					suffix = {"ULVI": "ئيل", "SUFLI": "يوش", "ŞER": "طيش", "ULVİ": "ئيل", "SUFLİ": "يوش", "SER": "طيش"}.get(htype.upper(), htype)
+				abjad_suffix = self.abjad(suffix, method, 1, 0, language)
+			elif language == "hebrew":
+				suffix = {"ULVI": "אל", "SUFLI": "וש", "ŞER": "טש", "ULVİ": "אל", "SUFLİ": "וש", "SER": "טש"}.get(htype.upper(), htype)
+				abjad_suffix = self.abjad(suffix, 1, 1, 0, language)
+			elif language == "english":
+				suffix = {"ULVI": "el", "SUFLI": "us", "ŞER": "is", "ULVİ": "el", "SUFLİ": "us", "SER": "is"}.get(htype.upper(), htype.lower())
+				abjad_suffix = self.abjad(suffix, 1, 1, 0, language)
+			elif language == "latin":
+				suffix = {"ULVI": "el", "SUFLI": "us", "ŞER": "is", "ULVİ": "el", "SUFLİ": "us", "SER": "is"}.get(htype.upper(), htype.lower())
+				abjad_suffix = self.abjad(suffix, 1, 1, 0, language)
+			elif language == "turkish":
+				suffix = {"ULVI": "el", "SUFLI": "uş", "ŞER": "iş", "ULVİ": "el", "SUFLİ": "uş", "SER": "iş"}.get(htype.upper(), htype.lower())
+				abjad_suffix = self.abjad(suffix, 1, 1, 0, language)
+			while int(prefix) <= 0:
+				prefix = str(int(number) - int(abjad_suffix))
+				number += 361
 			hpart = {}
 			counts = 0
 

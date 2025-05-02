@@ -71,7 +71,7 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	language = db.get_user_language(user_id)
 
 	repetition = update.message.text
-	if not repetition.isdigit() or int(repetition) < 1:
+	if not repetition.isdigit() or int(repetition) <= 1:
 		await update.message.reply_text(
 			i18n.t("ERROR_INVALID_INPUT", language, error="Repetition must be a positive integer")
 		)
@@ -81,8 +81,8 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 	# Prompt for Table (0-35)
 	keyboard = [
-		[InlineKeyboardButton(str(i), callback_data=str(i)) for i in range(j, min(j + 6, 36))]
-		for j in range(0, 36, 6)
+		[InlineKeyboardButton(lang.capitalize(), callback_data=lang)]
+		for lang in ["0-4", "6-10", "11-15", "16-20", "21-25", "26-30", "31-35", "HE", "TR", "EN", "LA"]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	await update.message.reply_text(
@@ -103,8 +103,8 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 	# Prompt for Language
 	keyboard = [
-		[InlineKeyboardButton(lang.capitalize(), callback_data=lang)]
-		for lang in ["arabic", "hebrew", "turkish", "english", "latin"]
+		[InlineKeyboardButton(typ.capitalize(), callback_data=lang)]
+		for lang in ["-1", "0", "+1", "+2", "+3", "5"]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	await query.message.reply_text(
@@ -130,14 +130,68 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		number = context.user_data["bastet_number"]
 		repetition = context.user_data["repetition"]
 		table = context.user_data["table"]
+		alphabet_order = table
+		abjad_type = lang
+
+		if alphabet_order == '0-4':
+			alphabeta = "arabic"
+			tablebase = 1
+		elif alphabet_order == '6-10':
+			alphabeta = "arabic"
+			tablebase = 7
+		elif alphabet_order == '11-15':
+			alphabeta = "arabic"
+			tablebase = 12
+		elif alphabet_order == '16-20':
+			alphabeta = "arabic"
+			tablebase = 17
+		elif alphabet_order == '21-25':
+			alphabeta = "arabic"
+			tablebase = 22
+		elif alphabet_order == '26-30':
+			alphabeta = "arabic"
+			tablebase = 27
+		elif alphabet_order == '31-35':
+			alphabeta = "arabic"
+			tablebase = 32
+		elif alphabet_order == 'HE':
+			alphabeta = "hebrew"
+			tablebase = 1
+		elif alphabet_order == 'TR':
+			alphabeta = "turkish"
+			tablebase = 1
+		elif alphabet_order == 'EN':
+			alphabeta = "english"
+			tablebase = 1
+		elif alphabet_order == 'LA':
+			alphabeta = "latin"
+			tablebase = 1
+
+		if abjad_type == '-1':
+			tablebase -= 1
+		elif abjad_type == '0':
+			tablebase = tablebase
+		elif abjad_type == '+1':
+			tablebase += 1
+		elif abjad_type == '+2':
+			tablebase += 2
+		elif abjad_type == '+3':
+			tablebase += 3
+		elif abjad_type == '5':
+			tablebase = 5
 
 		abjad = Abjad()
 		value = number
-		for _ in range(repetition):
-			result = abjad.abjad(str(value), tablo=table, shadda=1, detail=0, lang=lang)
-			value = result["sum"] if isinstance(result, dict) else result
+		result = abjad.bastet(
+			value,
+			int(repetition),
+			tablebase,
+			1,
+			alphabeta,
+			detail
+		)
 
-		if isinstance(value, str) and value.startswith("Error"):
+		if isinstance(result, str) and value.startswith("Error"):
 			await query.message.reply_text(
 				i18n.t("ERROR_GENERAL", language, error=value),
 				parse_mode=ParseMode.MARKDOWN
@@ -145,7 +199,7 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			await query.answer()
 			return ConversationHandler.END
 
-		response = i18n.t("BASTET_RESULT", language, number=number, repetition=repetition, table=table, value=value)
+		response = i18n.t("BASTET_RESULT", language, number=number, repetition=repetition, table=tablebase, value=result)
 
 		# Check warningNumbers.json
 		warning_desc = get_warning_description(value, language)
@@ -163,6 +217,10 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			keyboard.append([InlineKeyboardButton(
 				i18n.t("CREATE_MAGIC_SQUARE", language),
 				callback_data=f"magic_square_{value}"
+			)])
+			keyboard.append([InlineKeyboardButton(
+				i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
+				callback_data=f"indian_square_{value}"
 			)])
 		keyboard.append([InlineKeyboardButton(
 			i18n.t("SPELL_NUMBER", language),

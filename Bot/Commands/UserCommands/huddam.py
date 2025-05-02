@@ -61,7 +61,8 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 	keyboard = [
 		[InlineKeyboardButton("Ulvi", callback_data="ulvi")],
-		[InlineKeyboardButton("Sufli", callback_data="sufli")]
+		[InlineKeyboardButton("Sufli", callback_data="sufli")],
+		[InlineKeyboardButton("Şer", callback_data="ser")]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	await update.message.reply_text(
@@ -83,7 +84,7 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
 	# Prompt for Language
 	keyboard = [
 		[InlineKeyboardButton(lang.capitalize(), callback_data=lang)]
-		for lang in ["arabic", "hebrew", "turkish", "english", "latin"]
+		for lang in ["0-4", "6-10", "11-15", "16-20", "21-25", "26-30", "31-35", "HE", "TR", "EN", "LA"]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	await query.message.reply_text(
@@ -99,19 +100,87 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	db = Database()
 	i18n = I18n()
 	language = db.get_user_language(user_id)
+
+	lang = query.data
+	context.user_data["language"] = lang
+
+	number = context.user_data["huddam_number"]
+	entity_type = context.user_data["entity_type"]
+
+
+	# Prompt for Language
+	keyboard = [
+		[InlineKeyboardButton("Mode 1", callback_data="regular")],
+		[InlineKeyboardButton("Mode 2", callback_data="eacher")]
+	]
+	reply_markup = InlineKeyboardMarkup(keyboard)
+	await query.message.reply_text(
+		i18n.t("HUDDAM_PROMPT_MULTIPLIAR", language),
+		reply_markup=reply_markup
+	)
+	await query.answer()
+	return MULTIPLIAR
+
+async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE):
+	query = update.callback_query
+	user_id = query.from_user.id
+	db = Database()
+	i18n = I18n()
+	language = db.get_user_language(user_id)
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
 	db.increment_command_usage("huddam", user_id)
 
 	try:
-		lang = query.data
-		context.user_data["language"] = lang
+		multipliar = query.data
+		context.user_data["multipliar"] = multipliar
 
+		lang = context.user_data["language"]
 		number = context.user_data["huddam_number"]
 		entity_type = context.user_data["entity_type"]
+		alphabet_order = lang
+
+		if alphabet_order == '0-4':
+			alphabeta = "arabic"
+			tablebase = 1
+		elif alphabet_order == '6-10':
+			alphabeta = "arabic"
+			tablebase = 7
+		elif alphabet_order == '11-15':
+			alphabeta = "arabic"
+			tablebase = 12
+		elif alphabet_order == '16-20':
+			alphabeta = "arabic"
+			tablebase = 17
+		elif alphabet_order == '21-25':
+			alphabeta = "arabic"
+			tablebase = 22
+		elif alphabet_order == '26-30':
+			alphabeta = "arabic"
+			tablebase = 27
+		elif alphabet_order == '31-35':
+			alphabeta = "arabic"
+			tablebase = 32
+		elif alphabet_order == 'HE':
+			alphabeta = "hebrew"
+			tablebase = 1
+		elif alphabet_order == 'TR':
+			alphabeta = "turkish"
+			tablebase = 1
+		elif alphabet_order == 'EN':
+			alphabeta = "english"
+			tablebase = 1
+		elif alphabet_order == 'LA':
+			alphabeta = "latin"
+			tablebase = 1
+		method = tablebase
 
 		abjad = Abjad()
-		result = abjad.huddam(number, type=entity_type, lang=lang)
-
+		result = abjad.generate_name(number,
+			entity_type,
+			method,
+			alphabeta,
+			multipliar
+		)
 		if isinstance(result, str) and result.startswith("Error"):
 			await query.message.reply_text(
 				i18n.t("ERROR_GENERAL", language, error=result),
@@ -120,10 +189,9 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			await query.answer()
 			return ConversationHandler.END
 
-		# Assume result is a dict with name and value
-		name = result.get("name", result) if isinstance(result, dict) else result
-		value = result.get("value", number) if isinstance(result, dict) else number
-
+		# Assume result is name
+		name = result
+		value = number
 		response = i18n.t("HUDDAM_RESULT", language, number=number, type=entity_type, lang=lang, name=name)
 
 		# Get AI commentary
@@ -137,6 +205,10 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			keyboard.append([InlineKeyboardButton(
 				i18n.t("CREATE_MAGIC_SQUARE", language),
 				callback_data=f"magic_square_{value}"
+			)])
+			keyboard.append([InlineKeyboardButton(
+				i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
+				callback_data=f"indian_square_{value}"
 			)])
 		keyboard.append([InlineKeyboardButton(
 			i18n.t("SPELL_NUMBER", language),
@@ -182,6 +254,7 @@ def get_huddam_conversation_handler():
 		states={
 			ENTITY_TYPE: [CallbackQueryHandler(huddam_entity_type)],
 			LANGUAGE: [CallbackQueryHandler(huddam_language)],
+			MULTIPLIAR: [CallbackQueryHandler(huddam_multipliar)]
 		},
 		fallbacks=[CommandHandler("cancel", huddam_cancel)],
 		per_message=False
