@@ -61,8 +61,7 @@ async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 		magic_square = MagicSquareGenerator()
 		square = magic_square.generate_magic_square(3, row_sum, 0, False, 'arabic')
-		square_str = "\n".join(["  ".join(map(str, row)) for row in square])
-		response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square_str)
+		response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square)
 
 		# Add AI commentary
 		commentary = await get_ai_commentary(response, language)
