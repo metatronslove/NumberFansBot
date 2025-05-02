@@ -21,10 +21,11 @@ async def get_ai_commentary(response: str, lang: str) -> str:
             "return_prompt": False  # Try to exclude prompt in output
 		}
 		response = requests.post(
-			Config.ai_model_url,
+			config.ai_model_url,
 			headers=headers,
 			json=payload
 		)
+		response = re.sub(rf"^{re.escape(prompt)}.*?\[/INST\]", "", response, flags=re.DOTALL).strip()
 		if response.status_code == 200:
 			return response.json()[0]["generated_text"].split("[/INST]")[-1].strip()
 		else:
