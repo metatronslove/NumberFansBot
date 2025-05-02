@@ -10,6 +10,7 @@ from ...Abjad import Abjad
 from ...Numerology import UnifiedNumerology
 from ...MagicSquare import MagicSquareGenerator
 from ...NumberConverter import NumberConverter
+from ...cache import Cache
 from ...config import config
 from .square import square_handle
 from ..UserCommands.nutket import nutket_handle
@@ -70,6 +71,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
     db = Database()
     i18n = I18n()
     transliteration = Transliteration(db, i18n)
+    cache = Cache()
     language = db.get_user_language(user_id)
 
     if not (data.startswith("payment_select_") or data == "help_group_chat"):
@@ -93,21 +95,29 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
     try:
         if data.startswith("name_alt_"):
             parts = data.split("_")
-            if len(parts) < 5:
+            if len(parts) != 3:
                 await query.message.reply_text(
                     i18n.t("ERROR_INVALID_INPUT", language, error="Invalid callback data"),
                     parse_mode=ParseMode.HTML
                 )
                 await query.answer()
                 return
-            encoded_original = parts[2]
-            target_lang = parts[3]
-            encoded_transliterated = parts[4]
-            original_name = urllib.parse.unquote(encoded_original)
-            transliterated_name = urllib.parse.unquote(encoded_transliterated)
+            cache_id = parts[1]
+            alt_index = int(parts[2])
+            cache_data = cache.get_alternatives(cache_id)
+            if not cache_data or alt_index >= len(cache_data.get("alternatives", [])):
+                await query.message.reply_text(
+                    i18n.t("ERROR_INVALID_INPUT", language, error="Invalid or expired cache data"),
+                    parse_mode=ParseMode.HTML
+                )
+                await query.answer()
+                return
+            original_name = cache_data["source_name"]
+            target_lang = cache_data["target_lang"]
+            source_lang = cache_data["source_lang"]
+            transliterated_name = cache_data["alternatives"][alt_index]["transliterated_name"]
+            suffix = cache_data["alternatives"][alt_index].get("suffix", transliteration.get_suffix(transliterated_name, original_name))
             try:
-                source_lang = transliteration.guess_source_lang(original_name)
-                suffix = transliteration.get_suffix(transliterated_name, original_name)
                 transliteration.store_transliteration(original_name, source_lang, target_lang, transliterated_name, user_id=user_id)
                 response = transliteration.format_response(suffix, target_lang, language, language)
                 await query.message.reply_text(response, parse_mode=ParseMode.HTML)
@@ -275,14 +285,16 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
                     parse_mode=ParseMode.HTML
                 )
             else:
+                # Store alternatives in cache
+                cache_id = cache.store_alternatives(user_id, source_lang, target_lang, text, alternatives)
                 results = ", ".join(alt.get("suffix", transliteration.get_suffix(alt["transliterated_name"], text)) for alt in alternatives)
                 response = i18n.t("SUGGEST_TRANSLITERATION_RESULT", language, text=text, source_lang=source_lang, target_lang=target_lang, results=results)
                 buttons = [
                     [InlineKeyboardButton(
                         alt.get("suffix", transliteration.get_suffix(alt["transliterated_name"], text)),
-                        callback_data=f"name_alt_{encoded_text}_{target_lang}_{urllib.parse.quote(alt['transliterated_name'])}"
+                        callback_data=f"name_alt_{cache_id}_{i}"
                     )]
-                    for alt in alternatives
+                    for i, alt in enumerate(alternatives)
                 ]
                 reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
                 await query.message.reply_text(response, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
