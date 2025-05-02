@@ -76,7 +76,7 @@ class Transliteration:
 			new_results = {}
 			for current, info in results.items():
 				for mapped_char in mappings:
-					new_str = mapped_char
+					new_str = current + mapped_char
 					new_score = info["score"] + (-1 if mapped_char in info["used"] else 1)
 					new_results[new_str] = {
 						"score": new_score,
@@ -145,16 +145,6 @@ class Transliteration:
 
 	def format_response(self, transliterated_name: str, target_lang: str, output_lang: str) -> str:
 		"""Format transliteration response using i18n."""
-		if output_lang == 'en':
-			nameoflanguage = "english"
-		elif output_lang == 'tr':
-			nameoflanguage = "turkish"
-		elif output_lang == 'ar':
-			nameoflanguage = "arabic"
-		elif output_lang == 'he':
-			nameoflanguage = "hebrew"
-		elif output_lang == 'la':
-			nameoflanguage = "latin"
 		lang_names = {
 			"arabic": {
 				"turkish": "Arapça",
@@ -192,7 +182,7 @@ class Transliteration:
 				"hebrew": "טורקית"
 			}
 		}
-		lang_name = lang_names.get(target_lang, {}).get(nameoflanguage)
+		lang_name = lang_names.get(target_lang, {}).get(output_lang)
 		return self.i18n.t(
 			"TRANSLITERATION_RESPONSE",
 			output_lang,
