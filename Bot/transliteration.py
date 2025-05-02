@@ -150,11 +150,8 @@ class Transliteration:
 		i18n = I18n()
 		if user_language in available_languages:
 			language = user_language
-			context.args = [language]
-			await language_handle(update, context)
 		else:
 			language = 'en'
-			db.set_user_attribute(user_id, "language", language)
 		if language == 'en':
 			nameoflanguage = "english"
 		elif language == 'tr':
