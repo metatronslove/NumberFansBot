@@ -165,7 +165,7 @@ class Transliteration:
                 "english": "English",
                 "latin": "Anglicus",
                 "arabic": "إنجليزي",
-                "hebrew": "אنגلית"
+                "hebrew": "אנגלית"
             },
             "latin": {
                 "turkish": "Latince",
