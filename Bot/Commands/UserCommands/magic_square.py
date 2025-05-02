@@ -17,6 +17,7 @@ async def get_ai_commentary(response: str, lang: str) -> str:
 		payload = {
 			"inputs": prompt,
 			"parameters": {"max_length": 200, "temperature": 0.7}
+            "return_prompt": False  # Try to exclude prompt in output
 		}
 		response = requests.post(
 			Config.ai_model_url,
