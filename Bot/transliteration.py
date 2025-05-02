@@ -73,7 +73,7 @@ class Transliteration:
 			new_results = {}
 			for current, info in results.items():
 				for mapped_char in mappings:
-					new_str = current + mapped_char
+					new_str = mapped_char
 					new_score = info["score"] + (-1 if mapped_char in info["used"] else 1)
 					new_results[new_str] = {
 						"score": new_score,
@@ -142,6 +142,29 @@ class Transliteration:
 
 	def format_response(self, transliterated_name: str, target_lang: str, output_lang: str) -> str:
 		"""Format transliteration response using i18n."""
+		user = update.message.from_user
+		user_language = user.language_code.split('-')[0] if user.language_code else 'en'
+		available_languages = ['en', 'tr', 'ar', 'he', 'la']
+		user_id = user.id
+		db = Database()
+		i18n = I18n()
+		if user_language in available_languages:
+			language = user_language
+			context.args = [language]
+			await language_handle(update, context)
+		else:
+			language = 'en'
+			db.set_user_attribute(user_id, "language", language)
+		if language == 'en':
+			nameoflanguage = "english"
+		elif language == 'tr':
+			nameoflanguage = "turkish"
+		elif language == 'ar':
+			nameoflanguage = "arabic"
+		elif language == 'he':
+			nameoflanguage = "hebrew"
+		elif language == 'la':
+			nameoflanguage = "latin"
 		lang_names = {
 			"arabic": {
 				"turkish": "Arapça",
@@ -179,7 +202,7 @@ class Transliteration:
 				"hebrew": "טורקית"
 			}
 		}
-		lang_name = lang_names.get(target_lang, {}).get(output_lang, target_lang)
+		lang_name = nameoflanguage.get(target_lang, {}).get(output_lang, target_lang)
 		return self.i18n.t(
 			"TRANSLITERATION_RESPONSE",
 			output_lang,
