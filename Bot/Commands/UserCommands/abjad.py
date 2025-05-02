@@ -216,10 +216,10 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		abjad = Abjad()
 		result = abjad.abjad(
 			text,
-			tablo=tablebase,
-			shadda=shadda,
-			detail=detail,
-			lang=alphabeta
+			tablebase,
+			shadda,
+			detail,
+			alphabeta
 		)
 
 		if isinstance(result, str) and result.startswith("Error"):

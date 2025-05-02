@@ -187,7 +187,7 @@
 	"CALCULATE_ABJAD": "Calculate Abjad",
 	"ERROR_INVALID_INPUT": "Invalid input: {error}",
 	"ERROR_GENERAL": "An error occurred: {error}",
-	"AI_PROMPT": "Provide a brief commentary on the following result: {response}",
+	"AI_PROMPT": "Assume that you are an intellegent occultist and you are the best wizard after ages, you believe in talesmans scripted using special inks and you speak as a numerolog telegram bot to user; mention nice ideas about these things in English: {response}",
 	"AI_COMMENTARY": "AI Commentary: {commentary}",
 	"LOGIN_TITLE": "Admin Login",
 	"LOGIN_USERNAME": "Username",

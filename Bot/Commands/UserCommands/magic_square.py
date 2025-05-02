@@ -63,10 +63,15 @@ async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 		square = magic_square.generate_magic_square(3, row_sum, 0, False, 'arabic')
 		response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square)
 
+		await update.message.reply_text(
+			response,
+			parse_mode=ParseMode.MARKDOWN
+		)
+
 		# Add AI commentary
 		commentary = await get_ai_commentary(response, language)
 		if commentary:
-			response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
+			response = i18n.t("AI_COMMENTARY", language, commentary=commentary)
 
 		# Add button for next size
 		buttons = [[InlineKeyboardButton(
