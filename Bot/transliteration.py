@@ -56,7 +56,7 @@ class Transliteration:
 		# Check cached transliterations in MongoDB
 		alternatives = self.get_transliteration_alternatives(text, source_lang, target_lang)
 		if alternatives:
-			primary = alternatives[0]["transliterated_name"]
+			primary = get_suffix(alternatives[0]["transliterated_name"], text)
 			alt_names = [get_suffix(alt["transliterated_name"], text) for alt in alternatives[1:]]
 			return {"primary": primary, "alternatives": alt_names}
 
