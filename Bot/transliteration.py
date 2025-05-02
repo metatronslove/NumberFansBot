@@ -23,6 +23,13 @@ class Transliteration:
 		self.valid_languages = ["arabic", "turkish", "english", "hebrew", "latin"]
 		self.language_mapping = {"arabic": "arabic_hija"}
 
+	def get_suffix(x: str, y: str) -> str:
+		if not x or not y:
+			return x
+		if x.startswith(y):
+			return x[len(y):]
+		return x
+
 	def load_transliteration_map(self):
 		"""Load transliteration_map.json from Config directory."""
 		map_path = config.config_dir / "transliteration_map.json"
@@ -101,13 +108,6 @@ class Transliteration:
 			self.store_transliteration(text, source_lang, target_lang, translit)
 
 		return {"primary": primary, "alternatives": alternatives}
-
-	def get_suffix(x: str, y: str) -> str:
-		if not x or not y:
-			return x
-		if x.startswith(y):
-			return x[len(y):]
-		return x
 
 	def store_transliteration(self, source_name: str, source_lang: str, target_lang: str, transliterated_name: str, user_id: int = None):
 		"""Store transliteration in MongoDB, incrementing score if it exists."""
