@@ -1,4 +1,5 @@
 import math
+from .NumberConverter import NumberConverter
 
 class MagicSquareGenerator:
 	def __init__(self):
