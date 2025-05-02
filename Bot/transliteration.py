@@ -63,8 +63,8 @@ class Transliteration:
 		# Check cached transliterations in MongoDB
 		alternatives = self.get_transliteration_alternatives(text, source_lang, target_lang)
 		if alternatives:
-			primary = self.get_suffix(alternatives[0]["transliterated_name"], text)
-			alt_names = [self.get_suffix(alt["transliterated_name"], text) for alt in alternatives[1:]]
+			primary = alternatives[0]["transliterated_name"]
+			alt_names = [alt["transliterated_name"] for alt in alternatives[1:]]
 			return {"primary": primary, "alternatives": alt_names}
 
 		# Map source and target languages to transliteration_map keys
@@ -116,7 +116,7 @@ class Transliteration:
 				"source_name": source_name,
 				"source_lang": source_lang,
 				"target_lang": target_lang,
-				"transliterated_name": transliterated_name
+				"transliterated_name": self.get_suffix(transliterated_name, source_name)
 			}
 			if user_id:
 				update_data["user_id"] = user_id
@@ -125,7 +125,7 @@ class Transliteration:
 					"source_name": source_name,
 					"source_lang": source_lang,
 					"target_lang": target_lang,
-					"transliterated_name": transliterated_name
+					"transliterated_name": self.get_suffix(transliterated_name, source_name)
 				},
 				{
 					"$set": update_data,
