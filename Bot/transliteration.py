@@ -94,13 +94,21 @@ class Transliteration:
 			raise ValueError(f"No valid transliterations found for '{text}' from {source_lang} to {target_lang}")
 
 		primary = sorted_results[0][0]
-		alternatives = [res[0] for res in sorted_results[1:4]]  # Up to 3 alternatives
+		alternatives = [res[0] for res in sorted_results[1:]]  # All alternatives
 
 		# Store transliterations
 		for translit in [primary] + alternatives:
+			translit = get_suffix(translit, text)
 			self.store_transliteration(text, source_lang, target_lang, translit)
 
 		return {"primary": primary, "alternatives": alternatives}
+
+	def get_suffix(x: str, y: str) -> str:
+		if not x or not y:
+			return x
+		if x.startswith(y):
+			return x[len(y):]
+		return x
 
 	def store_transliteration(self, source_name: str, source_lang: str, target_lang: str, transliterated_name: str, user_id: int = None):
 		"""Store transliteration in MongoDB, incrementing score if it exists."""
