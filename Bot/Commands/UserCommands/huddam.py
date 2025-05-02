@@ -83,7 +83,7 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 	# Prompt for Language
 	keyboard = [
-		[InlineKeyboardButton(lang.capitalize(), callback_data=lang)]
+		[InlineKeyboardButton(lang, callback_data=lang)]
 		for lang in ["0-4", "6-10", "11-15", "16-20", "21-25", "26-30", "31-35", "HE", "TR", "EN", "LA"]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
