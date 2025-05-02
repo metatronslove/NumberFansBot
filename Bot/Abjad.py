@@ -208,7 +208,7 @@ class Abjad:
 
 		return {"sum": sum_value, "details": details} if detail else sum_value
 
-	def bastet(self, metin: str, mt: int, tablo: int = 1, shadda: int = 1, language: str = "ARABIC", detail: int = 0) -> str:
+	def bastet(self, metin: int, mt: int, tablo: int = 1, shadda: int = 1, language: str = "ARABIC", detail: int = 0) -> str:
 		try:
 			err = 0
 			language = language.upper()
