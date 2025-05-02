@@ -67,7 +67,7 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 			output_lang = "latin"
 		result = transliteration.transliterate(text, target_lang, source_lang)
 		primary = result["primary"]
-		response = transliteration.format_response(primary, target_lang, output_lang)  # Use format_response for localized name
+		response = transliteration.format_response(primary, target_lang, output_lang, language)  # Use format_response for localized name
 
 		transliteration.store_transliteration(text, source_lang, target_lang, primary, user_id=user_id)
 
