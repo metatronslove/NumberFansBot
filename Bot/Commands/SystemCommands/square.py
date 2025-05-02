@@ -70,12 +70,8 @@ async def square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, row_
 		max_n = 100
 		square = None
 
-		while n <= max_n:
-			temp_square = generator.generate_magic_square(n=n, row_sum=row_sum)
-			if not isinstance(temp_square, str) and generator.check_magic_square(temp_square, row_sum):
-				square = temp_square
-				break
-			n += 1
+		square = generator.generate_magic_square(n=n, row_sum=row_sum, 0, False, 'arabic')
+		indian = generator.generate_magic_square(n=n, row_sum=row_sum, 0, False, 'indian')
 
 		if square is None:
 			await (update.message.reply_text if update.message else update.callback_query.message.reply_text)(
@@ -84,19 +80,13 @@ async def square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, row_
 			)
 			return
 
-		converter = NumberConverter()
 		display_square = square
 		number_format = "arabic"
 		if use_indian:
-			display_square = [[converter.arabic(str(cell)) for cell in row] for row in square]
+			display_square = indian
 			number_format = "indian"
 
-		formatted_square = generator.box_the_square(
-			display_square,
-			border_style=0,
-			number_format=number_format
-		)
-		response = i18n.t("SQUARE_RESULT", language, number=n, row_sum=row_sum, square=formatted_square)
+		response = i18n.t("SQUARE_RESULT", language, number=n, row_sum=row_sum, square=display_square)
 
 		commentary = await get_ai_commentary(response, language)
 		if commentary:
@@ -111,15 +101,18 @@ async def square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, row_
 		next_n = n + 1
 		next_square = None
 		while next_n <= max_n:
-			temp_square = generator.generate_magic_square(n=next_n, row_sum=row_sum)
-			if not isinstance(temp_square, str) and generator.check_magic_square(temp_square, row_sum):
-				next_square = temp_square
+			square = generator.generate_magic_square(n=next_n, row_sum=row_sum, 0, False, 'arabic')
+			indian = generator.generate_magic_square(n=next_n, row_sum=row_sum, 0, False, 'indian')
+			if not isinstance(square, str):
+				next_square = square
+				if use_indian:
+					next_square = indian
 				break
 			next_n += 1
 		if next_square:
 			keyboard.append([InlineKeyboardButton(
 				i18n.t("NEXT_SIZE", language),
-				callback_data=f"next_size_{row_sum}_{n}"
+				callback_data=f"next_size_{row_sum}_{next_n}"
 			)])
 		reply_markup = InlineKeyboardMarkup(keyboard) if keyboard else None
 
