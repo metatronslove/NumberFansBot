@@ -274,10 +274,10 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					parse_mode=ParseMode.HTML
 				)
 			else:
-				results = ", ".join(alt["transliterated_name"] for alt in alternatives)
+				results = ", ".join(transliteration.get_suffix(alt["transliterated_name"], text) for alt in alternatives)
 				response = i18n.t("SUGGEST_TRANSLITERATION_RESULT", language, text=text, source_lang=source_lang, target_lang=target_lang, results=results)
 				buttons = [
-					[InlineKeyboardButton(alt["transliterated_name"], callback_data=f"name_alt_{encoded_text}_{target_lang}_{urllib.parse.quote(alt['transliterated_name'])}")]
+					[InlineKeyboardButton(transliteration.get_suffix(alt["transliterated_name"], text), callback_data=f"name_alt_{encoded_text}_{target_lang}_{urllib.parse.quote(alt['transliterated_name'])}")]
 					for alt in alternatives
 				]
 				reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
@@ -292,7 +292,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					parse_mode=ParseMode.HTML
 				)
 			else:
-				history_str = "\n".join([f"{item['source_name']} -> {item['transliterated_name']} ({item['target_lang']})" for item in history])
+				history_str = "\n".join([f"{item['source_name']} -> {transliteration.get_suffix(item['transliterated_name'], text)} ({item['target_lang']})" for item in history])
 				response = i18n.t("TRANSLITERATION_HISTORY_RESULT", language, history=history_str)
 				await query.message.reply_text(response, parse_mode=ParseMode.HTML)
 		elif data == "help_group_chat":
