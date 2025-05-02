@@ -60,7 +60,7 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
         elif language == 'tr':
             output_lang = "turkish"
         elif language == 'ar':
-            output_lang = "arabic"
+            outputdies_lang = "arabic"
         elif language == 'he':
             output_lang = "hebrew"
         elif language == 'la':
