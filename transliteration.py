@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update
 from telegram.ext import ContextTypes
 from telegram.constants import ParseMode
 from typing import Dict, List, Tuple, Optional
@@ -145,6 +145,7 @@ class Transliteration:
 
 	def format_response(self, transliterated_name: str, target_lang: str, output_lang: str) -> str:
 		"""Format transliteration response using i18n."""
+		update = Update()
 		user = update.message.from_user
 		user_language = user.language_code.split('-')[0] if user.language_code else 'en'
 		available_languages = ['en', 'tr', 'ar', 'he', 'la']
