@@ -143,7 +143,7 @@ class Transliteration:
 			logger.error(f"Failed to retrieve transliteration alternatives: {str(e)}")
 			return []
 
-	def format_response(self, transliterated_name: str, target_lang: str, output_lang: str) -> str:
+	def format_response(self, transliterated_name: str, target_lang: str, output_lang: str, language: str) -> str:
 		"""Format transliteration response using i18n."""
 		lang_names = {
 			"arabic": {
@@ -185,7 +185,7 @@ class Transliteration:
 		lang_name = lang_names.get(target_lang, {}).get(output_lang)
 		return self.i18n.t(
 			"TRANSLITERATION_RESPONSE",
-			output_lang,
+			language,
 			lang_name=lang_name,
 			result=transliterated_name
 		)
