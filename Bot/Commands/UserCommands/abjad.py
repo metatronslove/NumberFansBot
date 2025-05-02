@@ -62,7 +62,7 @@ async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 	is_arabic = bool(re.search(r'[\u0600-\u06FF]', text))
 	keyboard = [
-		[InlineKeyboardButton(lang.capitalize(), callback_data=lang)]
+		[InlineKeyboardButton(lang, callback_data=lang)]
 		for lang in ["0-4", "6-10", "11-15", "16-20", "21-25", "26-30", "31-35", "HE", "TR", "EN", "LA"]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
@@ -85,7 +85,7 @@ async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYP
 
 	# Prompt for Abjad Type
 	keyboard = [
-		[InlineKeyboardButton(typ.capitalize(), callback_data=typ)]
+		[InlineKeyboardButton(typ, callback_data=typ)]
 		for typ in ["-1", "0", "+1", "+2", "+3", "5"]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)

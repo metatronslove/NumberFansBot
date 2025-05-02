@@ -81,7 +81,7 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 	# Prompt for Table (0-35)
 	keyboard = [
-		[InlineKeyboardButton(lang.capitalize(), callback_data=lang)]
+		[InlineKeyboardButton(lang, callback_data=lang)]
 		for lang in ["0-4", "6-10", "11-15", "16-20", "21-25", "26-30", "31-35", "HE", "TR", "EN", "LA"]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
@@ -103,7 +103,7 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 	# Prompt for Language
 	keyboard = [
-		[InlineKeyboardButton(typ.capitalize(), callback_data=lang)]
+		[InlineKeyboardButton(lang, callback_data=lang)]
 		for lang in ["-1", "0", "+1", "+2", "+3", "5"]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
