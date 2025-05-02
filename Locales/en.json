@@ -180,6 +180,7 @@
 	"ELEMENT_EARTH": "Earth",
 	"ELEMENT_UNKNOWN": "Unknown",
 	"CREATE_MAGIC_SQUARE": "Create Magic Square",
+	"CREATE_INDIAN_MAGIC_SQUARE": "Create Indian Magic Square",
 	"EASTERN_ARABIC_NUMBERS": "View in Eastern Arabic Numerals",
 	"NEXT_SIZE": "Next Size",
 	"SPELL_NUMBER": "Spell Number",

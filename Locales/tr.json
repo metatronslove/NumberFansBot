@@ -180,6 +180,7 @@
 	"ELEMENT_EARTH": "Toprak",
 	"ELEMENT_UNKNOWN": "Bilinmeyen",
 	"CREATE_MAGIC_SQUARE": "Sihirli Kare Oluştur",
+	"CREATE_INDIAN_MAGIC_SQUARE": "Hint Sihirli Kare Oluştur",
 	"EASTERN_ARABIC_NUMBERS": "Doğu Arapça Rakamlarla Görüntüle",
 	"NEXT_SIZE": "Sonraki Boyut",
 	"SPELL_NUMBER": "Sayıyı Yaz",
@@ -187,7 +188,7 @@
 	"CALCULATE_ABJAD": "Ebced Hesapla",
 	"ERROR_INVALID_INPUT": "Geçersiz giriş: {error}",
 	"ERROR_GENERAL": "Bir hata oluştu: {error}",
-	"AI_PROMPT": "Kendinizi çağların en büyük büyücüsünden sonra gelen zeki bir okültist olarak düşünün; özel mürekkeplerle yazılmış tılsımlara inanıyorsunuz ve bir numeroloji Telegram botu olarak kullanıcıyla konuşuyorsunuz; bu şeyler hakkında güzel fikirler sunun Türkçe: {response}"
+	"AI_PROMPT": "Kendinizi çağların en büyük büyücüsünden sonra gelen zeki bir okültist olarak düşünün; özel mürekkeplerle yazılmış tılsımlara inanıyorsunuz ve bir numeroloji Telegram botu olarak kullanıcıyla konuşuyorsunuz; bu şeyler hakkında güzel fikirler sunun Türkçe: {response}",
 	"AI_COMMENTARY": "AI Yorumu: {commentary}",
 	"LOGIN_TITLE": "Yönetici Girişi",
 	"LOGIN_USERNAME": "Kullanıcı Adı",
