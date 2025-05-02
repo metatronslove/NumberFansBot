@@ -116,7 +116,7 @@ class Transliteration:
 				"source_name": source_name,
 				"source_lang": source_lang,
 				"target_lang": target_lang,
-				"transliterated_name": self.get_suffix(transliterated_name, source_name)
+				"transliterated_name": transliterated_name
 			}
 			if user_id:
 				update_data["user_id"] = user_id
@@ -125,7 +125,7 @@ class Transliteration:
 					"source_name": source_name,
 					"source_lang": source_lang,
 					"target_lang": target_lang,
-					"transliterated_name": self.get_suffix(transliterated_name, source_name)
+					"transliterated_name": transliterated_name, source_name
 				},
 				{
 					"$set": update_data,
