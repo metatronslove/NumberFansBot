@@ -68,7 +68,7 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
         result = transliteration.transliterate(text, target_lang, source_lang)
         primary = result["primary"]
         suffix = transliteration.get_suffix(primary, text)
-        response = transliteration.format_response(suffix, target_lang, output_lang)
+        response = transliteration.format_response(suffix, target_lang, output_lang, language)
 
         transliteration.store_transliteration(text, source_lang, target_lang, primary, user_id=user_id)
 
