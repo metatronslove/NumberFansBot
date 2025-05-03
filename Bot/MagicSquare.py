@@ -210,21 +210,21 @@ class MagicSquareGenerator:
 
 		return "\n".join(boxed)
 
-    def check_magic_square(self, magic_square, expected_sum):
-        n = len(magic_square)
-        expected_sum = int(expected_sum)  # Ensure expected_sum is integer
-        for i in range(n):
-            row_sum = sum(int(float(cell)) if str(cell).replace('.', '').isdigit() else 0 for cell in magic_square[i])
-            if row_sum != expected_sum:
-                return False
-        for j in range(n):
-            col_sum = sum(int(float(magic_square[i][j])) if str(magic_square[i][j]).replace('.', '').isdigit() else 0 for i in range(n))
-            if col_sum != expected_sum:
-                return False
-        diag_sum1 = sum(int(float(magic_square[i][i])) if str(magic_square[i][i]).replace('.', '').isdigit() else 0 for i in range(n))
-        if diag_sum1 != expected_sum:
-            return False
-        diag_sum2 = sum(int(float(magic_square[i][n - 1 - i])) if str(magic_square[i][n - 1 - i]).replace('.', '').isdigit() else 0 for i in range(n))
-        if diag_sum2 != expected_sum:
-            return False
-        return True
+	def check_magic_square(self, magic_square, expected_sum):
+		n = len(magic_square)
+		expected_sum = int(expected_sum)  # Ensure expected_sum is integer
+		for i in range(n):
+			row_sum = sum(int(float(cell)) if str(cell).replace('.', '').isdigit() else 0 for cell in magic_square[i])
+			if row_sum != expected_sum:
+				return False
+		for j in range(n):
+			col_sum = sum(int(float(magic_square[i][j])) if str(magic_square[i][j]).replace('.', '').isdigit() else 0 for i in range(n))
+			if col_sum != expected_sum:
+				return False
+		diag_sum1 = sum(int(float(magic_square[i][i])) if str(magic_square[i][i]).replace('.', '').isdigit() else 0 for i in range(n))
+		if diag_sum1 != expected_sum:
+			return False
+		diag_sum2 = sum(int(float(magic_square[i][n - 1 - i])) if str(magic_square[i][n - 1 - i]).replace('.', '').isdigit() else 0 for i in range(n))
+		if diag_sum2 != expected_sum:
+			return False
+		return True
