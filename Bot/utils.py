@@ -7,8 +7,8 @@ import asyncio
 from pathlib import Path
 from telegram import Update, User
 from telegram.ext import ContextTypes
-from ...cache import Cache
-from ...config import Config
+from .cache import Cache
+from .config import Config
 from .database import Database
 
 logger = logging.getLogger(__name__)
