@@ -214,16 +214,16 @@ class MagicSquareGenerator:
 		n = len(magic_square)
 		for i in range(n):
 			row_sum = sum(int(cell) if str(cell).isdigit() else 0 for cell in magic_square[i])
-			if abs(row_sum - expected_sum) > 0:
+			if abs(row_sum - expected_sum) != 0:
 				return False
 		for j in range(n):
 			col_sum = sum(int(magic_square[i][j]) if str(magic_square[i][j]).isdigit() else 0 for i in range(n))
-			if abs(col_sum - expected_sum) > 0:
+			if abs(col_sum - expected_sum) != 0:
 				return False
 		diag_sum1 = sum(int(magic_square[i][i]) if str(magic_square[i][i]).isdigit() else 0 for i in range(n))
-		if abs(diag_sum1 - expected_sum) > 0:
+		if abs(diag_sum1 - expected_sum) != 0:
 			return False
 		diag_sum2 = sum(int(magic_square[i][n - 1 - i]) if str(magic_square[i][n - 1 - i]).isdigit() else 0 for i in range(n))
-		if abs(diag_sum2 - expected_sum) > 0:
+		if abs(diag_sum2 - expected_sum) != 0:
 			return False
 		return True
