@@ -219,7 +219,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		result = abjad.abjad(
 			text,
 			tablebase,
-			shadda,
+			int(shadda),
 			detail,
 			alphabeta
 		)
