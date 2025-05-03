@@ -25,7 +25,7 @@ class MagicSquareGenerator:
 			magic_square = self.mirror_flip(magic_square)
 		if output_format == "indian":
 			magic_square = [
-				[self.number_converter.indian(str(cell)) for cell in row]
+				[self.number_converter.indian(str(int(cell))) for cell in row]
 				for row in magic_square
 			]
 		if not self.check_magic_square(magic_square, row_sum):
@@ -185,7 +185,7 @@ class MagicSquareGenerator:
 				cell_value = magic_square[r][c]
 				display_value = (f"\u200e\u200f{self.number_converter.arab_to_indian(cell_value)}\u200e"
 								if number_format == "indian" and not isinstance(cell_value, str)
-								else str(cell_value))
+								else str(int(cell_value)))
 				value_length = len(display_value.replace("\u200e", "").replace("\u200f", ""))
 				padding = border_length - value_length
 				left_pad = padding // 2
