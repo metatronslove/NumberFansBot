@@ -15,28 +15,30 @@ from datetime import datetime
 logger = logging.getLogger(__name__)
 
 async def get_ai_commentary(response: str, lang: str) -> str:
-	i18n = I18n()
-	prompt = i18n.t("AI_PROMPT", lang, response=response)
-	try:
-		headers = {"Authorization": f"Bearer {config.huggingface_access_token}"}
-		payload = {
-			"inputs": prompt,
-			"parameters": {"max_length": 200, "temperature": 0.7}
-		}
-		response = requests.post(
-			config.ai_model_url,
-			headers=headers,
-			json=payload
-		)
-		response.json()[0]["generated_text"] = re.sub(rf"^{re.escape(prompt)}.*?\[/INST\]", "", generated_text, flags=re.DOTALL).strip()
-		if response.status_code == 200:
-			return response.json()[0]["generated_text"].split("[/INST]")[-1].strip()
-		else:
-			logger.error(f"AI API error: {response.status_code}")
-			return ""
-	except Exception as e:
-		logger.error(f"AI commentary error: {str(e)}")
-		return ""
+    i18n = I18n()
+    prompt = i18n.t("AI_PROMPT", lang, response=response)
+    try:
+        headers = {"Authorization": f"Bearer {config.huggingface_access_token}"}
+        payload = {
+            "inputs": prompt,
+            "parameters": {"max_length": 200, "temperature": 0.7}
+        }
+        api_response = requests.post(
+            config.ai_model_url,
+            headers=headers,
+            json=payload
+        )
+        if api_response.status_code == 200:
+            generated_text = api_response.json()[0]["generated_text"]
+            # Strip the prompt and everything up to [/INST], keeping the content after
+            cleaned_text = re.sub(rf"^{re.escape(prompt)}.*?\[/INST\]\s*", "", generated_text, flags=re.DOTALL).strip()
+            return cleaned_text
+        else:
+            logger.error(f"AI API error: Status code {api_response.status_code}, Response: {api_response.text}")
+            return ""
+    except Exception as e:
+        logger.error(f"AI commentary error: {str(e)}")
+        return ""
 
 async def square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, row_sum: int = None, current_n: int = 3, use_indian: bool = False):
 	user = update.message.from_user if update.message else update.callback_query.from_user
