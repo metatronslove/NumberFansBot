@@ -14,12 +14,13 @@ from ...Numerology import UnifiedNumerology
 from ...MagicSquare import MagicSquareGenerator
 from ...NumberConverter import NumberConverter
 from ...cache import Cache
-from ...config import config
+from ...config import Config
 from ..UserCommands.nutket import nutket_handle
 from ..UserCommands.payment import handle_payment_callback
 import urllib.parse
 
 logger = logging.getLogger(__name__)
+config = Config()
 
 async def get_ai_commentary(response: str, lang: str) -> str:
     i18n = I18n()

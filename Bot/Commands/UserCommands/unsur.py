@@ -1,265 +1,237 @@
 import logging
-import requests
 import re
-import aiohttp
-import asyncio
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
-	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
-	ConversationHandler, filters, ContextTypes
+    Application, CommandHandler, MessageHandler, CallbackQueryHandler,
+    ConversationHandler, filters, ContextTypes
 )
 from telegram.constants import ParseMode
 from ...database import Database
 from ...i18n import I18n
-from ...admin_panel import config
-from ...Abjad import Abjad
 from ...element_classifier import ElementClassifier
-from ...utils import register_user_if_not_exists
+from ...utils import register_user_if_not_exists, get_ai_commentary
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
 INPUT, LANGUAGE, TABLE, SHADDA = range(4)
 
-async def get_ai_commentary(response: str, lang: str) -> str:
-    i18n = I18n()
-    prompt = i18n.t("AI_PROMPT", lang, response=response)
-    try:
-        headers = {"Authorization": f"Bearer {config.ai_access_token}"}
-        payload = {
-            "inputs": prompt,
-            "parameters": {"max_length": 200, "temperature": 0.7}
-        }
-        async with aiohttp.ClientSession() as session:
-            async with session.post(config.ai_model_url, headers=headers, json=payload) as api_response:
-                if api_response.status == 200:
-                    data = await api_response.json()
-                    generated_text = data[0]["generated_text"]
-                    logger.debug(f"Raw generated text: {generated_text}")
-                    cleaned_text = re.sub(
-                        rf"^{re.escape(prompt)}(?:\s*\[\/INST\])?\s*",
-                        "",
-                        generated_text,
-                        flags=re.DOTALL
-                    ).strip()
-                    logger.debug(f"Cleaned text: {cleaned_text}")
-                    return cleaned_text
-                else:
-                    logger.error(f"Hugging Face API error: Status code {api_response.status}, Response: {await api_response.text()}")
-                    return ""
-    except KeyError as e:
-        logger.error(f"AI commentary error: Invalid response format, missing key {e}")
-        return ""
-    except Exception as e:
-        logger.error(f"AI commentary error: {str(e)}")
-        return ""
-
 async def unsur_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	user = update.message.from_user
-	await register_user_if_not_exists(update, context, user)
-	user_id = user.id
-	db = Database()
-	i18n = I18n()
-	language = db.get_user_language(user_id)
+    user = update.message.from_user
+    await register_user_if_not_exists(update, context, user)
+    user_id = user.id
+    db = Database()
+    i18n = I18n()
+    language = db.get_user_language(user_id)
 
-	await update.message.reply_text(
-		i18n.t("UNSUR_PROMPT_INPUT", language),
-		parse_mode=ParseMode.MARKDOWN
-	)
-	return INPUT
+    await update.message.reply_text(
+        i18n.t("UNSUR_PROMPT_INPUT", language),
+        parse_mode=ParseMode.MARKDOWN
+    )
+    return INPUT
 
 async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	user_id = update.message.from_user.id
-	db = Database()
-	i18n = I18n()
-	language = db.get_user_language(user_id)
+    user_id = update.message.from_user.id
+    db = Database()
+    i18n = I18n()
+    language = db.get_user_language(user_id)
 
-	input_text = update.message.text.strip()
-	if not input_text:
-		await update.message.reply_text(
-			i18n.t("ERROR_INVALID_INPUT", language, error="Input is required"),
-			parse_mode=ParseMode.MARKDOWN
-		)
-		return INPUT
+    input_text = update.message.text.strip()
+    if not input_text:
+        await update.message.reply_text(
+            i18n.t("ERROR_INVALID_INPUT", language, error="Input is required"),
+            parse_mode=ParseMode.MARKDOWN
+        )
+        return INPUT
 
-	context.user_data["input_text"] = input_text
-	# Check if input is Arabic (U+0600–U+06FF)
-	is_arabic = bool(re.search(r'[\u0600-\u06FF]', input_text))
-	context.user_data["is_arabic"] = is_arabic
+    context.user_data["input_text"] = input_text
+    is_arabic = bool(re.search(r'[\u0600-\u06FF]', input_text))
+    context.user_data["is_arabic"] = is_arabic
 
-	# Prompt for Language
-	keyboard = [
-		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_TURKISH", language), callback_data="TURKCE")],
-		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ARABI", language), callback_data="ARABI")],
-		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_BUNI", language), callback_data="BUNI")],
-		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HUSEYNI", language), callback_data="HUSEYNI")],
-		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HEBREW", language), callback_data="HEBREW")],
-		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ENGLISH", language), callback_data="ENGLISH")],
-		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_LATIN", language), callback_data="LATIN")],
-		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_DEFAULT", language), callback_data="DEFAULT")]
-	]
-	reply_markup = InlineKeyboardMarkup(keyboard)
-	await update.message.reply_text(
-		i18n.t("UNSUR_PROMPT_LANGUAGE", language),
-		reply_markup=reply_markup
-	)
-	return LANGUAGE
+    keyboard = [
+        [InlineKeyboardButton(i18n.t("ALPHABET_ORDER_TURKISH", language), callback_data="unsur_lang_TURKCE")],
+        [InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ARABI", language), callback_data="unsur_lang_ARABI")],
+        [InlineKeyboardButton(i18n.t("ALPHABET_ORDER_BUNI", language), callback_data="unsur_lang_BUNI")],
+        [InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HUSEYNI", language), callback_data="unsur_lang_HUSEYNI")],
+        [InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HEBREW", language), callback_data="unsur_lang_HEBREW")],
+        [InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ENGLISH", language), callback_data="unsur_lang_ENGLISH")],
+        [InlineKeyboardButton(i18n.t("ALPHABET_ORDER_LATIN", language), callback_data="unsur_lang_LATIN")],
+        [InlineKeyboardButton(i18n.t("ALPHABET_ORDER_DEFAULT", language), callback_data="unsur_lang_DEFAULT")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text(
+        i18n.t("UNSUR_PROMPT_LANGUAGE", language),
+        reply_markup=reply_markup
+    )
+    return LANGUAGE
 
 async def unsur_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	query = update.callback_query
-	user_id = query.from_user.id
-	db = Database()
-	i18n = I18n()
-	language = db.get_user_language(user_id)
+    query = update.callback_query
+    await query.answer()
+    user_id = query.from_user.id
+    db = Database()
+    i18n = I18n()
+    language = db.get_user_language(user_id)
 
-	lang = query.data
-	context.user_data["language"] = lang
+    if not query.data.startswith("unsur_lang_"):
+        logger.debug(f"Ignoring unrelated callback in unsur_language: {query.data}")
+        return LANGUAGE
+    lang = query.data.split("unsur_lang_")[1]
+    context.user_data["language"] = lang
 
-	# List or Quantity
-	keyboard = [
-		[InlineKeyboardButton(i18n.t("ELEMENT_FIRE", language), callback_data="fire")],
-		[InlineKeyboardButton(i18n.t("ELEMENT_WATER", language), callback_data="water")],
-		[InlineKeyboardButton(i18n.t("ELEMENT_AIR", language), callback_data="air")],
-		[InlineKeyboardButton(i18n.t("ELEMENT_EARTH", language), callback_data="earth")]
-	]
-	reply_markup = InlineKeyboardMarkup(keyboard)
-	await query.message.reply_text(
-		i18n.t("UNSUR_PROMPT_TABLE", language),
-		reply_markup=reply_markup
-	)
-	await query.answer()
-	return TABLE
+    keyboard = [
+        [InlineKeyboardButton(i18n.t("ELEMENT_FIRE", language), callback_data="unsur_table_fire")],
+        [InlineKeyboardButton(i18n.t("ELEMENT_WATER", language), callback_data="unsur_table_water")],
+        [InlineKeyboardButton(i18n.t("ELEMENT_AIR", language), callback_data="unsur_table_air")],
+        [InlineKeyboardButton(i18n.t("ELEMENT_EARTH", language), callback_data="unsur_table_earth")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.message.reply_text(
+        i18n.t("UNSUR_PROMPT_TABLE", language),
+        reply_markup=reply_markup
+    )
+    return TABLE
 
 async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	query = update.callback_query
-	user_id = query.from_user.id
-	db = Database()
-	i18n = I18n()
-	language = db.get_user_language(user_id)
+    query = update.callback_query
+    await query.answer()
+    user_id = query.from_user.id
+    db = Database()
+    i18n = I18n()
+    language = db.get_user_language(user_id)
 
-	table = query.data
-	context.user_data["table"] = table
+    if not query.data.startswith("unsur_table_"):
+        logger.debug(f"Ignoring unrelated callback in unsur_table: {query.data}")
+        return TABLE
+    table = query.data.split("unsur_table_")[1]
+    context.user_data["table"] = table
 
-	# Prompt for Shadda if Arabic input
-	if context.user_data.get("is_arabic"):
-		keyboard = [
-			[InlineKeyboardButton(i18n.t("SHADDA_USE_ONCE", language), callback_data="1")],
-			[InlineKeyboardButton(i18n.t("SHADDA_USE_TWICE", language), callback_data="2")]
-		]
-		reply_markup = InlineKeyboardMarkup(keyboard)
-		await query.message.reply_text(
-			i18n.t("UNSUR_PROMPT_SHADDA", language),
-			reply_markup=reply_markup
-		)
-		await query.answer()
-		return SHADDA
-	else:
-		context.user_data["shadda"] = 1  # Default
-		return await unsur_shadda(update, context)
+    if context.user_data.get("is_arabic"):
+        keyboard = [
+            [InlineKeyboardButton(i18n.t("SHADDA_USE_ONCE", language), callback_data="unsur_shadda_1")],
+            [InlineKeyboardButton(i18n.t("SHADDA_USE_TWICE", language), callback_data="unsur_shadda_2")]
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await query.message.reply_text(
+            i18n.t("UNSUR_PROMPT_SHADDA", language),
+            reply_markup=reply_markup
+        )
+        return SHADDA
+    else:
+        context.user_data["shadda"] = 1
+        return await unsur_shadda(update, context)
 
 async def unsur_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	query = update.callback_query
-	user_id = query.from_user.id
-	db = Database()
-	i18n = I18n()
-	language = db.get_user_language(user_id)
-	db.set_user_attribute(user_id, "last_interaction", datetime.now())
-	db.increment_command_usage("unsur", user_id)
+    query = update.callback_query
+    user_id = query.from_user.id if query else update.message.from_user.id
+    db = Database()
+    i18n = I18n()
+    language = db.get_user_language(user_id)
+    db.set_user_attribute(user_id, "last_interaction", datetime.now())
+    db.increment_command_usage("unsur", user_id)
 
-	try:
-		if query:  # From callback
-			shadda = int(query.data)
-			context.user_data["shadda"] = shadda
-			await query.answer()
-		else:
-			shadda = context.user_data.get("shadda", 1)
+    try:
+        if query:
+            if not query.data.startswith("unsur_shadda_"):
+                logger.debug(f"Ignoring unrelated callback in unsur_shadda: {query.data}")
+                return SHADDA
+            shadda = int(query.data.split("unsur_shadda_")[1])
+            context.user_data["shadda"] = shadda
+            await query.answer()
 
-		input_text = context.user_data["input_text"]
-		lang = context.user_data["language"]
-		table = context.user_data["table"]
+        else:
+            shadda = context.user_data.get("shadda", 1)
 
-		unsur = ElementClassifier()
-		result = unsur.classify_elements(input_text, table, shadda, lang)
-		if isinstance(result, str) and result.startswith("Error"):
-			await (query.message.reply_text if query else update.message.reply_text)(
-				i18n.t("ERROR_GENERAL", language, error=result),
-				parse_mode=ParseMode.MARKDOWN
-			)
-			return ConversationHandler.END
-		value = result["adet"]
-		liste = result["liste"]
-		elements = {
-			'fire': i18n.t("ELEMENT_FIRE", language),
-			'water': i18n.t("ELEMENT_WATER", language),
-			'air': i18n.t("ELEMENT_AIR", language),
-			'earth': i18n.t("ELEMENT_EARTH", language)
-		}
-		element = elements.get(table, i18n.t("ELEMENT_UNKNOWN", language))
+        input_text = context.user_data["input_text"]
+        lang = context.user_data["language"]
+        table = context.user_data["table"]
 
-		response = i18n.t("UNSUR_RESULT", language, input=input_text, liste=liste, value=value, element=element)
+        unsur = ElementClassifier()
+        result = unsur.classify_elements(input_text, table, shadda, lang)
+        if isinstance(result, str) and result.startswith("Error"):
+            await (query.message.reply_text if query else update.message.reply_text)(
+                i18n.t("ERROR_GENERAL", language, error=result),
+                parse_mode=ParseMode.MARKDOWN
+            )
+            context.user_data.clear()
+            return ConversationHandler.END
 
-		# Get AI commentary
-		commentary = await get_ai_commentary(response, language)
-		if commentary:
-			response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
+        value = result["adet"]
+        liste = result["liste"]
+        elements = {
+            'fire': i18n.t("ELEMENT_FIRE", language),
+            'water': i18n.t("ELEMENT_WATER", language),
+            'air': i18n.t("ELEMENT_AIR", language),
+            'earth': i18n.t("ELEMENT_EARTH", language)
+        }
+        element = elements.get(table, i18n.t("ELEMENT_UNKNOWN", language))
 
-		# Add buttons
-		keyboard = []
-		if value >= 15:
-			keyboard.append([InlineKeyboardButton(
-				i18n.t("CREATE_MAGIC_SQUARE", language),
-				callback_data=f"magic_square_{value}"
-			)])
-			keyboard.append([InlineKeyboardButton(
-				i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
-				callback_data=f"indian_square_{value}"
-			)])
-		keyboard.append([InlineKeyboardButton(
-			i18n.t("SPELL_NUMBER", language),
-			callback_data=f"nutket_{value}_{lang}"
-		)])
-		if not input_text.replace(" ", "").isdigit():  # Add Calculate Abjad for text input
-			keyboard.append([InlineKeyboardButton(
-				i18n.t("CALCULATE_ABJAD", language),
-				callback_data=f"abjad_text_{input_text}_{lang}"
-			)])
-		reply_markup = InlineKeyboardMarkup(keyboard)
+        response = i18n.t("UNSUR_RESULT", language, input=input_text, liste=liste, value=value, element=element)
 
-		await (query.message.reply_text if query else update.message.reply_text)(
-			response,
-			parse_mode=ParseMode.MARKDOWN,
-			reply_markup=reply_markup
-		)
-		return ConversationHandler.END
+        commentary = await get_ai_commentary(response, language)
+        if commentary:
+            response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
 
-	except Exception as e:
-		logger.error(f"Unsur error: {str(e)}")
-		await (query.message.reply_text if query else update.message.reply_text)(
-			i18n.t("ERROR_GENERAL", language),
-			parse_mode=ParseMode.MARKDOWN
-		)
-		return ConversationHandler.END
+        keyboard = []
+        if value >= 15:
+            keyboard.append([InlineKeyboardButton(
+                i18n.t("CREATE_MAGIC_SQUARE", language),
+                callback_data=f"magic_square_{value}"
+            )])
+            keyboard.append([InlineKeyboardButton(
+                i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
+                callback_data=f"indian_square_{value}"
+            )])
+        keyboard.append([InlineKeyboardButton(
+            i18n.t("SPELL_NUMBER", language),
+            callback_data=f"nutket_{value}_{lang}"
+        )])
+        if not input_text.replace(" ", "").isdigit():
+            keyboard.append([InlineKeyboardButton(
+                i18n.t("CALCULATE_ABJAD", language),
+                callback_data=f"abjad_text_{input_text}_{lang}"
+            )])
+        reply_markup = InlineKeyboardMarkup(keyboard)
+
+        await (query.message.reply_text if query else update.message.reply_text)(
+            response,
+            parse_mode=ParseMode.MARKDOWN,
+            reply_markup=reply_markup
+        )
+        context.user_data.clear()
+        return ConversationHandler.END
+
+    except Exception as e:
+        logger.error(f"Unsur error: {str(e)}")
+        await (query.message.reply_text if query else update.message.reply_text)(
+            i18n.t("ERROR_GENERAL", language),
+            parse_mode=ParseMode.MARKDOWN
+        )
+        context.user_data.clear()
+        return ConversationHandler.END
 
 async def unsur_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	user_id = update.message.from_user.id
-	db = Database()
-	i18n = I18n()
-	language = db.get_user_language(user_id)
-	await update.message.reply_text(
-		i18n.t("UNSUR_CANCEL", language),
-		parse_mode=ParseMode.MARKDOWN
-	)
-	return ConversationHandler.END
+    user_id = update.message.from_user.id
+    db = Database()
+    i18n = I18n()
+    language = db.get_user_language(user_id)
+    await update.message.reply_text(
+        i18n.t("UNSUR_CANCEL", language),
+        parse_mode=ParseMode.MARKDOWN
+    )
+    context.user_data.clear()
+    return ConversationHandler.END
 
 def get_unsur_conversation_handler():
-	return ConversationHandler(
-		entry_points=[CommandHandler("unsur", unsur_start)],
-		states={
-			INPUT: [MessageHandler(filters.TEXT & ~filters.COMMAND, unsur_input)],
-			LANGUAGE: [CallbackQueryHandler(unsur_language)],
-			TABLE: [CallbackQueryHandler(unsur_table)],
-			SHADDA: [CallbackQueryHandler(unsur_shadda)],
-		},
-		fallbacks=[CommandHandler("cancel", unsur_cancel)],
-		per_message=False
-	)
+    return ConversationHandler(
+        entry_points=[CommandHandler("unsur", unsur_start)],
+        states={
+            INPUT: [MessageHandler(filters.TEXT & ~filters.COMMAND, unsur_input)],
+            LANGUAGE: [CallbackQueryHandler(unsur_language, pattern=r"^unsur_lang_")],
+            TABLE: [CallbackQueryHandler(unsur_table, pattern=r"^unsur_table_")],
+            SHADDA: [CallbackQueryHandler(unsur_shadda, pattern=r"^unsur_shadda_")],
+        },
+        fallbacks=[CommandHandler("cancel", unsur_cancel)],
+        per_message=False,
+        allow_reentry=False
+    )
