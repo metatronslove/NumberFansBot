@@ -32,7 +32,7 @@ async def get_ai_commentary(response: str, lang: str) -> str:
 			headers=headers,
 			json=payload
 		)
-		response = re.sub(rf"^{re.escape(prompt)}.*?\[/INST\]", "", response, flags=re.DOTALL).strip()
+		response.json()[0]["generated_text"] = re.sub(rf"^{re.escape(prompt)}.*?\[/INST\]", "", generated_text, flags=re.DOTALL).strip()
 		if response.status_code == 200:
 			return response.json()[0]["generated_text"].split("[/INST]")[-1].strip()
 		else:
@@ -83,8 +83,17 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 	# Prompt for Table (0-35)
 	keyboard = [
-		[InlineKeyboardButton(lang, callback_data=lang)]
-		for lang in ["0-4", "6-10", "11-15", "16-20", "21-25", "26-30", "31-35", "HE", "TR", "EN", "LA"]
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ABJADI", language), callback_data="0-4")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI", language), callback_data="6-10")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_QURANIC", language), callback_data="11-15")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HIJA", language), callback_data="16-20")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI_HIJA", language), callback_data="21-25")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_IKLEELS", language), callback_data="26-30")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_SHAMSE_ABJADI", language), callback_data="31-35")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HEBREW", language), callback_data="HE")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_TURKISH", language), callback_data="TR")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ENGLISH", language), callback_data="EN")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_LATIN", language), callback_data="LA")]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	await update.message.reply_text(
@@ -105,8 +114,12 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 	# Prompt for Language
 	keyboard = [
-		[InlineKeyboardButton(lang, callback_data=lang)]
-		for lang in ["-1", "0", "+1", "+2", "+3", "5"]
+		[InlineKeyboardButton(i18n.t("ABJAD_TYPE_ASGHAR", language), callback_data="-1")],
+		[InlineKeyboardButton(i18n.t("ABJAD_TYPE_SAGHIR", language), callback_data="0")],
+		[InlineKeyboardButton(i18n.t("ABJAD_TYPE_KEBEER", language), callback_data="+1")],
+		[InlineKeyboardButton(i18n.t("ABJAD_TYPE_AKBAR", language), callback_data="+2")],
+		[InlineKeyboardButton(i18n.t("ABJAD_TYPE_SAGHIR_PLUS_QUANTITY", language), callback_data="+3")],
+		[InlineKeyboardButton(i18n.t("ABJAD_TYPE_LETTER_QUANTITY", language), callback_data="5"]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	await query.message.reply_text(

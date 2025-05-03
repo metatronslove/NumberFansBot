@@ -34,7 +34,7 @@ async def get_ai_commentary(response: str, lang: str) -> str:
 			headers=headers,
 			json=payload
 		)
-		response = re.sub(rf"^{re.escape(prompt)}.*?\[/INST\]", "", response, flags=re.DOTALL).strip()
+		response.json()[0]["generated_text"] = re.sub(rf"^{re.escape(prompt)}.*?\[/INST\]", "", generated_text, flags=re.DOTALL).strip()
 		if response.status_code == 200:
 			return response.json()[0]["generated_text"].split("[/INST]")[-1].strip()
 		else:
@@ -141,7 +141,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				callback_data=f"next_size_{row_sum}_3"
 			)]]
 			reply_markup = InlineKeyboardMarkup(buttons)
-			await query.message.reply_text(response, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
+			await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN,	reply_markup=reply_markup)
 		elif data.startswith("indian_square_"):
 			parts = data[len("indian_square_"):].split("_")
 			row_sum, n = int(parts[0]), int(parts[1])

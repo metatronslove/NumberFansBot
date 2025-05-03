@@ -32,7 +32,7 @@ async def get_ai_commentary(response: str, lang: str) -> str:
 			headers=headers,
 			json=payload
 		)
-		response = re.sub(rf"^{re.escape(prompt)}.*?\[/INST\]", "", response, flags=re.DOTALL).strip()
+		response.json()[0]["generated_text"] = re.sub(rf"^{re.escape(prompt)}.*?\[/INST\]", "", generated_text, flags=re.DOTALL).strip()
 		if response.status_code == 200:
 			return response.json()[0]["generated_text"].split("[/INST]")[-1].strip()
 		else:
@@ -62,9 +62,9 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	context.user_data["huddam_number"] = number
 
 	keyboard = [
-		[InlineKeyboardButton("Ulvi", callback_data="ulvi")],
-		[InlineKeyboardButton("Sufli", callback_data="sufli")],
-		[InlineKeyboardButton("Şer", callback_data="ser")]
+		[InlineKeyboardButton(i18n.t("HUDDAM_HIGH", language), callback_data="ulvi")],
+		[InlineKeyboardButton(i18n.t("HUDDAM_LOW", language), callback_data="sufli")],
+		[InlineKeyboardButton(i18n.t("HUDDAM_BAD", language), callback_data="ser")]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	await update.message.reply_text(
@@ -85,8 +85,17 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 	# Prompt for Language
 	keyboard = [
-		[InlineKeyboardButton(lang, callback_data=lang)]
-		for lang in ["0-4", "6-10", "11-15", "16-20", "21-25", "26-30", "31-35", "HE", "TR", "EN", "LA"]
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ABJADI", language), callback_data="0-4")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI", language), callback_data="6-10")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_QURANIC", language), callback_data="11-15")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HIJA", language), callback_data="16-20")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI_HIJA", language), callback_data="21-25")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_IKLEELS", language), callback_data="26-30")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_SHAMSE_ABJADI", language), callback_data="31-35")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HEBREW", language), callback_data="HE")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_TURKISH", language), callback_data="TR")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ENGLISH", language), callback_data="EN")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_LATIN", language), callback_data="LA")]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	await query.message.reply_text(
@@ -112,8 +121,8 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 	# Prompt for Language
 	keyboard = [
-		[InlineKeyboardButton("Mode 1", callback_data="regular")],
-		[InlineKeyboardButton("Mode 2", callback_data="eacher")]
+		[InlineKeyboardButton(i18n.t("HUDDAM_REGULAR", language), callback_data="regular")],
+		[InlineKeyboardButton(i18n.t("HUDDAM_EACHER", language), callback_data="eacher")]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	await query.message.reply_text(

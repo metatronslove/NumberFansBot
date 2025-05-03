@@ -26,7 +26,7 @@ async def get_ai_commentary(response: str, lang: str) -> str:
 			headers=headers,
 			json=payload
 		)
-		response = re.sub(rf"^{re.escape(prompt)}.*?\[/INST\]", "", response, flags=re.DOTALL).strip()
+		response.json()[0]["generated_text"] = re.sub(rf"^{re.escape(prompt)}.*?\[/INST\]", "", generated_text, flags=re.DOTALL).strip()
 		if response.status_code == 200:
 			return response.json()[0]["generated_text"].split("[/INST]")[-1].strip()
 		else:

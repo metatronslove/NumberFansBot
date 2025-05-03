@@ -33,7 +33,7 @@ async def get_ai_commentary(response: str, lang: str) -> str:
 			headers=headers,
 			json=payload
 		)
-		response = re.sub(rf"^{re.escape(prompt)}.*?\[/INST\]", "", response, flags=re.DOTALL).strip()
+		response.json()[0]["generated_text"] = re.sub(rf"^{re.escape(prompt)}.*?\[/INST\]", "", generated_text, flags=re.DOTALL).strip()
 		if response.status_code == 200:
 			return response.json()[0]["generated_text"].split("[/INST]")[-1].strip()
 		else:
@@ -78,8 +78,14 @@ async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 	# Prompt for Language
 	keyboard = [
-		[InlineKeyboardButton(lang.capitalize(), callback_data=lang)]
-		for lang in ['TURKCE', 'ARABI', 'BUNI', 'HUSEYNI', 'HEBREW', 'ENGLISH', 'LATIN', 'GENERAL']
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_TURKISH", language), callback_data="TURKCE")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ARABI", language), callback_data="ARABI")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_BUNI", language), callback_data="BUNI")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HUSEYNI", language), callback_data="HUSEYNI")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HEBREW", language), callback_data="HEBREW")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ENGLISH", language), callback_data="ENGLISH")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_LATIN", language), callback_data="LATIN")],
+		[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_DEFAULT", language), callback_data="DEFAULT")]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	await update.message.reply_text(
@@ -126,8 +132,8 @@ async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	# Prompt for Shadda if Arabic input
 	if context.user_data.get("is_arabic"):
 		keyboard = [
-			[InlineKeyboardButton("1", callback_data="1")],
-			[InlineKeyboardButton("2", callback_data="2")]
+			[InlineKeyboardButton(i18n.t("SHADDA_USE_ONCE", language), callback_data="1")],
+			[InlineKeyboardButton(i18n.t("SHADDA_USE_TWICE", language), callback_data="2")]
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await query.message.reply_text(
@@ -169,8 +175,8 @@ async def unsur_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 				parse_mode=ParseMode.MARKDOWN
 			)
 			return ConversationHandler.END
-		value = result["adet"] if isinstance(result, dict) else result
-		liste = result["list"] if isinstance(result, dict) else result
+		value = result["adet"]
+		liste = result["liste"]
 		elements = {
 			'fire': i18n.t("ELEMENT_FIRE", language),
 			'water': i18n.t("ELEMENT_WATER", language),
@@ -192,6 +198,10 @@ async def unsur_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			keyboard.append([InlineKeyboardButton(
 				i18n.t("CREATE_MAGIC_SQUARE", language),
 				callback_data=f"magic_square_{value}"
+			)])
+			keyboard.append([InlineKeyboardButton(
+				i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
+				callback_data=f"indian_square_{value}"
 			)])
 		keyboard.append([InlineKeyboardButton(
 			i18n.t("SPELL_NUMBER", language),
