@@ -73,7 +73,7 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	language = db.get_user_language(user_id)
 
 	repetition = update.message.text
-	if not repetition.isdigit() or int(repetition) <= 1:
+	if not repetition.isdigit() or int(repetition) < 1:
 		await update.message.reply_text(
 			i18n.t("ERROR_INVALID_INPUT", language, error="Repetition must be a positive integer")
 		)

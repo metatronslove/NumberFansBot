@@ -165,7 +165,7 @@ class Abjad:
 
 		i = 0
 		while i < len(chars):
-			char = chars[i]
+			char = chars[i].lower()
 			value = 0
 
 			# Handle special letters
