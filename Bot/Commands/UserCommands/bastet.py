@@ -191,7 +191,7 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			tablebase,
 			1,
 			alphabeta,
-			detail
+			0
 		)
 
 		if isinstance(result, str) and value.startswith("Error"):
