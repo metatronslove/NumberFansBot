@@ -1,3 +1,6 @@
+import logging
+import aiohttp
+import asyncio
 import requests
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
@@ -10,9 +13,6 @@ from ...utils import register_user_if_not_exists, get_warning_description
 from datetime import datetime
 import urllib.parse
 import re
-import logging
-import aiohttp
-import asyncio
 
 logger = logging.getLogger(__name__)
 

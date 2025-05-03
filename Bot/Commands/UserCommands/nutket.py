@@ -1,4 +1,8 @@
 import logging
+import requests
+import re
+import aiohttp
+import asyncio
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 from telegram.constants import ParseMode
@@ -8,10 +12,6 @@ from ...config import Config
 from ...Abjad import Abjad
 from ...utils import register_user_if_not_exists
 from datetime import datetime
-import requests
-import re
-import aiohttp
-import asyncio
 
 logger = logging.getLogger(__name__)
 
