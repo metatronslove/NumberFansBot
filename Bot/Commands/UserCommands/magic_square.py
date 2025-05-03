@@ -69,7 +69,7 @@ async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 		buttons = [
 		[InlineKeyboardButton(
 				i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
-				callback_data=f"indian_square_{value}"
+				callback_data=f"indian_square_{row_sum}"
 			)],
 		[InlineKeyboardButton(
 			i18n.t("NEXT_SIZE", language),
