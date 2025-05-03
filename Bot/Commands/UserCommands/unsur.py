@@ -232,6 +232,6 @@ def get_unsur_conversation_handler():
 			SHADDA: [CallbackQueryHandler(unsur_shadda, pattern=r"^unsur_shadda_")],
 		},
 		fallbacks=[CommandHandler("cancel", unsur_cancel)],
-		per_message=False,
-		allow_reentry=False
+		per_message=True,
+		allow_reentry=True
 	)

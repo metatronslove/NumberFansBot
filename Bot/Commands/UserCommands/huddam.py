@@ -238,6 +238,6 @@ def get_huddam_conversation_handler():
 			MULTIPLIAR: [CallbackQueryHandler(huddam_multipliar, pattern=r"^huddam_multi_")],
 		},
 		fallbacks=[CommandHandler("cancel", huddam_cancel)],
-		per_message=False,
-		allow_reentry=False
+		per_message=True,
+		allow_reentry=True
 	)

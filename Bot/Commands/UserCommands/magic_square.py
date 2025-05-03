@@ -1,7 +1,11 @@
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ContextTypes
+from telegram.ext import (
+	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
+	ConversationHandler, filters, ContextTypes
+)
 from telegram.constants import ParseMode
+from telegram.error import BadRequest
 from ...database import Database
 from ...i18n import I18n
 from ...MagicSquare import MagicSquareGenerator
