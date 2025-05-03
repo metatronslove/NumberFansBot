@@ -119,7 +119,7 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		[InlineKeyboardButton(i18n.t("ABJAD_TYPE_KEBEER", language), callback_data="+1")],
 		[InlineKeyboardButton(i18n.t("ABJAD_TYPE_AKBAR", language), callback_data="+2")],
 		[InlineKeyboardButton(i18n.t("ABJAD_TYPE_SAGHIR_PLUS_QUANTITY", language), callback_data="+3")],
-		[InlineKeyboardButton(i18n.t("ABJAD_TYPE_LETTER_QUANTITY", language), callback_data="5"]
+		[InlineKeyboardButton(i18n.t("ABJAD_TYPE_LETTER_QUANTITY", language), callback_data="5")]
 	]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 	await query.message.reply_text(
