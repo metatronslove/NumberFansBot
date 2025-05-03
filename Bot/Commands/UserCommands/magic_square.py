@@ -76,7 +76,7 @@ async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 			callback_data=f"next_size_{row_sum}_{square['size']}_arabic"
 		)]]
 		reply_markup = InlineKeyboardMarkup(buttons)
-		await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN,	reply_markup=reply_markup)
+		await update.message.reply_text(response, parse_mode=ParseMode.MARKDOWN,	reply_markup=reply_markup)
 	except ValueError:
 		await update.message.reply_text(
 			i18n.t("ERROR_INVALID_INPUT", language, error="Invalid row sum"),
