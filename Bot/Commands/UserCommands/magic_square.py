@@ -60,33 +60,23 @@ async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 				parse_mode=ParseMode.HTML
 			)
 			return
-
 		magic_square = MagicSquareGenerator()
 		square = magic_square.generate_magic_square(3, row_sum, 0, False, 'arabic')
-		response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square)
-
-		await update.message.reply_text(
-			response,
-			parse_mode=ParseMode.MARKDOWN
-		)
-
-		# Add AI commentary
+		response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square["box"])
 		commentary = await get_ai_commentary(response, language)
 		if commentary:
-			response = i18n.t("AI_COMMENTARY", language, commentary=commentary)
-
-		# Add button for next size
-		buttons = [[InlineKeyboardButton(
+			response = "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
+		buttons = [
+		[InlineKeyboardButton(
+				i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
+				callback_data=f"indian_square_{value}"
+			)],
+		[InlineKeyboardButton(
 			i18n.t("NEXT_SIZE", language),
-			callback_data=f"next_size_{row_sum}_3"
+			callback_data=f"next_size_{row_sum}_{square['size']}_arabic"
 		)]]
 		reply_markup = InlineKeyboardMarkup(buttons)
-
-		await update.message.reply_text(
-			response,
-			parse_mode=ParseMode.MARKDOWN,
-			reply_markup=reply_markup
-		)
+		await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN,	reply_markup=reply_markup)
 	except ValueError:
 		await update.message.reply_text(
 			i18n.t("ERROR_INVALID_INPUT", language, error="Invalid row sum"),
