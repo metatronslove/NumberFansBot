@@ -58,7 +58,7 @@ def register_handlers():
     telegram_app.add_handler(CommandHandler("magicsquare", magic_square.magic_square_handle))
     telegram_app.add_handler(CommandHandler("transliterate", transliterate.transliterate_handle))
     telegram_app.add_handler(CommandHandler("name", name.name_handle))
-    telegram_app.add_handler(CommandHandler("cancel", cancel_handle))
+    telegram_app.add_handler(CommandHandler("cancel", cancel.cancel_handle))
     telegram_app.add_handler(CommandHandler("settings", settings.settings_handle))
     telegram_app.add_handler(CommandHandler("payment", payment_handle))
 
