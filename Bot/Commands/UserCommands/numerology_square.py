@@ -11,28 +11,44 @@ from ...config import config
 from ...utils import register_user_if_not_exists
 from datetime import datetime
 import urllib.parse
+import logging
+import aiohttp
+import asyncio
+
+logger = logging.getLogger(__name__)
 
 async def get_ai_commentary(response: str, lang: str) -> str:
-	i18n = I18n()
-	prompt = i18n.t("AI_PROMPT", lang, response=response)
-	try:
-		headers = {"Authorization": f"Bearer {config.ai_access_token}"}
-		payload = {
-			"inputs": prompt,
-			"parameters": {"max_length": 200, "temperature": 0.7}
-		}
-		response = requests.post(
-			config.ai_model_url,
-			headers=headers,
-			json=payload
-		)
-		response.json()[0]["generated_text"] = re.sub(rf"^{re.escape(prompt)}.*?\[/INST\]", "", generated_text, flags=re.DOTALL).strip()
-		if response.status_code == 200:
-			return response.json()[0]["generated_text"].split("[/INST]")[-1].strip()
-		else:
-			return ""
-	except Exception:
-		return ""
+    i18n = I18n()
+    prompt = i18n.t("AI_PROMPT", lang, response=response)
+    try:
+        headers = {"Authorization": f"Bearer {config.ai_access_token}"}
+        payload = {
+            "inputs": prompt,
+            "parameters": {"max_length": 200, "temperature": 0.7}
+        }
+        async with aiohttp.ClientSession() as session:
+            async with session.post(config.ai_model_url, headers=headers, json=payload) as api_response:
+                if api_response.status == 200:
+                    data = await api_response.json()
+                    generated_text = data[0]["generated_text"]
+                    logger.debug(f"Raw generated text: {generated_text}")
+                    cleaned_text = re.sub(
+                        rf"^{re.escape(prompt)}(?:\s*\[\/INST\])?\s*",
+                        "",
+                        generated_text,
+                        flags=re.DOTALL
+                    ).strip()
+                    logger.debug(f"Cleaned text: {cleaned_text}")
+                    return cleaned_text
+                else:
+                    logger.error(f"Hugging Face API error: Status code {api_response.status}, Response: {await api_response.text()}")
+                    return ""
+    except KeyError as e:
+        logger.error(f"AI commentary error: Invalid response format, missing key {e}")
+        return ""
+    except Exception as e:
+        logger.error(f"AI commentary error: {str(e)}")
+        return ""
 
 async def numerology_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	user = update.message.from_user
