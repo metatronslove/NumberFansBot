@@ -248,8 +248,8 @@ def get_bastet_conversation_handler():
 		entry_points=[CommandHandler("bastet", bastet_start)],
 		states={
 			REPETITION: [MessageHandler(filters.TEXT & ~filters.COMMAND, bastet_repetition)],
-			TABLE: [CallbackQueryHandler(bastet_table, pattern=r"^bastet_table_")],
-			LANGUAGE: [CallbackQueryHandler(bastet_language, pattern=r"^bastet_lang_")],
+			TABLE: [CallbackQueryHandler(bastet_table)],
+			LANGUAGE: [CallbackQueryHandler(bastet_language)],
 		},
 		fallbacks=[CommandHandler("cancel", bastet_cancel)],
 		per_message=True,

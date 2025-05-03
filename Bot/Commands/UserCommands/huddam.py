@@ -233,9 +233,9 @@ def get_huddam_conversation_handler():
 	return ConversationHandler(
 		entry_points=[CommandHandler("huddam", huddam_start)],
 		states={
-			ENTITY_TYPE: [CallbackQueryHandler(huddam_entity_type, pattern=r"^huddam_entity_")],
-			LANGUAGE: [CallbackQueryHandler(huddam_language, pattern=r"^huddam_lang_")],
-			MULTIPLIAR: [CallbackQueryHandler(huddam_multipliar, pattern=r"^huddam_multi_")],
+			ENTITY_TYPE: [CallbackQueryHandler(huddam_entity_type)],
+			LANGUAGE: [CallbackQueryHandler(huddam_language)],
+			MULTIPLIAR: [CallbackQueryHandler(huddam_multipliar)],
 		},
 		fallbacks=[CommandHandler("cancel", huddam_cancel)],
 		per_message=True,

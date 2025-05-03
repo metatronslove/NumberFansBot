@@ -227,9 +227,9 @@ def get_unsur_conversation_handler():
 		entry_points=[CommandHandler("unsur", unsur_start)],
 		states={
 			INPUT: [MessageHandler(filters.TEXT & ~filters.COMMAND, unsur_input)],
-			LANGUAGE: [CallbackQueryHandler(unsur_language, pattern=r"^unsur_lang_")],
-			TABLE: [CallbackQueryHandler(unsur_table, pattern=r"^unsur_table_")],
-			SHADDA: [CallbackQueryHandler(unsur_shadda, pattern=r"^unsur_shadda_")],
+			LANGUAGE: [CallbackQueryHandler(unsur_language)],
+			TABLE: [CallbackQueryHandler(unsur_table)],
+			SHADDA: [CallbackQueryHandler(unsur_shadda)],
 		},
 		fallbacks=[CommandHandler("cancel", unsur_cancel)],
 		per_message=True,

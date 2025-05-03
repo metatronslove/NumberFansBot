@@ -302,10 +302,10 @@ def get_abjad_conversation_handler():
 	return ConversationHandler(
 		entry_points=[CommandHandler("abjad", abjad_start)],
 		states={
-			ALPHABET_ORDER: [CallbackQueryHandler(abjad_alphabet_order, pattern=r"^abjad_alphabet_")],
-			ABJAD_TYPE: [CallbackQueryHandler(abjad_type, pattern=r"^abjad_type_")],
-			SHADDA: [CallbackQueryHandler(abjad_shadda, pattern=r"^abjad_shadda_")],
-			DETAIL: [CallbackQueryHandler(abjad_detail, pattern=r"^abjad_detail_")],
+			ALPHABET_ORDER: [CallbackQueryHandler(abjad_alphabet_order)],
+			ABJAD_TYPE: [CallbackQueryHandler(abjad_type)],
+			SHADDA: [CallbackQueryHandler(abjad_shadda)],
+			DETAIL: [CallbackQueryHandler(abjad_detail)],
 		},
 		fallbacks=[CommandHandler("cancel", abjad_cancel)],
 		per_message=True,
