@@ -36,9 +36,9 @@ class MagicSquareGenerator:
 		if n % 2 == 1:
 			return self.siamese_method(n)
 		elif n % 4 == 0:
-			return self.strachey_method(n)
-		else:
 			return self.strachey_singly_even_method(n)
+		else:
+			return self.strachey_method(n)
 
 	def siamese_method(self, n):
 		magic_square = [[0] * n for _ in range(n)]
