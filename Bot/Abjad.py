@@ -217,19 +217,19 @@ class Abjad:
 				baster = int(metin)
 			else:
 				if 0 <= tablo <= 15:
-					baster = self.abjad(metin, tablo, shadda)
+					baster = self.abjad(metin, tablo, shadda, 0, language.lower())
 				elif -16 <= tablo < 0:
 					invertablo = -tablo - 1
-					baster = self.abjad(metin, invertablo, shadda)
+					baster = self.abjad(metin, invertablo, shadda, 0, language.lower())
 
 			for _ in range(mt):
 				ns = self.nutket(baster, language)
 				baster = 0
 
 				if 0 <= tablo <= 15:
-					baster = self.abjad(ns, tablo, 1) + self.abjad(ns, 5, 1)
+					baster = self.abjad(ns, tablo, 1, 0, language.lower()) + self.abjad(ns, 5, 1, 0, language.lower())
 				elif -16 <= tablo < 0:
-					baster = self.abjad(ns, invertablo, 1)
+					baster = self.abjad(ns, invertablo, 1, 0, language.lower())
 				else:
 					baster = "Tablo Kodu?"
 					err = 1
