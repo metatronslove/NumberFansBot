@@ -136,13 +136,17 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			if commentary:
 				response = "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
 			buttons = [[InlineKeyboardButton(
+				i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
+				callback_data=f"indian_square_{value}"
+			)],
+			[InlineKeyboardButton(
 				i18n.t("NEXT_SIZE", language),
 				callback_data=f"next_size_{row_sum}_{square['size']}_arabic"
 			)]]
 			reply_markup = InlineKeyboardMarkup(buttons)
 			await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN,	reply_markup=reply_markup)
 		elif data.startswith("indian_square_"):
-			row_sum = int(data[len("magic_square_"):])
+			row_sum = int(data[len("indian_square_"):])
 			magic_square = MagicSquareGenerator()
 			square = magic_square.generate_magic_square(3, row_sum, 0, False, 'indian')
 			response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square["box"])
@@ -150,6 +154,10 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			if commentary:
 				response = "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
 			buttons = [[InlineKeyboardButton(
+				i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
+				callback_data=f"magic_square_{value}"
+			)],
+			[InlineKeyboardButton(
 				i18n.t("NEXT_SIZE", language),
 				callback_data=f"next_size_{row_sum}_{square['size']}_indian"
 			)]]
@@ -164,10 +172,20 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			commentary = await get_ai_commentary(response, language)
 			if commentary:
 				response = "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
-			buttons = [[InlineKeyboardButton(
+			if output_numbering == "indian":
+				buttons = [[InlineKeyboardButton(
+					i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
+					callback_data=f"indian_square_{current_n}"
+				)]]
+			else:
+				buttons = [[InlineKeyboardButton(
+					i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
+					callback_data=f"magic_square_{current_n}"
+				)]]
+			buttons.append([InlineKeyboardButton(
 				i18n.t("NEXT_SIZE", language),
 				callback_data=f"next_size_{row_sum}_{square['size']}_{output_numbering}"
-			)]]
+			)])
 			reply_markup = InlineKeyboardMarkup(buttons)
 			await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN,	reply_markup=reply_markup)
 		elif data.startswith("nutket_"):
