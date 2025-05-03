@@ -137,7 +137,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				response = "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
 			buttons = [[InlineKeyboardButton(
 				i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
-				callback_data=f"indian_square_{value}"
+				callback_data=f"indian_square_{row_sum}"
 			)],
 			[InlineKeyboardButton(
 				i18n.t("NEXT_SIZE", language),
@@ -155,7 +155,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				response = "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
 			buttons = [[InlineKeyboardButton(
 				i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
-				callback_data=f"magic_square_{value}"
+				callback_data=f"magic_square_{row_sum}"
 			)],
 			[InlineKeyboardButton(
 				i18n.t("NEXT_SIZE", language),
@@ -175,12 +175,12 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			if output_numbering == "indian":
 				buttons = [[InlineKeyboardButton(
 					i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
-					callback_data=f"indian_square_{current_n}"
+					callback_data=f"indian_square_{row_sum}"
 				)]]
 			else:
 				buttons = [[InlineKeyboardButton(
 					i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
-					callback_data=f"magic_square_{current_n}"
+					callback_data=f"magic_square_{row_sum}"
 				)]]
 			buttons.append([InlineKeyboardButton(
 				i18n.t("NEXT_SIZE", language),
