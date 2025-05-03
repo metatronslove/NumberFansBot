@@ -185,16 +185,16 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 		abjad = Abjad()
 		value = number
-		result = abjad.bastet(
+		result = int(abjad.bastet(
 			value,
 			int(repetition),
 			tablebase,
 			1,
 			alphabeta,
 			0
-		)
+		))
 
-		if isinstance(result, str) and value.startswith("Error"):
+		if isinstance(result, str) and str(result).startswith("Error"):
 			await query.message.reply_text(
 				i18n.t("ERROR_GENERAL", language, error=value),
 				parse_mode=ParseMode.MARKDOWN
