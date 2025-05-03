@@ -201,7 +201,7 @@ class Abjad:
 				i += 1
 
 			sum_value += value
-			if detail:
+			if detail == 1:
 				details.append({"char": char, "value": value})
 
 			i += 1
@@ -213,7 +213,7 @@ class Abjad:
 			err = 0
 			language = language.upper()
 
-			if metin.isdigit():
+			if metin:
 				baster = int(metin)
 			else:
 				if 0 <= tablo <= 15:
