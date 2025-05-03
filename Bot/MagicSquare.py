@@ -29,16 +29,16 @@ class MagicSquareGenerator:
 				for row in magic_square
 			]
 		if not self.check_magic_square(magic_square, row_sum):
-			return self.generate_magic_square(n + 1, row_sum, rotation, mirror, output_format)
+			return self.generate_magic_square((n + 1), row_sum, rotation, mirror, output_format)
 		return self.box_the_square(magic_square, 4, 1, 1, output_format)
 
 	def create_magic_square(self, n):
 		if n % 2 == 1:
 			return self.siamese_method(n)
 		elif n % 4 == 0:
-			return self.strachey_singly_even_method(n)
-		else:
 			return self.strachey_method(n)
+		else:
+			return self.strachey_singly_even_method(n)
 
 	def siamese_method(self, n):
 		magic_square = [[0] * n for _ in range(n)]
