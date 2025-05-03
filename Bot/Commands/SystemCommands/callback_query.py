@@ -12,7 +12,6 @@ from ...MagicSquare import MagicSquareGenerator
 from ...NumberConverter import NumberConverter
 from ...cache import Cache
 from ...config import config
-from .square import square_handle
 from ..UserCommands.nutket import nutket_handle
 from ..UserCommands.payment import handle_payment_callback
 import urllib.parse
@@ -135,21 +134,42 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square)
 			commentary = await get_ai_commentary(response, language)
 			if commentary:
-				response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
+				response = "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
 			buttons = [[InlineKeyboardButton(
 				i18n.t("NEXT_SIZE", language),
-				callback_data=f"next_size_{row_sum}_3"
+				callback_data=f"next_size_{row_sum}_{square['size']}_arabic"
 			)]]
 			reply_markup = InlineKeyboardMarkup(buttons)
 			await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN,	reply_markup=reply_markup)
 		elif data.startswith("indian_square_"):
-			parts = data[len("indian_square_"):].split("_")
-			row_sum, n = int(parts[0]), int(parts[1])
-			await square_handle(update, context, row_sum=row_sum, current_n=n, use_indian=True)
+			row_sum = int(data[len("magic_square_"):])
+			magic_square = MagicSquareGenerator()
+			square = magic_square.generate_magic_square(3, row_sum, 0, False, 'indian')
+			response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square["box"])
+			commentary = await get_ai_commentary(response, language)
+			if commentary:
+				response = "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
+			buttons = [[InlineKeyboardButton(
+				i18n.t("NEXT_SIZE", language),
+				callback_data=f"next_size_{row_sum}_{square['size']}_indian"
+			)]]
+			reply_markup = InlineKeyboardMarkup(buttons)
+			await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN,	reply_markup=reply_markup)
 		elif data.startswith("next_size_"):
 			parts = data[len("next_size_"):].split("_")
-			row_sum, current_n = int(parts[0]), int(parts[1])
-			await square_handle(update, context, row_sum=row_sum, current_n=current_n + 1, use_indian=False)
+			row_sum, current_n, output_numbering = int(parts[0]), int(parts[1]), str(parts[3])
+			magic_square = MagicSquareGenerator()
+			square = magic_square.generate_magic_square(current_n + 1, row_sum, 0, False, output_numbering)
+			response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square["box"])
+			commentary = await get_ai_commentary(response, language)
+			if commentary:
+				response = "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
+			buttons = [[InlineKeyboardButton(
+				i18n.t("NEXT_SIZE", language),
+				callback_data=f"next_size_{row_sum}_{square['size']}_{output_numbering}"
+			)]]
+			reply_markup = InlineKeyboardMarkup(buttons)
+			await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN,	reply_markup=reply_markup)
 		elif data.startswith("nutket_"):
 			parts = data[len("nutket_"):].split("_")
 			number, lang = int(parts[0]), parts[1]

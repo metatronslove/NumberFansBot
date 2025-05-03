@@ -30,7 +30,7 @@ class MagicSquareGenerator:
 			]
 		if not self.check_magic_square(magic_square, row_sum):
 			return self.generate_magic_square((n + 1), row_sum, rotation, mirror, output_format)
-		return self.box_the_square(magic_square, 4, 1, 1, output_format)
+		return {"box": self.box_the_square(magic_square, 4, 1, 1, output_format), "size": n}
 
 	def create_magic_square(self, n):
 		if n % 2 == 1:
