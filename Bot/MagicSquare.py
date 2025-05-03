@@ -158,7 +158,7 @@ class MagicSquareGenerator:
 		longest_length = 0
 		for row in magic_square:
 			for cell in row:
-				value = str(cell)
+				value = str(int(cell))
 				if number_format == "indian":
 					value = self.number_converter.indian(value)
 				length = len(value.replace("\u200e", "").replace("\u200f", ""))
