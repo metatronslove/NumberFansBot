@@ -202,7 +202,7 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			int(repetition),
 			tablebase,
 			1,
-			alphabeta,
+			alphabeta.upper(),
 			0
 		))
 
@@ -277,7 +277,7 @@ def get_bastet_conversation_handler():
 		states={
 			REPETITION: [MessageHandler(filters.TEXT & ~filters.COMMAND, bastet_repetition)],
 			TABLE: [CallbackQueryHandler(bastet_table)],
-			LANGUAGE: [CallbackQueryHandler(bastet_language)],
+			LANGUAGE: [CallbackQueryHandler(bastet_language)]
 		},
 		fallbacks=[CommandHandler("cancel", bastet_cancel)],
 		per_message=False

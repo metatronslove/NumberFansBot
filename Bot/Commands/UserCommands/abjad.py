@@ -245,7 +245,9 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			return ConversationHandler.END
 
 		value = result["sum"] if isinstance(result, dict) else result
-		details = result.get("details", "") if isinstance(result, dict) and detail == 1 else ""
+		detail_json = result.get("details", "") if isinstance(result, dict) and detail == 1 else ""
+		details = "".join(f"[{d['char']}={d['value']}]" for d in detail_json) if isinstance(result, dict) and detail == 1 else ""
+
 
 		response = i18n.t("ABJAD_RESULT", language, text=text, value=value)
 		if details:
