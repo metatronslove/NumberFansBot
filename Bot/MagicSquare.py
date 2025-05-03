@@ -44,7 +44,7 @@ class MagicSquareGenerator:
 		magic_square = [[0] * n for _ in range(n)]
 		row, col = 0, n // 2
 		for num in range(1, n * n + 1):
-			magic_square[row][col] = num
+			magic_square[row][col] = int(num)
 			next_row = (row - 1 + n) % n
 			next_col = (col + 1) % n
 			if magic_square[next_row][next_col] != 0:
@@ -59,9 +59,9 @@ class MagicSquareGenerator:
 		for i in range(n):
 			for j in range(n):
 				if i % 4 == j % 4 or (i + j) % 4 == 3:
-					magic_square[i][j] = n * n - count + 1
+					magic_square[i][j] = int(n * n - count + 1)
 				else:
-					magic_square[i][j] = count
+					magic_square[i][j] = int(count)
 				count += 1
 		return magic_square
 
@@ -71,10 +71,10 @@ class MagicSquareGenerator:
 		mini_magic = self.siamese_method(k)
 		for i in range(k):
 			for j in range(k):
-				magic_square[i][j] = mini_magic[i][j]
-				magic_square[i + k][j + k] = mini_magic[i][j] + k * k
-				magic_square[i][j + k] = mini_magic[i][j] + 2 * k * k
-				magic_square[i + k][j] = mini_magic[i][j] + 3 * k * k
+				magic_square[i][j] = int(mini_magic[i][j])
+				magic_square[i + k][j + k] = int(mini_magic[i][j] + k * k)
+				magic_square[i][j + k] = int(mini_magic[i][j] + 2 * k * k)
+				magic_square[i + k][j] = int(mini_magic[i][j] + 3 * k * k)
 		swap_col = list(range((k - 1) // 2)) + list(range(n - (k - 1) // 2 + 1, n))
 		for i in range(k):
 			for col in swap_col:
