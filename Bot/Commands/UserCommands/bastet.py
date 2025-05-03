@@ -12,6 +12,7 @@ from ...Abjad import Abjad
 from ...utils import register_user_if_not_exists, get_warning_description
 from datetime import datetime
 import requests
+import re
 
 logger = logging.getLogger(__name__)
 

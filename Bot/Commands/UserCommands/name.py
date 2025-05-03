@@ -9,6 +9,7 @@ from ...config import Config
 from ...utils import register_user_if_not_exists
 from datetime import datetime
 import urllib.parse
+import re
 
 async def get_ai_commentary(response: str, lang: str) -> str:
 	i18n = I18n()

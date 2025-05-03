@@ -9,6 +9,7 @@ from ...Abjad import Abjad
 from ...utils import register_user_if_not_exists
 from datetime import datetime
 import requests
+import re
 
 logger = logging.getLogger(__name__)
 
