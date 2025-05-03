@@ -48,7 +48,6 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    await query.answer()
     user_id = query.from_user.id
     db = Database()
     i18n = I18n()
@@ -78,11 +77,11 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
         i18n.t("HUDDAM_PROMPT_LANGUAGE", language),
         reply_markup=reply_markup
     )
+    await query.answer()
     return LANGUAGE
 
 async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    await query.answer()
     user_id = query.from_user.id
     db = Database()
     i18n = I18n()
@@ -103,11 +102,11 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
         i18n.t("HUDDAM_PROMPT_MULTIPLIAR", language),
         reply_markup=reply_markup
     )
+    await query.answer()
     return MULTIPLIAR
 
 async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    await query.answer()
     user_id = query.from_user.id
     db = Database()
     i18n = I18n()
@@ -205,6 +204,7 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE):
             parse_mode=ParseMode.MARKDOWN,
             reply_markup=reply_markup
         )
+		await query.answer()
         context.user_data.clear()
         return ConversationHandler.END
 

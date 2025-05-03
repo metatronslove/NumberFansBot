@@ -67,7 +67,6 @@ async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def unsur_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    await query.answer()
     user_id = query.from_user.id
     db = Database()
     i18n = I18n()
@@ -90,11 +89,11 @@ async def unsur_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
         i18n.t("UNSUR_PROMPT_TABLE", language),
         reply_markup=reply_markup
     )
+    await query.answer()
     return TABLE
 
 async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    await query.answer()
     user_id = query.from_user.id
     db = Database()
     i18n = I18n()
@@ -116,6 +115,7 @@ async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
             i18n.t("UNSUR_PROMPT_SHADDA", language),
             reply_markup=reply_markup
         )
+		await query.answer()
         return SHADDA
     else:
         context.user_data["shadda"] = 1
