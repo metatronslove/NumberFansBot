@@ -9,7 +9,7 @@ from telegram.constants import ParseMode
 from ...database import Database
 from ...i18n import I18n
 from ...MagicSquare import MagicSquareGenerator
-from ...config import Config
+from ...admin_panel import config
 from ...utils import register_user_if_not_exists
 from datetime import datetime
 
