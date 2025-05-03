@@ -16,6 +16,7 @@ from .square import square_handle
 from ..UserCommands.nutket import nutket_handle
 from ..UserCommands.payment import handle_payment_callback
 import urllib.parse
+import re
 
 logger = logging.getLogger(__name__)
 

@@ -57,7 +57,6 @@ class ElementClassifier:
 		self.shadda_char = '\u0651'  # Arabic shadda (U+0651)
 		self.valid_guides = ['TURKCE', 'ARABI', 'BUNI', 'HUSEYNI', 'HEBREW', 'ENGLISH', 'LATIN']
 		self.valid_elements = ['fire', 'air', 'water', 'earth']
-		self.valid_output_types = ['list', 'amount']
 
 	def _normalize_char(self, char: str, guide: str) -> str:
 		"""Normalize special characters based on guide."""
@@ -126,7 +125,11 @@ class ElementClassifier:
 				'0': 'fire',
 				'1': 'air',
 				'2': 'water',
-				'3': 'earth'
+				'3': 'earth',
+				'fire': 'fire',
+				'air': 'air',
+				'water': 'water',
+				'earth': 'earth'
 			}.get(element_type, element_type)
 			if element_type not in self.valid_elements:
 				return 'Hata?'
