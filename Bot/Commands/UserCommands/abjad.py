@@ -34,12 +34,22 @@ async def get_ai_commentary(response: str, lang: str) -> str:
         )
         if api_response.status_code == 200:
             generated_text = api_response.json()[0]["generated_text"]
-            # Strip the prompt and everything up to [/INST], keeping the content after
-            cleaned_text = re.sub(rf"^{re.escape(prompt)}.*?\[/INST\]\s*", "", generated_text, flags=re.DOTALL).strip()
+            logger.debug(f"Raw generated text: {generated_text}")
+            # Strip the prompt, optionally followed by [/INST], and any leading/trailing whitespace
+            cleaned_text = re.sub(
+                rf"^{re.escape(prompt)}(?:\s*\[\/INST\])?\s*",
+                "",
+                generated_text,
+                flags=re.DOTALL
+            ).strip()
+            logger.debug(f"Cleaned text: {cleaned_text}")
             return cleaned_text
         else:
             logger.error(f"AI API error: Status code {api_response.status_code}, Response: {api_response.text}")
             return ""
+    except KeyError as e:
+        logger.error(f"AI commentary error: Invalid response format, missing key {e}")
+        return ""
     except Exception as e:
         logger.error(f"AI commentary error: {str(e)}")
         return ""
@@ -248,7 +258,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 		value = result["sum"] if isinstance(result, dict) else result
 		detail_json = result.get("details", "") if isinstance(result, dict) and detail == 1 else ""
-		details = "".join(f"\[{d['char']}={d['value']}\]" for d in detail_json) if isinstance(result, dict) and detail == 1 else ""
+		details = "".join(f"\[{d['char']}={d['value']}]" for d in detail_json) if isinstance(result, dict) and detail == 1 else ""
 
 
 		response = i18n.t("ABJAD_RESULT", language, text=text, value=value)
