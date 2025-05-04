@@ -14,14 +14,13 @@ logger = logging.getLogger(__name__)
 async def start_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.message.from_user
     user_language = user.language_code.split('-')[0] if user.language_code else 'en'
-    available_languages = ['en', 'tr', 'ar', 'he', 'la']
     await register_user_if_not_exists(update, context, user, language=user_language)
     user_id = user.id
     db = Database()
     i18n = I18n()
 
     try:
-        if user_language in available_languages:
+        if user_language in ['en', 'tr', 'ar', 'he', 'la']:
             language = user_language
             context.args = [language]
             await language_handle(update, context)
