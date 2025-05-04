@@ -9,6 +9,7 @@ import bcrypt
 import logging
 import yaml
 from pathlib import Path
+from datetime import datetime
 
 app = Flask(__name__, template_folder="../Templates/", static_folder="../Assets", static_url_path="/Assets")
 config = Config()
@@ -29,6 +30,7 @@ telegram_app = Application.builder().token(config.telegram_token).build()
 # Initialize the application
 try:
     loop.run_until_complete(telegram_app.initialize())
+    logger.info("Telegram application initialized successfully")
 except Exception as e:
     logger.error(f"Failed to initialize Telegram application: {str(e)}")
     loop.close()
@@ -47,27 +49,126 @@ def register_handlers():
     from .Commands.UserCommands.payment import payment_handle, handle_pre_checkout, handle_successful_payment
     from .Commands.SystemCommands.callback_query import set_language_handle, handle_callback_query
 
-    telegram_app.add_handler(CallbackQueryHandler(handle_callback_query))
-    telegram_app.add_handler(CallbackQueryHandler(set_language_handle, pattern=r"lang\|.+"))
-    telegram_app.add_handler(CommandHandler("start", start.start_handle))
-    telegram_app.add_handler(CommandHandler("help", help.help_handle))
-    telegram_app.add_handler(CommandHandler("language", language.language_handle))
-    telegram_app.add_handler(CommandHandler("numerology", numerology.numerology_handle))
-    telegram_app.add_handler(CommandHandler("convertnumbers", convert_numbers.convert_numbers_handle))
-    telegram_app.add_handler(CommandHandler("magicsquare", magic_square.magic_square_handle))
-    telegram_app.add_handler(CommandHandler("transliterate", transliterate.transliterate_handle))
-    telegram_app.add_handler(CommandHandler("name", name.name_handle))
-    telegram_app.add_handler(CommandHandler("cancel", cancel.cancel_handle))
-    telegram_app.add_handler(CommandHandler("settings", settings.settings_handle))
-    telegram_app.add_handler(CommandHandler("payment", payment_handle))
-    telegram_app.add_handler(PreCheckoutQueryHandler(handle_pre_checkout))
-    telegram_app.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, handle_successful_payment))
-    telegram_app.add_handler(get_abjad_conversation_handler())
-    telegram_app.add_handler(get_bastet_conversation_handler())
-    telegram_app.add_handler(get_huddam_conversation_handler())
-    telegram_app.add_handler(get_unsur_conversation_handler())
+    try:
+        telegram_app.add_handler(CallbackQueryHandler(handle_callback_query))
+        logger.info("Registered CallbackQueryHandler for handle_callback_query")
+    except Exception as e:
+        logger.error(f"Failed to register handle_callback_query: {str(e)}")
 
-register_handlers()
+    try:
+        telegram_app.add_handler(CallbackQueryHandler(set_language_handle, pattern=r"lang\|.+"))
+        logger.info("Registered CallbackQueryHandler for set_language_handle")
+    except Exception as e:
+        logger.error(f"Failed to register set_language_handle: {str(e)}")
+
+    try:
+        telegram_app.add_handler(CommandHandler("start", start.start_handle))
+        logger.info("Registered CommandHandler for /start")
+    except Exception as e:
+        logger.error(f"Failed to register /start: {str(e)}")
+
+    try:
+        telegram_app.add_handler(CommandHandler("help", help.help_handle))
+        logger.info("Registered CommandHandler for /help")
+    except Exception as e:
+        logger.error(f"Failed to register /help: {str(e)}")
+
+    try:
+        telegram_app.add_handler(CommandHandler("language", language.language_handle))
+        logger.info("Registered CommandHandler for /language")
+    except Exception as e:
+        logger.error(f"Failed to register /language: {str(e)}")
+
+    try:
+        telegram_app.add_handler(CommandHandler("numerology", numerology.numerology_handle))
+        logger.info("Registered CommandHandler for /numerology")
+    except Exception as e:
+        logger.error(f"Failed to register /numerology: {str(e)}")
+
+    try:
+        telegram_app.add_handler(CommandHandler("convertnumbers", convert_numbers.convert_numbers_handle))
+        logger.info("Registered CommandHandler for /convertnumbers")
+    except Exception as e:
+        logger.error(f"Failed to register /convertnumbers: {str(e)}")
+
+    try:
+        telegram_app.add_handler(CommandHandler("magicsquare", magic_square.magic_square_handle))
+        logger.info("Registered CommandHandler for /magicsquare")
+    except Exception as e:
+        logger.error(f"Failed to register /magicsquare: {str(e)}")
+
+    try:
+        telegram_app.add_handler(CommandHandler("transliterate", transliterate.transliterate_handle))
+        logger.info("Registered CommandHandler for /transliterate")
+    except Exception as e:
+        logger.error(f"Failed to register /transliterate: {str(e)}")
+
+    try:
+        telegram_app.add_handler(CommandHandler("name", name.name_handle))
+        logger.info("Registered CommandHandler for /name")
+    except Exception as e:
+        logger.error(f"Failed to register /name: {str(e)}")
+
+    try:
+        telegram_app.add_handler(CommandHandler("cancel", cancel.cancel_handle))
+        logger.info("Registered CommandHandler for /cancel")
+    except Exception as e:
+        logger.error(f"Failed to register /cancel: {str(e)}")
+
+    try:
+        telegram_app.add_handler(CommandHandler("settings", settings.settings_handle))
+        logger.info("Registered CommandHandler for /settings")
+    except Exception as e:
+        logger.error(f"Failed to register /settings: {str(e)}")
+
+    try:
+        telegram_app.add_handler(CommandHandler("payment", payment_handle))
+        logger.info("Registered CommandHandler for /payment")
+    except Exception as e:
+        logger.error(f"Failed to register /payment: {str(e)}")
+
+    try:
+        telegram_app.add_handler(PreCheckoutQueryHandler(handle_pre_checkout))
+        logger.info("Registered PreCheckoutQueryHandler")
+    except Exception as e:
+        logger.error(f"Failed to register PreCheckoutQueryHandler: {str(e)}")
+
+    try:
+        telegram_app.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, handle_successful_payment))
+        logger.info("Registered MessageHandler for successful payment")
+    except Exception as e:
+        logger.error(f"Failed to register successful payment handler: {str(e)}")
+
+    try:
+        telegram_app.add_handler(get_abjad_conversation_handler())
+        logger.info("Registered ConversationHandler for /abjad")
+    except Exception as e:
+        logger.error(f"Failed to register /abjad conversation handler: {str(e)}")
+
+    try:
+        telegram_app.add_handler(get_bastet_conversation_handler())
+        logger.info("Registered ConversationHandler for /bastet")
+    except Exception as e:
+        logger.error(f"Failed to register /bastet conversation handler: {str(e)}")
+
+    try:
+        telegram_app.add_handler(get_huddam_conversation_handler())
+        logger.info("Registered ConversationHandler for /huddam")
+    except Exception as e:
+        logger.error(f"Failed to register /huddam conversation handler: {str(e)}")
+
+    try:
+        telegram_app.add_handler(get_unsur_conversation_handler())
+        logger.info("Registered ConversationHandler for /unsur")
+    except Exception as e:
+        logger.error(f"Failed to register /unsur conversation handler: {str(e)}")
+
+try:
+    register_handlers()
+    logger.info("All handlers registered successfully")
+except Exception as e:
+    logger.error(f"Error in register_handlers: {str(e)}")
+    raise
 
 def load_models():
     """Load models from Config/models.yml"""
@@ -113,7 +214,7 @@ def index(lang="en"):
     config = Config()
     db = Database()
     i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:  # Updated
+    if lang not in AVAILABLE_LANGUAGES:
         lang = "en"
     query = "SELECT * FROM users"
     db.cursor.execute(query)
@@ -125,7 +226,7 @@ def login(lang="en"):
     config = Config()
     db = Database()
     i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:  # Updated
+    if lang not in AVAILABLE_LANGUAGES:
         lang = "en"
     if request.method == "POST":
         username = request.form.get("username")
@@ -150,7 +251,7 @@ def register(lang="en"):
     config = Config()
     db = Database()
     i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:  # Updated
+    if lang not in AVAILABLE_LANGUAGES:
         lang = "en"
     if request.method == "POST":
         username = request.form.get("username")
@@ -162,7 +263,7 @@ def register(lang="en"):
         db.cursor.execute(query, (username,))
         if db.cursor.fetchone():
             flash(i18n.t("REGISTER_ERROR", lang, error="Username already exists"), "error")
-            return render_template("register.html", i18n=i18n, lang=lang)
+            return render_template("register.html", i18n=i16n, lang=lang)
         hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
         query = """
         INSERT INTO users (user_id, username, password, is_admin, created_at, last_interaction)
@@ -183,7 +284,7 @@ def logout(lang="en"):
     session.pop("user_id", None)
     db = Database()
     i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:  # Updated
+    if lang not in AVAILABLE_LANGUAGES:
         lang = "en"
     flash(i18n.t("LOGOUT_SUCCESS", lang), "success")
     return redirect(url_for("login", lang=lang))
@@ -193,7 +294,7 @@ def save_config_route(lang="en"):
     config = Config()
     db = Database()
     i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:  # Updated
+    if lang not in AVAILABLE_LANGUAGES:
         lang = "en"
     config_data = {
         'mysql': {},
@@ -233,7 +334,7 @@ def add_model(lang="en"):
         return redirect(url_for("login", lang=lang))
     db = Database()
     i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:  # Updated
+    if lang not in AVAILABLE_LANGUAGES:
         lang = "en"
     model_name = request.form.get("model_name")
     model_url = request.form.get("model_url")
@@ -272,7 +373,7 @@ def delete_model(lang="en"):
         return redirect(url_for("login", lang=lang))
     db = Database()
     i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:  # Updated
+    if lang not in AVAILABLE_LANGUAGES:
         lang = "en"
     model_name = request.form.get("model_name")
     try:
@@ -299,7 +400,7 @@ def github_traffic(lang="en"):
     config = Config()
     db = Database()
     i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:  # Updated
+    if lang not in AVAILABLE_LANGUAGES:
         lang = "en"
     query = "SELECT * FROM users"
     db.cursor.execute(query)
@@ -315,7 +416,7 @@ def manage_beta_tester(lang="en"):
         return redirect(url_for("login", lang=lang))
     db = Database()
     i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:  # Updated
+    if lang not in AVAILABLE_LANGUAGES:
         lang = "en"
     telegram_id = request.form.get("telegram_id")
     action = request.form.get("action")
