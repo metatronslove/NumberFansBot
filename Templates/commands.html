@@ -55,6 +55,7 @@
 	</div>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 	<script>
 		particlesJS('particles-js', {
 			"particles": {
@@ -73,6 +74,50 @@
 			},
 			"retina_detect": true
 		});
+	// Add chart visualization
+    document.addEventListener('DOMContentLoaded', function() {
+        const commandUsage = {{ command_usage | tojson }};
+        if (commandUsage && commandUsage.length > 0) {
+            const ctx = document.createElement('canvas');
+            ctx.id = 'command-usage-chart';
+            ctx.style.width = '100%';
+            ctx.style.height = '400px';
+            document.querySelector('.status-container').insertBefore(ctx, document.querySelector('.table'));
+
+            const labels = commandUsage.map(usage => `/${usage.command}`);
+            const percentages = commandUsage.map(usage => usage.percentage);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '{{ i18n.t('COMMAND_USAGE_PERCENTAGE', lang) }}',
+                        data: percentages,
+                        backgroundColor: 'rgba(72, 255, 0, 0.6)',
+                        borderColor: '#48ff00',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: true, position: 'top', labels: { color: '#fff' } },
+                        title: { display: true, text: '{{ i18n.t('COMMAND_USAGE_CHART', lang) }}', color: '#fff' }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { color: '#fff', callback: value => value + '%' },
+                            grid: { color: 'rgba(255, 255, 255, 0.2)' }
+                        },
+                        x: { ticks: { color: '#fff' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
+                    }
+                }
+            });
+        }
+    });
 	</script>
 </body>
 </html>
