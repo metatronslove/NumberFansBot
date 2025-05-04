@@ -1,4 +1,5 @@
-from Bot.config import Config  # Updated import
+import logging
+from Bot.config import Config
 from Bot.database import Database
 from Bot.i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -9,8 +10,11 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.transliteration import Transliteration
+from Bot.cache import Cache  # Added import
 from Bot.utils import register_user_if_not_exists
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 async def suggest_transliteration_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.message.from_user
@@ -47,13 +51,32 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
 
     try:
         source_lang = source_lang or transliteration.guess_source_lang(text)
+        if source_lang not in valid_languages:
+            await update.message.reply_text(
+                i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid source language: {source_lang}"),
+                parse_mode=ParseMode.HTML
+            )
+            return
+
         suggestions = transliteration.suggest_transliterations(text, source_lang, target_lang)
-        results = ", ".join(suggestions)
+        if not suggestions:
+            await update.message.reply_text(
+                i18n.t("SUGGEST_TRANSLITERATION_RESULT", language, text=text, source_lang=source_lang, target_lang=target_lang, results="No suggestions available"),
+                parse_mode=ParseMode.HTML
+            )
+            return
+
+        # Store suggestions in cache
+        cache = Cache()
+        alternatives = [{"transliterated_name": s, "suffix": transliteration.get_suffix(s, text)} for s in suggestions]
+        cache_id = cache.store_alternatives(user_id, source_lang, target_lang, text, alternatives)
+
+        results = ", ".join(transliteration.get_suffix(s, text) for s in suggestions)
         response = i18n.t("SUGGEST_TRANSLITERATION_RESULT", language, text=text, source_lang=source_lang, target_lang=target_lang, results=results)
 
         buttons = [
-            [InlineKeyboardButton(s, callback_data=f"name_alt_{text}_{target_lang}_{s}")]
-            for s in suggestions
+            [InlineKeyboardButton(transliteration.get_suffix(s, text), callback_data=f"name_alt_{cache_id}_{i}")]
+            for i, s in enumerate(suggestions)
         ]
         reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
 
@@ -63,6 +86,7 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
             reply_markup=reply_markup
         )
     except Exception as e:
+        logger.error(f"Suggest transliteration error: {str(e)}")
         await update.message.reply_text(
             i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
             parse_mode=ParseMode.HTML
