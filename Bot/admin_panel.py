@@ -107,6 +107,7 @@ def get_fields():
 def index(lang="en"):
     if "username" not in session:
         return redirect(url_for("login", lang=lang))
+    config = Config()
     db = Database()
     i18n = I18n()
     if lang not in config.available_languages:
@@ -118,6 +119,7 @@ def index(lang="en"):
 
 @app.route("/<lang>/login", methods=["GET", "POST"])
 def login(lang="en"):
+    config = Config()
     db = Database()
     i18n = I18n()
     if lang not in config.available_languages:
@@ -142,6 +144,7 @@ def login(lang="en"):
 
 @app.route("/<lang>/register", methods=["GET", "POST"])
 def register(lang="en"):
+    config = Config()
     db = Database()
     i18n = I18n()
     if lang not in config.available_languages:
@@ -172,6 +175,7 @@ def register(lang="en"):
 
 @app.route("/<lang>/logout")
 def logout(lang="en"):
+    config = Config()
     session.pop("username", None)
     session.pop("user_id", None)
     db = Database()
@@ -183,6 +187,7 @@ def logout(lang="en"):
 
 @app.route("/<lang>/save_config", methods=["POST"])
 def save_config_route(lang="en"):
+    config = Config()
     db = Database()
     i18n = I18n()
     if lang not in config.available_languages:
@@ -219,6 +224,7 @@ def save_config_route(lang="en"):
 
 @app.route("/<lang>/add_model", methods=["POST"])
 def add_model(lang="en"):
+    config = Config()
     if "username" not in session:
         flash(i18n.t("LOGIN_ERROR", lang), "error")
         return redirect(url_for("login", lang=lang))
@@ -257,6 +263,7 @@ def add_model(lang="en"):
 
 @app.route("/<lang>/delete_model", methods=["POST"])
 def delete_model(lang="en"):
+    config = Config()
     if "username" not in session:
         flash(i18n.t("LOGIN_ERROR", lang), "error")
         return redirect(url_for("login", lang=lang))
@@ -286,6 +293,7 @@ def delete_model(lang="en"):
 
 @app.route("/<lang>/github_traffic")
 def github_traffic(lang="en"):
+    config = Config()
     db = Database()
     i18n = I18n()
     if lang not in config.available_languages:
@@ -298,6 +306,7 @@ def github_traffic(lang="en"):
 
 @app.route("/<lang>/manage_beta_tester", methods=["POST"])
 def manage_beta_tester(lang="en"):
+    config = Config()
     if "username" not in session:
         flash(i18n.t("LOGIN_ERROR", lang), "error")
         return redirect(url_for("login", lang=lang))
@@ -326,6 +335,7 @@ def manage_beta_tester(lang="en"):
 
 @app.route(f"/bot{config.telegram_token}", methods=["POST"])
 def webhook():
+    config = Config()
     try:
         update = Update.de_json(request.get_json(), telegram_app.bot)
         loop.run_until_complete(telegram_app.process_update(update))
@@ -336,6 +346,7 @@ def webhook():
 
 @app.route("/set_webhook", methods=["GET"])
 def set_webhook():
+    config = Config()
     if not config.telegram_token:
         logger.error("TELEGRAM_TOKEN is not set")
         return "Failed to set webhook: TELEGRAM_TOKEN is not set", 500
