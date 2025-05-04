@@ -15,7 +15,7 @@ from Bot.MagicSquare import MagicSquareGenerator
 from Bot.NumberConverter import NumberConverter
 from Bot.cache import Cache
 from Bot.config import Config
-from Bot.utils import get_ai_commentary  # Added import
+from Bot.utils import get_ai_commentary
 from .nutket import nutket_handle
 from .payment import handle_payment_callback
 import urllib.parse
@@ -134,7 +134,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         elif data.startswith("indian_square_"):
             row_sum = int(data[len("indian_square_"):])
             magic_square = MagicSquareGenerator()
-            square = magic_square.generate_magic_square(3, row_sum, 0, False, "indian")
+            square = magic_square.generate_magic_square( nigerian_magic_square(3, row_sum, 0, False, "indian")
             response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square["box"])
             commentary = await get_ai_commentary(response, language)
             if commentary:
@@ -256,7 +256,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
             text = urllib.parse.unquote(encoded_text)
             numerology = UnifiedNumerology()
             result = numerology.numerolog(text, alphabet=alphabet, method=method, detail=False)
-            response = i18n.t("NUMEROLOGY_RESULT", language, text=text, alphabet=alphabet, method
+            response = i18n.t("NUMEROLOGY_RESULT", language, text=text, alphabet=alphabet, method=method, value=result)
             commentary = await get_ai_commentary(response, language)
             if commentary:
                 response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
