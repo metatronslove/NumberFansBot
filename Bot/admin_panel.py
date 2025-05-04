@@ -93,7 +93,7 @@ def get_fields():
         {"key": "mysql_user", "label": "MySQL User", "value": config.mysql_user or "", "use_env": config._config.get("mysql_user_use_env", False)},
         {"key": "mysql_password", "label": "MySQL Password", "value": config.mysql_password or "", "use_env": config._config.get("mysql_password_use_env", False)},
         {"key": "mysql_database", "label": "MySQL Database", "value": config.mysql_database or "", "use_env": config._config.get("mysql_database_use_env", False)},
-        {"key": "github_username", "label": "GitHub Username", "value": config.github_username or "", "use_env": config._config.get("github_username_use_env", False
+        {"key": "github_username", "label": "GitHub Username", "value": config.github_username or "", "use_env": config._config.get("github_username_use_env", False)},
         {"key": "github_token", "label": "GitHub Token", "value": config.github_token or "", "use_env": config._config.get("github_token_use_env", False)},
         {"key": "github_repo", "label": "GitHub Repository", "value": config.github_repo or "", "use_env": config._config.get("github_repo_use_env", False)},
         {"key": "github_pages_url", "label": "GitHub Pages URL", "value": config.github_pages_url or "", "use_env": config._config.get("github_pages_url_use_env", False)},
