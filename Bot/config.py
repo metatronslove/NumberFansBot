@@ -15,6 +15,7 @@ class Config:
 		}
 		self._load_yaml_config()
 		self._load_attributes()
+		self.models = load_models()
 
 	def _load_yaml_config(self):
 		config_file = Path('Config/config.yml')
@@ -60,6 +61,19 @@ class Config:
 		if not self.flask_secret_key:
 			logger.error("FLASK_SECRET_KEY is not set")
 			raise ValueError("FLASK_SECRET_KEY is required")
+
+	def load_models():
+		"""Load models from Config/models.yml"""
+		models_file = Path("Config/models.yml")
+		if models_file.exists():
+			try:
+				with open(models_file, "r") as f:
+					models_data = yaml.safe_load(f) or {"models": []}
+				return {m["name"]: type("Model", (), m) for m in models_data["models"]}
+			except Exception as e:
+				logger.error(f"Failed to load models.yml: {str(e)}")
+				return {}
+		return {}
 
 	def save_config(self, config_data):
 		"""Save configuration to config.yml"""

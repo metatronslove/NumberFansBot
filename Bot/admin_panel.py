@@ -170,21 +170,6 @@ except Exception as e:
 	logger.error(f"Error in register_handlers: {str(e)}")
 	raise
 
-def load_models():
-	"""Load models from Config/models.yml"""
-	models_file = Path("Config/models.yml")
-	if models_file.exists():
-		try:
-			with open(models_file, "r") as f:
-				models_data = yaml.safe_load(f) or {"models": []}
-			return {m["name"]: type("Model", (), m) for m in models_data["models"]}
-		except Exception as e:
-			logger.error(f"Failed to load models.yml: {str(e)}")
-			return {}
-	return {}
-
-config.models = load_models()
-
 def get_fields():
 	return [
 		{"key": "telegram_token", "label": "Telegram Token", "value": config.telegram_token or "", "use_env": config._config.get("telegram_token_use_env", False)},
