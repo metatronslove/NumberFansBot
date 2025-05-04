@@ -1,13 +1,21 @@
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ContextTypes
-from telegram.constants import ParseMode
-from ...database import Database
-from ...i18n import I18n
-from ...transliteration import Transliteration
-from ...utils import register_user_if_not_exists
-from datetime import datetime
-import urllib.parse
 import logging
+import re
+from Bot.config import Config  # Updated import
+from Bot.database import Database
+from Bot.i18n import I18n
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import (
+    Application, CommandHandler, MessageHandler, CallbackQueryHandler,
+    ConversationHandler, filters, ContextTypes
+)
+from telegram.constants import ParseMode
+from telegram.error import BadRequest
+from Bot.Abjad import Abjad
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary
+from datetime import datetime
+
+logger = logging.getLogger(__name__)
+from ...transliteration import Transliteration
 
 logger = logging.getLogger(__name__)
 
