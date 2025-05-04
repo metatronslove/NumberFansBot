@@ -32,8 +32,9 @@ class Config:
         self.telegram_token = self._config.get('telegram_token') or os.getenv('TELEGRAM_TOKEN')
         self.bot_username = self._config.get('bot_username') or os.getenv('BOT_USERNAME', '@NumberFansBot')
         self.webhook_url = self._config.get('webhook_url') or os.getenv('WEBHOOK_URL')
-        self.mysql_host = self._config.get('mysql', {}).get('host') or os.getenv('MYSQL_HOST', 'mysql-numberfansbot-numberfansbot.j.aivencloud.com:28236')
+        self.mysql_host = self._config.get('mysql', {}).get('host') or os.getenv('MYSQL_HOST', 'mysql-numberfansbot-numberfansbot.j.aivencloud.com')
         self.mysql_user = self._config.get('mysql', {}).get('user') or os.getenv('MYSQL_USER', 'avnadmin')
+        self.mysql_port = self._config.get('mysql', {}).get('user') or os.getenv('MYSQL_PORT', 28236)
         self.mysql_password = self._config.get('mysql', {}).get('password') or os.getenv('MYSQL_PASSWORD', 'your_password_here')  # Replace with actual password
         self.mysql_database = self._config.get('mysql', {}).get('database') or os.getenv('MYSQL_DATABASE', 'numberfansbot')  # Replace with actual database name
         self.github_username = self._config.get('github_username') or os.getenv('GITHUB_USERNAME')

@@ -11,8 +11,8 @@ config = Config()
 class Database:
     def __init__(self):
         self.conn = mysql.connector.connect(
-            host=config.mysql_host.split(':')[0],
-            port=int(config.mysql_host.split(':')[1]) if ':' in config.mysql_host else 3306,
+            host=config.mysql_host,
+            port=config.mysql_port,
             user=config.mysql_user,
             password=config.mysql_password,
             database=config.mysql_database
