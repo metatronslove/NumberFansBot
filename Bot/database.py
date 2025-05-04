@@ -39,10 +39,10 @@ class Database:
 			""",
 			"""
 			ALTER TABLE users
-			ADD COLUMN IF NOT EXISTS is_beta_tester BOOLEAN DEFAULT FALSE,
-			ADD COLUMN IF NOT EXISTS is_blacklisted BOOLEAN DEFAULT FALSE,
-			ADD COLUMN IF NOT EXISTS is_teskilat BOOLEAN DEFAULT FALSE,
-			ADD COLUMN IF NOT EXISTS credits INT DEFAULT 0
+			ADD COLUMN is_beta_tester BOOLEAN DEFAULT FALSE,
+			ADD COLUMN is_blacklisted BOOLEAN DEFAULT FALSE,
+			ADD COLUMN is_teskilat BOOLEAN DEFAULT FALSE,
+			ADD COLUMN credits INT DEFAULT 0
 			"""
 		]
 		for query in queries:
