@@ -21,12 +21,12 @@ def seed_admin():
 
 	# Database connection configuration with SSL
 	db_config = {
-        'host': config.mysql_host or 'mysql-numberfansbot-numberfansbot.j.aivencloud.com',
-        'port': config.mysql_port or 28236,
-        'user': config.mysql_user or 'avnadmin',
-        'password': config.mysql_password or 'real-password',
-        'database': config.mysql_database or 'numberfansbot',
-        'ssl_ca': os.environ.get('MYSQL_SSL_CA', '/code/ca.pem')  # Path to Aiven CA certificate
+		'host': config.mysql_host or 'mysql-numberfansbot-numberfansbot.j.aivencloud.com',
+		'port': config.mysql_port or 28236,
+		'user': config.mysql_user or 'avnadmin',
+		'password': config.mysql_password or 'real-password',
+		'database': config.mysql_database or 'numberfansbot',
+		'ssl_ca': os.environ.get('MYSQL_SSL_CA', '/code/ca.pem')  # Path to Aiven CA certificate
 	}
 
 	try:

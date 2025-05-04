@@ -201,113 +201,113 @@ def get_fields():
 @app.route("/<lang>")
 @app.route("/")
 def index(lang="en"):
-    if "username" not in session:
-        return redirect(url_for("login", lang=lang))
-    config = Config()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    critical_fields = ['telegram_token', 'mysql_host', 'mysql_user', 'mysql_password', 'mysql_database', 'flask_secret_key']
-    if not all(getattr(config, field) for field in critical_fields):
-        return redirect(url_for("install", lang=lang))
-    db = Database()
-    users = db.get_users()
-    for user in users:
-        badges = []
-        if user['is_admin']:
-            badges.append('🛡️')
-        if user['is_beta_tester']:
-            badges.append('🧪')
-        if user['is_teskilat']:
-            badges.append('🇹🇷')
-        if user['credits'] == 0:
-            badges.append('⚠️')
-        if user['is_blacklisted']:
-            badges.append('🚫')
-        user['badges'] = ' '.join(badges)
-    return render_template("dashboard.html", i18n=i18n, lang=lang, users=users, fields=get_fields(), config=config)
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+	config = Config()
+	i18n = I18n()
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+	critical_fields = ['telegram_token', 'mysql_host', 'mysql_user', 'mysql_password', 'mysql_database', 'flask_secret_key']
+	if not all(getattr(config, field) for field in critical_fields):
+		return redirect(url_for("install", lang=lang))
+	db = Database()
+	users = db.get_users()
+	for user in users:
+		badges = []
+		if user['is_admin']:
+			badges.append('🛡️')
+		if user['is_beta_tester']:
+			badges.append('🧪')
+		if user['is_teskilat']:
+			badges.append('🇹🇷')
+		if user['credits'] == 0:
+			badges.append('⚠️')
+		if user['is_blacklisted']:
+			badges.append('🚫')
+		user['badges'] = ' '.join(badges)
+	return render_template("dashboard.html", i18n=i18n, lang=lang, users=users, fields=get_fields(), config=config)
 
 @app.route("/<lang>/toggle_blacklist", methods=["POST"])
 def toggle_blacklist(lang="en"):
-    if "username" not in session:
-        return redirect(url_for("login", lang=lang))
-    config = Config()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    user_id = request.form.get("user_id")
-    try:
-        db = Database()
-        if db.toggle_blacklist(user_id):
-            query = "SELECT is_blacklisted FROM users WHERE user_id = %s"
-            db.cursor.execute(query, (user_id,))
-            user = db.cursor.fetchone()
-            status = "blacklisted" if user['is_blacklisted'] else "unblacklisted"
-            flash(i18n.t("BLACKLIST_TOGGLED", lang, user_id=user_id, status=status), "success")
-        else:
-            flash(i18n.t("BLACKLIST_TOGGLE_ERROR", lang), "error")
-    except Exception as e:
-        logger.error(f"Error toggling blacklist: {str(e)}")
-        flash(i18n.t("BLACKLIST_TOGGLE_ERROR", lang), "error")
-    return redirect(url_for("index", lang=lang))
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+	config = Config()
+	i18n = I18n()
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+	user_id = request.form.get("user_id")
+	try:
+		db = Database()
+		if db.toggle_blacklist(user_id):
+			query = "SELECT is_blacklisted FROM users WHERE user_id = %s"
+			db.cursor.execute(query, (user_id,))
+			user = db.cursor.fetchone()
+			status = "blacklisted" if user['is_blacklisted'] else "unblacklisted"
+			flash(i18n.t("BLACKLIST_TOGGLED", lang, user_id=user_id, status=status), "success")
+		else:
+			flash(i18n.t("BLACKLIST_TOGGLE_ERROR", lang), "error")
+	except Exception as e:
+		logger.error(f"Error toggling blacklist: {str(e)}")
+		flash(i18n.t("BLACKLIST_TOGGLE_ERROR", lang), "error")
+	return redirect(url_for("index", lang=lang))
 
 @app.route("/<lang>/promote_credits", methods=["POST"])
 def promote_credits(lang="en"):
-    if "username" not in session:
-        return redirect(url_for("login", lang=lang))
-    config = Config()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    user_id = request.form.get("user_id")
-    credits = request.form.get("credits")
-    try:
-        credits = int(credits)
-        if credits <= 0:
-            flash(i18n.t("INVALID_CREDITS", lang, error="Credits must be positive"), "error")
-            return redirect(url_for("index", lang=lang))
-        db = Database()
-        if db.promote_credits(user_id, credits):
-            flash(i18n.t("CREDITS_PROMOTED", lang, credits=credits, user_id=user_id), "success")
-        else:
-            flash(i18n.t("CREDITS_PROMOTE_ERROR", lang), "error")
-    except ValueError:
-        flash(i18n.t("INVALID_CREDITS", lang, error="Invalid credits value"), "error")
-    return redirect(url_for("index", lang=lang))
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+	config = Config()
+	i18n = I18n()
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+	user_id = request.form.get("user_id")
+	credits = request.form.get("credits")
+	try:
+		credits = int(credits)
+		if credits <= 0:
+			flash(i18n.t("INVALID_CREDITS", lang, error="Credits must be positive"), "error")
+			return redirect(url_for("index", lang=lang))
+		db = Database()
+		if db.promote_credits(user_id, credits):
+			flash(i18n.t("CREDITS_PROMOTED", lang, credits=credits, user_id=user_id), "success")
+		else:
+			flash(i18n.t("CREDITS_PROMOTE_ERROR", lang), "error")
+	except ValueError:
+		flash(i18n.t("INVALID_CREDITS", lang, error="Invalid credits value"), "error")
+	return redirect(url_for("index", lang=lang))
 
 @app.route("/<lang>/install", methods=["GET", "POST"])
 def install(lang="en"):
-    config = Config()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    messages = []
-    if request.method == "POST":
-        config_data = {
-            'mysql': {},
-            'ai_settings': {}
-        }
-        fields = [
-            'telegram_token', 'bot_username', 'webhook_url', 'mysql_host', 'mysql_user', 'mysql_password',
-            'mysql_database', 'github_username', 'github_token', 'github_repo', 'github_pages_url',
-            'payment_provider_token', 'currency_exchange_token', 'huggingface_access_token', 'flask_secret_key'
-        ]
-        for field in fields:
-            value = request.form.get(field)
-            config_data[field] = value or ""
-            config_data[f"{field}_use_env"] = False
-        try:
-            config.save_config(config_data)
-            # Set environment variables for admin seeding
-            os.environ['ADMIN_USER'] = request.form.get("admin_username", "admin")
-            os.environ['ADMIN_PASS'] = request.form.get("admin_password", "password123")
-            seed_admin()  # Seed the admin user
-            flash(i18n.t("INSTALL_SUCCESS", lang), "success")
-            return redirect(url_for("index", lang=lang))
-        except Exception as e:
-            logger.error(f"Install error: {str(e)}")
-            messages.append(f"Failed to save configuration or seed admin: {str(e)}")
-    return render_template("install.html", i18n=i18n, lang=lang, messages=messages)
+	config = Config()
+	i18n = I18n()
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+	messages = []
+	if request.method == "POST":
+		config_data = {
+			'mysql': {},
+			'ai_settings': {}
+		}
+		fields = [
+			'telegram_token', 'bot_username', 'webhook_url', 'mysql_host', 'mysql_user', 'mysql_password',
+			'mysql_database', 'github_username', 'github_token', 'github_repo', 'github_pages_url',
+			'payment_provider_token', 'currency_exchange_token', 'huggingface_access_token', 'flask_secret_key'
+		]
+		for field in fields:
+			value = request.form.get(field)
+			config_data[field] = value or ""
+			config_data[f"{field}_use_env"] = False
+		try:
+			config.save_config(config_data)
+			# Set environment variables for admin seeding
+			os.environ['ADMIN_USER'] = request.form.get("admin_username", "admin")
+			os.environ['ADMIN_PASS'] = request.form.get("admin_password", "password123")
+			seed_admin()  # Seed the admin user
+			flash(i18n.t("INSTALL_SUCCESS", lang), "success")
+			return redirect(url_for("index", lang=lang))
+		except Exception as e:
+			logger.error(f"Install error: {str(e)}")
+			messages.append(f"Failed to save configuration or seed admin: {str(e)}")
+	return render_template("install.html", i18n=i18n, lang=lang, messages=messages)
 
 @app.route("/<lang>/login", methods=["GET", "POST"])
 def login(lang="en"):
@@ -336,18 +336,18 @@ def login(lang="en"):
 
 @app.route("/<lang>/commands")
 def commands(lang="en"):
-    config = Config()
-    db = Database()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    command_usage = db.get_command_usage()
-    # Process for visualization
-    if command_usage:
-        max_count = max(usage['count'] for usage in command_usage)
-        for usage in command_usage:
-            usage['percentage'] = (usage['count'] / max_count * 100) if max_count > 0 else 0
-    return render_template("commands.html", i18n=i18n, lang=lang, command_usage=command_usage, config=config)
+	config = Config()
+	db = Database()
+	i18n = I18n()
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+	command_usage = db.get_command_usage()
+	# Process for visualization
+	if command_usage:
+		max_count = max(usage['count'] for usage in command_usage)
+		for usage in command_usage:
+			usage['percentage'] = (usage['count'] / max_count * 100) if max_count > 0 else 0
+	return render_template("commands.html", i18n=i18n, lang=lang, command_usage=command_usage, config=config)
 
 @app.route("/<lang>/logout")
 def logout(lang="en"):
@@ -469,13 +469,13 @@ def delete_model(lang="en"):
 
 @app.route("/<lang>/github_traffic")
 def github_traffic(lang="en"):
-    config = Config()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    if not config.github_pages_url:
-        flash(i18n.t("CONFIGURE_GITHUB_URL", lang), "warning")
-    return render_template("github_traffic.html", i18n=i18n, lang=lang, config=config)
+	config = Config()
+	i18n = I18n()
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+	if not config.github_pages_url:
+		flash(i18n.t("CONFIGURE_GITHUB_URL", lang), "warning")
+	return render_template("github_traffic.html", i18n=i18n, lang=lang, config=config)
 
 @app.route("/<lang>/manage_beta_tester", methods=["POST"])
 def manage_beta_tester(lang="en"):
