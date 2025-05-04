@@ -11,7 +11,8 @@ class Config:
 		self.available_languages = ['en', 'tr', 'ar', 'he', 'la']
 		self._config = {
 			'mysql': {},
-			'ai_settings': {}
+			'ai_settings': {},
+			'github_pages_url': 'https://metatronslove.github.io/github-repo-traffic-viewer/'
 		}
 		self._load_yaml_config()
 		self._load_attributes()
