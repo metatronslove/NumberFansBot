@@ -15,12 +15,13 @@ async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.message.from_user
     await register_user_if_not_exists(update, context, user)
     user_id = user.id
+    config = Config()
     db = Database()
     i18n = I18n()
     telegram_lang = user.language_code or "en"
     current_lang = db.get_user_language(user_id) or telegram_lang
 
-    if current_lang not in Config.available_languages:
+    if current_lang not in configavailable_languages:
         current_lang = "en"
 
     db.increment_command_usage("language", user_id)
@@ -33,9 +34,9 @@ async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await show_language_selection(update, current_lang)
             return
 
-        if lang_code not in Config.available_languages:
+        if lang_code not in configavailable_languages:
             await update.message.reply_text(
-                i18n.t("LANGUAGE_INVALID", current_lang, languages=", ".join(Config.available_languages)),
+                i18n.t("LANGUAGE_INVALID", current_lang, languages=", ".join(configavailable_languages)),
                 parse_mode=ParseMode.MARKDOWN
             )
             return
