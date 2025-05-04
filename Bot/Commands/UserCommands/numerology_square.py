@@ -3,14 +3,18 @@ import aiohttp
 import asyncio
 import requests
 import re
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ContextTypes
-from telegram.constants import ParseMode
+from ...admin_panel import config
 from ...database import Database
 from ...i18n import I18n
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import (
+	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
+	ConversationHandler, filters, ContextTypes
+)
+from telegram.constants import ParseMode
+from telegram.error import BadRequest
 from ...Numerology import UnifiedNumerology
 from ...MagicSquare import MagicSquareGenerator
-from ...config import config
 from ...utils import register_user_if_not_exists
 from datetime import datetime
 import urllib.parse

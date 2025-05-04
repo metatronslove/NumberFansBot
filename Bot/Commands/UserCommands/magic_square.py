@@ -1,4 +1,7 @@
 import logging
+from ...admin_panel import config
+from ...database import Database
+from ...i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
 	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
@@ -6,8 +9,6 @@ from telegram.ext import (
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
-from ...database import Database
-from ...i18n import I18n
 from ...MagicSquare import MagicSquareGenerator
 from ...utils import register_user_if_not_exists, get_ai_commentary
 from datetime import datetime

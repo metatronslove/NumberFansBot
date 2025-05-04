@@ -5,8 +5,15 @@ import re
 import aiohttp
 import asyncio
 from pathlib import Path
-from telegram import Update, User
-from telegram.ext import ContextTypes
+from .database import Database
+from .i18n import I18n
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import (
+	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
+	ConversationHandler, filters, ContextTypes
+)
+from telegram.constants import ParseMode
+from telegram.error import BadRequest
 from .cache import Cache
 from .config import Config
 from .database import Database

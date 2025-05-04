@@ -1,12 +1,14 @@
 import logging
+from ...admin_panel import config
+from ...database import Database
+from ...i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
 	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
 	ConversationHandler, filters, ContextTypes
 )
 from telegram.constants import ParseMode
-from ...database import Database
-from ...i18n import I18n
+from telegram.error import BadRequest
 from ...Abjad import Abjad
 from ...utils import register_user_if_not_exists, get_warning_description, get_ai_commentary
 from datetime import datetime
