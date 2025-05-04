@@ -1,70 +1,70 @@
 import mysql.connector
 import bcrypt
-import os
+from Bot.config import Config
+from datetime import datetime
+import logging
 import sys
-from .config import Config
+import os
 
-config = Config()
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-# Load environment variables
-admin_user = os.getenv('ADMIN_USER', 'admin')
-admin_pass = os.getenv('ADMIN_PASS', 'password123')
+def seed_admin():
+    config = Config()
 
-# Check for required environment variables
-missing_vars = []
-if not config.mysql_host:
-    missing_vars.append('MYSQL_HOST')
-if not config.mysql_user:
-    missing_vars.append('MYSQL_USER')
-if not config.mysql_password:
-    missing_vars.append('MYSQL_PASSWORD')
-if not config.mysql_database:
-    missing_vars.append('MYSQL_DATABASE')
-if not admin_user:
-    missing_vars.append('ADMIN_USER')
-if not admin_pass:
-    missing_vars.append('ADMIN_PASS')
+    # Database connection configuration with SSL
+    db_config = {
+        'host': config.mysql_host or 'mysql-numberfansbot-numberfansbot.j.aivencloud.com',
+        'port': config.mysql_port or 28236,
+        'user': config.mysql_user or 'avnadmin',
+        'password': config.mysql_password or 'real-password',
+        'database': config.mysql_database or 'numberfansbot',
+        'ssl_ca': '/path/to/ca.pem'  # Path to Aiven CA certificate
+    }
 
-if missing_vars:
-    print(f"Error: The following environment variables are not set: {', '.join(missing_vars)}")
-    sys.exit(1)
+    try:
+        # Connect to the database
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor(dictionary=True)
 
-try:
-    # Connect to MySQL
-    conn = mysql.connector.connect(
-        host=config.mysql_host.split(':')[0],
-        port=int(config.mysql_host.split(':')[1]) if ':' in config.mysql_host else 3306,
-        user=config.mysql_user,
-        password=config.mysql_password,
-        database=config.mysql_database
-    )
-    cursor = conn.cursor(dictionary=True)
+        # Check if admin user already exists
+        username = 'admin'
+        query = "SELECT * FROM users WHERE username = %s"
+        cursor.execute(query, (username,))
+        existing_user = cursor.fetchone()
 
-    # Check if admin exists
-    query = "SELECT 1 FROM users WHERE username = %s AND is_admin = TRUE"
-    cursor.execute(query, (admin_user,))
-    if cursor.fetchone():
-        print(f"Admin user '{admin_user}' already exists")
-        cursor.close()
-        conn.close()
-        sys.exit(0)
+        if existing_user:
+            logger.info(f"Admin user '{username}' already exists.")
+            return
 
-    # Create admin user
-    hashed_password = bcrypt.hashpw(admin_pass.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-    query = """
-    INSERT INTO users (user_id, username, password, is_admin, created_at, last_interaction)
-    VALUES (%s, %s, %s, %s, NOW(), NOW())
-    """
-    cursor.execute(query, (0, admin_user, hashed_password, True))
-    conn.commit()
+        # Hash the admin password
+        password = 'password123'  # Default password; change in production
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
-    print(f"Admin user '{admin_user}' created successfully")
-    cursor.close()
-    conn.close()
-    sys.exit(0)
+        # Insert admin user
+        query = """
+        INSERT INTO users (user_id, username, password, is_admin, created_at, last_interaction)
+        VALUES (%s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(query, (0, username, hashed_password, True, datetime.now(), datetime.now()))
+        conn.commit()
 
-except Exception as e:
-    print(f"Error creating admin user: {str(e)}")
-    cursor.close()
-    conn.close()
-    sys.exit(1)
+        logger.info(f"Admin user '{username}' created successfully.")
+
+    except mysql.connector.Error as e:
+        logger.error(f"Database error: {str(e)}")
+        sys.exit(1)
+    except Exception as e:
+        logger.error(f"Error seeding admin user: {str(e)}")
+        sys.exit(1)
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals() and conn.is_connected():
+            conn.close()
+
+if __name__ == '__main__':
+    # Ensure the parent directory is in sys.path
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    seed_admin()
