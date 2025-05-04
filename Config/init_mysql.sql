@@ -63,11 +63,6 @@ CREATE TABLE user_activity (
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE blacklist (
-    user_id BIGINT PRIMARY KEY,
-    added_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
 -- TTL-like behavior for transliteration_cache
 DELIMITER //
 CREATE EVENT IF NOT EXISTS clean_transliteration_cache
