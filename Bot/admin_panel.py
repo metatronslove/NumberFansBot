@@ -275,7 +275,7 @@ def promote_credits(lang="en"):
 		flash(i18n.t("INVALID_CREDITS", lang, error="Invalid credits value"), "error")
 	return redirect(url_for("index", lang=lang))
 
-@app.route("/<lang>/install", methods=["GET", "POST"])
+@app.route("/<lang>/install", methods=["POST"])
 def install(lang="en"):
 	config = Config()
 	i18n = I18n()
@@ -309,7 +309,7 @@ def install(lang="en"):
 			messages.append(f"Failed to save configuration or seed admin: {str(e)}")
 	return render_template("install.html", i18n=i18n, lang=lang, messages=messages)
 
-@app.route("/<lang>/login", methods=["GET", "POST"])
+@app.route("/<lang>/login", methods=["POST"])
 def login(lang="en"):
 	config = Config()
 	db = Database()
