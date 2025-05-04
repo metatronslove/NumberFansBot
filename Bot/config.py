@@ -62,7 +62,7 @@ class Config:
 			logger.error("FLASK_SECRET_KEY is not set")
 			raise ValueError("FLASK_SECRET_KEY is required")
 
-	def load_models():
+	def load_models(self):
 		"""Load models from Config/models.yml"""
 		models_file = Path("Config/models.yml")
 		if models_file.exists():
