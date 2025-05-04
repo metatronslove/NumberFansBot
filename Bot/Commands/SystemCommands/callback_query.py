@@ -55,6 +55,20 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
     cache = Cache()
     language = db.get_user_language(user_id)
 
+    logger.info(f"Processing callback query: {data} for user {user_id}")
+
+    # Skip conversation handler callbacks to avoid interception
+    conversation_patterns = [
+        "abjad_alphabet_", "abjad_type_", "abjad_shadda_", "abjad_detail_",
+        "bastet_table_", "bastet_lang_",
+        "huddam_entity_", "huddam_lang_", "huddam_multi_",
+        "unsur_lang_", "unsur_table_", "unsur_shadda_"
+    ]
+    if any(data.startswith(pattern) for pattern in conversation_patterns):
+        logger.debug(f"Skipping callback {data} as it belongs to a conversation handler")
+        await query.answer()
+        return
+
     if not (data.startswith("payment_select_") or data == "help_group_chat"):
         if db.is_blacklisted(user_id):
             await query.message.reply_text(
@@ -114,7 +128,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
             response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square["box"])
             commentary = await get_ai_commentary(response, language)
             if commentary:
-                response = "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
+                response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
             buttons = [
                 [
                     InlineKeyboardButton(
@@ -138,7 +152,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
             response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square["box"])
             commentary = await get_ai_commentary(response, language)
             if commentary:
-                response = "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
+                response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
             buttons = [
                 [
                     InlineKeyboardButton(
@@ -157,13 +171,13 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
             await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup)
         elif data.startswith("next_size_"):
             parts = data[len("next_size_"):].split("_")
-            row_sum, current_n, output_numbering = int(parts[0]), int(parts[1]), str(parts[3])
+            row_sum, current_n, output_numbering = int(parts[0]), int(parts[1]), str(parts[2])
             magic_square = MagicSquareGenerator()
             square = magic_square.generate_magic_square(current_n + 1, row_sum, 0, False, output_numbering)
             response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square["box"])
             commentary = await get_ai_commentary(response, language)
             if commentary:
-                response = "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
+                response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
             if output_numbering == "indian":
                 buttons = [
                     [
@@ -395,11 +409,44 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
                     i18n.t("ERROR_GENERAL", language, error="Failed to send help video"),
                     parse_mode=ParseMode.HTML
                 )
+        else:
+            logger.warning(f"Unhandled callback query: {data}")
+            await query.message.reply_text(
+                i18n.t("ERROR_GENERAL", language, error="Unknown callback command"),
+                parse_mode=ParseMode.HTML
+            )
         await query.answer()
     except Exception as e:
-        logger.error(f"Callback error: {str(e)}")
+        logger.error(f"Callback error for data '{data}': {str(e)}")
         await query.message.reply_text(
             i18n.t("ERROR_GENERAL", language, error="An error occurred while processing the callback"),
             parse_mode=ParseMode.HTML
         )
         await query.answer()
+
+async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    data = query.data
+    user_id = query.from_user.id
+    db = Database()
+    i18n = I18n()
+    language = db.get_user_language(user_id)
+
+    try:
+        parts = data.split("_")
+        if len(parts) != 3 or parts[0] != "payment" or parts[1] != "select":
+            await query.message.reply_text(
+                i18n.t("ERROR_INVALID_INPUT", language, error="Invalid payment callback"),
+                parse_mode=ParseMode.HTML
+            )
+            await query.answer()
+            return
+        plan = parts[2]
+        await payment_handle(update, context, plan=plan)
+    except Exception as e:
+        logger.error(f"Payment callback error: {str(e)}")
+        await query.message.reply_text(
+            i18n.t("ERROR_GENERAL", language, error="Failed to process payment"),
+            parse_mode=ParseMode.HTML
+        )
+    await query.answer()
