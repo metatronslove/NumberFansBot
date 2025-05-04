@@ -9,6 +9,8 @@ import asyncio
 import bcrypt
 import logging
 import yaml
+from urllib.parse import urlparse
+import re
 from pathlib import Path
 from datetime import datetime
 
@@ -469,13 +471,35 @@ def delete_model(lang="en"):
 
 @app.route("/<lang>/github_traffic")
 def github_traffic(lang="en"):
-	config = Config()
-	i18n = I18n()
-	if lang not in AVAILABLE_LANGUAGES:
-		lang = "en"
-	if not config.github_pages_url:
-		flash(i18n.t("CONFIGURE_GITHUB_URL", lang), "warning")
-	return render_template("github_traffic.html", i18n=i18n, lang=lang, config=config)
+    config = Config()
+    i18n = I18n()
+    if lang not in AVAILABLE_LANGUAGES:
+        lang = "en"
+
+    # Validate and parse github_pages_url
+    github_info = {
+        "url": config.github_pages_url,
+        "username": "",
+        "repo": ""
+    }
+
+    if not config.github_pages_url:
+        flash(i18n.t("CONFIGURE_GITHUB_URL", lang), "warning")
+    else:
+        try:
+            parsed_url = urlparse(config.github_pages_url)
+            # Extract username and repo from URL (e.g., https://metatronslove.github.io/github-repo-traffic-viewer/)
+            path_match = re.match(r"/([^/]+)/([^/]+)", parsed_url.path)
+            if path_match:
+                github_info["username"] = path_match.group(1)
+                github_info["repo"] = path_match.group(2)
+            else:
+                flash(i18n.t("ERROR_GENERAL", lang, error="Invalid GitHub Pages URL format"), "error")
+        except Exception as e:
+            logger.error(f"Error parsing github_pages_url: {str(e)}")
+            flash(i18n.t("ERROR_GENERAL", lang, error="Failed to parse GitHub Pages URL"), "error")
+
+    return render_template("github_traffic.html", i18n=i18n, lang=lang, config=config, github_info=github_info)
 
 @app.route("/<lang>/manage_beta_tester", methods=["POST"])
 def manage_beta_tester(lang="en"):
