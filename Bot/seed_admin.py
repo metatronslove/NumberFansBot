@@ -53,7 +53,7 @@ def seed_admin():
 		INSERT INTO users (user_id, username, password, is_admin, created_at, last_interaction, chat_id)
 		VALUES (%s, %s, %s, %s, %s, %s, %s)
 		"""
-		cursor.execute(query, (0, username, hashed_password, True, datetime.now(), datetime.now(), 0))
+		cursor.execute(query, (user_id, username, hashed_password, True, datetime.now(), datetime.now(), 0))
 		conn.commit()
 
 		logger.info(f"Admin user '{username}' created successfully.")
