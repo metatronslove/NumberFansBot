@@ -123,7 +123,7 @@ def register_handlers():
 		logger.error(f"Failed to register /settings: {str(e)}")
 
 	try:
-		telegram_app.add_handler(CommandHandler("credits", credits_handle))
+		telegram_app.add_handler(CommandHandler("credits", credits.credits_handle))
 		logger.info("Registered CommandHandler for /credits")
 	except Exception as e:
 		logger.error(f"Failed to register /credits: {str(e)}")
