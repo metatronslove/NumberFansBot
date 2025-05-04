@@ -21,12 +21,12 @@ def seed_admin():
 
 	# Database connection configuration with SSL
 	db_config = {
-		'host': config.mysql_host or 'mysql-numberfansbot-numberfansbot.j.aivencloud.com',
-		'port': int(os.environ.get('MYSQL_PORT', 28236)),  # Use env var or default Aiven port
-		'user': config.mysql_user or 'avnadmin',
-		'password': config.mysql_password or 'real-password',
-		'database': config.mysql_database or 'numberfansbot',
-		'ssl_ca': os.environ.get('MYSQL_SSL_CA', '/code/ca.pem')  # Path to Aiven CA certificate
+        'host': config.mysql_host or 'mysql-numberfansbot-numberfansbot.j.aivencloud.com',
+        'port': config.mysql_port or 28236,
+        'user': config.mysql_user or 'avnadmin',
+        'password': config.mysql_password or 'real-password',
+        'database': config.mysql_database or 'numberfansbot',
+        'ssl_ca': os.environ.get('MYSQL_SSL_CA', '/code/ca.pem')  # Path to Aiven CA certificate
 	}
 
 	try:
@@ -53,7 +53,7 @@ def seed_admin():
 		INSERT INTO users (user_id, username, password, is_admin, created_at, last_interaction, chat_id)
 		VALUES (%s, %s, %s, %s, %s, %s, %s)
 		"""
-		cursor.execute(query, (user_id, username, hashed_password, True, datetime.now(), datetime.now(), 0))
+		cursor.execute(query, (0, username, hashed_password, True, datetime.now(), datetime.now(), 0))
 		conn.commit()
 
 		logger.info(f"Admin user '{username}' created successfully.")
