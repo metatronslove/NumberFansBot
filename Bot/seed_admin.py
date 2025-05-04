@@ -1,10 +1,16 @@
-import mysql.connector
-import bcrypt
-from Bot.config import Config
-from datetime import datetime
-import logging
 import sys
 import os
+import mysql.connector
+import bcrypt
+from datetime import datetime
+import logging
+
+# Add the project root directory to sys.path
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+from Bot.config import Config
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -20,7 +26,7 @@ def seed_admin():
         'user': config.mysql_user or 'avnadmin',
         'password': config.mysql_password or 'real-password',
         'database': config.mysql_database or 'numberfansbot',
-        'ssl_ca': '/path/to/ca.pem'  # Path to Aiven CA certificate
+        'ssl_ca': os.environ.get('MYSQL_SSL_CA', '/code/ca.pem')  # Path to Aiven CA certificate
     }
 
     try:
@@ -39,7 +45,7 @@ def seed_admin():
             return
 
         # Hash the admin password
-        password = 'password123'  # Default password; change in production
+        password = os.environ.get('ADMIN_PASSWORD', 'password123')  # Use env var or default
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
         # Insert admin user
@@ -65,6 +71,4 @@ def seed_admin():
             conn.close()
 
 if __name__ == '__main__':
-    # Ensure the parent directory is in sys.path
-    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     seed_admin()
