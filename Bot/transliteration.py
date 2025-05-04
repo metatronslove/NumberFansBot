@@ -32,7 +32,7 @@ class Transliteration:
     def load_transliteration_map(self):
         """Load transliteration_map.json from Config directory."""
         config = Config()
-        map_path = Path("Bot/config") / "transliteration_map.json"  # Explicit path
+        map_path = Path("Config") / "transliteration_map.json"  # Explicit path
         try:
             with open(map_path, "r", encoding="utf-8") as f:
                 self.transliteration_map = json.load(f)
