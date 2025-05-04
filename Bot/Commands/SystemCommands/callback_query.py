@@ -16,8 +16,8 @@ from Bot.NumberConverter import NumberConverter
 from Bot.cache import Cache
 from Bot.config import Config
 from Bot.utils import get_ai_commentary
-from .nutket import nutket_handle
-from .payment import handle_payment_callback
+from Bot.Commands.UserCommands.nutket import nutket_handle
+from Bot.Commands.UserCommands.payment import payment_handle, get_payment_handlers
 import urllib.parse
 
 logger = logging.getLogger(__name__)
