@@ -2,7 +2,7 @@ from .start import start_handle
 from .help import help_handle
 from .magic_square import magic_square_handle
 from .convert_numbers import convert_numbers_handle
-from .transliterate import transliterate_handle, get_transliterate_conversation_handler
+from .transliterate import transliterate_handle
 from .language import language_handle
 from .payment import payment_handle, get_payment_conversation_handler
 from .transliteration_history import transliteration_history_handle
