@@ -36,13 +36,6 @@ class Database:
 				last_interaction DATETIME,
 				chat_id BIGINT
 			)
-			""",
-			"""
-			ALTER TABLE users
-			ADD COLUMN is_beta_tester BOOLEAN DEFAULT FALSE,
-			ADD COLUMN is_blacklisted BOOLEAN DEFAULT FALSE,
-			ADD COLUMN is_teskilat BOOLEAN DEFAULT FALSE,
-			ADD COLUMN credits INT DEFAULT 0
 			"""
 		]
 		for query in queries:
