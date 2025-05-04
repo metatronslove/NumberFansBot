@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 import mysql.connector
 from .i18n import I18n
-from Bot.config import Config  # Updated import
+from Bot.config import Config
 from .database import Database
 from .Numerology import UnifiedNumerology
 import logging
@@ -32,7 +32,7 @@ class Transliteration:
     def load_transliteration_map(self):
         """Load transliteration_map.json from Config directory."""
         config = Config()
-        map_path = Path("Config") / "transliteration_map.json"  # Explicit path
+        map_path = Path("Config") / "transliteration_map.json"
         try:
             with open(map_path, "r", encoding="utf-8") as f:
                 self.transliteration_map = json.load(f)
@@ -60,7 +60,7 @@ class Transliteration:
         if source_lang not in self.valid_languages:
             raise ValueError(f"Invalid source language: {source_lang}")
 
-        # Check cached transliterations in MongoDB
+        # Check cached transliterations in MySQL
         alternatives = self.get_transliteration_alternatives(text, source_lang, target_lang)
         if alternatives:
             primary = alternatives[0]["transliterated_name"]
@@ -93,7 +93,7 @@ class Transliteration:
 
         # Sort by score and filter out original text
         sorted_results = sorted(
-            [(k, v) for k, v in results.items() if k != text],  # Exclude original text
+            [(k, v) for k, v in results.items() if k != text],
             key=lambda x: x[1]["score"],
             reverse=True
         )
@@ -110,45 +110,69 @@ class Transliteration:
         return {"primary": primary, "alternatives": alternatives}
 
     def store_transliteration(self, source_name: str, source_lang: str, target_lang: str, transliterated_name: str, user_id: int = None):
-        """Store transliteration in MongoDB, incrementing score if it exists."""
+        """Store transliteration in MySQL, incrementing score if it exists."""
         try:
-            update_data = {
-                "source_name": source_name,
-                "source_lang": source_lang,
-                "target_lang": target_lang,
-                "transliterated_name": transliterated_name,
-                "suffix": self.get_suffix(transliterated_name, source_name)  # Store suffix
-            }
-            if user_id:
-                update_data["user_id"] = user_id
-            self.db.transliteration_collection.update_one(
-                {
-                    "source_name": source_name,
-                    "source_lang": source_lang,
-                    "target_lang": target_lang,
-                    "transliterated_name": transliterated_name
-                },
-                {
-                    "$set": update_data,
-                    "$inc": {"score": 1}
-                },
-                upsert=True
-            )
+            suffix = self.get_suffix(transliterated_name, source_name)
+            # Check if the transliteration exists
+            query = """
+                SELECT id, score FROM transliterations
+                WHERE source_name = %s AND source_lang = %s AND target_lang = %s AND transliterated_name = %s
+            """
+            self.db.cursor.execute(query, (source_name, source_lang, target_lang, transliterated_name))
+            result = self.db.cursor.fetchone()
+
+            if result:
+                # Update existing record
+                transliteration_id, current_score = result
+                query = """
+                    UPDATE transliterations
+                    SET score = %s, suffix = %s, user_id = %s
+                    WHERE id = %s
+                """
+                self.db.cursor.execute(query, (current_score + 1, suffix, user_id, transliteration_id))
+            else:
+                # Insert new record
+                query = """
+                    INSERT INTO transliterations (source_name, source_lang, target_lang, transliterated_name, suffix, score, user_id)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                """
+                self.db.cursor.execute(query, (source_name, source_lang, target_lang, transliterated_name, suffix, 1, user_id))
+
+            self.db.conn.commit()
+        except mysql.connector.Error as e:
+            logger.error(f"Failed to store transliteration in MySQL: {str(e)}")
+            self.db.conn.rollback()
         except Exception as e:
-            logger.error(f"Failed to store transliteration: {str(e)}")
+            logger.error(f"Unexpected error storing transliteration: {str(e)}")
 
     def get_transliteration_alternatives(self, source_name: str, source_lang: str, target_lang: str) -> List[Dict]:
-        """Retrieve cached transliterations from MongoDB, sorted by score."""
+        """Retrieve cached transliterations from MySQL, sorted by score."""
         try:
-            return list(self.db.transliteration_collection.find(
+            query = """
+                SELECT id, source_name, source_lang, target_lang, transliterated_name, suffix, score, user_id
+                FROM transliterations
+                WHERE source_name = %s AND source_lang = %s AND target_lang = %s
+                ORDER BY score DESC, transliterated_name ASC
+            """
+            self.db.cursor.execute(query, (source_name, source_lang, target_lang))
+            results = self.db.cursor.fetchall()
+            return [
                 {
-                    "source_name": source_name,
-                    "source_lang": source_lang,
-                    "target_lang": target_lang
-                }
-            ).sort([("score", -1), ("transliterated_name", 1)]))
+                    "id": row[0],
+                    "source_name": row[1],
+                    "source_lang": row[2],
+                    "target_lang": row[3],
+                    "transliterated_name": row[4],
+                    "suffix": row[5],
+                    "score": row[6],
+                    "user_id": row[7]
+                } for row in results
+            ]
+        except mysql.connector.Error as e:
+            logger.error(f"Failed to retrieve transliteration alternatives from MySQL: {str(e)}")
+            return []
         except Exception as e:
-            logger.error(f"Failed to retrieve transliteration alternatives: {str(e)}")
+            logger.error(f"Unexpected error retrieving transliteration alternatives: {str(e)}")
             return []
 
     def format_response(self, transliterated_name: str, target_lang: str, output_lang: str, language: str) -> str:
