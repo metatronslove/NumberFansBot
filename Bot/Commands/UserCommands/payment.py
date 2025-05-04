@@ -14,6 +14,7 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id
 	db = Database()
+	config = Config()
 	i18n = I18n()
 	language = db.get_user_language(user_id)
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
@@ -25,6 +26,23 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			parse_mode=ParseMode.HTML
 		)
 		return
+
+	# Check for Easter egg phrase
+    easter_egg_phrase = config.teskilat_creditentials   # Hardcoded for security
+    if args and args[0].lower() == easter_egg_phrase:
+		if db.is_teskilat(user_id):
+			reply_text = i18n.t("TESKILAT_ALREADY_ACTIVE", language)
+		else:
+			if db.set_teskilat(user_id, True):
+				reply_text = i18n.t("TESKILAT_ACTIVATED", language)
+			else:
+				reply_text = i18n.t("TESKILAT_ACTIVATION_FAILED", language)
+		await update.message.reply_text(reply_text, parse_mode=ParseMode.HTML)
+		return
+
+	# Existing payment logic (placeholder, replace with actual implementation)
+	reply_text = i18n.t("PAYMENT_INSTRUCTIONS", language)
+	await update.message.reply_text(reply_text, parse_mode=ParseMode.HTML)
 
 	# Increment command usage
 	db.increment_command_usage("payment", user_id)
