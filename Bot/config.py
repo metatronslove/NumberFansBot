@@ -15,7 +15,7 @@ class Config:
 		}
 		self._load_yaml_config()
 		self._load_attributes()
-		self.models = load_models()
+		self.models = self.load_models()
 
 	def _load_yaml_config(self):
 		config_file = Path('Config/config.yml')
