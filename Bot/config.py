@@ -42,7 +42,7 @@ class Config:
 		self.github_username = self._config.get('github_username') or os.getenv('GITHUB_USERNAME')
 		self.github_token = self._config.get('github_token') or os.getenv('GITHUB_TOKEN')
 		self.github_repo = self._config.get('github_repo') or os.getenv('GITHUB_REPO')
-		self.github_pages_url = self._config.get('github_pages_url') or os.getenv('GITHUB_PAGES_URL')
+		self.github_pages_url = os.getenv('GITHUB_PAGES_URL') or self._config.get('github_pages_url')
 		self.payment_provider_token = self._config.get('payment_provider_token') or os.getenv('PAYMENT_PROVIDER_TOKEN')
 		self.currency_exchange_token = self._config.get('currency_exchange_token') or os.getenv('CURRENCY_EXCHANGE_TOKEN')
 		self.huggingface_access_token = self._config.get('huggingface_access_token') or os.getenv('HUGGINGFACE_ACCESS_TOKEN')
