@@ -163,21 +163,6 @@ class Database:
 		self.cursor.execute(query, (user_id, is_beta_tester, is_beta_tester))
 		self.conn.commit()
 
-	def is_blacklisted(self, user_id: int) -> bool:
-		query = "SELECT 1 FROM blacklist WHERE user_id = %s"
-		self.cursor.execute(query, (user_id,))
-		return bool(self.cursor.fetchone())
-
-	def add_to_blacklist(self, user_id: int):
-		query = "INSERT INTO blacklist (user_id, added_at) VALUES (%s, %s) ON DUPLICATE KEY UPDATE added_at = %s"
-		self.cursor.execute(query, (user_id, datetime.now(), datetime.now()))
-		self.conn.commit()
-
-	def remove_from_blacklist(self, user_id: int):
-		query = "DELETE FROM blacklist WHERE user_id = %s"
-		self.cursor.execute(query, (user_id))
-		self.conn.commit()
-
 	def increment_command_usage(self, command: str, user_id: int) -> None:
 		query = """
 		INSERT INTO command_usage (user_id, command, count, last_user_id, last_used)
