@@ -1,11 +1,12 @@
 import mysql.connector
-from .config import config
+from .config import Config
 import hashlib
 import time
 import json
 
 class Cache:
     def __init__(self):
+		config = Config()
         self.conn = mysql.connector.connect(
             host=config.mysql_host,
             port=config.mysql_port,
