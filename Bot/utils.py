@@ -28,7 +28,7 @@ async def get_ai_commentary(response: str, lang: str) -> str:
         headers = {"Authorization": f"Bearer {config.ai_access_token}"}
         payload = {
             "inputs": prompt,
-            "parameters": {"max_length": 200, "temperature": 0.7}
+            "parameters": {"max_length": 144, "temperature": 0.7}
         }
         async with aiohttp.ClientSession() as session:
             async with session.post(config.ai_model_url, headers=headers, json=payload) as api_response:
