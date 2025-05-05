@@ -26,7 +26,7 @@
 		<div class="tagline">{{ i18n.t('TAGLINE', lang) }}</div>
 	</div>
 	<div class="status-container">
-		{% if not github_pages_url %}
+		{% if not github_info.url %}
 			<div class="alert alert-warning">{{ i18n.t('CONFIGURE_GITHUB_URL', lang) }}</div>
 		{% else %}
 			<div class="time-range-selector">
