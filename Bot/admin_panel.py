@@ -531,8 +531,6 @@ def webhook():
 	try:
 		update = Update.de_json(request.get_json(), telegram_app.bot)
 		loop.run_until_complete(telegram_app.process_update(update))
-			updater.start_polling()
-	updater.idle()
 		return "", 200
 	except Exception as e:
 		logger.error(f"Webhook error: {str(e)}")
