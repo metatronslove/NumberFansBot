@@ -229,27 +229,27 @@ def index(lang="en"):
 		user['badges'] = ' '.join(badges)
 
 	# Validate and parse github_pages_url
-    github_info = {
-        "url": config.github_pages_url,
-        "username": "",
-        "repo": ""
-    }
+	github_info = {
+		"url": config.github_pages_url,
+		"username": "",
+		"repo": ""
+	}
 
-    if not config.github_pages_url:
-        flash(i18n.t("CONFIGURE_GITHUB_URL", lang), "warning")
-    else:
-        try:
-            parsed_url = urlparse(config.github_pages_url)
-            # Extract username and repo from URL (e.g., https://metatronslove.github.io/github-repo-traffic-viewer/)
-            path_match = re.match(r"/([^/]+)/([^/]+)", parsed_url.path)
-            if path_match:
-                github_info["username"] = path_match.group(1)
-                github_info["repo"] = path_match.group(2)
-            else:
-                flash(i18n.t("ERROR_GENERAL", lang, error="Invalid GitHub Pages URL format"), "error")
-        except Exception as e:
-            logger.error(f"Error parsing github_pages_url: {str(e)}")
-            flash(i18n.t("ERROR_GENERAL", lang, error="Failed to parse GitHub Pages URL"), "error")
+	if not config.github_pages_url:
+		flash(i18n.t("CONFIGURE_GITHUB_URL", lang), "warning")
+	else:
+		try:
+			parsed_url = urlparse(config.github_pages_url)
+			# Extract username and repo from URL (e.g., https://metatronslove.github.io/github-repo-traffic-viewer/)
+			path_match = re.match(r"/([^/]+)/([^/]+)", parsed_url.path)
+			if path_match:
+				github_info["username"] = path_match.group(1)
+				github_info["repo"] = path_match.group(2)
+			else:
+				flash(i18n.t("ERROR_GENERAL", lang, error="Invalid GitHub Pages URL format"), "error")
+		except Exception as e:
+			logger.error(f"Error parsing github_pages_url: {str(e)}")
+			flash(i18n.t("ERROR_GENERAL", lang, error="Failed to parse GitHub Pages URL"), "error")
 
 
 	# Process for visualization
@@ -531,8 +531,8 @@ def webhook():
 	try:
 		update = Update.de_json(request.get_json(), telegram_app.bot)
 		loop.run_until_complete(telegram_app.process_update(update))
-		    updater.start_polling()
-    updater.idle()
+			updater.start_polling()
+	updater.idle()
 		return "", 200
 	except Exception as e:
 		logger.error(f"Webhook error: {str(e)}")
