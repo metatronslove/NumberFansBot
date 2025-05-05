@@ -169,7 +169,8 @@ class Database:
 		VALUES (%s, %s, %s, %s, 1)
 		ON DUPLICATE KEY UPDATE count = count + 1, last_user_id = %s, last_used = %s
 		"""
-		self.cursor.execute(query, (user_id, datetime.now(), user_id, command, user_id))
+		now = datetime.now()  # Store datetime.now() to ensure consistency
+		self.cursor.execute(query, (user_id, now, user_id, command, user_id, now))
 		self.conn.commit()
 
 	def get_command_usage(self) -> list:
