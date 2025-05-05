@@ -31,7 +31,6 @@ async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		lang_code = args[0].lower() if args else ""
 
 		if not lang_code:
-			await show_language_selection(update, current_lang)
 			return
 
 		if lang_code not in config.available_languages:
@@ -55,7 +54,3 @@ async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			i18n.t("LANGUAGE_ERROR_GENERAL", current_lang),
 			parse_mode=ParseMode.MARKDOWN
 		)
-
-async def show_language_selection(update: Update, current_lang: str):
-	# Implementation unchanged
-	pass
