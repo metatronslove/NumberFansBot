@@ -112,7 +112,7 @@ class Database:
 		query = "SELECT language_code FROM users WHERE user_id = %s"
 		self.cursor.execute(query, (user_id,))
 		user = self.cursor.fetchone()
-		return user['language'] if user else 'en'
+		return user['language_code'] if user else 'en'
 
 	def promote_credits(self, user_id: int, credits: int) -> bool:
 		try:
