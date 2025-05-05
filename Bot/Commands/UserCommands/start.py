@@ -26,7 +26,7 @@ async def start_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			await language_handle(update, context)
 		else:
 			language = 'en'
-			db.set_user_attribute(user_id, "language", language)
+			db.set_user_attribute(user_id, "language_code", language)
 
 		db.set_user_attribute(user_id, "last_interaction", datetime.now())
 		db.increment_command_usage("start", user_id)
