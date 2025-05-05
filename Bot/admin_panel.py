@@ -227,7 +227,49 @@ def index(lang="en"):
 		if user['is_blacklisted']:
 			badges.append('🚫')
 		user['badges'] = ' '.join(badges)
-	return render_template("dashboard.html", i18n=i18n, lang=lang, users=users, fields=get_fields(), config=config)
+
+	# Validate and parse github_pages_url
+    github_info = {
+        "url": config.github_pages_url,
+        "username": "",
+        "repo": ""
+    }
+
+    if not config.github_pages_url:
+        flash(i18n.t("CONFIGURE_GITHUB_URL", lang), "warning")
+    else:
+        try:
+            parsed_url = urlparse(config.github_pages_url)
+            # Extract username and repo from URL (e.g., https://metatronslove.github.io/github-repo-traffic-viewer/)
+            path_match = re.match(r"/([^/]+)/([^/]+)", parsed_url.path)
+            if path_match:
+                github_info["username"] = path_match.group(1)
+                github_info["repo"] = path_match.group(2)
+            else:
+                flash(i18n.t("ERROR_GENERAL", lang, error="Invalid GitHub Pages URL format"), "error")
+        except Exception as e:
+            logger.error(f"Error parsing github_pages_url: {str(e)}")
+            flash(i18n.t("ERROR_GENERAL", lang, error="Failed to parse GitHub Pages URL"), "error")
+
+
+	# Process for visualization
+	command_usage = db.get_command_usage()
+
+	if command_usage:
+		max_count = max(usage['count'] for usage in command_usage)
+		for usage in command_usage:
+			usage['percentage'] = (usage['count'] / max_count * 100) if max_count > 0 else 0
+
+	return render_template(
+		"dashboard.html",
+		i18n=i18n,
+		lang=lang,
+		users=users,
+		fields=get_fields(),
+		config=config,
+		command_usage=command_usage,
+		github_info=github_info
+	)
 
 @app.route("/<lang>/toggle_blacklist", methods=["POST"])
 def toggle_blacklist(lang="en"):
@@ -335,21 +377,6 @@ def login(lang="en"):
 		else:
 			flash(i18n.t("LOGIN_ERROR", lang), "error")
 	return render_template("login.html", i18n=i18n, lang=lang)
-
-@app.route("/<lang>/commands")
-def commands(lang="en"):
-	config = Config()
-	db = Database()
-	i18n = I18n()
-	if lang not in AVAILABLE_LANGUAGES:
-		lang = "en"
-	command_usage = db.get_command_usage()
-	# Process for visualization
-	if command_usage:
-		max_count = max(usage['count'] for usage in command_usage)
-		for usage in command_usage:
-			usage['percentage'] = (usage['count'] / max_count * 100) if max_count > 0 else 0
-	return render_template("commands.html", i18n=i18n, lang=lang, command_usage=command_usage, config=config)
 
 @app.route("/<lang>/logout")
 def logout(lang="en"):
@@ -469,38 +496,6 @@ def delete_model(lang="en"):
 	users = db.cursor.fetchall()
 	return render_template("dashboard.html", i18n=i18n, lang=lang, users=users, fields=get_fields(), config=config)
 
-@app.route("/<lang>/github_traffic")
-def github_traffic(lang="en"):
-    config = Config()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-
-    # Validate and parse github_pages_url
-    github_info = {
-        "url": config.github_pages_url,
-        "username": "",
-        "repo": ""
-    }
-
-    if not config.github_pages_url:
-        flash(i18n.t("CONFIGURE_GITHUB_URL", lang), "warning")
-    else:
-        try:
-            parsed_url = urlparse(config.github_pages_url)
-            # Extract username and repo from URL (e.g., https://metatronslove.github.io/github-repo-traffic-viewer/)
-            path_match = re.match(r"/([^/]+)/([^/]+)", parsed_url.path)
-            if path_match:
-                github_info["username"] = path_match.group(1)
-                github_info["repo"] = path_match.group(2)
-            else:
-                flash(i18n.t("ERROR_GENERAL", lang, error="Invalid GitHub Pages URL format"), "error")
-        except Exception as e:
-            logger.error(f"Error parsing github_pages_url: {str(e)}")
-            flash(i18n.t("ERROR_GENERAL", lang, error="Failed to parse GitHub Pages URL"), "error")
-
-    return render_template("github_traffic.html", i18n=i18n, lang=lang, config=config, github_info=github_info)
-
 @app.route("/<lang>/manage_beta_tester", methods=["POST"])
 def manage_beta_tester(lang="en"):
 	config = Config()
@@ -536,6 +531,8 @@ def webhook():
 	try:
 		update = Update.de_json(request.get_json(), telegram_app.bot)
 		loop.run_until_complete(telegram_app.process_update(update))
+		    updater.start_polling()
+    updater.idle()
 		return "", 200
 	except Exception as e:
 		logger.error(f"Webhook error: {str(e)}")
