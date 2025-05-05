@@ -48,7 +48,7 @@ body {
 }
 
 .status-container {
-	max-width: 900px;
+	max-width: 98%;
 	margin: 20px auto;
 	padding: 20px;
 	background: rgba(42, 42, 42, 0.15);
