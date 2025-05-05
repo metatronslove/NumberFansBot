@@ -165,11 +165,11 @@ class Database:
 
 	def increment_command_usage(self, command: str, user_id: int) -> None:
 		query = """
-		INSERT INTO command_usage (user_id, command, count, last_user_id, last_used)
-		VALUES (%s, %s, 1, %s, %s)
+		INSERT INTO command_usage (user_id, last_used, last_user_id, command, count)
+		VALUES (%s, %s, %s, %s, 1)
 		ON DUPLICATE KEY UPDATE count = count + 1, last_user_id = %s, last_used = %s
 		"""
-		self.cursor.execute(query, (user_id, command, user_id, datetime.now(), user_id, datetime.now()))
+		self.cursor.execute(query, (user_id, datetime.now(), user_id, command, user_id))
 		self.conn.commit()
 
 	def get_command_usage(self) -> list:
