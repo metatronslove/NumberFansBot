@@ -12,7 +12,7 @@ class Config:
 		self._config = {
 			'mysql': {},
 			'ai_settings': {},
-			'github_pages_url': 'https://metatronslove.github.io/github-repo-traffic-viewer/'
+			'github_pages_url': 'https://metatronslove.github.io/github-repo-traffic-viewer'
 		}
 		self._load_yaml_config()
 		self._load_attributes()
