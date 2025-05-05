@@ -109,7 +109,7 @@ class Database:
 		return user['is_beta_tester'] if user else False
 
 	def get_user_language(self, user_id: int) -> str:
-		query = "SELECT language FROM users WHERE user_id = %s"
+		query = "SELECT language_code FROM users WHERE user_id = %s"
 		self.cursor.execute(query, (user_id,))
 		user = self.cursor.fetchone()
 		return user['language'] if user else 'en'
