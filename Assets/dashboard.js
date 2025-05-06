@@ -1,28 +1,3 @@
-import {
-	python
-} from "https://cdn.jsdelivr.net/npm/@codemirror/lang-python@6.1.3/dist/index.min.js";
-import {
-	html
-} from "https://cdn.jsdelivr.net/npm/@codemirror/lang-html@6.4.5/dist/index.min.js";
-import {
-	javascript
-} from "https://cdn.jsdelivr.net/npm/@codemirror/lang-javascript@6.2.1/dist/index.min.js";
-import {
-	css
-} from "https://cdn.jsdelivr.net/npm/@codemirror/lang-css@6.2.1/dist/index.min.js";
-import {
-	yaml
-} from "https://cdn.jsdelivr.net/npm/@codemirror/lang-yaml@6.0.0/dist/index.min.js";
-import {
-	sql
-} from "https://cdn.jsdelivr.net/npm/@codemirror/lang-sql@6.5.2/dist/index.min.js";
-import {
-	EditorView,
-	basicSetup
-} from "https://cdn.jsdelivr.net/npm/codemirror@6.0.1/dist/index.min.js";
-import {
-	dracula
-} from "https://cdn.jsdelivr.net/npm/@codemirror/theme-dracula@0.21.0/dist/index.min.js";
 particlesJS('particles-js', {
 	"particles": {
 		"number": {
