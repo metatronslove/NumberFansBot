@@ -13,27 +13,38 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.7/lib/codemirror.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.7/theme/dracula.min.css">
     <style>
-        .file-tree { margin-bottom: 20px; }
+        .files-tab-content {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .file-tree-container {
+            width: 300px;
+            overflow-x: auto;
+            background: #2a2a2a;
+            padding: 10px;
+            border: 1px solid #48ff00;
+        }
         .file-tree ul { list-style: none; padding-left: 20px; }
         .file-tree li { margin: 5px 0; }
         .file-tree .directory > a { font-weight: bold; color: #48ff00; }
         .file-tree .file > a { cursor: pointer; color: #ffffff; }
         .file-tree .file > a:hover { text-decoration: underline; }
-        .editor-container { display: none; margin-top: 20px; }
-        .CodeMirror { height: 400px; border: 1px solid #48ff00; background: #2a2a2a; color: #fff; }
+        .editor-container {
+            flex: 1;
+            display: none;
+            background: #2a2a2a;
+            padding: 10px;
+            border: 1px solid #48ff00;
+        }
+        .CodeMirror { height: 400px; border: 1px solid #48ff00; }
         .file-actions { margin-top: 10px; }
-        .create-file-form { margin-top: 20px; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .tab { cursor: pointer; display: inline-block; padding: 10px 20px; margin-right: 5px; background: #2a2a2a; color: #fff; border-radius: 5px 5px 0 0; }
-        .tab.active { background: #48ff00; color: #000; }
-        .table-dark { background: #2a2a2a; color: #fff; }
-        .form-control { background: #2a2a2a; color: #fff; border: 1px solid #48ff00; }
-        .btn-primary { background: #48ff00; color: #000; border: none; }
-        .btn-primary:hover { background: #3ce000; }
-        .btn-danger { background: #ff4d4d; border: none; }
-        .btn-danger:hover { background: #e60000; }
-        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .create-file-form { margin-bottom: 20px; }
+        @media (max-width: 768px) {
+            .files-tab-content { flex-direction: column; }
+            .file-tree-container { width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -49,7 +60,7 @@
         <div class="logo">NumberFansBot</div>
         <div class="tagline">{{ i18n.t('TAGLINE', lang) }}</div>
     </div>
-    <div class="status-container container mt-4">
+    <div class="status-container">
         <h2>{{ i18n.t('DASHBOARD_TITLE', lang) }}</h2>
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -68,7 +79,9 @@
                 <div class="tab" data-tab="github">{{ i18n.t('GITHUB_TRAFFIC_TAB', lang) }}</div>
             {% endif %}
             <div class="tab" data-tab="files">{{ i18n.t('FILES_TAB', lang) }}</div>
-            <div class="link-tab" data-tab="install"><a href="{{ url_for('install', lang=lang) }}" class="btn btn-primary">{{ i18n.t('INSTALL_TAB', lang) }}</a></div>
+            <div class="link-tab" data-tab="install">
+                <a href="{{ url_for('install', lang=lang) }}" class="btn btn-primary">{{ i18n.t('INSTALL_TAB', lang) }}</a>
+            </div>
         </div>
         <div class="tab-content{% if command_usage %} active{% endif %}" id="commands">
             <h2>{{ i18n.t('COMMANDS_TITLE', lang) }}</h2>
@@ -172,6 +185,14 @@
                 <button type="submit" class="btn btn-primary mt-3">{{ i18n.t('SAVE_CONFIG', lang) }}</button>
             </form>
         </div>
+        <style>
+            #users table {
+                thead tr th, tbody tr td {
+                    max-width: calc(100% / 7);
+                    min-width: calc(100% / 8);
+                }
+            }
+        </style>
         <div class="tab-content" id="users">
             <h3>{{ i18n.t('USERS_TAB', lang) }}</h3>
             <table class="table table-dark">
@@ -256,9 +277,7 @@
         </div>
         <div class="tab-content" id="files">
             <h3>{{ i18n.t('FILES_TAB', lang) }}</h3>
-            <div class="file-tree" id="file-tree"></div>
             <div class="create-file-form">
-                <h4>{{ i18n.t('CREATE_FILE', lang) }}</h4>
                 <form id="create-file-form">
                     <div class="mb-3">
                         <label for="new-file-path" class="form-label">{{ i18n.t('FILE_PATH', lang) }}</label>
@@ -267,12 +286,17 @@
                     <button type="submit" class="btn btn-primary">{{ i18n.t('CREATE', lang) }}</button>
                 </form>
             </div>
-            <div class="editor-container" id="editor-container">
-                <h4 id="editor-title"></h4>
-                <textarea id="editor"></textarea>
-                <div class="file-actions">
-                    <button class="btn btn-primary" id="save-file">{{ i18n.t('SAVE', lang) }}</button>
-                    <button class="btn btn-danger" id="delete-file">{{ i18n.t('DELETE', lang) }}</button>
+            <div class="files-tab-content">
+                <div class="file-tree-container">
+                    <div class="file-tree" id="file-tree"></div>
+                </div>
+                <div class="editor-container" id="editor-container">
+                    <h4 id="editor-title"></h4>
+                    <textarea id="editor"></textarea>
+                    <div class="file-actions">
+                        <button class="btn btn-primary" id="save-file">{{ i18n.t('SAVE', lang) }}</button>
+                        <button class="btn btn-danger" id="delete-file">{{ i18n.t('DELETE', lang) }}</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -281,21 +305,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked@4.0.18/lib/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/core.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/javascript.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/python.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/xml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.7/lib/codemirror.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.7/mode/python/python.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.7/mode/htmlmixed/htmlmixed.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.7/mode/javascript/javascript.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.7/mode/css/css.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.7/mode/yaml/yaml.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.7/mode/sql/sql.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.7/mode/markdown/markdown.min.js"></script>
     <script>
-        // Particle background
         particlesJS('particles-js', {
             "particles": {
                 "number": {"value": 80, "density": {"enable": true, "value_area": 800}},
@@ -314,7 +328,6 @@
             "retina_detect": true
         });
 
-        // Tab switching
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -324,7 +337,6 @@
             });
         });
 
-        // Form styling
         document.querySelectorAll('.promote-credits-form').forEach(form => {
             form.style.display = 'flex';
             form.style.gap = '10px';
@@ -341,11 +353,418 @@
             form.querySelector('button').style.padding = '5px 10px';
         });
 
+        {% if github_info.url %}
+        let allRepos = [];
+        let currentPage = 1;
+        let reposPerPage = 25;
+
+        const githubInfo = {
+            baseUrl: '{{ github_info.url }}',
+            username: '{{ github_info.username }}',
+            repo: '{{ github_info.repo }}'
+        };
+
+        function githubMarkdownToHtml(markdown) {
+            const container = document.createElement('div');
+            marked.setOptions({
+                gfm: true,
+                breaks: true,
+                tables: true,
+                pedantic: false,
+                sanitize: false,
+                smartLists: true,
+                smartypants: false,
+                highlight: function(code, lang) {
+                    if (typeof hljs !== 'undefined' && lang) {
+                        try {
+                            return hljs.highlight(code, { language: lang }).value;
+                        } catch (e) {
+                            console.warn(`Error highlighting ${lang} code:`, e);
+                        }
+                    }
+                    return code;
+                }
+            });
+            container.innerHTML = marked.parse(markdown);
+            postProcessHtml(container);
+            return container.innerHTML;
+        }
+
+        function postProcessHtml(container) {
+            container.querySelectorAll('pre').forEach(pre => {
+                pre.classList.add('github-markdown-pre');
+                const code = pre.querySelector('code');
+                if (code) code.classList.add('github-markdown-code');
+            });
+            container.querySelectorAll('table').forEach(table => {
+                table.classList.add('github-markdown-table');
+            });
+            container.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(header => {
+                const id = header.textContent.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
+                header.id = id;
+                const anchor = document.createElement('a');
+                anchor.className = 'github-markdown-header-anchor';
+                anchor.href = `#${id}`;
+                anchor.innerHTML = '<svg aria-hidden="true" height="16" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>';
+                header.prepend(anchor);
+            });
+        }
+
+        function ToggleReadMe(repoName, fullName) {
+            const readmeContainer = document.getElementById(`readme-${repoName}`);
+            if (readmeContainer.style.display === 'none') {
+                readmeContainer.style.display = 'block';
+            } else {
+                readmeContainer.style.display = 'none';
+            }
+        }
+
+        async function fetchAndDisplayReadme(repoName, fullName) {
+            const readmeContainer = document.getElementById(`readme-${repoName}`);
+            try {
+                const response = await fetch(`https://raw.githubusercontent.com/${fullName}/main/README.md`);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch README: ${response.status}`);
+                }
+                let markdown = await response.text();
+                markdown = convertRelativeUrls(markdown, fullName);
+                const html = githubMarkdownToHtml(markdown);
+                const modalHTML = `
+                    <div class="readme-modal-overlay" onclick="ToggleReadMe('${repoName}')">
+                        <div class="readme-modal-content" onclick="event.stopPropagation()">
+                            <div class="readme-modal-body">${html}</div>
+                        </div>
+                    </div>
+                `;
+                readmeContainer.innerHTML = modalHTML;
+                readmeContainer.style.display = 'none';
+                processImagesAndLinks(readmeContainer, fullName);
+                if (typeof hljs !== 'undefined') {
+                    document.querySelectorAll('.readme-modal-body pre code').forEach(block => {
+                        hljs.highlightElement(block);
+                    });
+                }
+            } catch (error) {
+                readmeContainer.innerHTML = `
+                    <div class="readme-modal-overlay" onclick="ToggleReadMe('${repoName}')">
+                        <div class="readme-modal-content" onclick="event.stopPropagation()">
+                            <div class="readme-modal-body">
+                                <p>{{ i18n.t('README_ERROR', lang) }} ${repoName}</p>
+                                <p>${error.message}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                readmeContainer.style.display = 'none';
+            }
+        }
+
+        function convertRelativeUrls(markdown, fullName) {
+            markdown = markdown.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, altText, path) => {
+                if (!path.startsWith('http') && !path.startsWith('data:')) {
+                    if (path.startsWith('/')) {
+                        path = `https://raw.githubusercontent.com/${fullName}/main${path}`;
+                    } else {
+                        path = `https://raw.githubusercontent.com/${fullName}/main/${path}`;
+                    }
+                }
+                return `![${altText}](${path})`;
+            });
+            markdown = markdown.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, path) => {
+                if (!path.startsWith('http') && !path.startsWith('#') && !path.startsWith('mailto:')) {
+                    if (path.startsWith('/')) {
+                        path = `https://github.com/${fullName}/blob/main${path}`;
+                    } else {
+                        path = `https://github.com/${fullName}/blob/main/${path}`;
+                    }
+                }
+                return `[${text}](${path})`;
+            });
+            return markdown;
+        }
+
+        function processImagesAndLinks(container, fullName) {
+            container.querySelectorAll('img').forEach(img => {
+                const src = img.getAttribute('src');
+                if (src && !src.startsWith('http') && !src.startsWith('data:')) {
+                    const absoluteSrc = src.startsWith('/')
+                        ? `https://raw.githubusercontent.com/${fullName}/main${src}`
+                        : `https://raw.githubusercontent.com/${fullName}/main/${src}`;
+                    img.setAttribute('src', absoluteSrc);
+                }
+            });
+            container.querySelectorAll('a').forEach(a => {
+                const href = a.getAttribute('href');
+                if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:')) {
+                    const absoluteHref = href.startsWith('/')
+                        ? `https://github.com/${fullName}/blob/main${href}`
+                        : `https://github.com/${fullName}/blob/main/${href}`;
+                    a.setAttribute('href', absoluteHref);
+                    a.setAttribute('target', '_blank');
+                }
+            });
+        }
+
+        function getBasePath() {
+            return githubInfo.baseUrl.endsWith('/') ? githubInfo.baseUrl : githubInfo.baseUrl + '/';
+        }
+
+        async function fetchTrafficData(repoName) {
+            try {
+                const basePath = getBasePath();
+                const [viewsRes, clonesRes] = await Promise.all([
+                    fetch(`${basePath}data/repos/${encodeURIComponent(repoName)}/views.json`),
+                    fetch(`${basePath}data/repos/${encodeURIComponent(repoName)}/clones.json`)
+                ]);
+                if (!viewsRes.ok) {
+                    console.warn(`Views data not found for ${repoName}`);
+                    return { views: { views: [] } };
+                }
+                if (!clonesRes.ok) {
+                    console.warn(`Clones data not found for ${repoName}`);
+                    return { clones: { clones: [] } };
+                }
+                const views = await viewsRes.json();
+                const clones = await clonesRes.json();
+                const trafficData = { views: views || { views: [] }, clones: clones || { clones: [] } };
+                if (!validateTrafficData(trafficData)) {
+                    throw new Error('Invalid data structure');
+                }
+                return trafficData;
+            } catch (error) {
+                console.error(`Error loading traffic data for ${repoName}:`, error);
+                return { views: { views: [] }, clones: { clones: [] } };
+            }
+        }
+
+        async function fetchAllRepos() {
+            try {
+                const basePath = getBasePath();
+                const response = await fetch(`${basePath}data/repo-info.json`);
+                let data;
+                if (!response.ok) {
+                    const fallbackUrl = `https://raw.githubusercontent.com/${githubInfo.username}/${githubInfo.repo}/main/data/repo-info.json`;
+                    const fallbackResponse = await fetch(fallbackUrl);
+                    if (!fallbackResponse.ok) {
+                        throw new Error('Repository list not found');
+                    }
+                    data = await fallbackResponse.json();
+                } else {
+                    data = await response.json();
+                }
+                return Array.isArray(data) ? { repositories: data } : data;
+            } catch (error) {
+                console.error('Error loading repositories:', error);
+                showInfoBox();
+                return { repositories: [] };
+            }
+        }
+
+        function validateTrafficData(data) {
+            if (!data) return false;
+            if (data.views && !Array.isArray(data.views.views)) return false;
+            if (data.clones && !Array.isArray(data.clones.clones)) return false;
+            return true;
+        }
+
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleDateString('{{ lang }}', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        function fillMissingDates(data, range) {
+            if (data.length === 0) return data;
+            const dateMap = new Map();
+            data.forEach(item => dateMap.set(item.timestamp.split('T')[0], item));
+            const sortedDates = [...dateMap.keys()].sort();
+            const startDate = new Date(sortedDates[0]);
+            const endDate = new Date(sortedDates[sortedDates.length - 1]);
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                const dateStr = d.toISOString().split('T')[0];
+                if (!dateMap.has(dateStr)) {
+                    dateMap.set(dateStr, { timestamp: dateStr, count: 0, uniques: 0 });
+                }
+            }
+            return [...dateMap.values()].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        }
+
+        function createChart(canvasId, label, data, labels, total) {
+            const ctx = document.getElementById(canvasId);
+            if (!ctx) return;
+            if (data.length === 0) {
+                ctx.parentElement.innerHTML = `<p>{{ i18n.t('NO_DATA', lang) }}</p>`;
+                return;
+            }
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `${label} ({{ i18n.t('TOTAL', lang) }}: ${total || 0})`,
+                        data: data,
+                        borderColor: '#48ff00',
+                        backgroundColor: 'rgba(72, 255, 0, 0.2)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: true, position: 'top', labels: { color: '#fff' } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#fff' }, grid: { color: 'rgba(255, 255, 255, 0.2)' } },
+                        x: { ticks: { color: '#fff', maxRotation: 45, minRotation: 45 }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
+                    }
+                }
+            });
+        }
+
+        function showError(message) {
+            const container = document.getElementById('charts-container');
+            container.innerHTML = `<div class="error">${message}</div>`;
+        }
+
+        function showInfoBox() {
+            document.getElementById('info-container').innerHTML = `<div class="info-box">{{ i18n.t('INFO_BOX', lang) }}</div>`;
+        }
+
+        function setupPagination(totalRepos, reposPerPage) {
+            const totalPages = Math.ceil(totalRepos / reposPerPage);
+            const paginationDiv = document.getElementById('pagination');
+            paginationDiv.innerHTML = '';
+            if (totalPages <= 1) return;
+
+            const prevButton = document.createElement('button');
+            prevButton.innerHTML = '{{ i18n.t('PREVIOUS_PAGE', lang) }}';
+            prevButton.disabled = currentPage === 1;
+            prevButton.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage -= 1;
+                    displayRepos();
+                }
+            });
+            paginationDiv.appendChild(prevButton);
+
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                if (i === currentPage) pageButton.classList.add('active');
+                pageButton.addEventListener('click', () => {
+                    currentPage = i;
+                    displayRepos();
+                });
+                paginationDiv.appendChild(pageButton);
+            }
+
+            const nextButton = document.createElement('button');
+            nextButton.innerHTML = '{{ i18n.t('NEXT_PAGE', lang) }}';
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage += 1;
+                    displayRepos();
+                }
+            });
+            paginationDiv.appendChild(nextButton);
+            paginationDiv.style.display = 'flex';
+        }
+
+        function filterDataByDateRange(data, range) {
+            if (range === 'all') return data;
+            const days = parseInt(range) || 30;
+            const cutoffDate = new Date();
+            cutoffDate.setDate(cutoffDate.getDate() - days);
+            return data.filter(item => new Date(item.timestamp) >= cutoffDate);
+        }
+
+        async function displayRepos() {
+            if (!allRepos || !allRepos.repositories) {
+                showError('{{ i18n.t('ERROR_LOADING_REPOS', lang) }}');
+                return;
+            }
+            const selectedRange = document.getElementById('time-range').value;
+            const startIdx = (currentPage - 1) * reposPerPage;
+            const endIdx = startIdx + reposPerPage;
+            const reposToShow = allRepos.repositories.slice(startIdx, endIdx);
+            const totalPages = Math.ceil(allRepos.repositories.length / reposPerPage);
+
+            document.getElementById('charts-container').innerHTML = '';
+            document.getElementById('loading').textContent = '{{ i18n.t('LOADING_REPOS', lang) }}'.replace('(0)', `(${reposToShow.length})`);
+
+            document.querySelector('.per-page-selector').style.display = 'block';
+            document.querySelector('.time-range-selector').style.display = 'block';
+            document.querySelector('.info-box').style.display = 'none';
+
+            let loadedCount = 0;
+            for (const repo of reposToShow) {
+                document.getElementById('loading').textContent = '{{ i18n.t('LOADING_REPOS', lang) }}'.replace('%d', ++loadedCount);
+                const trafficData = await fetchTrafficData(repo.name);
+                const filteredViews = filterDataByDateRange(trafficData.views.views, selectedRange);
+                const filteredClones = filterDataByDateRange(trafficData.clones.clones, selectedRange);
+                const completeViews = fillMissingDates(filteredViews, selectedRange);
+                const completeClones = fillMissingDates(filteredClones, selectedRange);
+
+                const container = document.createElement('div');
+                container.className = 'chart-box';
+                const escapedRepoName = repo.name.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"').replace(/'/g, '');
+                container.innerHTML = `
+                    <h3>
+                        <a href="https://github.com/${repo.full_name}" target="_blank">🔗 {{ i18n.t('REPO_HEADER', lang) }}.</a> |
+                        <a href="https://github.com/${repo.full_name}/zipball/main" target="_top">zip⬇</a> |
+                        <a href="https://github.com/${repo.full_name}/tarball/main" target="_top">tar⬇</a> |
+                        <a href="https://github.com/${repo.full_name}/fork" target="_blank">fork🖈</a> |
+                        <a onclick="ToggleReadMe('${escapedRepoName}', '${repo.full_name}')" id="toggle-${escapedRepoName}">README.md+</a>
+                    </h3>
+                    <div id="readme-${escapedRepoName}" style="display:none;"></div>
+                    <div class="stats-summary">
+                        <div class="stat-item">
+                            <span class="stat-label">{{ i18n.t('VIEWS', lang) }}:</span>
+                            <span class="stat-value">${trafficData.views.count || 0}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">{{ i18n.t('CLONES', lang) }}:</span>
+                            <span class="stat-value">${trafficData.clones.count || 0}</span>
+                        </div>
+                    </div>
+                    <div class="chart-row">
+                        <div class="chart-container">
+                            <canvas id="views-${escapedRepoName}"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="clones-${escapedRepoName}"></canvas>
+                        </div>
+                    </div>
+                `.replace('%s', escapedRepoName);
+                document.getElementById('charts-container').appendChild(container);
+                fetchAndDisplayReadme(repo.name, repo.full_name);
+                createChart(`views-${escapedRepoName}`, '{{ i18n.t('VIEWS', lang) }}', completeViews.map(v => v.count), completeViews.map(v => formatDate(v.timestamp)), trafficData.views.count);
+                createChart(`clones-${escapedRepoName}`, '{{ i18n.t('CLONES', lang) }}', completeClones.map(c => c.count), completeClones.map(c => formatDate(c.timestamp)), trafficData.clones.count);
+            }
+
+            document.getElementById('pagination').style.display = 'flex';
+            document.getElementById('loading').textContent = '{{ i18n.t('PAGE_STATS', lang) }}'
+                .replace('%d', currentPage)
+                .replace('%d', totalPages)
+                .replace('%d', allRepos.repositories.length);
+            setupPagination(allRepos.repositories.length, reposPerPage);
+        }
+
         // File Tree and Editor
         let editor = null;
         let currentFilePath = null;
 
-        function renderFileTree(files, parentElement, prefix = '') {
+        function renderFileTree(files, parentElement) {
             const ul = document.createElement('ul');
             files.forEach(item => {
                 const li = document.createElement('li');
@@ -362,7 +781,7 @@
                     li.appendChild(a);
                     const childrenUl = document.createElement('ul');
                     childrenUl.style.display = 'none';
-                    renderFileTree(item.children, childrenUl, prefix + '  ');
+                    renderFileTree(item.children, childrenUl);
                     li.appendChild(childrenUl);
                 } else {
                     a.href = '#';
@@ -396,10 +815,10 @@
                     editor = CodeMirror.fromTextArea(document.getElementById('editor'), {
                         lineNumbers: true,
                         theme: 'dracula',
-                        mode: data.mode
+                        mode: data.mode || 'python'
                     });
                 } else {
-                    editor.setOption('mode', data.mode);
+                    editor.setOption('mode', data.mode || 'python');
                 }
                 editor.setValue(data.content);
             })
@@ -509,445 +928,71 @@
                 });
         }
 
-        // Load file tree on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            loadFileTree();
-        });
+        async function main() {
+            showInfoBox();
+            allRepos = await fetchAllRepos();
+            if (!allRepos.repositories || allRepos.repositories.length === 0) {
+                showInfoBox();
+                return;
+            }
+            displayRepos();
+            {% if command_usage %}
+                const commandUsage = {{ command_usage | tojson }};
+                if (commandUsage && commandUsage.length > 0) {
+                    const ctx = document.createElement('canvas');
+                    ctx.id = 'command-usage-chart';
+                    ctx.style.width = '100%';
+                    ctx.style.height = '400px';
+                    document.querySelector('#commands').insertBefore(ctx, document.querySelector('#commands-table'));
 
-        // GitHub Traffic Functionality
-        {% if github_info.url %}
-            let allRepos = [];
-            let currentPage = 1;
-            let reposPerPage = 25;
+                    const labels = commandUsage.map(usage => `/${usage.command}`);
+                    const percentages = commandUsage.map(usage => usage.percentage);
 
-            const githubInfo = {
-                baseUrl: '{{ github_info.url }}',
-                username: '{{ github_info.username }}',
-                repo: '{{ github_info.repo }}'
-            };
-
-            function githubMarkdownToHtml(markdown) {
-                const container = document.createElement('div');
-                marked.setOptions({
-                    gfm: true,
-                    breaks: true,
-                    tables: true,
-                    pedantic: false,
-                    sanitize: false,
-                    smartLists: true,
-                    smartypants: false,
-                    highlight: function(code, lang) {
-                        if (lang && hljs.getLanguage(lang)) {
-                            try {
-                                return hljs.highlight(code, { language: lang }).value;
-                            } catch (e) {
-                                console.warn(`Error highlighting ${lang} code:`, e);
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: '{{ i18n.t('COMMAND_USAGE_PERCENTAGE', lang) }}',
+                                data: percentages,
+                                backgroundColor: 'rgba(72, 255, 0, 0.6)',
+                                borderColor: '#48ff00',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: { display: true, position: 'top', labels: { color: '#fff' } },
+                                title: { display: true, text: '{{ i18n.t('COMMAND_USAGE_CHART', lang) }}', color: '#fff' }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 100,
+                                    ticks: { color: '#fff', callback: value => value + '%' },
+                                    grid: { color: 'rgba(255, 255, 255, 0.2)' }
+                                },
+                                x: { ticks: { color: '#fff' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
                             }
                         }
-                        return code;
-                    }
-                });
-                container.innerHTML = marked.parse(markdown);
-                postProcessHtml(container);
-                return container.innerHTML;
-            }
-
-            function postProcessHtml(container) {
-                container.querySelectorAll('pre').forEach(pre => {
-                    pre.classList.add('github-markdown-pre');
-                    const code = pre.querySelector('code');
-                    if (code) code.classList.add('github-markdown-code');
-                });
-                container.querySelectorAll('table').forEach(table => {
-                    table.classList.add('github-markdown-table');
-                });
-                container.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(header => {
-                    const id = header.textContent.toLowerCase().replace(/[^\w\u4e00-\u9fa5]+/g, '-').replace(/^-+|-+$/g, '');
-                    header.id = id;
-                    const anchor = document.createElement('a');
-                    anchor.className = 'github-markdown-header-anchor';
-                    anchor.href = `#${id}`;
-                    anchor.innerHTML = '<svg aria-hidden="true" height="16" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>';
-                    header.prepend(anchor);
-                });
-            }
-
-            function ToggleReadMe(repoName, fullName) {
-                const readmeContainer = document.getElementById(`readme-${repoName}`);
-                if (readmeContainer.style.display === 'none') {
-                    readmeContainer.style.display = 'block';
-                } else {
-                    readmeContainer.style.display = 'none';
-                }
-            }
-
-            async function fetchAndDisplayReadme(repoName, fullName) {
-                const readmeContainer = document.getElementById(`readme-${repoName}`);
-                try {
-                    const response = await fetch(`https://raw.githubusercontent.com/${fullName}/main/README.md`);
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch README: ${response.status}`);
-                    }
-                    let markdown = await response.text();
-                    markdown = convertRelativeUrls(markdown, fullName);
-                    const html = githubMarkdownToHtml(markdown);
-                    const modalHTML = `
-                        <div class="readme-modal-overlay" onclick="ToggleReadMe('${repoName}')">
-                            <div class="readme-modal-content" onclick="event.stopPropagation()">
-                                <div class="readme-modal-body">${html}</div>
-                            </div>
-                        </div>
-                    `;
-                    readmeContainer.innerHTML = modalHTML;
-                    readmeContainer.style.display = 'none';
-                    processImagesAndLinks(readmeContainer, fullName);
-                    document.querySelectorAll('.readme-modal-body pre code').forEach(block => {
-                        hljs.highlightElement(block);
                     });
-                } catch (error) {
-                    readmeContainer.innerHTML = `
-                        <div class="readme-modal-overlay" onclick="ToggleReadMe('${repoName}')">
-                            <div class="readme-modal-content" onclick="event.stopPropagation()">
-                                <div class="readme-modal-body">
-                                    <p>{{ i18n.t('README_ERROR', lang) }} ${repoName}</p>
-                                    <p>${error.message}</p>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    readmeContainer.style.display = 'none';
                 }
-            }
+            {% endif %}
+            loadFileTree();
+        }
 
-            function convertRelativeUrls(markdown, fullName) {
-                markdown = markdown.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, altText, path) => {
-                    if (!path.startsWith('http') && !path.startsWith('data:')) {
-                        if (path.startsWith('/')) {
-                            path = `https://raw.githubusercontent.com/${fullName}/main${path}`;
-                        } else {
-                            path = `https://raw.githubusercontent.com/${fullName}/main/${path}`;
-                        }
-                    }
-                    return `![${altText}](${path})`;
-                });
-                markdown = markdown.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, path) => {
-                    if (!path.startsWith('http') && !path.startsWith('#') && !path.startsWith('mailto:')) {
-                        if (path.startsWith('/')) {
-                            path = `https://github.com/${fullName}/blob/main${path}`;
-                        } else {
-                            path = `https://github.com/${fullName}/blob/main/${path}`;
-                        }
-                    }
-                    return `[${text}](${path})`;
-                });
-                return markdown;
-            }
-
-            function processImagesAndLinks(container, fullName) {
-                container.querySelectorAll('img').forEach(img => {
-                    const src = img.getAttribute('src');
-                    if (src && !src.startsWith('http') && !src.startsWith('data:')) {
-                        const absoluteSrc = src.startsWith('/')
-                            ? `https://raw.githubusercontent.com/${fullName}/main${src}`
-                            : `https://raw.githubusercontent.com/${fullName}/main/${src}`;
-                        img.setAttribute('src', absoluteSrc);
-                    }
-                });
-                container.querySelectorAll('a').forEach(a => {
-                    const href = a.getAttribute('href');
-                    if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:')) {
-                        const absoluteHref = href.startsWith('/')
-                            ? `https://github.com/${fullName}/blob/main${href}`
-                            : `https://github.com/${fullName}/blob/main/${href}`;
-                        a.setAttribute('href', absoluteHref);
-                        a.setAttribute('target', '_blank');
-                    }
-                });
-            }
-
-            function getBasePath() {
-                return githubInfo.baseUrl.endsWith('/') ? githubInfo.baseUrl : githubInfo.baseUrl + '/';
-            }
-
-            async function fetchTrafficData(repoName) {
-                try {
-                    const basePath = getBasePath();
-                    const [viewsRes, clonesRes] = await Promise.all([
-                        fetch(`${basePath}data/repos/${encodeURIComponent(repoName)}/views.json`),
-                        fetch(`${basePath}data/repos/${encodeURIComponent(repoName)}/clones.json`)
-                    ]);
-                    if (!viewsRes.ok) {
-                        console.warn(`Views data not found for ${repoName}`);
-                        return { views: { views: [] } };
-                    }
-                    if (!clonesRes.ok) {
-                        console.warn(`Clones data not found for ${repoName}`);
-                        return { clones: { clones: [] } };
-                    }
-                    const views = await viewsRes.json();
-                    const clones = await clonesRes.json();
-                    const trafficData = { views: views || { views: [] }, clones: clones || { clones: [] } };
-                    if (!validateTrafficData(trafficData)) {
-                        throw new Error('Invalid data structure');
-                    }
-                    return trafficData;
-                } catch (error) {
-                    console.error(`Error loading traffic data for ${repoName}:`, error);
-                    return { views: { views: [] }, clones: { clones: [] } };
-                }
-            }
-
-            async function fetchAllRepos() {
-                try {
-                    const basePath = getBasePath();
-                    const response = await fetch(`${basePath}data/repo-info.json`);
-                    let data;
-                    if (!response.ok) {
-                        const fallbackUrl = `https://raw.githubusercontent.com/${githubInfo.username}/${githubInfo.repo}/main/data/repo-info.json`;
-                        const fallbackResponse = await fetch(fallbackUrl);
-                        if (!fallbackResponse.ok) {
-                            throw new Error('Repository list not found');
-                        }
-                        data = await fallbackResponse.json();
-                    } else {
-                        data = await response.json();
-                    }
-                    return Array.isArray(data) ? { repositories: data } : data;
-                } catch (error) {
-                    console.error('Error loading repositories:', error);
-                    showInfoBox();
-                    return { repositories: [] };
-                }
-            }
-
-            function validateTrafficData(data) {
-                if (!data) return false;
-                if (data.views && !Array.isArray(data.views.views)) return false;
-                if (data.clones && !Array.isArray(data.clones.clones)) return false;
-                return true;
-            }
-
-            function formatDate(isoString) {
-                const date = new Date(isoString);
-                return date.toLocaleDateString('{{ lang }}', { year: 'numeric', month: 'short', day: 'numeric' });
-            }
-
-            function fillMissingDates(data, range) {
-                if (data.length === 0) return data;
-                const dateMap = new Map();
-                data.forEach(item => dateMap.set(item.timestamp.split('T')[0], item));
-                const sortedDates = [...dateMap.keys()].sort();
-                const startDate = new Date(sortedDates[0]);
-                const endDate = new Date(sortedDates[sortedDates.length - 1]);
-                for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-                    const dateStr = d.toISOString().split('T')[0];
-                    if (!dateMap.has(dateStr)) {
-                        dateMap.set(dateStr, { timestamp: dateStr, count: 0, uniques: 0 });
-                    }
-                }
-                return [...dateMap.values()].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-            }
-
-            function createChart(canvasId, label, data, labels, total) {
-                const ctx = document.getElementById(canvasId);
-                if (!ctx) return;
-                if (data.length === 0) {
-                    ctx.parentElement.innerHTML = `<p>{{ i18n.t('NO_DATA', lang) }}</p>`;
-                    return;
-                }
-                return new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: `${label} ({{ i18n.t('TOTAL', lang) }}: ${total || 0})`,
-                            data: data,
-                            borderColor: '#48ff00',
-                            backgroundColor: 'rgba(72, 255, 0, 0.2)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: true, position: 'top', labels: { color: '#fff' } }
-                        },
-                        scales: {
-                            y: { beginAtZero: true, ticks: { color: '#fff' }, grid: { color: 'rgba(255, 255, 255, 0.2)' } },
-                            x: { ticks: { color: '#fff' }, grid: { color: 'rgba(255, 255, 255, 0.2)' } }
-                        }
-                    }
-                });
-            }
-
-            function showInfoBox() {
-                const infoContainer = document.getElementById('info-container');
-                infoContainer.innerHTML = `
-                    <div class="alert alert-warning">
-                        {{ i18n.t('NO_REPOSITORIES', lang) }}
-                    </div>
-                `;
-                document.getElementById('loading').style.display = 'none';
-            }
-
-function filterDataByDateRange(data, range) {
-    if (range === 'all') return data;
-    const days = parseInt(range) || 30;
-    const cutoffDate = new Date();
-    cutoffDate.setDate(cutoffDate.getDate() - days);
-    return data.filter(item => new Date(item.timestamp) >= cutoffDate);
-}
-
-async function displayRepos() {
-    if (!allRepos || !allRepos.repositories) {
-        showError('{{ i18n.t('ERROR_LOADING_REPOS', lang) }}');
-        return;
-    }
-    const selectedRange = document.getElementById('time-range').value;
-    const startIdx = (currentPage - 1) * reposPerPage;
-    const endIdx = startIdx + reposPerPage;
-    const reposToShow = allRepos.repositories.slice(startIdx, endIdx);
-    const totalPages = Math.ceil(allRepos.repositories.length / reposPerPage);
-
-    document.getElementById('charts-container').innerHTML = '';
-    document.getElementById('loading').textContent = '{{ i18n.t('LOADING_REPOS', lang) }}'.replace('(0)', `(${reposToShow.length})`);
-
-    document.querySelector('.per-page-selector').style.display = 'block';
-    document.querySelector('.time-range-selector').style.display = 'block';
-    document.querySelector('.info-box').style.display = 'none';
-
-    let loadedCount = 0;
-    for (const repo of reposToShow) {
-        document.getElementById('loading').textContent = '{{ i18n.t('LOADING_REPOS', lang) }}'.replace('%d', ++loadedCount);
-        const trafficData = await fetchTrafficData(repo.name);
-        const filteredViews = filterDataByDateRange(trafficData.views.views, selectedRange);
-        const filteredClones = filterDataByDateRange(trafficData.clones.clones, selectedRange);
-        const completeViews = fillMissingDates(filteredViews, selectedRange);
-        const completeClones = fillMissingDates(filteredClones, selectedRange);
-
-        const container = document.createElement('div');
-        container.className = 'chart-box';
-        const escapedRepoName = repo.name.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"').replace(/'/g, '');
-        container.innerHTML = `
-            <h3>
-                <a href="https://github.com/${repo.full_name}" target="_blank">🔗 {{ i18n.t('REPO_HEADER', lang) }}.</a> |
-                <a href="https://github.com/${repo.full_name}/zipball/main" target="_top">zip⬇</a> |
-                <a href="https://github.com/${repo.full_name}/tarball/main" target="_top">tar⬇</a> |
-                <a href="https://github.com/${repo.full_name}/fork" target="_blank">fork🖈</a> |
-                <a onclick="ToggleReadMe('${escapedRepoName}', '${repo.full_name}')" id="toggle-${escapedRepoName}">README.md+</a>
-            </h3>
-            <div id="readme-${escapedRepoName}" style="display:none;"></div>
-            <div class="stats-summary">
-                <div class="stat-item">
-                    <span class="stat-label">{{ i18n.t('VIEWS', lang) }}:</span>
-                    <span class="stat-value">${trafficData.views.count || 0}</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">{{ i18n.t('CLONES', lang) }}:</span>
-                    <span class="stat-value">${trafficData.clones.count || 0}</span>
-                </div>
-            </div>
-            <div class="chart-row">
-                <div class="chart-container">
-                    <canvas id="views-${escapedRepoName}"></canvas>
-                </div>
-                <div class="chart-container">
-                    <canvas id="clones-${escapedRepoName}"></canvas>
-                </div>
-            </div>
-        `.replace('%s', escapedRepoName);
-        document.getElementById('charts-container').appendChild(container);
-        fetchAndDisplayReadme(repo.name, repo.full_name);
-        createChart(`views-${escapedRepoName}`, '{{ i18n.t('VIEWS', lang) }}', completeViews.map(v => v.count), completeViews.map(v => formatDate(v.timestamp)), trafficData.views.count);
-        createChart(`clones-${escapedRepoName}`, '{{ i18n.t('CLONES', lang) }}', completeClones.map(c => c.count), completeClones.map(c => formatDate(c.timestamp)), trafficData.clones.count);
-    }
-
-    document.getElementById('pagination').style.display = 'flex';
-    document.getElementById('loading').textContent = '{{ i18n.t('PAGE_STATS', lang) }}'
-        .replace('%d', currentPage)
-        .replace('%d', totalPages)
-        .replace('%d', allRepos.repositories.length);
-    setupPagination(allRepos.repositories.length, reposPerPage);
-}
-
-            document.getElementById('time-range').addEventListener('change', (e) => {
-                reposPerPage = parseInt(document.getElementById('per-page').value);
-                displayRepos(1, e.target.value, reposPerPage);
-            });
-
+        document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('per-page').addEventListener('change', (e) => {
-                reposPerPage = parseInt(e.target.value);
-                displayRepos(1, document.getElementById('time-range').value, reposPerPage);
+                reposPerPage = parseInt(e.target.value) || 25;
+                currentPage = 1;
+                displayRepos();
             });
-
-            async function initGitHubTab() {
-                const repoData = await fetchAllRepos();
-                allRepos = repoData.repositories || [];
-                if (allRepos.length === 0) {
-                    showInfoBox();
-                    return;
-                }
-                await displayRepos(1, '30d', reposPerPage);
-    {% if command_usage %}
-    		const commandUsage = {{ command_usage | tojson }};
-		if (commandUsage && commandUsage.length > 0) {
-			const ctx = document.createElement('canvas');
-			ctx.id = 'command-usage-chart';
-			ctx.style.width = '100%';
-			ctx.style.height = '400px';
-			document.querySelector('#commands').insertBefore(ctx, document.querySelector('#commands-table'));
-
-			const labels = commandUsage.map(usage => `/${usage.command}`);
-			const percentages = commandUsage.map(usage => usage.percentage);
-
-			new Chart(ctx, {
-				type: 'bar',
-				data: {
-					labels: labels,
-					datasets: [{
-						label: '{{ i18n.t('COMMAND_USAGE_PERCENTAGE', lang) }}',
-						data: percentages,
-						backgroundColor: 'rgba(72, 255, 0, 0.6)',
-						borderColor: '#48ff00',
-						borderWidth: 1
-					}]
-				},
-				options: {
-					responsive: true,
-					plugins: {
-						legend: { display: true, position: 'top', labels: { color: '#fff' } },
-						title: { display: true, text: '{{ i18n.t('COMMAND_USAGE_CHART', lang) }}', color: '#fff' }
-					},
-					scales: {
-						y: {
-							beginAtZero: true,
-							max: 100,
-							ticks: { color: '#fff', callback: value => value + '%' },
-							grid: { color: 'rgba(255, 255, 255, 0.2)' }
-						},
-						x: { ticks: { color: '#fff' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
-					}
-				}
-			});
-		}
-    {% else %}
-    {% endif %}
-            }
-
-            document.addEventListener('DOMContentLoaded', () => {
-                if (document.querySelector('.tab[data-tab="github"]').classList.contains('active')) {
-                    initGitHubTab();
-                }
-                document.querySelector('.tab[data-tab="github"]').addEventListener('click', () => {
-                    if (!allRepos.length) {
-                        initGitHubTab();
-                    }
-                });
-            });
+            document.getElementById('time-range').addEventListener('change', displayRepos);
+            main();
+        });
         {% endif %}
     </script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93baf7ddafcb53ee',t:'MTc0NjU2MDYyNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
