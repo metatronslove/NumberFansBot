@@ -310,7 +310,8 @@ def get_bastet_conversation_handler():
 				LANGUAGE: [CallbackQueryHandler(bastet_language)],
 			},
 			fallbacks=[CommandHandler("cancel", bastet_cancel)],
-			allow_reentry=True
+			allow_reentry=True,
+			per_message=True
 		)
 		logger.info("Bastet conversation handler initialized successfully")
 		return handler

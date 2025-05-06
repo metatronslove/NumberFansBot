@@ -296,7 +296,8 @@ def get_huddam_conversation_handler():
 				MULTIPLIAR: [CallbackQueryHandler(huddam_multipliar)],
 			},
 			fallbacks=[CommandHandler("cancel", huddam_cancel)],
-			allow_reentry=True
+			allow_reentry=True,
+			per_message=True
 		)
 		logger.info("Huddam conversation handler initialized successfully")
 		return handler
