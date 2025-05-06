@@ -287,6 +287,19 @@ body {
 }
 
 .create-file-form {
+	padding: 10px;
+	label {
+		padding: 10px;
+	}
+	input {
+		width: calc(100% - 16rem);
+		display: inline-block;
+	}
+	button {
+		width: 6rem;
+		text-align: center;
+		display: inline-block;
+	}
 	margin-bottom: 20px;
 }
 
