@@ -374,7 +374,8 @@ def get_abjad_conversation_handler():
 				DETAIL: [CallbackQueryHandler(abjad_detail)],
 			},
 			fallbacks=[CommandHandler("cancel", abjad_cancel)],
-			allow_reentry=True
+			allow_reentry=True,
+			per_message=True
 		)
 		logger.info("Abjad conversation handler initialized successfully")
 		return handler
