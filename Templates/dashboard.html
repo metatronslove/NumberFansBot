@@ -148,6 +148,14 @@
 			</form>
 		</div>
 <!-- dashboard.html (update the users tab-content) -->
+<style>
+#users table {
+	thead tr th, tbody tr td {
+		max-width: calc(100% / 6);
+		min-width: calc(100% / 7);
+	}
+}
+</style>
 <div class="tab-content active" id="users">
 	<h3>{{ i18n.t('USERS_TAB', lang) }}</h3>
 	<table class="table table-dark">
@@ -269,7 +277,6 @@
 
 		document.querySelectorAll('.toggle-blacklist-form').forEach(form => {
 			form.style.display = 'inline-block';
-			form.querySelector('button').style.width = '33%'
 			form.querySelector('button').style.padding = '5px 10px';
 		});
 {% if github_info.url %}
