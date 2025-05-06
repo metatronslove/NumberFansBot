@@ -81,7 +81,7 @@ async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYP
 		if not query.data.startswith("abjad_alphabet_"):
 			logger.debug(f"Ignoring unrelated callback in abjad_alphabet_order: {query.data}")
 			return ALPHABET_ORDER
-		alphabet_order = query.data.split("abjad_alphabet_")[1]
+		alphabet_order = query.data.split("abjad_alphabet_")[0]
 		context.user_data["alphabet_order"] = alphabet_order
 
 		keyboard = [
@@ -119,7 +119,7 @@ async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		if not query.data.startswith("abjad_type_"):
 			logger.debug(f"Ignoring unrelated callback in abjad_type: {query.data}")
 			return ABJAD_TYPE
-		abjad_type = query.data.split("abjad_type_")[1]
+		abjad_type = query.data.split("abjad_type_")[0]
 		context.user_data["abjad_type"] = abjad_type
 
 		if context.user_data.get("is_arabic"):
@@ -159,7 +159,7 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			if not query.data.startswith("abjad_shadda_"):
 				logger.debug(f"Ignoring unrelated callback in abjad_shadda: {query.data}")
 				return SHADDA
-			shadda = int(query.data.split("abjad_shadda_")[1])
+			shadda = int(query.data.split("abjad_shadda_")[0])
 			context.user_data["shadda"] = shadda
 		else:
 			shadda = context.user_data.get("shadda", 1)
@@ -197,7 +197,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		if not query.data.startswith("abjad_detail_"):
 			logger.debug(f"Ignoring unrelated callback in abjad_detail: {query.data}")
 			return ConversationHandler.END
-		detail = int(query.data.split("abjad_detail_")[1])
+		detail = int(query.data.split("abjad_detail_")[0])
 		context.user_data["detail"] = detail
 		text = context.user_data["abjad_text"]
 		alphabet_order = context.user_data["alphabet_order"]
