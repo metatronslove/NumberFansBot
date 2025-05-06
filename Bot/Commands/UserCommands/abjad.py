@@ -69,7 +69,7 @@ async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		return ConversationHandler.END
 
 async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	logger.debug(f"Processing abjad_alphabet_order for user {update.effective_user.id}")
+	logger.info(f"Processing abjad_alphabet_order for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
 		await query.answer()
@@ -107,7 +107,7 @@ async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYP
 		return ConversationHandler.END
 
 async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	logger.debug(f"Processing abjad_type for user {update.effective_user.id}")
+	logger.info(f"Processing abjad_type for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
 		await query.answer()
@@ -145,7 +145,7 @@ async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		return ConversationHandler.END
 
 async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	logger.debug(f"Processing abjad_shadda for user {update.effective_user.id}")
+	logger.info(f"Processing abjad_shadda for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
 		if query:
@@ -183,7 +183,7 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		return ConversationHandler.END
 
 async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	logger.debug(f"Processing abjad_detail for user {update.effective_user.id}")
+	logger.info(f"Processing abjad_detail for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
 		await query.answer()
