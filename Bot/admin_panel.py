@@ -1,7 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for, session, flash, jsonify
 from telegram import Update
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler, PreCheckoutQueryHandler, MessageHandler
-from telegram.ext.filters import Filters
+from telegram.ext import Application, CommandHandler, CallbackQueryHandler, PreCheckoutQueryHandler, MessageHandler, Filters
 from .config import Config
 from .database import Database
 from .i18n import I18n
@@ -39,7 +38,7 @@ except Exception as e:
     logger.error(f"Failed to initialize Telegram application: {str(e)}")
     raise
 
-# Register handlers
+# Register handlers (unchanged)
 def register_handlers():
     from .Commands.UserCommands import (
         start, help, language, numerology, convert_numbers, magic_square,
@@ -429,6 +428,7 @@ def delete_file(lang="en"):
         logger.error(f"Error deleting {file_path}: {str(e)}")
         return jsonify({"error": f"Failed to delete: {str(e)}"}), 500
 
+# Existing routes (unchanged)
 @app.route("/<lang>/toggle_blacklist", methods=["POST"])
 def toggle_blacklist(lang="en"):
     if "username" not in session:
