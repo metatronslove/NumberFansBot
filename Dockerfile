@@ -5,13 +5,14 @@ RUN apt-get update && \
     DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends \
     python3-pip \
     build-essential \
-    ffmpeg \
-    git && \
+    ffmpeg && \
     rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
-RUN useradd -m -s /bin/bash appuser && \
-    mkdir /code && \
+RUN useradd -m -u 1000 -s /bin/bash appuser
+
+# Create /code directory with correct permissions
+RUN mkdir /code && \
     chown -R appuser:appuser /code
 
 # Upgrade pip and install dependencies
