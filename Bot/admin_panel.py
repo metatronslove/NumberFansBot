@@ -6,7 +6,7 @@ from Bot.database import Database
 from Bot.i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
-	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
+	Application, CommandHandler, MessageHandler, CallbackQueryHandler, PreCheckoutQueryHandler,
 	ConversationHandler, filters, ContextTypes
 )
 from telegram.constants import ParseMode
