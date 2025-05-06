@@ -296,6 +296,12 @@
 	"TESKILAT_ACTIVATED": "Teşkilat ayrıcalığı başarıyla etkinleştirildi",
 	"TESKILAT_ACTIVATION_FAILED": "Teşkilat ayrıcalığı etkinleştirilemedi",
 	"PAYMENT_INSTRUCTIONS": "Lütfen ödeme talimatlarını takip edin...",
+    "FILES_TAB": "Dosyalar",
+    "CREATE_FILE": "Yeni Dosya Oluştur",
+    "FILE_PATH": "Dosya Yolu",
+    "CREATE": "Oluştur",
+    "SAVE": "Kaydet",
+    "DELETE": "Sil",
 	"COMMAND_ALIASES": {
 		"abjad": ["abjad"],
 		"huddam": ["huddâm"],

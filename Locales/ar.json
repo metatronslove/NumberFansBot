@@ -296,6 +296,12 @@
 	"TESKILAT_ACTIVATED": "تم تفعيل امتياز التشكيلات بنجاح",
 	"TESKILAT_ACTIVATION_FAILED": "فشل في تفعيل امتياز التشكيلات",
 	"PAYMENT_INSTRUCTIONS": "يرجى اتباع تعليمات الدفع...",
+    "FILES_TAB": "الملفات",
+    "CREATE_FILE": "إنشاء ملف جديد",
+    "FILE_PATH": "مسار الملف",
+    "CREATE": "إنشاء",
+    "SAVE": "حفظ",
+    "DELETE": "حذف",
 	"COMMAND_ALIASES": {
 		"abjad": ["أبجد"],
 		"huddam": ["هدّام"],

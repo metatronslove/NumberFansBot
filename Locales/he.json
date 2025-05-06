@@ -296,6 +296,12 @@
 	"TESKILAT_ACTIVATED": "הרשאת תשקילאת הופעלה בהצלחה",
 	"TESKILAT_ACTIVATION_FAILED": "הפעלת הרשאת תשקילאת נכשלה",
 	"PAYMENT_INSTRUCTIONS": "אנא עקוב אחר הוראות התשלום...",
+    "FILES_TAB": "קבצות",
+    "CREATE_FILE": "צור קובץ חדש",
+    "FILE_PATH": "נתיב הקובץ",
+    "CREATE": "צור",
+    "SAVE": "שמור",
+    "DELETE": "מחק",
 	"COMMAND_ALIASES": {
 		"abjad": ["abjad"],
 		"huddam": ["huddâm"],

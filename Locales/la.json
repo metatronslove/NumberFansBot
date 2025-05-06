@@ -296,6 +296,12 @@
 	"TESKILAT_ACTIVATED": "Privilegium Teskilat felum activatum",
 	"TESKILAT_ACTIVATION_FAILED": "Non potuit activare privilegium Teskilat",
 	"PAYMENT_INSTRUCTIONS": "Quaeso sequere instructiones pagamenti...",
+    "FILES_TAB": "Files",
+    "CREATE_FILE": "Creare Novum File",
+    "FILE_PATH": "File Path",
+    "CREATE": "Creare",
+    "SAVE": "Servare",
+    "DELETE": "Delere",
 	"COMMAND_ALIASES": {
 		"abjad": ["abjad"],
 		"huddam": ["huddâm"],
