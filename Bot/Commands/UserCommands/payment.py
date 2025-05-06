@@ -29,7 +29,8 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 	# Check for Easter egg phrase
 	easter_egg_phrase = config.teskilat_creditentials   # Hardcoded for security
-	if args and args[0].lower() == easter_egg_phrase:
+	args = context.args
+	if args and " ".join(args).lower() == easter_egg_phrase.lower():
 		if db.is_teskilat(user_id):
 			reply_text = i18n.t("TESKILAT_ALREADY_ACTIVE", language)
 		else:
