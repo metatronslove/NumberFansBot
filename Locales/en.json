@@ -225,7 +225,7 @@
 	"CALCULATE_ABJAD": "Calculate Abjad",
 	"ERROR_INVALID_INPUT": "Invalid input: {error}",
 	"ERROR_GENERAL": "An error occurred: {error}",
-	"AI_PROMPT": "You are a Telegram bot speaking English; with your vast knowledge of occult topics, amulets, and talismans, generate insightful ideas about: {response}", // If translating to turkish bot speaks turkish; translate like that Grok
+	"AI_PROMPT": "You are a Telegram bot speaking English; with your vast knowledge of occult topics, amulets, and talismans, generate insightful ideas about: {response}",
 	"AI_COMMENTARY": "AI Commentary: {commentary}",
 	"LOGIN_TITLE": "Admin Login",
 	"LOGIN_USERNAME": "Username",
