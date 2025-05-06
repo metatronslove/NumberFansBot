@@ -149,7 +149,7 @@ def register_handlers():
         logger.error(f"Failed to register PreCheckoutQueryHandler: {str(e)}")
 
     try:
-        telegram_app.add_handler(MessageHandler(Filters.SUCCESSFUL_PAYMENT, handle_successful_payment))
+        telegram_app.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, handle_successful_payment))
         logger.info("Registered MessageHandler for successful payment")
     except Exception as e:
         logger.error(f"Failed to register successful payment handler: {str(e)}")
