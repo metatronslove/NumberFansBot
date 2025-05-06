@@ -1,11 +1,13 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, LabeledPrice
 from telegram.ext import ContextTypes, PreCheckoutQueryHandler, MessageHandler, filters
 from telegram.constants import ParseMode
+import logging
+from Bot.config import Config  # Updated import
 from Bot.database import Database
 from Bot.i18n import I18n
-from Bot.config import Config  # Updated import
 from Bot.utils import register_user_if_not_exists
-import logging
+from datetime import datetime
+from .language import language_handle
 
 logger = logging.getLogger(__name__)
 
