@@ -365,16 +365,20 @@ def save_file(lang="en"):
     content = data.get("content")
     if not file_path or not is_safe_path(file_path):
         return jsonify({"error": "Invalid or unsafe file path"}), 400
+
+	full_path = os.path.join(PROJECT_ROOT, file_path)
+
     try:
-        file = PROJECT_ROOT / file_path
-        if not file.exists() or not file.is_file():
-            return jsonify({"error": "File does not exist"}), 404
-        with open(file, "w", encoding="utf-8") as f:
+        # Ensure the parent directory exists
+        os.makedirs(os.path.dirname(full_path), exist_ok=True)
+        # Write the file
+        with open(full_path, "w", encoding="utf-8") as f:
             f.write(content)
         return jsonify({"message": "File saved successfully"})
+    except PermissionError:
+        return jsonify({"error": "Permission denied when writing file"}), 403
     except Exception as e:
-        logger.error(f"Error saving file {file_path}: {str(e)}")
-        return jsonify({"error": "Failed to save file"}), 500
+        return jsonify({"error": f"Failed to save file: {str(e)}"}), 500
 
 @app.route("/<lang>/files/create", methods=["POST"])
 def create_file(lang="en"):
