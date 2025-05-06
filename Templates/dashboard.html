@@ -11,6 +11,22 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@codemirror/theme-dracula@0.21.0/dist/index.min.css">
+    <script>
+		import { python } from "https://cdn.jsdelivr.net/npm/@codemirror/lang-python@6.1.3/dist/index.min.js";
+		import { html } from "https://cdn.jsdelivr.net/npm/@codemirror/lang-html@6.4.5/dist/index.min.js";
+		import { javascript } from "https://cdn.jsdelivr.net/npm/@codemirror/lang-javascript@6.2.1/dist/index.min.js";
+		import { css } from "https://cdn.jsdelivr.net/npm/@codemirror/lang-css@6.2.1/dist/index.min.js";
+		import { yaml } from "https://cdn.jsdelivr.net/npm/@codemirror/lang-yaml@6.0.0/dist/index.min.js";
+		import { sql } from "https://cdn.jsdelivr.net/npm/@codemirror/lang-sql@6.5.2/dist/index.min.js";
+		import { EditorView, basicSetup } from "https://cdn.jsdelivr.net/npm/codemirror@6.0.1/dist/index.min.js";
+		import { dracula } from "https://cdn.jsdelivr.net/npm/@codemirror/theme-dracula@0.21.0/dist/index.min.js";
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@codemirror/lang-python@6.1.3/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@codemirror/lang-html@6.4.5/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@codemirror/lang-javascript@6.2.1/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@codemirror/lang-css@6.2.1/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@codemirror/lang-yaml@6.0.0/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@codemirror/lang-sql@6.5.2/dist/index.min.js"></script>
 </head>
 <body>
     <div class="particles" id="particles-js"></div>
@@ -272,12 +288,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@codemirror/lang-python@6.1.3/dist/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@codemirror/lang-html@6.4.5/dist/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@codemirror/lang-javascript@6.2.1/dist/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@codemirror/lang-css@6.2.1/dist/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@codemirror/lang-yaml@6.0.0/dist/index.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@codemirror/lang-sql@6.5.2/dist/index.min.js"></script>
     <script>particlesJS('particles-js', {
 	"particles": {
 		"number": {
@@ -720,8 +730,7 @@ function setupPagination(totalRepos, reposPerPage) {
 	paginationDiv.innerHTML = '';
 	if (totalPages <= 1) return;
 	const prevButton = document.createElement('button');
-	prevButton.innerHTML = '{{ i18n.t('
-	PREVIOUS_PAGE ', lang) }}';
+	prevButton.innerHTML = `{{i18n.t('PREVIOUS_PAGE', lang)}}`;
 	prevButton.disabled = currentPage === 1;
 	prevButton.addEventListener('click', () => {
 		if (currentPage > 1) {
@@ -747,8 +756,7 @@ function setupPagination(totalRepos, reposPerPage) {
 		paginationDiv.appendChild(pageButton);
 	}
 	const nextButton = document.createElement('button');
-	nextButton.innerHTML = '{{ i18n.t('
-	NEXT_PAGE ', lang) }}';
+	nextButton.innerHTML = `{{i18n.t('NEXT_PAGE', lang)}}`;
 	nextButton.disabled = currentPage === totalPages;
 	nextButton.addEventListener('click', () => {
 		if (currentPage < totalPages) {
@@ -769,8 +777,7 @@ function filterDataByDateRange(data, range) {
 }
 async function displayRepos() {
 	if (!allRepos || !allRepos.repositories) {
-		showError('{{ i18n.t('
-			ERROR_LOADING_REPOS ', lang) }}');
+		showError(`{{i18n.t('ERROR_LOADING_REPOS', lang)}}`);
 		return;
 	}
 	const selectedRange = document.getElementById('time-range').value;
@@ -779,15 +786,13 @@ async function displayRepos() {
 	const reposToShow = allRepos.repositories.slice(startIdx, endIdx);
 	const totalPages = Math.ceil(allRepos.repositories.length / reposPerPage);
 	document.getElementById('charts-container').innerHTML = '';
-	document.getElementById('loading').textContent = '{{ i18n.t('
-	LOADING_REPOS ', lang) }}'.replace('(0)', `(${reposToShow.length})`);
+	document.getElementById('loading').textContent = `{{i18n.t('LOADING_REPOS', lang)}}`.replace('(0)', `(${reposToShow.length})`);
 	document.querySelector('.per-page-selector').style.display = 'block';
 	document.querySelector('.time-range-selector').style.display = 'block';
 	document.querySelector('.info-box').style.display = 'none';
 	let loadedCount = 0;
 	for (const repo of reposToShow) {
-		document.getElementById('loading').textContent = '{{ i18n.t('
-		LOADING_REPOS ', lang) }}'.replace('%d', ++loadedCount);
+		document.getElementById('loading').textContent = `{{i18n.t('LOADING_REPOS', lang)}}`.replace('%d', ++loadedCount);
 		const trafficData = await fetchTrafficData(repo.name);
 		const filteredViews = filterDataByDateRange(trafficData.views.views, selectedRange);
 		const filteredClones = filterDataByDateRange(trafficData.clones.clones, selectedRange);
@@ -826,14 +831,11 @@ async function displayRepos() {
                 `.replace('%s', escapedRepoName);
 		document.getElementById('charts-container').appendChild(container);
 		fetchAndDisplayReadme(repo.name, repo.full_name);
-		createChart(`views-${escapedRepoName}`, '{{ i18n.t('
-			VIEWS ', lang) }}', completeViews.map(v => v.count), completeViews.map(v => formatDate(v.timestamp)), trafficData.views.count);
-		createChart(`clones-${escapedRepoName}`, '{{ i18n.t('
-			CLONES ', lang) }}', completeClones.map(c => c.count), completeClones.map(c => formatDate(c.timestamp)), trafficData.clones.count);
+		createChart(`views-${escapedRepoName}`, `{{i18n.t('VIEWS', lang)}}`, completeViews.map(v => v.count), completeViews.map(v => formatDate(v.timestamp)), trafficData.views.count);
+		createChart(`clones-${escapedRepoName}`, `{{i18n.t('CLONES', lang)}}`, completeClones.map(c => c.count), completeClones.map(c => formatDate(c.timestamp)), trafficData.clones.count);
 	}
 	document.getElementById('pagination').style.display = 'flex';
-	document.getElementById('loading').textContent = '{{ i18n.t('
-	PAGE_STATS ', lang) }}'.replace('%d', currentPage).replace('%d', totalPages).replace('%d', allRepos.repositories.length);
+	document.getElementById('loading').textContent = `{{i18n.t('PAGE_STATS', lang)}}`.replace('%d', currentPage).replace('%d', totalPages).replace('%d', allRepos.repositories.length);
 	setupPagination(allRepos.repositories.length, reposPerPage);
 }
 // File Tree and Editor
@@ -1030,8 +1032,7 @@ async function main() {
 			data: {
 				labels: labels,
 				datasets: [{
-					label: '{{ i18n.t('
-					COMMAND_USAGE_PERCENTAGE ', lang) }}',
+					label: `{{i18n.t('COMMAND_USAGE_PERCENTAGE', lang)}}`,
 					data: percentages,
 					backgroundColor: 'rgba(72, 255, 0, 0.6)',
 					borderColor: '#48ff00',
@@ -1050,8 +1051,7 @@ async function main() {
 					},
 					title: {
 						display: true,
-						text: '{{ i18n.t('
-						COMMAND_USAGE_CHART ', lang) }}',
+						text: `{{ i18n.t('COMMAND_USAGE_CHART', lang)}}`,
 						color: '#fff'
 					}
 				},
