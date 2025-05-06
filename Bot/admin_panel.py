@@ -513,9 +513,9 @@ def toggle_beta_tester	(lang="en"):
 			user = db.cursor.fetchone()
 			status = "beta_tester" if user['is_beta_tester'] else "note_beta_tester"
 			if status == "beta_tester":
-				flash(i18n.t("BETA_TESTER_GRANTED", lang, telegram_id=telegram_id), "success")
+				flash(i18n.t("BETA_TESTER_GRANTED", lang, telegram_id=user_id), "success")
 			else:
-				flash(i18n.t("BETA_TESTER_REVOKED", lang, telegram_id=telegram_id), "success")
+				flash(i18n.t("BETA_TESTER_REVOKED", lang, telegram_id=user_id), "success")
 		else:
 			flash(i18n.t("ERROR_INVALID_INPUT", lang, error="Invalid action"), "error")
 	except Exception as e:
