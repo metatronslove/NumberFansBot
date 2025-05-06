@@ -98,6 +98,7 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.debug(f"Processing bastet_table for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
+		await query.answer()
 		user_id = query.from_user.id
 		db = Database()
 		i18n = I18n()
@@ -122,7 +123,6 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			i18n.t("BASTET_PROMPT_LANGUAGE", language),
 			reply_markup=reply_markup
 		)
-		await query.answer()
 		return LANGUAGE
 	except Exception as e:
 		logger.error(f"Error in bastet_table: {str(e)}")
@@ -136,6 +136,7 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.debug(f"Processing bastet_language for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
+		await query.answer()
 		user_id = query.from_user.id
 		db = Database()
 		i18n = I18n()
@@ -266,7 +267,6 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup,
 		)
-		await query.answer()
 		context.user_data.clear()
 		return ConversationHandler.END
 

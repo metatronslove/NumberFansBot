@@ -246,7 +246,7 @@ def index(lang="en"):
 				github_info["username"] = path_match.group(1)
 				github_info["repo"] = path_match.group(2)
 			else:
-				flash(i18n.t("ERROR_GENERAL", lang, error="Invalid GitHub Pages URL format"), "error")
+				# flash(i18n.t("ERROR_GENERAL", lang, error="Invalid GitHub Pages URL format"), "error")
 		except Exception as e:
 			logger.error(f"Error parsing github_pages_url: {str(e)}")
 			flash(i18n.t("ERROR_GENERAL", lang, error="Failed to parse GitHub Pages URL"), "error")
@@ -496,34 +496,32 @@ def delete_model(lang="en"):
 	users = db.cursor.fetchall()
 	return render_template("dashboard.html", i18n=i18n, lang=lang, users=users, fields=get_fields(), config=config)
 
-@app.route("/<lang>/manage_beta_tester", methods=["POST"])
-def manage_beta_tester(lang="en"):
-	config = Config()
+@app.route("/<lang>/toggle_beta_tester", methods=["POST"])
+def toggle_beta_tester	(lang="en"):
 	if "username" not in session:
-		flash(i18n.t("LOGIN_ERROR", lang), "error")
 		return redirect(url_for("login", lang=lang))
-	db = Database()
+	config = Config()
 	i18n = I18n()
 	if lang not in AVAILABLE_LANGUAGES:
 		lang = "en"
-	telegram_id = request.form.get("telegram_id")
-	action = request.form.get("action")
-	query = "SELECT * FROM users"
-	db.cursor.execute(query)
-	users = db.cursor.fetchall()
+	user_id = request.form.get("user_id")
 	try:
-		telegram_id = int(telegram_id)
-		if action == "grant":
-			db.set_beta_tester(telegram_id, True)
-			flash(i18n.t("BETA_TESTER_GRANTED", lang, telegram_id=telegram_id), "success")
-		elif action == "revoke":
-			db.set_beta_tester(telegram_id, False)
-			flash(i18n.t("BETA_TESTER_REVOKED", lang, telegram_id=telegram_id), "success")
+		db = Database()
+		if db.toggle_beta_tester(user_id):
+			query = "SELECT is_beta_tester FROM users WHERE user_id = %s"
+			db.cursor.execute(query, (user_id,))
+			user = db.cursor.fetchone()
+			status = "beta_tester" if user['is_beta_tester'] else "note_beta_tester"
+			if status == "beta_tester":
+				flash(i18n.t("BETA_TESTER_GRANTED", lang, telegram_id=telegram_id), "success")
+			else:
+				flash(i18n.t("BETA_TESTER_REVOKED", lang, telegram_id=telegram_id), "success")
 		else:
 			flash(i18n.t("ERROR_INVALID_INPUT", lang, error="Invalid action"), "error")
-	except ValueError:
-		flash(i18n.t("ERROR_INVALID_INPUT", lang, error="Invalid Telegram ID"), "error")
-	return render_template("dashboard.html", i18n=i18n, lang=lang, users=users, fields=get_fields(), config=config)
+	except Exception as e:
+		logger.error(f"Error toggling blacklist: {str(e)}")
+		flash(i18n.t("ERROR_INVALID_INPUT", lang, error="Invalid action"), "error")
+	return redirect(url_for("index", lang=lang))
 
 @app.route(f"/bot{config.telegram_token}", methods=["POST"])
 def webhook():

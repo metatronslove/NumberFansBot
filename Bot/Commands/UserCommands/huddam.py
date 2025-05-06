@@ -61,6 +61,7 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
 	logger.debug(f"Processing huddam_entity_type for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
+		await query.answer()
 		user_id = query.from_user.id
 		db = Database()
 		i18n = I18n()
@@ -90,7 +91,6 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
 			i18n.t("HUDDAM_PROMPT_LANGUAGE", language),
 			reply_markup=reply_markup
 		)
-		await query.answer()
 		return LANGUAGE
 	except Exception as e:
 		logger.error(f"Error in huddam_entity_type: {str(e)}")
@@ -104,6 +104,7 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.debug(f"Processing huddam_language for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
+		await query.answer()
 		user_id = query.from_user.id
 		db = Database()
 		i18n = I18n()
@@ -124,7 +125,6 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			i18n.t("HUDDAM_PROMPT_MULTIPLIAR", language),
 			reply_markup=reply_markup
 		)
-		await query.answer()
 		return MULTIPLIAR
 	except Exception as e:
 		logger.error(f"Error in huddam_language: {str(e)}")
@@ -138,6 +138,7 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.debug(f"Processing huddam_multipliar for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
+		await query.answer()
 		user_id = query.from_user.id
 		db = Database()
 		i18n = I18n()
@@ -252,7 +253,6 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup,
 		)
-		await query.answer()
 		context.user_data.clear()
 		return ConversationHandler.END
 

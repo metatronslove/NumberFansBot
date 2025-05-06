@@ -72,6 +72,7 @@ async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYP
 	logger.debug(f"Processing abjad_alphabet_order for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
+		await query.answer()
 		user_id = query.from_user.id
 		db = Database()
 		i18n = I18n()
@@ -96,7 +97,6 @@ async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYP
 			i18n.t("ABJAD_PROMPT_TYPE", language),
 			reply_markup=reply_markup
 		)
-		await query.answer()
 		return ABJAD_TYPE
 	except Exception as e:
 		logger.error(f"Error in abjad_alphabet_order: {str(e)}")
@@ -110,6 +110,7 @@ async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.debug(f"Processing abjad_type for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
+		await query.answer()
 		user_id = query.from_user.id
 		db = Database()
 		i18n = I18n()
@@ -131,7 +132,6 @@ async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 				i18n.t("ABJAD_PROMPT_SHADDA", language),
 				reply_markup=reply_markup
 			)
-			await query.answer()
 			return SHADDA
 		else:
 			context.user_data["shadda"] = 1
@@ -148,6 +148,8 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.debug(f"Processing abjad_shadda for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
+		if query:
+			await query.answer()
 		user_id = query.from_user.id if query else update.message.from_user.id
 		db = Database()
 		i18n = I18n()
@@ -171,8 +173,6 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			i18n.t("ABJAD_PROMPT_DETAIL", language),
 			reply_markup=reply_markup
 		)
-		if query:
-			await query.answer()
 		return DETAIL
 	except Exception as e:
 		logger.error(f"Error in abjad_shadda: {str(e)}")
@@ -186,6 +186,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.debug(f"Processing abjad_detail for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
+		await query.answer()
 		user_id = query.from_user.id
 		db = Database()
 		i18n = I18n()
@@ -305,7 +306,6 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup,
 		)
-		await query.answer()
 		context.user_data["abjad_result"] = result
 
 		context.user_data.clear()

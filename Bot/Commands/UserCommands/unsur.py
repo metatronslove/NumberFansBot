@@ -45,6 +45,7 @@ async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.debug(f"Processing unsur_input for user {update.effective_user.id}")
 	try:
 		user_id = update.message.from_user.id
+		await query.answer()
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
@@ -89,6 +90,7 @@ async def unsur_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.debug(f"Processing unsur_language for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
+		await query.answer()
 		user_id = query.from_user.id
 		db = Database()
 		i18n = I18n()
@@ -111,7 +113,6 @@ async def unsur_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			i18n.t("UNSUR_PROMPT_TABLE", language),
 			reply_markup=reply_markup
 		)
-		await query.answer()
 		return TABLE
 	except Exception as e:
 		logger.error(f"Error in unsur_language: {str(e)}")
@@ -125,6 +126,7 @@ async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.debug(f"Processing unsur_table for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
+		await query.answer()
 		user_id = query.from_user.id
 		db = Database()
 		i18n = I18n()
@@ -146,7 +148,6 @@ async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
 				i18n.t("UNSUR_PROMPT_SHADDA", language),
 				reply_markup=reply_markup
 			)
-			await query.answer()
 			return SHADDA
 		else:
 			context.user_data["shadda"] = 1
@@ -163,6 +164,7 @@ async def unsur_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.debug(f"Processing unsur_shadda for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
+		await query.answer()
 		user_id = query.from_user.id if query else update.message.from_user.id
 		db = Database()
 		i18n = I18n()

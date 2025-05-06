@@ -108,6 +108,21 @@ class Database:
 		user = self.cursor.fetchone()
 		return user['is_beta_tester'] if user else False
 
+	def toggle_beta_tester(self, user_id: int) -> bool:
+		try:
+			query = """
+			UPDATE users
+			SET is_beta_tester = NOT is_beta_tester
+			WHERE user_id = %s
+			"""
+			self.cursor.execute(query, (user_id,))
+			self.conn.commit()
+			logger.info(f"Toggled beta tester status for user_id {user_id}")
+			return True
+		except mysql.connector.Error as e:
+			logger.error(f"Error toggling beta tester: {str(e)}")
+			return False
+
 	def get_user_language(self, user_id: int) -> str:
 		query = "SELECT language_code FROM users WHERE user_id = %s"
 		self.cursor.execute(query, (user_id,))
@@ -147,7 +162,6 @@ class Database:
 		self.cursor.execute(query, (value, user_id))
 		self.conn.commit()
 
-
 	def set_user_language(self, user_id: int, language_code: str) -> None:
 		query = "UPDATE users SET language_code = %s WHERE user_id = %s"
 		self.cursor.execute(query, (language_code, user_id))
@@ -156,11 +170,6 @@ class Database:
 	def add_credits(self, user_id: int, amount: int):
 		query = "INSERT INTO users (user_id, credits) VALUES (%s, %s) ON DUPLICATE KEY UPDATE credits = credits + %s"
 		self.cursor.execute(query, (user_id, amount, amount))
-		self.conn.commit()
-
-	def set_beta_tester(self, user_id: int, is_beta_tester: bool):
-		query = "INSERT INTO users (user_id, is_beta_tester) VALUES (%s, %s) ON DUPLICATE KEY UPDATE is_beta_tester = %s"
-		self.cursor.execute(query, (user_id, is_beta_tester, is_beta_tester))
 		self.conn.commit()
 
 	def increment_command_usage(self, command: str, user_id: int) -> None:
