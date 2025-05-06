@@ -705,7 +705,7 @@ async function main() {
 			ctx.id = 'command-usage-chart';
 			ctx.style.width = '100%';
 			ctx.style.height = '400px';
-			document.querySelector('.status-container').insertBefore(ctx, document.querySelector('#commands-table'));
+			document.querySelector('#commands').insertBefore(ctx, document.querySelector('#commands-table'));
 
 			const labels = commandUsage.map(usage => `/${usage.command}`);
 			const percentages = commandUsage.map(usage => usage.percentage);
