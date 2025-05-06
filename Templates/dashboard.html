@@ -793,61 +793,85 @@
                 document.getElementById('loading').style.display = 'none';
             }
 
-            async function displayRepos(page, timeRange, perPage) {
-                const start = (page - 1) * perPage;
-                const end = start + perPage;
-                const paginatedRepos = allRepos.slice(start, end);
+function filterDataByDateRange(data, range) {
+    if (range === 'all') return data;
+    const days = parseInt(range) || 30;
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+    return data.filter(item => new Date(item.timestamp) >= cutoffDate);
+}
 
-                const chartsContainer = document.getElementById('charts-container');
-                chartsContainer.innerHTML = '';
+async function displayRepos() {
+    if (!allRepos || !allRepos.repositories) {
+        showError('{{ i18n.t('ERROR_LOADING_REPOS', lang) }}');
+        return;
+    }
+    const selectedRange = document.getElementById('time-range').value;
+    const startIdx = (currentPage - 1) * reposPerPage;
+    const endIdx = startIdx + reposPerPage;
+    const reposToShow = allRepos.repositories.slice(startIdx, endIdx);
+    const totalPages = Math.ceil(allRepos.repositories.length / reposPerPage);
 
-                for (const repo of paginatedRepos) {
-                    const repoName = repo.name;
-                    const fullName = `${githubInfo.username}/${repoName}`;
-                    const trafficData = await fetchTrafficData(repoName);
+    document.getElementById('charts-container').innerHTML = '';
+    document.getElementById('loading').textContent = '{{ i18n.t('LOADING_REPOS', lang) }}'.replace('(0)', `(${reposToShow.length})`);
 
-                    const viewsData = fillMissingDates(trafficData.views.views, timeRange);
-                    const clonesData = fillMissingDates(trafficData.clones.clones, timeRange);
+    document.querySelector('.per-page-selector').style.display = 'block';
+    document.querySelector('.time-range-selector').style.display = 'block';
+    document.querySelector('.info-box').style.display = 'none';
 
-                    const viewsLabels = viewsData.map(item => formatDate(item.timestamp));
-                    const viewsCounts = viewsData.map(item => item.count);
-                    const viewsUniques = viewsData.map(item => item.uniques);
-                    const clonesLabels = clonesData.map(item => formatDate(item.timestamp));
-                    const clonesCounts = clonesData.map(item => item.count);
-                    const clonesUniques = clonesData.map(item => item.uniques);
+    let loadedCount = 0;
+    for (const repo of reposToShow) {
+        document.getElementById('loading').textContent = '{{ i18n.t('LOADING_REPOS', lang) }}'.replace('%d', ++loadedCount);
+        const trafficData = await fetchTrafficData(repo.name);
+        const filteredViews = filterDataByDateRange(trafficData.views.views, selectedRange);
+        const filteredClones = filterDataByDateRange(trafficData.clones.clones, selectedRange);
+        const completeViews = fillMissingDates(filteredViews, selectedRange);
+        const completeClones = fillMissingDates(filteredClones, selectedRange);
 
-                    const totalViews = viewsCounts.reduce((a, b) => a + b, 0);
-                    const totalClones = clonesCounts.reduce((a, b) => a + b, 0);
+        const container = document.createElement('div');
+        container.className = 'chart-box';
+        const escapedRepoName = repo.name.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"').replace(/'/g, '');
+        container.innerHTML = `
+            <h3>
+                <a href="https://github.com/${repo.full_name}" target="_blank">🔗 {{ i18n.t('REPO_HEADER', lang) }}.</a> |
+                <a href="https://github.com/${repo.full_name}/zipball/main" target="_top">zip⬇</a> |
+                <a href="https://github.com/${repo.full_name}/tarball/main" target="_top">tar⬇</a> |
+                <a href="https://github.com/${repo.full_name}/fork" target="_blank">fork🖈</a> |
+                <a onclick="ToggleReadMe('${escapedRepoName}', '${repo.full_name}')" id="toggle-${escapedRepoName}">README.md+</a>
+            </h3>
+            <div id="readme-${escapedRepoName}" style="display:none;"></div>
+            <div class="stats-summary">
+                <div class="stat-item">
+                    <span class="stat-label">{{ i18n.t('VIEWS', lang) }}:</span>
+                    <span class="stat-value">${trafficData.views.count || 0}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">{{ i18n.t('CLONES', lang) }}:</span>
+                    <span class="stat-value">${trafficData.clones.count || 0}</span>
+                </div>
+            </div>
+            <div class="chart-row">
+                <div class="chart-container">
+                    <canvas id="views-${escapedRepoName}"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="clones-${escapedRepoName}"></canvas>
+                </div>
+            </div>
+        `.replace('%s', escapedRepoName);
+        document.getElementById('charts-container').appendChild(container);
+        fetchAndDisplayReadme(repo.name, repo.full_name);
+        createChart(`views-${escapedRepoName}`, '{{ i18n.t('VIEWS', lang) }}', completeViews.map(v => v.count), completeViews.map(v => formatDate(v.timestamp)), trafficData.views.count);
+        createChart(`clones-${escapedRepoName}`, '{{ i18n.t('CLONES', lang) }}', completeClones.map(c => c.count), completeClones.map(c => formatDate(c.timestamp)), trafficData.clones.count);
+    }
 
-                    chartsContainer.innerHTML += `
-                        <div class="repo-container">
-                            <h3>${repoName}</h3>
-                            <button onclick="fetchAndDisplayReadme('${repoName}', '${fullName}'); ToggleReadMe('${repoName}', '${fullName}');" class="btn btn-primary">Show README</button>
-                            <div id="readme-${repoName}" style="display: none;"></div>
-                            <div class="chart-container">
-                                <canvas id="views-chart-${repoName}"></canvas>
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="clones-chart-${repoName}"></canvas>
-                            </div>
-                        </div>
-                    `;
-
-                    createChart(`views-chart-${repoName}`, '{{ i18n.t('VIEWS', lang) }}', viewsCounts, viewsLabels, totalViews);
-                    createChart(`clones-chart-${repoName}`, '{{ i18n.t('CLONES', lang) }}', clonesCounts, clonesLabels, totalClones);
-                }
-
-                document.getElementById('loading').style.display = 'none';
-
-                const totalPages = Math.ceil(allRepos.length / perPage);
-                const pagination = document.getElementById('pagination');
-                pagination.innerHTML = '';
-                for (let i = 1; i <= totalPages; i++) {
-                    pagination.innerHTML += `
-                        <button onclick="displayRepos(${i}, '${timeRange}', ${perPage})" class="btn btn-${i === page ? 'primary' : 'secondary'}">${i}</button>
-                    `;
-                }
-            }
+    document.getElementById('pagination').style.display = 'flex';
+    document.getElementById('loading').textContent = '{{ i18n.t('PAGE_STATS', lang) }}'
+        .replace('%d', currentPage)
+        .replace('%d', totalPages)
+        .replace('%d', allRepos.repositories.length);
+    setupPagination(allRepos.repositories.length, reposPerPage);
+}
 
             document.getElementById('time-range').addEventListener('change', (e) => {
                 reposPerPage = parseInt(document.getElementById('per-page').value);
@@ -867,6 +891,50 @@
                     return;
                 }
                 await displayRepos(1, '30d', reposPerPage);
+    {% if command_usage %}
+    		const commandUsage = {{ command_usage | tojson }};
+		if (commandUsage && commandUsage.length > 0) {
+			const ctx = document.createElement('canvas');
+			ctx.id = 'command-usage-chart';
+			ctx.style.width = '100%';
+			ctx.style.height = '400px';
+			document.querySelector('#commands').insertBefore(ctx, document.querySelector('#commands-table'));
+
+			const labels = commandUsage.map(usage => `/${usage.command}`);
+			const percentages = commandUsage.map(usage => usage.percentage);
+
+			new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: labels,
+					datasets: [{
+						label: '{{ i18n.t('COMMAND_USAGE_PERCENTAGE', lang) }}',
+						data: percentages,
+						backgroundColor: 'rgba(72, 255, 0, 0.6)',
+						borderColor: '#48ff00',
+						borderWidth: 1
+					}]
+				},
+				options: {
+					responsive: true,
+					plugins: {
+						legend: { display: true, position: 'top', labels: { color: '#fff' } },
+						title: { display: true, text: '{{ i18n.t('COMMAND_USAGE_CHART', lang) }}', color: '#fff' }
+					},
+					scales: {
+						y: {
+							beginAtZero: true,
+							max: 100,
+							ticks: { color: '#fff', callback: value => value + '%' },
+							grid: { color: 'rgba(255, 255, 255, 0.2)' }
+						},
+						x: { ticks: { color: '#fff' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
+					}
+				}
+			});
+		}
+    {% else %}
+    {% endif %}
             }
 
             document.addEventListener('DOMContentLoaded', () => {
