@@ -150,6 +150,14 @@
                 <button type="submit" class="btn btn-primary mt-3">{{ i18n.t('SAVE_CONFIG', lang) }}</button>
             </form>
         </div>
+        <style>
+            #users table {
+                thead tr th, tbody tr td {
+                    max-width: calc(100% / 7);
+                    min-width: calc(100% / 8);
+                }
+            }
+        </style>
         <div class="tab-content" id="users">
             <h3>{{ i18n.t('USERS_TAB', lang) }}</h3>
             <table class="table table-dark">
@@ -249,7 +257,7 @@
                 </div>
                 <div class="editor-container" id="editor-container">
                     <h4 id="editor-title"></h4>
-                    <div id="editor"></div>
+                    <textarea id="editor"></textarea>
                     <div class="file-actions">
                         <button class="btn btn-primary" id="save-file">{{ i18n.t('SAVE', lang) }}</button>
                         <button class="btn btn-danger" id="delete-file">{{ i18n.t('DELETE', lang) }}</button>
