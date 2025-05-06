@@ -241,10 +241,10 @@ def index(lang="en"):
 		try:
 			parsed_url = urlparse(config.github_pages_url)
 			# Extract username and repo from URL (e.g., https://metatronslove.github.io/github-repo-traffic-viewer/)
-			path_match = re.match(r"/([^/]+[(\.github\.io)$])/([^/]+[/$])", parsed_url.path)
+			path_match = re.match(r"/([^/]+)\.github\.io/([^/]+)/?", parsed_url.path)
 			if path_match:
 				github_info["username"] = path_match.group(1)
-				github_info["repo"] = path_match.group(2)
+				github_info["repo"] = path_match.group(2).rstrip("/")  # Remove trailing slash if present
 			else:
 				flash(i18n.t("ERROR_GENERAL", lang, error="Invalid GitHub Pages URL format"), "error")
 		except Exception as e:
