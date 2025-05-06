@@ -38,8 +38,9 @@ async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 		text = " ".join(args)
 		context.user_data["abjad_text"] = text
-
 		is_arabic = bool(re.search(r"[\u0600-\u06FF]", text))
+		context.user_data["is_arabic"] = is_arabic
+
 		keyboard = [
 			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ABJADI", language), callback_data="abjad_alphabet_0-4")],
 			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI", language), callback_data="abjad_alphabet_6-10")],
@@ -58,7 +59,6 @@ async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			i18n.t("ABJAD_PROMPT_ALPHABET", language),
 			reply_markup=reply_markup
 		)
-		context.user_data["is_arabic"] = is_arabic
 		return ALPHABET_ORDER
 	except Exception as e:
 		logger.error(f"Error in abjad_start: {str(e)}")
