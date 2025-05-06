@@ -259,15 +259,17 @@
 		document.querySelectorAll('.promote-credits-form').forEach(form => {
 			form.style.display = 'flex';
 			form.style.gap = '10px';
-			form.querySelector('input[type="number"]').style.width = '100px';
+			form.querySelector('input[type="number"]').style.width = '65%';
 			form.querySelector('input[type="number"]').style.backgroundColor = '#2a2a2a';
 			form.querySelector('input[type="number"]').style.color = '#fff';
 			form.querySelector('input[type="number"]').style.border = '1px solid #48ff00';
+			form.querySelector('button').style.width = '33%';
 			form.querySelector('button').style.padding = '5px 10px';
 		});
 
 		document.querySelectorAll('.toggle-blacklist-form').forEach(form => {
 			form.style.display = 'inline-block';
+			form.querySelector('button').style.width = '33%'
 			form.querySelector('button').style.padding = '5px 10px';
 		});
 {% if github_info.url %}
@@ -687,6 +689,50 @@ async function main() {
         return;
     }
     displayRepos();
+    {% if command_usage %}
+    		const commandUsage = {{ command_usage | tojson }};
+		if (commandUsage && commandUsage.length > 0) {
+			const ctx = document.createElement('canvas');
+			ctx.id = 'command-usage-chart';
+			ctx.style.width = '100%';
+			ctx.style.height = '400px';
+			document.querySelector('.status-container').insertBefore(ctx, document.querySelector('.table'));
+
+			const labels = commandUsage.map(usage => `/${usage.command}`);
+			const percentages = commandUsage.map(usage => usage.percentage);
+
+			new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: labels,
+					datasets: [{
+						label: '{{ i18n.t('COMMAND_USAGE_PERCENTAGE', lang) }}',
+						data: percentages,
+						backgroundColor: 'rgba(72, 255, 0, 0.6)',
+						borderColor: '#48ff00',
+						borderWidth: 1
+					}]
+				},
+				options: {
+					responsive: true,
+					plugins: {
+						legend: { display: true, position: 'top', labels: { color: '#fff' } },
+						title: { display: true, text: '{{ i18n.t('COMMAND_USAGE_CHART', lang) }}', color: '#fff' }
+					},
+					scales: {
+						y: {
+							beginAtZero: true,
+							max: 100,
+							ticks: { color: '#fff', callback: value => value + '%' },
+							grid: { color: 'rgba(255, 255, 255, 0.2)' }
+						},
+						x: { ticks: { color: '#fff' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }
+					}
+				}
+			});
+		}
+    {% else %}
+    {% endif %}
 }
 
 document.addEventListener('DOMContentLoaded', function() {
