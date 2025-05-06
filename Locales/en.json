@@ -206,6 +206,7 @@
 	"PAYMENT_FAILED": "Payment failed. Please try again.",
 	"NO_CREDITS": "You have no credits left. Use /payment to purchase more.",
 	"USER_BLACKLISTED": "You are blacklisted and cannot use this bot.",
+	"BETA_TESTER": "Beta tester",
 	"BETA_TESTER_GRANTED": "Beta tester privileges granted to Telegram ID {telegram_id}.",
 	"BETA_TESTER_REVOKED": "Beta tester privileges revoked for Telegram ID {telegram_id}.",
 	"GRANT_ACCESS": "Hire Beta Tester",
@@ -224,7 +225,7 @@
 	"CALCULATE_ABJAD": "Calculate Abjad",
 	"ERROR_INVALID_INPUT": "Invalid input: {error}",
 	"ERROR_GENERAL": "An error occurred: {error}",
-	"AI_PROMPT": "You are a Telegram bot speaking English; with your vast knowledge of occult topics, amulets, and talismans, generate insightful ideas about: {response}",
+	"AI_PROMPT": "You are a Telegram bot speaking English; with your vast knowledge of occult topics, amulets, and talismans, generate insightful ideas about: {response}", // If translating to turkish bot speaks turkish; translate like that Grok
 	"AI_COMMENTARY": "AI Commentary: {commentary}",
 	"LOGIN_TITLE": "Admin Login",
 	"LOGIN_USERNAME": "Username",

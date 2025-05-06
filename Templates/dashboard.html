@@ -147,8 +147,8 @@
 <style>
 #users table {
 	thead tr th, tbody tr td {
-		max-width: calc(100% / 6);
-		min-width: calc(100% / 7);
+		max-width: calc(100% / 7);
+		min-width: calc(100% / 8);
 	}
 }
 </style>
@@ -157,35 +157,38 @@
 	<table class="table table-dark">
 		<thead>
 			<tr>
-				<th>{{ i18n.t('USER_ID', lang) }}</th>
-				<th>{{ i18n.t('USERNAME', lang) }}</th>
-				<th>{{ i18n.t('BADGES', lang) }}</th>
-				<th>{{ i18n.t('CREDITS', lang) }}</th>
-				<th>{{ i18n.t('PROMOTE_CREDITS', lang) }}</th>
-				<th>{{ i18n.t('BLACKLIST', lang) }}</th>
+				<th style="text-align: left;">{{ i18n.t('USER_ID', lang) }}</th>
+				<th style="text-align: left;">{{ i18n.t('USERNAME', lang) }}</th>
+				<th style="text-align: center;">{{ i18n.t('BADGES', lang) }}</th>
+				<th style="text-align: center;">{{ i18n.t('CREDITS', lang) }}</th>
+				<th style="text-align: right;">{{ i18n.t('PROMOTE_CREDITS', lang) }}</th>
+				<th style="text-align: right;">{{ i18n.t('BLACKLIST', lang) }}</th>
+				<th style="text-align: right;">{{ i18n.t('BETA_TESTER', lang) }}</th>
 			</tr>
 		</thead>
 		<tbody>
 			{% for user in users %}
 			<tr>
-				<td>{{ user.user_id }}</td>
-				<td>{{ user.username }}</td>
-				<td>{{ user.badges | safe }}</td>
-				<td>{{ user.credits }}</td>
-				<td>
+				<td style="text-align: left;">{{ user.user_id }}</td>
+				<td style="text-align: left;">{{ user.username }}</td>
+				<td style="text-align: center;">{{ user.badges | safe }}</td>
+				<td style="text-align: center;">{{ user.credits }}</td>
+				<td style="text-align: right;">
 					<form action="{{ url_for('promote_credits', lang=lang) }}" method="POST" class="promote-credits-form">
 						<input type="hidden" name="user_id" value="{{ user.user_id }}">
 						<input type="number" name="credits" min="1" placeholder="{{ i18n.t('ENTER_CREDITS', lang) }}" required>
 						<button type="submit" class="btn btn-primary">{{ i18n.t('SUBMIT', lang) }}</button>
 					</form>
 				</td>
-				<td>
+				<td style="text-align: right;">
 					<form action="{{ url_for('toggle_blacklist', lang=lang) }}" method="POST" class="toggle-blacklist-form">
 						<input type="hidden" name="user_id" value="{{ user.user_id }}">
 						<button type="submit" class="btn btn-{{ 'danger' if user.is_blacklisted else 'secondary' }}">
 							{{ i18n.t('UNBLACKLIST' if user.is_blacklisted else 'BLACKLIST', lang) }}
 						</button>
 					</form>
+				</td>
+				<td style="text-align: right;">
 					<form action="{{ url_for('toggle_beta_tester', lang=lang) }}" method="POST" class="toggle-beta-tester-form">
 						<input type="hidden" name="user_id" value="{{ user.user_id }}">
 						<button type="submit" class="btn btn-{{ 'secondary' if user.is_beta_tester else 'danger' }}">
