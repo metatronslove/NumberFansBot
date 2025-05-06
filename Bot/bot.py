@@ -1,7 +1,22 @@
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler, PreCheckoutQueryHandler, MessageHandler, filters
-from .config import config
-from .database import Database
-from .i18n import I18n
+import logging
+import re
+import asyncio
+import os
+from Bot.config import Config
+from Bot.database import Database
+from Bot.i18n import I18n
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import (
+	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
+	ConversationHandler, filters, ContextTypes
+)
+from telegram.constants import ParseMode
+from telegram.error import BadRequest
+from Bot.Abjad import Abjad
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary
+from urllib.parse import urlparse
+from pathlib import Path
+from datetime import datetime
 from .Commands.UserCommands import (
 	start, help, language, numerology, convert_numbers, magic_square,
 	transliterate, name, cancel, settings
@@ -13,8 +28,6 @@ from .Commands.UserCommands.unsur import get_unsur_conversation_handler
 from .Commands.UserCommands.nutket import nutket_handle
 from .Commands.UserCommands.payment import payment_handle, get_payment_handlers
 from .Commands.SystemCommands.callback_query import set_language_handle, handle_callback_query
-import logging
-import asyncio
 
 logger = logging.getLogger(__name__)
 

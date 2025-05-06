@@ -1,4 +1,6 @@
-from Bot.config import Config  # Updated import
+import logging
+import re
+from Bot.config import Config
 from Bot.database import Database
 from Bot.i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -8,8 +10,13 @@ from telegram.ext import (
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
-from Bot.utils import register_user_if_not_exists
+import asyncio
+from Bot.Abjad import Abjad
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary
+from urllib.parse import urlparse
+from pathlib import Path
 from datetime import datetime
+import os
 
 async def help_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	user = update.message.from_user

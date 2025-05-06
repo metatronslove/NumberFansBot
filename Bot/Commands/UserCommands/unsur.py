@@ -10,9 +10,13 @@ from telegram.ext import (
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
-from Bot.element_classifier import ElementClassifier
-from Bot.utils import register_user_if_not_exists, get_ai_commentary
+import asyncio
+from Bot.Abjad import Abjad
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary
+from urllib.parse import urlparse
+from pathlib import Path
 from datetime import datetime
+import os
 
 logger = logging.getLogger(__name__)
 
