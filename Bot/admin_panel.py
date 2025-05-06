@@ -246,7 +246,7 @@ def index(lang="en"):
 				github_info["username"] = path_match.group(1)
 				github_info["repo"] = path_match.group(2)
 			else:
-				# flash(i18n.t("ERROR_GENERAL", lang, error="Invalid GitHub Pages URL format"), "error")
+				flash(i18n.t("ERROR_GENERAL", lang, error="Invalid GitHub Pages URL format"), "error")
 		except Exception as e:
 			logger.error(f"Error parsing github_pages_url: {str(e)}")
 			flash(i18n.t("ERROR_GENERAL", lang, error="Failed to parse GitHub Pages URL"), "error")
