@@ -367,12 +367,10 @@ def get_abjad_conversation_handler():
 	try:
 		handler = ConversationHandler(
 			entry_points=[CommandHandler("abjad", abjad_start)],
-			states={
-				ALPHABET_ORDER: [CallbackQueryHandler(abjad_alphabet_order)],
-				ABJAD_TYPE: [CallbackQueryHandler(abjad_type)],
-				SHADDA: [CallbackQueryHandler(abjad_shadda)],
-				DETAIL: [CallbackQueryHandler(abjad_detail)],
-			},
+			ALPHABET_ORDER=[CallbackQueryHandler(abjad_alphabet_order)],
+			ABJAD_TYPE=[CallbackQueryHandler(abjad_type)],
+			SHADDA=[CallbackQueryHandler(abjad_shadda)],
+			DETAIL=[CallbackQueryHandler(abjad_detail)],
 			fallbacks=[CommandHandler("cancel", abjad_cancel)],
 			allow_reentry=True,
 		)
