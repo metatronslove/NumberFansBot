@@ -45,7 +45,6 @@ async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.debug(f"Processing unsur_input for user {update.effective_user.id}")
 	try:
 		user_id = update.message.from_user.id
-		await query.answer()
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
