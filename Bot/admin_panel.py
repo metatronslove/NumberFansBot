@@ -21,9 +21,6 @@ from telegram.ext import (
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
-from uvicorn import Config as UvicornConfig
-from uvicorn import Server
-from contextlib import asynccontextmanager
 
 # Initialize Flask app
 flask_app = Flask(__name__, template_folder="../Templates/", static_folder="../Assets", static_url_path="/Assets")
@@ -37,6 +34,24 @@ AVAILABLE_LANGUAGES = ["en", "tr", "ar", "he", "la"]
 
 # Initialize Telegram application
 telegram_app = Application.builder().token(config.telegram_token).build()
+
+# Initialize Telegram application synchronously at module level
+def initialize_telegram_app_sync():
+    """Initialize the Telegram application in a new event loop."""
+    try:
+        # Create a new event loop for initialization
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(telegram_app.initialize())
+        logger.info("Telegram application initialized successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize Telegram application: {str(e)}")
+        raise
+    finally:
+        loop.close()
+
+# Run initialization immediately
+initialize_telegram_app_sync()
 
 # Register handlers
 def register_handlers():
@@ -713,35 +728,10 @@ async def set_webhook():
 # Wrap Flask app with WsgiToAsgi for ASGI compatibility
 app = WsgiToAsgi(flask_app)
 
-# Define lifespan handler for Uvicorn
-@asynccontextmanager
-async def lifespan(app):
-    """Handle startup and shutdown events for the application."""
-    # Startup: Initialize Telegram application
-    try:
-        await telegram_app.initialize()
-        logger.info("Telegram application initialized successfully")
-    except Exception as e:
-        logger.error(f"Failed to initialize Telegram application: {str(e)}")
-        raise
-
-    yield  # Run the application
-
-    # Shutdown: Clean up Telegram application
-    try:
-        await telegram_app.shutdown()
-        logger.info("Telegram application shut down successfully")
-    except Exception as e:
-        logger.error(f"Failed to shut down Telegram application: {str(e)}")
-
-# Configure Uvicorn with lifespan handler
-uvicorn_config = UvicornConfig(
-    app=app,
-    host="0.0.0.0",
-    port=int(os.getenv("PORT", 8000)),  # Use Render's PORT env variable
-    lifespan="on",
-)
-uvicorn_server = Server(uvicorn_config)
-
 if __name__ == "__main__":
-    asyncio.run(uvicorn_server.serve())
+    import uvicorn
+    uvicorn.run(
+        app,
+        host="0.0.0.0",
+        port=int(os.getenv("PORT", 8000)),
+    )
