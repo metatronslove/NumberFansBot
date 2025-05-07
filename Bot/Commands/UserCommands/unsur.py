@@ -265,7 +265,8 @@ def get_unsur_conversation_handler():
 			},
 			fallbacks=[CommandHandler("cancel", unsur_cancel), MessageHandler(filters.Regex(r'^/.*'), timeout)],
 			allow_reentry=True,
-			per_message=True
+			per_chat=False,
+			per_message=False
 		)
 		logger.info("Unsur conversation handler initialized successfully")
 		return handler

@@ -228,7 +228,8 @@ def get_huddam_conversation_handler():
 			},
 			fallbacks=[CommandHandler("cancel", huddam_cancel), MessageHandler(filters.Regex(r'^/.*'), timeout)],
 			allow_reentry=True,
-			per_message=True
+			per_chat=False,
+			per_message=False
 		)
 		logger.info("Huddam conversation handler initialized successfully")
 		return handler

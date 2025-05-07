@@ -286,7 +286,8 @@ def get_abjad_conversation_handler():
 			},
 			fallbacks=[CommandHandler("cancel", abjad_cancel), MessageHandler(filters.Regex(r'^/.*'), timeout)],
 			allow_reentry=True,
-			per_message=True
+			per_chat=False,
+			per_message=False
 		)
 		logger.info("Abjad conversation handler initialized successfully")
 		return handler
