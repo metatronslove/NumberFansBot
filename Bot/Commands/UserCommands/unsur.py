@@ -7,7 +7,8 @@ from Bot.i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
 	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
-	ConversationHandler, filters, ContextTypes
+	ConversationHandler, filters, ContextTypes, CallbackContext, ExtBot,
+	TypeHandler,
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
@@ -21,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 INPUT, LANGUAGE, TABLE, SHADDA = range(4)
 
-async def unsur_start(update: Update, context: CallbackContext)	:
+async def unsur_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Starting /unsur for user {update.effective_user.id}")
 	try:
 		user = update.message.from_user
@@ -44,7 +45,7 @@ async def unsur_start(update: Update, context: CallbackContext)	:
 		)
 		return ConversationHandler.END
 
-async def unsur_input(update: Update, context: CallbackContext)	:
+async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.debug(f"Processing unsur_input for user {update.effective_user.id}")
 	try:
 		user_id = update.message.from_user.id
@@ -88,7 +89,7 @@ async def unsur_input(update: Update, context: CallbackContext)	:
 		)
 		return ConversationHandler.END
 
-async def unsur_language(update: Update, context: CallbackContext)	:
+async def unsur_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Processing unsur_language for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
@@ -126,7 +127,7 @@ async def unsur_language(update: Update, context: CallbackContext)	:
 		await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
 		return ConversationHandler.END
 
-async def unsur_table(update: Update, context: CallbackContext)	:
+async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Processing unsur_table for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
@@ -189,7 +190,7 @@ async def unsur_table(update: Update, context: CallbackContext)	:
 		await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
 		return ConversationHandler.END
 
-async def unsur_shadda(update: Update, context: CallbackContext)	:
+async def unsur_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Processing unsur_shadda for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
@@ -230,7 +231,7 @@ async def unsur_shadda(update: Update, context: CallbackContext)	:
 		await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
 		return ConversationHandler.END
 
-async def unsur_cancel(update: Update, context: CallbackContext)	:
+async def unsur_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Cancelling /unsur for user {update.effective_user.id}")
 	try:
 		user_id = update.message.from_user.id

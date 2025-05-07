@@ -6,7 +6,8 @@ from Bot.i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
 	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
-	ConversationHandler, filters, ContextTypes
+	ConversationHandler, filters, ContextTypes, CallbackContext, ExtBot,
+	TypeHandler,
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
@@ -21,7 +22,7 @@ from .language import language_handle
 
 logger = logging.getLogger(__name__)
 
-async def start_handle(update: Update, context: CallbackContext)	:
+async def start_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	user = update.message.from_user
 	user_language = user.language_code.split('-')[0] if user.language_code else 'en'
 	await register_user_if_not_exists(update, context, user, language=user_language)

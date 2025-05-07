@@ -8,7 +8,8 @@ from Bot.i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
 	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
-	ConversationHandler, filters, ContextTypes
+	ConversationHandler, filters, ContextTypes, CallbackContext, ExtBot,
+	TypeHandler,
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
@@ -17,7 +18,7 @@ from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
 
-async def cancel_handle(update: Update, context: CallbackContext)	:
+async def cancel_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	user = update.message.from_user
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id

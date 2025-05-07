@@ -8,7 +8,8 @@ from Bot.i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
 	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
-	ConversationHandler, filters, ContextTypes
+	ConversationHandler, filters, ContextTypes, CallbackContext, ExtBot,
+	TypeHandler,
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest

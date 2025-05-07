@@ -11,7 +11,7 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
-async def credits_handle(update: Update, context: CallbackContext)	:
+async def credits_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	user_id = update.effective_user.id
 	db = Database()
 	i18n = I18n()

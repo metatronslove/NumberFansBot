@@ -9,7 +9,8 @@ from .i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, User  # Added User import
 from telegram.ext import (
 	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
-	ConversationHandler, filters, ContextTypes
+	ConversationHandler, filters, ContextTypes, CallbackContext, ExtBot,
+	TypeHandler,
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
@@ -22,7 +23,7 @@ from datetime import datetime
 logger = logging.getLogger(__name__)
 config = Config()
 
-async def timeout(update: Update, context: CallbackContext)	:
+async def timeout(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	await update.message.reply_text("Conversation timed out. Please start again.", parse_mode="HTML")
 	context.user_data.clear()
 	return ConversationHandler.END
