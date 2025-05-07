@@ -1,6 +1,7 @@
 import logging
 import requests
 import re
+import urllib.parse
 from Bot.config import Config
 from Bot.database import Database
 from Bot.i18n import I18n
@@ -14,7 +15,6 @@ from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.Abjad import Abjad
 from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
-from urllib.parse import urlparse
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
