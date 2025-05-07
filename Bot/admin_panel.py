@@ -43,21 +43,29 @@ async def initialize_telegram_app():
     global _initialized
     if not _initialized:
         try:
+            logger.info("Starting Telegram application initialization")
             await telegram_app.initialize()
             logger.info("Telegram application initialized successfully")
             _initialized = True
         except Exception as e:
             logger.error(f"Failed to initialize Telegram application: {str(e)}")
             raise
+    else:
+        logger.info("Telegram application already initialized")
 
 # Run initialization during app setup
 try:
     loop = asyncio.get_event_loop()
     if loop.is_running():
-        # If an event loop is already running, create a task
-        asyncio.ensure_future(initialize_telegram_app())
+        logger.info("Event loop is running, scheduling Telegram initialization as a task")
+        # Schedule initialization as a task to avoid blocking
+        task = asyncio.ensure_future(initialize_telegram_app())
+        # Wait briefly to ensure task starts
+        loop.run_until_complete(asyncio.sleep(0.1))
+        if task.done() and task.exception():
+            raise task.exception()
     else:
-        # If no loop is running, run the coroutine directly
+        logger.info("Event loop is not running, running Telegram initialization directly")
         loop.run_until_complete(initialize_telegram_app())
 except Exception as e:
     logger.error(f"Initialization error: {str(e)}")
@@ -504,6 +512,7 @@ def promote_credits(lang="en"):
 @flask_app.route("/<lang>/install", methods=["GET", "POST"])
 def install(lang="en"):
     config = Config()
+worldly:
     i18n = I18n()
     if lang not in AVAILABLE_LANGUAGES:
         lang = "en"
@@ -708,14 +717,19 @@ def toggle_beta_tester(lang="en"):
 async def webhook(token):
     config = Config()
     decoded_token = unquote(token)
+    logger.info(f"Received webhook token: {token}, decoded: {decoded_token}")
     if decoded_token != config.telegram_token:
-        logger.error("Invalid webhook token")
+        logger.error(f"Invalid webhook token: {decoded_token}")
         return "", 403
     try:
         update = Update.de_json(request.get_json(), telegram_app.bot)
         if update:
             await telegram_app.process_update(update)
+            logger.info("Webhook update processed successfully")
             return "", 200
+        else:
+            logger.warning("No update found in webhook request")
+            return "", 400
     except Exception as e:
         logger.error(f"Webhook error: {str(e)}")
         return "", 500
