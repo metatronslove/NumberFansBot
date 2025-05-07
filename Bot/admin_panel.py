@@ -35,17 +35,33 @@ AVAILABLE_LANGUAGES = ["en", "tr", "ar", "he", "la"]
 # Initialize Telegram application
 telegram_app = Application.builder().token(config.telegram_token).build()
 
-# Initialize Telegram application before first request
-@flask_app.before_first_request
-def initialize_telegram_app():
-    """Initialize the Telegram application asynchronously using the existing event loop."""
-    try:
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(telegram_app.initialize())
-        logger.info("Telegram application initialized successfully")
-    except Exception as e:
-        logger.error(f"Failed to initialize Telegram application: {str(e)}")
-        raise
+# Flag to ensure initialization happens only once
+_initialized = False
+
+async def initialize_telegram_app():
+    """Initialize the Telegram application asynchronously."""
+    global _initialized
+    if not _initialized:
+        try:
+            await telegram_app.initialize()
+            logger.info("Telegram application initialized successfully")
+            _initialized = True
+        except Exception as e:
+            logger.error(f"Failed to initialize Telegram application: {str(e)}")
+            raise
+
+# Run initialization during app setup
+try:
+    loop = asyncio.get_event_loop()
+    if loop.is_running():
+        # If an event loop is already running, create a task
+        asyncio.ensure_future(initialize_telegram_app())
+    else:
+        # If no loop is running, run the coroutine directly
+        loop.run_until_complete(initialize_telegram_app())
+except Exception as e:
+    logger.error(f"Initialization error: {str(e)}")
+    raise
 
 # Register handlers
 def register_handlers():
@@ -688,11 +704,14 @@ def toggle_beta_tester(lang="en"):
         flash(i18n.t("ERROR_INVALID_INPUT", lang, error="Invalid action"), "error")
     return redirect(url_for("index", lang=lang))
 
-@flask_app.route(f"/bot{config.telegram_token}", methods=["POST"])
-async def webhook():
+@flask_app.route("/bot<token>", methods=["POST"])
+async def webhook(token):
     config = Config()
+    decoded_token = unquote(token)
+    if decoded_token != config.telegram_token:
+        logger.error("Invalid webhook token")
+        return "", 403
     try:
-        # Decode URL-encoded token in case it's sent encoded
         update = Update.de_json(request.get_json(), telegram_app.bot)
         if update:
             await telegram_app.process_update(update)
