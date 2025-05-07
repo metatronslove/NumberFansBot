@@ -283,8 +283,9 @@ body {
     flex: 1;
     max-width: calc(100% - 320px);
     display: none;
-    background: rgba(30,30,30,.5);
+    background: rgba(40, 42, 54, 1);
     padding: 10px;
+    opacity: .75;
     border: 1px solid #48ff00;
 }
 
@@ -293,7 +294,6 @@ body {
     min-height: 31.5rem;
     height: auto;
     border: 1px solid #48ff00;
-    opacity: .5;
 }
 
 .file-actions {
