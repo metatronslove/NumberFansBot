@@ -68,20 +68,24 @@ async def set_webhook_on_startup():
 async def setup_telegram_app():
     """Schedule or run Telegram initialization and webhook setup."""
     try:
-        logger.info("Event loop is running, scheduling Telegram initialization and webhook setup")
+        logger.info("Scheduling Telegram initialization and webhook setup")
         await initialize_telegram_app()
         await set_webhook_on_startup()
     except Exception as e:
         logger.error(f"Initialization or webhook setup error: {str(e)}")
         raise
 
-# Execute initialization and webhook setup
+# Schedule initialization and webhook setup
 try:
-    # Wait for initialization and webhook setup to complete
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(setup_telegram_app())
+    if loop.is_running():
+        logger.info("Event loop is running, scheduling Telegram initialization as a task")
+        asyncio.create_task(setup_telegram_app())
+    else:
+        logger.info("Event loop is not running, running Telegram initialization directly")
+        asyncio.run(setup_telegram_app())
 except Exception as e:
-    logger.error(f"Failed to complete Telegram initialization and webhook setup: {str(e)}")
+    logger.error(f"Failed to schedule Telegram initialization: {str(e)}")
     raise
 
 # Register handlers
@@ -545,7 +549,7 @@ def install(lang="en"):
             config_data[f"{field}_use_env"] = False
         try:
             config.save_config(config_data)
-            os.environ['ADMIN_USER'] = request.form.get("admin_username", "admin")
+            os.environ['ADMIN_USER'] = request.formloop.run_until_complete(setup_telegram_app()).get("admin_username", "admin")
             os.environ['ADMIN_PASS'] = request.form.get("admin_password", "password123")
             seed_admin()
             flash(i18n.t("INSTALL_SUCCESS", lang), "success")
