@@ -1,4 +1,8 @@
-from Bot.config import Config  # Updated import
+import logging
+import os
+import re
+import asyncio
+from Bot.config import Config
 from Bot.database import Database
 from Bot.i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -8,7 +12,9 @@ from telegram.ext import (
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
-from Bot.utils import register_user_if_not_exists
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary
+from urllib.parse import urlparse
+from pathlib import Path
 from datetime import datetime
 
 async def cancel_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):

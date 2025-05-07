@@ -7,12 +7,11 @@ from Bot.i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, LabeledPrice
 from telegram.ext import (
 	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
-	ConversationHandler, filters, ContextTypes
+	ConversationHandler, filters, ContextTypes, PreCheckoutQueryHandler
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 import asyncio
-from Bot.Abjad import Abjad
 from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary
 from urllib.parse import urlparse
 from pathlib import Path

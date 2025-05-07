@@ -1,4 +1,7 @@
 import logging
+import os
+import re
+import asyncio
 from Bot.config import Config
 from Bot.database import Database
 from Bot.i18n import I18n
@@ -9,10 +12,12 @@ from telegram.ext import (
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary
+from urllib.parse import urlparse
+from pathlib import Path
+from datetime import datetime
 from Bot.transliteration import Transliteration
 from Bot.cache import Cache  # Added import
-from Bot.utils import register_user_if_not_exists
-from datetime import datetime
 
 logger = logging.getLogger(__name__)
 

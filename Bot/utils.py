@@ -5,7 +5,6 @@ import re
 import aiohttp
 import asyncio
 from pathlib import Path
-from .database import Database
 from .i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, User  # Added User import
 from telegram.ext import (
@@ -17,6 +16,8 @@ from telegram.error import BadRequest
 from .cache import Cache
 from .config import Config
 from .database import Database
+from urllib.parse import urlparse
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 config = Config()
