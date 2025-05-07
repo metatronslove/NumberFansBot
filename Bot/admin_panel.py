@@ -4,6 +4,7 @@ import re
 import bcrypt
 import yaml
 import requests
+import asyncio
 from flask import Flask, request, render_template, redirect, url_for, session, flash, jsonify
 from asgiref.wsgi import WsgiToAsgi
 from Bot.config import Config
@@ -710,7 +711,7 @@ async def set_webhook():
 app = WsgiToAsgi(flask_app)
 
 async def __main__():
-    # Initialize the application
+    # Initialize the Telegram application
     try:
         await telegram_app.initialize()
         logger.info("Telegram application initialized successfully")
@@ -719,5 +720,9 @@ async def __main__():
         raise
 
 if __name__ == "__main__":
+    # Run the Telegram application initialization
+    asyncio.run(__main__())
+
+    # Start the Uvicorn server
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
