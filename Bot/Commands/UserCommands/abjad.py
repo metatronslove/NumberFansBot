@@ -227,7 +227,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
 			return ConversationHandler.END
 
-		value = result["sum"]
+		value = result["sum"] if detail == 1 else result
 		details = "".join(f"\[{d['char']}={d['value']}]" for d in result.get("details", [])) if detail else ""
 		response = i18n.t("ABJAD_RESULT", language, text=text, value=value)
 		if details:
