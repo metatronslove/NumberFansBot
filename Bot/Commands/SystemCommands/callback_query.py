@@ -6,6 +6,7 @@ import aiohttp
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler, ContextTypes
 from telegram.constants import ParseMode
+from telegram.error import BadRequest
 from Bot.database import Database
 from Bot.i18n import I18n
 from Bot.transliteration import Transliteration
@@ -54,6 +55,15 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 	transliteration = Transliteration(db, i18n)
 	cache = Cache()
 	language = db.get_user_language(user_id)
+
+	try:
+		await query.answer()
+	except BadRequest as e:
+		if "Query is too old" in str(e) or "query id is invalid" in str(e):
+			logger.info(f"Ignoring old or invalid callback query: {str(e)}")
+		else:
+			logger.error(f"BadRequest in handle_callback_query: {str(e)}")
+			raise
 
 	if not (data.startswith("payment_select_") or data == "help_group_chat"):
 		if db.is_blacklisted(user_id):
