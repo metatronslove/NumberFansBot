@@ -248,8 +248,8 @@
                     <div class="mb-3">
                         <label for="new-file-path" class="form-label">{{ i18n.t('FILE_PATH', lang) }}</label>
                         <input type="text" class="form-control" id="new-file-path" placeholder="e.g., Bot/new_script.py" required>
+                        <button type="submit" class="btn btn-primary">{{ i18n.t('CREATE', lang) }}</button>
                     </div>
-                    <button type="submit" class="btn btn-primary">{{ i18n.t('CREATE', lang) }}</button>
                 </form>
             </div>
             <div class="files-tab-content">
@@ -258,7 +258,7 @@
                 </div>
                 <div class="editor-container" id="editor-container">
                     <h4 id="editor-title"></h4>
-                    <textarea id="editor" rows="10" cols="50"></textarea>
+                    <textarea id="editor" rows="15" cols="60"></textarea>
                     <div class="file-actions">
                         <button class="btn btn-primary" id="save-file">{{ i18n.t('SAVE', lang) }}</button>
                         <button class="btn btn-danger" id="delete-file">{{ i18n.t('DELETE', lang) }}</button>
