@@ -149,109 +149,109 @@ async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		return ConversationHandler.END
 
 async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    logger.info(f"Processing abjad_shadda for user {update.effective_user.id}")
-    try:
-        query = update.callback_query
-        await query.answer()
-        user_id = query.from_user.id
-        db = Database()
-        i18n = I18n()
-        language = db.get_user_language(user_id)
+	logger.info(f"Processing abjad_shadda for user {update.effective_user.id}")
+	try:
+		query = update.callback_query
+		await query.answer()
+		user_id = query.from_user.id
+		db = Database()
+		i18n = I18n()
+		language = db.get_user_language(user_id)
 
-        # Credit check
-        from Bot.bot import check_credits
-        if not await check_credits(update, context):
-            await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
-            return ConversationHandler.END
+		# Credit check
+		from Bot.bot import check_credits
+		if not await check_credits(update, context):
+			await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
+			return ConversationHandler.END
 
-        if not query.data.startswith("abjad_shadda_"):
-            logger.debug(f"Ignoring callback: {query.data}")
-            return SHADDA
-        context.user_data["shadda"] = int(query.data[len("abjad_shadda_"):]) or 1
+		if not query.data.startswith("abjad_shadda_"):
+			logger.debug(f"Ignoring callback: {query.data}")
+			return SHADDA
+		context.user_data["shadda"] = int(query.data[len("abjad_shadda_"):]) or 1
 
-        keyboard = [
-            [InlineKeyboardButton(i18n.t("ABJAD-ONLY-RESULT", language), callback_data="abjad_detail_0")],
-            [InlineKeyboardButton(i18n.t("ABJAD-WITH-DETAILS", language), callback_data="abjad_detail_1")]
-        ]
-        await query.message.reply_text(
-            i18n.t("ABJAD_PROMPT_DETAIL", language),
-            reply_markup=InlineKeyboardMarkup(keyboard),
-            parse_mode="HTML"
-        )
-        return DETAIL
-    except Exception as e:
-        logger.error(f"Error in abjad_shadda: {str(e)}")
-        await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
-        return ConversationHandler.END
+		keyboard = [
+			[InlineKeyboardButton(i18n.t("ABJAD-ONLY-RESULT", language), callback_data="abjad_detail_0")],
+			[InlineKeyboardButton(i18n.t("ABJAD-WITH-DETAILS", language), callback_data="abjad_detail_1")]
+		]
+		await query.message.reply_text(
+			i18n.t("ABJAD_PROMPT_DETAIL", language),
+			reply_markup=InlineKeyboardMarkup(keyboard),
+			parse_mode="HTML"
+		)
+		return DETAIL
+	except Exception as e:
+		logger.error(f"Error in abjad_shadda: {str(e)}")
+		await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
+		return ConversationHandler.END
 
 async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    logger.info(f"Processing abjad_detail for user {update.effective_user.id}")
-    try:
-        query = update.callback_query
-        await query.answer()
-        user_id = query.from_user.id
-        db = Database()
-        i18n = I18n()
-        language = db.get_user_language(user_id)
+	logger.info(f"Processing abjad_detail for user {update.effective_user.id}")
+	try:
+		query = update.callback_query
+		await query.answer()
+		user_id = query.from_user.id
+		db = Database()
+		i18n = I18n()
+		language = db.get_user_language(user_id)
 
-        # Credit check
-        from Bot.bot import check_credits
-        if not await check_credits(update, context):
-            await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
-            return ConversationHandler.END
+		# Credit check
+		from Bot.bot import check_credits
+		if not await check_credits(update, context):
+			await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
+			return ConversationHandler.END
 
-        if not query.data.startswith("abjad_detail_"):
-            logger.debug(f"Ignoring callback: {query.data}")
-            return DETAIL
-        detail = int(query.data[len("abjad_detail_"):])
-        context.user_data["detail"] = detail
+		if not query.data.startswith("abjad_detail_"):
+			logger.debug(f"Ignoring callback: {query.data}")
+			return DETAIL
+		detail = int(query.data[len("abjad_detail_"):])
+		context.user_data["detail"] = detail
 
-        text = context.user_data["abjad_text"]
-        alphabet_order = context.user_data["alphabet_order"]
-        abjad_type = context.user_data["abjad_type"]
-        shadda = context.user_data.get("shadda", 1)
+		text = context.user_data["abjad_text"]
+		alphabet_order = context.user_data["alphabet_order"]
+		abjad_type = context.user_data["abjad_type"]
+		shadda = context.user_data.get("shadda", 1)
 
-        alphabet_map = {
-            "0-4": ("arabic", 1), "6-10": ("arabic", 7), "11-15": ("arabic", 12),
-            "16-20": ("arabic", 17), "21-25": ("arabic", 22), "26-30": ("arabic", 27),
-            "31-35": ("arabic", 32), "HE": ("hebrew", 1), "TR": ("turkish", 1),
-            "EN": ("english", 1), "LA": ("latin", 1)
-        }
-        alphabeta, tablebase = alphabet_map[alphabet_order]
-        tablebase += {"-1": -1, "0": 0, "+1": 1, "+2": 2, "+3": 3, "5": 5}[abjad_type]
+		alphabet_map = {
+			"0-4": ("arabic", 1), "6-10": ("arabic", 7), "11-15": ("arabic", 12),
+			"16-20": ("arabic", 17), "21-25": ("arabic", 22), "26-30": ("arabic", 27),
+			"31-35": ("arabic", 32), "HE": ("hebrew", 1), "TR": ("turkish", 1),
+			"EN": ("english", 1), "LA": ("latin", 1)
+		}
+		alphabeta, tablebase = alphabet_map[alphabet_order]
+		tablebase += {"-1": -1, "0": 0, "+1": 1, "+2": 2, "+3": 3, "5": 5}[abjad_type]
 
-        abjad = Abjad()
-        result = abjad.abjad(text, tablebase, shadda, detail, alphabeta)
-        if isinstance(result, str) and result.startswith("Error"):
-            await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
-            return ConversationHandler.END
+		abjad = Abjad()
+		result = abjad.abjad(text, tablebase, shadda, detail, alphabeta)
+		if isinstance(result, str) and result.startswith("Error"):
+			await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
+			return ConversationHandler.END
 
-        value = result["sum"]
-        details = "".join(f"[{d['char']}={d['value']}]" for d in result.get("details", [])) if detail else ""
-        response = i18n.t("ABJAD_RESULT", language, text=text, value=value)
-        if details:
-            response += "\n" + i18n.t("ABJAD_DETAILS", language, details=details)
+		value = result["sum"]
+		details = "".join(f"[{d['char']}={d['value']}]" for d in result.get("details", [])) if detail else ""
+		response = i18n.t("ABJAD_RESULT", language, text=text, value=value)
+		if details:
+			response += "\n" + i18n.t("ABJAD_DETAILS", language, details=details)
 
-        keyboard = [
-            [InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{value}")],
-            [InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{value}_{alphabeta}")]
-        ]
-        if details:
-            keyboard.append([InlineKeyboardButton(i18n.t("SHOW_DETAILS", language), callback_data=f"abjad_details_{user_id}")])
+		keyboard = [
+			[InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{value}")],
+			[InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{value}_{alphabeta}")]
+		]
+		if details:
+			keyboard.append([InlineKeyboardButton(i18n.t("SHOW_DETAILS", language), callback_data=f"abjad_details_{user_id}")])
 
-        await query.message.reply_text(
-            response,
-            parse_mode="HTML",
-            reply_markup=InlineKeyboardMarkup(keyboard)
-        )
-        context.user_data["abjad_result"] = result  # Preserve for details
-        for key in ["abjad_text", "alphabet_order", "abjad_type", "shadda", "detail"]:
-            context.user_data.pop(key, None)
-        return ConversationHandler.END
-    except Exception as e:
-        logger.error(f"Error in abjad_detail: {str(e)}")
-        await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
-        return ConversationHandler.END
+		await query.message.reply_text(
+			response,
+			parse_mode="HTML",
+			reply_markup=InlineKeyboardMarkup(keyboard)
+		)
+		context.user_data["abjad_result"] = result  # Preserve for details
+		for key in ["abjad_text", "alphabet_order", "abjad_type", "shadda", "detail"]:
+			context.user_data.pop(key, None)
+		return ConversationHandler.END
+	except Exception as e:
+		logger.error(f"Error in abjad_detail: {str(e)}")
+		await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
+		return ConversationHandler.END
 
 async def abjad_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.info(f"Cancelling /abjad for user {update.effective_user.id}")

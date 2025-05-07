@@ -23,9 +23,9 @@ logger = logging.getLogger(__name__)
 config = Config()
 
 async def timeout(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Conversation timed out. Please start again.", parse_mode="HTML")
-    context.user_data.clear()
-    return ConversationHandler.END
+	await update.message.reply_text("Conversation timed out. Please start again.", parse_mode="HTML")
+	context.user_data.clear()
+	return ConversationHandler.END
 
 async def get_ai_commentary(response: str, lang: str) -> str:
 	i18n = I18n()
