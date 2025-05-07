@@ -166,7 +166,7 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
 			return ConversationHandler.END
 
-		if context.user_data["shadda"] != 1:
+		if context.user_data.get("shadda") != 1:
 			if not query.data.startswith("abjad_shadda_"):
 				logger.debug(f"Ignoring callback: {query.data}")
 				return SHADDA
@@ -205,12 +205,14 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
 			return ConversationHandler.END
 
+
+		logger.info(f"Query Data: {str(query.data)} {len(str(query.data))}")
 		if not query.data.startswith("abjad_detail_"):
 			logger.debug(f"Ignoring callback: {query.data}")
 			return DETAIL
 		else:
-			detail = query.data[len("abjad_detail_"):]
-			context.user_data["detail"] = int(detail)
+			detail = str(query.data)[len("abjad_detail_"):]
+			context.user_data["detail"] = int(float(detail))
 
 		text = context.user_data["abjad_text"]
 		alphabet_order = context.user_data["alphabet_order"]
