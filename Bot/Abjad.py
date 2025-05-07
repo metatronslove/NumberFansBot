@@ -1,5 +1,6 @@
 import re
 import math
+import random
 from typing import Union, List, Dict, Tuple, Optional
 
 class Abjad:
