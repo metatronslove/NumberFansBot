@@ -8,11 +8,11 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, Labeled
 from telegram.ext import (
 	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
 	ConversationHandler, filters, ContextTypes, CallbackContext, ExtBot,
-	TypeHandler,, PreCheckoutQueryHandler
+	TypeHandler, PreCheckoutQueryHandler
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
-# import asyncio
+import asyncio
 from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
 from urllib.parse import urlparse
 from pathlib import Path
