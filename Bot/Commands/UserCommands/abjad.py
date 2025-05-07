@@ -205,12 +205,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
 			return ConversationHandler.END
 
-		logger.info(f"Query Data: {str(query.data)} {len(str(query.data))}")
-		if not query.data.startswith("abjad_detail_"):
-			logger.debug(f"Ignoring callback: {query.data}")
-			return DETAIL
-		else:
-			detail = 1 if query.data == "abjad_detail_1" else 0
+		detail = 1 if str(query.data) == "abjad_detail_1" else 0
 
 		text = context.user_data["abjad_text"]
 		alphabet_order = context.user_data["alphabet_order"]
@@ -233,7 +228,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			return ConversationHandler.END
 
 		value = result["sum"]
-		details = "".join(f"[{d['char']}={d['value']}]" for d in result.get("details", [])) if detail else ""
+		details = "".join(f"\[{d['char']}={d['value']}]" for d in result.get("details", [])) if detail else ""
 		response = i18n.t("ABJAD_RESULT", language, text=text, value=value)
 		if details:
 			response += "\n" + i18n.t("ABJAD_DETAILS", language, details=details)
