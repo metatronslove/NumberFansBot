@@ -1,11 +1,12 @@
 import logging
 import os
 import re
-import asyncio
+# import asyncio
 import bcrypt
 import yaml
 import requests
 from flask import Flask, request, render_template, redirect, url_for, session, flash, jsonify
+from asgiref.wsgi import WsgiToAsgi
 from Bot.config import Config
 from Bot.database import Database
 from Bot.i18n import I18n
@@ -21,7 +22,7 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 
-app = Flask(__name__, template_folder="../Templates/", static_folder="../Assets", static_url_path="/Assets")
+app = WsgiToAsgi(Flask(__name__, template_folder="../Templates/", static_folder="../Assets", static_url_path="/Assets"))
 config = Config()
 app.secret_key = config.flask_secret_key
 logging.basicConfig(level=logging.INFO)
@@ -31,15 +32,15 @@ logger = logging.getLogger(__name__)
 AVAILABLE_LANGUAGES = ["en", "tr", "ar", "he", "la"]
 
 # Use the default event loop
-loop = asyncio.get_event_loop()
+# loop = asyncio.get_event_loop()
 
 # Initialize Telegram application
 telegram_app = Application.builder().token(config.telegram_token).build()
 
 # Initialize the application
 try:
-	loop.run_until_complete(telegram_app.initialize())
-	# telegram_app.initialize()
+	# loop.run_until_complete(telegram_app.initialize())
+	await telegram_app.initialize()
 	logger.info("Telegram application initialized successfully")
 except Exception as e:
 	logger.error(f"Failed to initialize Telegram application: {str(e)}")
