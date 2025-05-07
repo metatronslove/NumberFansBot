@@ -40,7 +40,7 @@ telegram_app = Application.builder().token(config.telegram_token).build()
 # Initialize the application
 try:
 	# loop.run_until_complete(telegram_app.initialize())
-	await telegram_app.initialize()
+	telegram_app.initialize()
 	logger.info("Telegram application initialized successfully")
 except Exception as e:
 	logger.error(f"Failed to initialize Telegram application: {str(e)}")
