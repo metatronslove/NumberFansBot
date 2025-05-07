@@ -1,7 +1,6 @@
 import logging
-import os
+import requests
 import re
-import asyncio
 from Bot.config import Config
 from Bot.database import Database
 from Bot.i18n import I18n
@@ -15,7 +14,6 @@ from telegram.error import BadRequest
 from Bot.Abjad import Abjad
 from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
 from urllib.parse import urlparse
-from pathlib import Path
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -28,6 +26,7 @@ async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		user = update.message.from_user
 		await register_user_if_not_exists(update, context, user)
 		user_id = user.id
+		config=Config()
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
@@ -78,6 +77,7 @@ async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYP
 		query = update.callback_query
 		await query.answer()
 		user_id = query.from_user.id
+		config=Config()
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
@@ -116,6 +116,7 @@ async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		query = update.callback_query
 		await query.answer()
 		user_id = query.from_user.id
+		config=Config()
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
@@ -154,6 +155,7 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		query = update.callback_query
 		await query.answer()
 		user_id = query.from_user.id
+		config=Config()
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
@@ -190,6 +192,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		query = update.callback_query
 		await query.answer()
 		user_id = query.from_user.id
+		config=Config()
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
@@ -257,6 +260,7 @@ async def abjad_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.info(f"Cancelling /abjad for user {update.effective_user.id}")
 	try:
 		user_id = update.message.from_user.id
+		config=Config()
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)

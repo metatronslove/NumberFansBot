@@ -1,7 +1,6 @@
 import logging
-import os
+import requests
 import re
-import asyncio
 from Bot.config import Config
 from Bot.database import Database
 from Bot.i18n import I18n
@@ -13,11 +12,10 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.Abjad import Abjad
-from Bot.element_classifier import ElementClassifier
 from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
-import urllib.parse
-from pathlib import Path
+from urllib.parse import urlparse
 from datetime import datetime
+from Bot.element_classifier import ElementClassifier
 
 logger = logging.getLogger(__name__)
 
