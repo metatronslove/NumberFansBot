@@ -528,6 +528,8 @@ def promote_credits(lang="en"):
 
 @flask_app.route("/<lang>/install", methods=["GET", "POST"])
 def install(lang="en"):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
 	config = Config()
 	i18n = I18n()
 	if lang not in AVAILABLE_LANGUAGES:
@@ -598,6 +600,8 @@ def logout(lang="en"):
 
 @flask_app.route("/<lang>/save_config", methods=["POST"])
 def save_config_route(lang="en"):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
 	config = Config()
 	db = Database()
 	i18n = I18n()
@@ -752,6 +756,8 @@ async def webhook(token):
 
 @flask_app.route("/set_webhook", methods=["GET"])
 async def set_webhook():
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
 	config = Config()
 	if not config.telegram_token:
 		logger.error("TELEGRAM_TOKEN is not set")
