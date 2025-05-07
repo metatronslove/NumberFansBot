@@ -1,7 +1,7 @@
 import logging
 import os
 import re
-# import asyncio
+import asyncio
 import bcrypt
 import yaml
 import requests
@@ -695,7 +695,7 @@ async def webhook():
 		# loop.run_until_complete(telegram_app.process_update(update))
 		if update:
 			await telegram_app.process_update(update)
-		return "", 200
+			return "", 200
 	except Exception as e:
 		logger.error(f"Webhook error: {str(e)}")
 		return "", 500
