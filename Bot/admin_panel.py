@@ -688,19 +688,20 @@ def toggle_beta_tester(lang="en"):
 	return redirect(url_for("index", lang=lang))
 
 @app.route(f"/bot{config.telegram_token}", methods=["POST"])
-def webhook():
+async def webhook():
 	config = Config()
 	try:
 		update = Update.de_json(request.get_json(), telegram_app.bot)
 		# loop.run_until_complete(telegram_app.process_update(update))
-		await telegram_app.process_update(update)
+		if update:
+			await telegram_app.process_update(update)
 		return "", 200
 	except Exception as e:
 		logger.error(f"Webhook error: {str(e)}")
 		return "", 500
 
 @app.route("/set_webhook", methods=["GET"])
-def set_webhook():
+async def set_webhook():
 	config = Config()
 	if not config.telegram_token:
 		logger.error("TELEGRAM_TOKEN is not set")
