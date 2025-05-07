@@ -31,14 +31,14 @@ logger = logging.getLogger(__name__)
 AVAILABLE_LANGUAGES = ["en", "tr", "ar", "he", "la"]
 
 # Use the default event loop
-# loop = asyncio.get_event_loop()
+loop = asyncio.get_event_loop()
 
 # Initialize Telegram application
 telegram_app = Application.builder().token(config.telegram_token).build()
 
 # Initialize the application
 try:
-	# loop.run_until_complete(telegram_app.initialize())
+	loop.run_until_complete(telegram_app.initialize())
 	telegram_app.initialize()
 	logger.info("Telegram application initialized successfully")
 except Exception as e:
