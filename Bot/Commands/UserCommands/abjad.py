@@ -166,11 +166,12 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
 			return ConversationHandler.END
 
-		if not query.data.startswith("abjad_shadda_"):
-			logger.debug(f"Ignoring callback: {query.data}")
-			if context.user_data["shadda"] != 1:
+		if context.user_data["shadda"] != 1:
+			if not query.data.startswith("abjad_shadda_"):
+				logger.debug(f"Ignoring callback: {query.data}")
 				return SHADDA
-		context.user_data["shadda"] = int(query.data[len("abjad_shadda_"):]) or 1
+			else:
+				context.user_data["shadda"] = int(query.data[len("abjad_shadda_"):]) or 1
 
 		keyboard = [
 			[InlineKeyboardButton(i18n.t("ABJAD-ONLY-RESULT", language), callback_data="abjad_detail_0")],
