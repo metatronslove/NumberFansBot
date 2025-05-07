@@ -210,7 +210,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			logger.debug(f"Ignoring callback: {query.data}")
 			return DETAIL
 		else:
-			detail = int(str(query.data)[len("abjad_detail_"):])
+			detail = 1 if query.data == "abjad_detail_1" else 0
 
 		text = context.user_data["abjad_text"]
 		alphabet_order = context.user_data["alphabet_order"]
