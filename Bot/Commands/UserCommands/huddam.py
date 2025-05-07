@@ -227,7 +227,7 @@ def get_huddam_conversation_handler():
 				MULTIPLIAR: [CallbackQueryHandler(huddam_multipliar)],
 			},
 			fallbacks=[CommandHandler("cancel", huddam_cancel), MessageHandler(filters.Regex(r'^/.*'), timeout)],
-			allow_reentry=True,
+			allow_reentry=False,
 			per_chat=False,
 			per_message=False
 		)
