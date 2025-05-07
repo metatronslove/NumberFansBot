@@ -20,7 +20,7 @@ from .language import language_handle
 
 logger = logging.getLogger(__name__)
 
-async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def payment_handle(update: Update, context: CallbackContext)	:
 	user = update.message.from_user
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id
@@ -88,7 +88,7 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		reply_markup=reply_markup
 	)
 
-async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def handle_payment_callback(update: Update, context: CallbackContext)	:
 	query = update.callback_query
 	user_id = query.from_user.id
 	db = Database()
@@ -135,7 +135,7 @@ async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_
 				parse_mode=ParseMode.HTML
 			)
 
-async def handle_pre_checkout(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def handle_pre_checkout(update: Update, context: CallbackContext)	:
 	query = update.pre_checkout_query
 	user_id = query.from_user.id
 	db = Database()
@@ -152,7 +152,7 @@ async def handle_pre_checkout(update: Update, context: ContextTypes.DEFAULT_TYPE
 		logger.error(f"Pre-checkout error: {str(e)}")
 		await query.answer(ok=False, error_message=i18n.t("PAYMENT_FAILED", language))
 
-async def handle_successful_payment(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def handle_successful_payment(update: Update, context: CallbackContext)	:
 	user_id = update.message.from_user.id
 	payment = update.message.successful_payment
 	db = Database()

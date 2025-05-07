@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 ALPHABET_ORDER, ABJAD_TYPE, SHADDA, DETAIL = range(4)
 
-async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def abjad_start(update: Update, context: CallbackContext)	:
 	logger.info(f"Starting /abjad for user {update.effective_user.id}")
 	try:
 		user = update.message.from_user
@@ -71,7 +71,7 @@ async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		)
 		return ConversationHandler.END
 
-async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def abjad_alphabet_order(update: Update, context: CallbackContext)	:
 	logger.info(f"Processing abjad_alphabet_order for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
@@ -110,7 +110,7 @@ async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYP
 		)
 		return ConversationHandler.END
 
-async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def abjad_type(update: Update, context: CallbackContext)	:
 	logger.info(f"Processing abjad_type for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
@@ -149,7 +149,7 @@ async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		)
 		return ConversationHandler.END
 
-async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def abjad_shadda(update: Update, context: CallbackContext)	:
 	logger.info(f"Processing abjad_shadda for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
@@ -186,7 +186,7 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
 		return ConversationHandler.END
 
-async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def abjad_detail(update: Update, context: CallbackContext)	:
 	logger.info(f"Processing abjad_detail for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
@@ -256,7 +256,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
 		return ConversationHandler.END
 
-async def abjad_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def abjad_cancel(update: Update, context: CallbackContext)	:
 	logger.info(f"Cancelling /abjad for user {update.effective_user.id}")
 	try:
 		user_id = update.message.from_user.id

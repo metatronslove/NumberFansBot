@@ -20,7 +20,7 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
-async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def name_handle(update: Update, context: CallbackContext)	:
 	user = update.message.from_user
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id

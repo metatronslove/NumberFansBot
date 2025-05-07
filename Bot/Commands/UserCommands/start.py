@@ -21,7 +21,7 @@ from .language import language_handle
 
 logger = logging.getLogger(__name__)
 
-async def start_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def start_handle(update: Update, context: CallbackContext)	:
 	user = update.message.from_user
 	user_language = user.language_code.split('-')[0] if user.language_code else 'en'
 	await register_user_if_not_exists(update, context, user, language=user_language)

@@ -24,7 +24,7 @@ import urllib.parse
 logger = logging.getLogger(__name__)
 config = Config()
 
-async def set_language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def set_language_handle(update: Update, context: CallbackContext)	:
 	query = update.callback_query
 	await query.answer()
 	user_id = query.from_user.id
@@ -46,7 +46,7 @@ async def set_language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 			parse_mode=ParseMode.HTML
 		)
 
-async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def handle_callback_query(update: Update, context: CallbackContext)	:
 	query = update.callback_query
 	data = query.data
 	user_id = query.from_user.id

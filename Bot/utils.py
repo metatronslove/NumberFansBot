@@ -22,7 +22,7 @@ from datetime import datetime
 logger = logging.getLogger(__name__)
 config = Config()
 
-async def timeout(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def timeout(update: Update, context: CallbackContext)	:
 	await update.message.reply_text("Conversation timed out. Please start again.", parse_mode="HTML")
 	context.user_data.clear()
 	return ConversationHandler.END

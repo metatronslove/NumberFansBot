@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 ENTITY_TYPE, LANGUAGE, MULTIPLIAR = range(3)
 
-async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def huddam_start(update: Update, context: CallbackContext)	:
 	logger.info(f"Starting /huddam for user {update.effective_user.id}")
 	try:
 		user = update.message.from_user
@@ -60,7 +60,7 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		)
 		return ConversationHandler.END
 
-async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def huddam_entity_type(update: Update, context: CallbackContext)	:
 	logger.debug(f"Processing huddam_entity_type for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
@@ -103,7 +103,7 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
 		)
 		return ConversationHandler.END
 
-async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def huddam_language(update: Update, context: CallbackContext)	:
 	logger.debug(f"Processing huddam_language for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
@@ -137,7 +137,7 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		)
 		return ConversationHandler.END
 
-async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def huddam_multipliar(update: Update, context: CallbackContext)	:
 	logger.info(f"Processing huddam_multipliar for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
@@ -194,7 +194,7 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
 		return ConversationHandler.END
 
-async def huddam_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def huddam_cancel(update: Update, context: CallbackContext)	:
 	logger.info(f"Cancelling /huddam for user {update.effective_user.id}")
 	try:
 		user_id = update.message.from_user.id

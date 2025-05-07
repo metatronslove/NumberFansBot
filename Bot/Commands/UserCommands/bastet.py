@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 REPETITION, TABLE, LANGUAGE = range(3)
 
-async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def bastet_start(update: Update, context: CallbackContext)	:
 	logger.info(f"Starting /bastet for user {update.effective_user.id}")
 	try:
 		user = update.message.from_user
@@ -53,7 +53,7 @@ async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		)
 		return ConversationHandler.END
 
-async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def bastet_repetition(update: Update, context: CallbackContext)	:
 	logger.debug(f"Processing bastet_repetition for user {update.effective_user.id}")
 	try:
 		user_id = update.message.from_user.id
@@ -98,7 +98,7 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		)
 		return ConversationHandler.END
 
-async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def bastet_table(update: Update, context: CallbackContext)	:
 	logger.debug(f"Processing bastet_table for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
@@ -136,7 +136,7 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		)
 		return ConversationHandler.END
 
-async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def bastet_language(update: Update, context: CallbackContext)	:
 	logger.info(f"Processing bastet_language for user {update.effective_user.id}")
 	try:
 		query = update.callback_query
@@ -193,7 +193,7 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
 		return ConversationHandler.END
 
-async def bastet_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def bastet_cancel(update: Update, context: CallbackContext)	:
 	logger.info(f"Cancelling /bastet for user {update.effective_user.id}")
 	try:
 		user_id = update.message.from_user.id
