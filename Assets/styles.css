@@ -24,12 +24,12 @@ body {
 .logo {
     font-size: 2.5rem;
     font-weight: bold;
-    color: #48ff00;
+    color: rgba(72,255,0,.25);
 }
 
 .tagline {
     font-size: 1rem;
-    color: #ccc;
+    color: rgba(200,200,200,.25);
 }
 
 .language-switcher {
@@ -97,42 +97,51 @@ body {
 }
 
 .tab-content.active {
+    input{
+        background: rgba(40,40,56,.75);
+    }
+    input[type=text]{
+        width: 800px;
+    }
+    input[type=checkbox]{
+        width: 1rem;
+    }
     display: block;
 }
 
 .form-control {
-    background-color: #2a2a2a;
+    background-color: rgba(36,36,36,.25);
     color: #fff;
-    border: 1px solid #48ff00;
+    border: 1px solid rgba(72,255,0,.25);
 }
 
 .form-control:focus {
-    border-color: #48ff00;
+    border-color: rgba(72,255,0,.25);
     box-shadow: 0 0 5px rgba(72, 255, 0, 0.5);
 }
 
 .btn-primary {
-    background-color: #006400;
-    border-color: #006400;
+    background-color: rgba(0,116,0,.5);
+    border-color: rgba(0,116,0,.5);
 }
 
 .btn-primary:hover {
-    background-color: #48ff00;
-    border-color: #48ff00;
+    background-color: rgba(0,116,0,.7);
+    border-color: rgba(0,116,0,.7);
 }
 
 .table-dark {
-    background-color: #2a2a2a;
+    background-color: rgba(36,36,36,.5);
 }
 
 .table-dark th,
 .table-dark td {
-    border-color: #48ff00;
+    border-color: rgba(72,255,0,.25);
     vertical-align: middle;
 }
 
 .table-dark th {
-    background-color: #1a1a1a;
+    background-color: rgba(26,26,26,.5);
     vertical-align: middle;
 }
 
@@ -155,7 +164,7 @@ body {
 }
 
 .pagination button {
-    background-color: #006400;
+    background-color: rgba(0,116,0,.25);
     color: #fff;
     border: none;
     padding: 8px 16px;
@@ -165,7 +174,7 @@ body {
 
 .pagination button.active,
 .pagination button:hover {
-    background-color: #48ff00;
+    background-color: rgba(72,255,0,.25);
 }
 
 .pagination button:disabled {
@@ -293,7 +302,7 @@ body {
     max-height: 31.5rem;
     min-height: 31.5rem;
     height: auto;
-    border: 1px solid #48ff00;
+    border: 1px solid rgba(72,255,0,.25);
 }
 
 .file-actions {
