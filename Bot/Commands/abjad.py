@@ -209,8 +209,8 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			logger.debug(f"Ignoring callback: {query.data}")
 			return DETAIL
 		else:
+			logger.info(f"Query Data: {query.data} {len(query.data)}")
 			detail = query.data[len("abjad_detail_"):]
-			logger.info(f"Query Data: {query.data} {detail}")
 			context.user_data["detail"] = int(float(detail))
 
 		text = context.user_data["abjad_text"]
