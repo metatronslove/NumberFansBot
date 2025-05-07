@@ -159,7 +159,7 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 			return MULTIPLIAR
 		context.user_data["multipliar"] = query.data[len("huddam_multi_"):]
 
-		lang = context.user_data["language"]
+		huddam_lang = context.user_data["language"]
 		number = context.user_data["huddam_number"]
 		entity_type = context.user_data["entity_type"]
 
@@ -169,7 +169,7 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 			"31-35": ("arabic", 32), "HE": ("hebrew", 1), "TR": ("turkish", 1),
 			"EN": ("english", 1), "LA": ("latin", 1)
 		}
-		alphabeta, method = alphabet_map[lang]
+		alphabeta, method = alphabet_map[huddam_lang]
 
 		abjad = Abjad()
 		result = abjad.generate_name(number, entity_type, method, alphabeta, context.user_data["multipliar"])
@@ -177,7 +177,7 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 			await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
 			return ConversationHandler.END
 
-		response = i18n.t("HUDDAM_RESULT", language, number=number, type=entity_type, lang=lang, name=result)
+		response = i18n.t("HUDDAM_RESULT", language, number=number, type=entity_type, huddam_lang=huddam_lang, name=result)
 		keyboard = [
 			[InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{number}")],
 			[InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{number}_{alphabeta}")],
