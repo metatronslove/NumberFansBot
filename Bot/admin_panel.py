@@ -512,7 +512,6 @@ def promote_credits(lang="en"):
 @flask_app.route("/<lang>/install", methods=["GET", "POST"])
 def install(lang="en"):
     config = Config()
-worldly:
     i18n = I18n()
     if lang not in AVAILABLE_LANGUAGES:
         lang = "en"
