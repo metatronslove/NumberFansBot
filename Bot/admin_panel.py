@@ -693,7 +693,7 @@ def webhook():
 	try:
 		update = Update.de_json(request.get_json(), telegram_app.bot)
 		# loop.run_until_complete(telegram_app.process_update(update))
-		await telegram_app.process_update(update)
+		telegram_app.process_update(update)
 		return "", 200
 	except Exception as e:
 		logger.error(f"Webhook error: {str(e)}")
@@ -712,7 +712,7 @@ def set_webhook():
 
 	try:
 		# result = loop.run_until_complete(telegram_app.bot.set_webhook(url=webhook_url))
-		result = await telegram_app.bot.set_webhook(url=webhook_url)
+		result = telegram_app.bot.set_webhook(url=webhook_url)
 		if result:
 			logger.info(f"Webhook set successfully to {webhook_url}")
 			return f"Webhook set to {webhook_url}", 200
