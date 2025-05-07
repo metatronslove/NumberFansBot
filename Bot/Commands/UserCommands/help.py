@@ -1,14 +1,14 @@
 import logging
 import os
 import re
-# import asyncio
+import asyncio
 from Bot.config import Config
 from Bot.database import Database
 from Bot.i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
-	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
-	ConversationHandler, filters, ContextTypes, CallbackContext, ExtBot,
+	Application, ExtBot, ConversationHandler, CommandHandler, MessageHandler,
+	ContextTypes, CallbackContext, CallbackQueryHandler, filters,
 	TypeHandler,
 )
 from telegram.constants import ParseMode

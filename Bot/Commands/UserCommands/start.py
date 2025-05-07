@@ -5,13 +5,13 @@ from Bot.database import Database
 from Bot.i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
-	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
-	ConversationHandler, filters, ContextTypes, CallbackContext, ExtBot,
+	Application, ExtBot, ConversationHandler, CommandHandler, MessageHandler,
+	ContextTypes, CallbackContext, CallbackQueryHandler, filters,
 	TypeHandler,
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
-# import asyncio
+import asyncio
 from Bot.Abjad import Abjad
 from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
 from urllib.parse import urlparse

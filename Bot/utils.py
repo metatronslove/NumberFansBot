@@ -3,13 +3,13 @@ import logging
 import requests
 import re
 import aiohttp
-# import asyncio
+import asyncio
 from pathlib import Path
 from .i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, User  # Added User import
 from telegram.ext import (
-	Application, CommandHandler, MessageHandler, CallbackQueryHandler,
-	ConversationHandler, filters, ContextTypes, CallbackContext, ExtBot,
+	Application, ExtBot, ConversationHandler, CommandHandler, MessageHandler,
+	ContextTypes, CallbackContext, CallbackQueryHandler, filters,
 	TypeHandler,
 )
 from telegram.constants import ParseMode

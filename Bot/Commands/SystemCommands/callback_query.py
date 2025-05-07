@@ -2,7 +2,7 @@ import logging
 import requests
 import re
 import aiohttp
-# import asyncio
+import asyncio
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler, ContextTypes
 from telegram.constants import ParseMode
