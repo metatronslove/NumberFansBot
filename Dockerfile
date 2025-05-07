@@ -40,4 +40,4 @@ EXPOSE $PORT
 
 # Use entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["sh", "-c", "python Bot/seed_admin.py && uvicorn Bot.admin_panel:app --host 0.0.0.0 --port $PORT"]
+CMD ["sh", "-c", "python Bot/seed_admin.py && uvicorn Bot.admin_panel:app --host 0.0.0.0 --port $PORT --lifespan off"]

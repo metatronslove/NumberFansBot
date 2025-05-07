@@ -53,31 +53,35 @@ async def initialize_telegram_app():
     else:
         logger.info("Telegram application already initialized")
 
-# Run initialization during app setup
-async def setup_telegram_app():
-    """Schedule or run Telegram initialization based on event loop state."""
+async def set_webhook_on_startup():
+    """Set the Telegram webhook after initialization."""
+    if not config.telegram_token:
+        logger.error("TELEGRAM_TOKEN is not set, cannot set webhook")
+        return
+    webhook_url = f"https://{os.getenv('RENDER_EXTERNAL_HOSTNAME', 'localhost')}/bot{config.telegram_token}"
     try:
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
-            logger.info("Event loop is running, scheduling Telegram initialization as a task")
-            task = asyncio.create_task(initialize_telegram_app())
-            # Allow the task to start without blocking
-            await asyncio.sleep(0)  # Yield control to the event loop
-            if task.done() and task.exception():
-                raise task.exception()
-        else:
-            logger.info("Event loop is not running, running Telegram initialization directly")
-            await initialize_telegram_app()
+        await telegram_app.bot.set_webhook(url=webhook_url)
+        logger.info(f"Webhook set successfully to {webhook_url}")
     except Exception as e:
-        logger.error(f"Initialization error: {str(e)}")
+        logger.error(f"Failed to set webhook: {str(e)}")
+
+async def setup_telegram_app():
+    """Schedule or run Telegram initialization and webhook setup."""
+    try:
+        logger.info("Event loop is running, scheduling Telegram initialization and webhook setup")
+        await initialize_telegram_app()
+        await set_webhook_on_startup()
+    except Exception as e:
+        logger.error(f"Initialization or webhook setup error: {str(e)}")
         raise
 
-# Execute initialization
+# Execute initialization and webhook setup
 try:
-    # Since Uvicorn runs an event loop, use async setup
-    asyncio.get_event_loop().create_task(setup_telegram_app())
+    # Wait for initialization and webhook setup to complete
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(setup_telegram_app())
 except Exception as e:
-    logger.error(f"Failed to schedule Telegram initialization: {str(e)}")
+    logger.error(f"Failed to complete Telegram initialization and webhook setup: {str(e)}")
     raise
 
 # Register handlers
@@ -766,8 +770,11 @@ app = WsgiToAsgi(flask_app)
 
 if __name__ == "__main__":
     import uvicorn
+    port = int(os.getenv("PORT", 8080))
+    logger.info(f"Starting Uvicorn on port {port}")
     uvicorn.run(
         app,
         host="0.0.0.0",
-        port=int(os.getenv("PORT", 8000)),
+        port=port,
+        lifespan="off"  # Disable lifespan to suppress ASGI warning
     )
