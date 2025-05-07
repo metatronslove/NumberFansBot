@@ -45,12 +45,10 @@
                 <div class="tab" data-tab="github">{{ i18n.t('GITHUB_TRAFFIC_TAB', lang) }}</div>
             {% endif %}
             <div class="tab" data-tab="files">{{ i18n.t('FILES_TAB', lang) }}</div>
-            <div class="link-tab" data-tab="install">
-                <a href="{{ url_for('install', lang=lang) }}" class="btn btn-primary">{{ i18n.t('INSTALL_TAB', lang) }}</a>
-            </div>
+            <div class="tab" data-tab="install">{{ i18n.t('INSTALL_TAB', lang) }}</div>
             <div class="link-tab" data-tab="logout">
-				<a href="{{ url_for('logout', lang=lang) }}" class="btn btn-secondary">{{ i18n.t('LOGOUT', lang) }}</a>
-			</div>
+                <a href="{{ url_for('logout', lang=lang) }}" class="btn btn-secondary">{{ i18n.t('LOGOUT', lang) }}</a>
+            </div>
         </div>
         <div class="tab-content{% if command_usage %} active{% endif %}" id="commands">
             <h2>{{ i18n.t('COMMANDS_TITLE', lang) }}</h2>
@@ -267,6 +265,38 @@
                         <button class="btn btn-danger" id="delete-file">{{ i18n.t('DELETE', lang) }}</button>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="tab-content" id="install">
+            <h3>{{ i18n.t('INSTALL_TITLE', lang) }}</h3>
+            <div class="install-form">
+                <form method="POST" action="{{ url_for('install', lang=lang) }}">
+                    {% for field in fields %}
+                        <div class="form-group mb-3">
+                            <label for="{{ field.key }}">{{ field.label }}</label>
+                            <input type="text" id="{{ field.key }}" name="{{ field.key }}" class="form-control" value="{{ field.value }}">
+                            <div class="form-check mt-2">
+                                <input type="checkbox" class="form-check-input" id="{{ field.key }}_use_env" name="{{ field.key }}_use_env" {{ 'checked' if field.use_env else '' }}>
+                                <label class="form-check-label" for="{{ field.key }}_use_env">{{ i18n.t('USE_ENV', lang) }}</label>
+                                <small class="text-muted">{{ i18n.t('TOOLTIP_ENV', lang) }}</small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="form-group mb-3">
+                        <label for="admin_username">{{ i18n.t('ADMIN_USERNAME', lang) }}</label>
+                        <input type="text" id="admin_username" name="admin_username" class="form-control" value="admin">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="admin_password">{{ i18n.t('ADMIN_PASSWORD', lang) }}</label>
+                        <input type="text" id="admin_password" name="admin_password" class="form-control" value="password123">
+                    </div>
+                    <button type="submit" class="btn btn-primary">{{ i18n.t('INSTALL_SUBMIT', lang) }}</button>
+                </form>
+            </div>
+            <div class="install-messages">
+                {% for message in messages %}
+                    <div class="error">{{ message }}</div>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -1049,5 +1079,5 @@
             }
         })();
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93bd8c7aeec7adde',t:'MTc0NjU4NzY4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
