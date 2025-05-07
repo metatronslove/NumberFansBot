@@ -241,7 +241,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 		await query.message.reply_text(
 			response,
-			parse_mode="HTML",
+			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=InlineKeyboardMarkup(keyboard)
 		)
 		context.user_data["abjad_result"] = result  # Preserve for details
@@ -285,9 +285,6 @@ def get_abjad_conversation_handler():
 				DETAIL: [CallbackQueryHandler(abjad_detail)],
 			},
 			fallbacks=[CommandHandler("cancel", abjad_cancel), MessageHandler(filters.Regex(r'^/.*'), timeout)],
-			allow_reentry=False,
-			per_chat=False,
-			per_message=False
 		)
 		logger.info("Abjad conversation handler initialized successfully")
 		return handler

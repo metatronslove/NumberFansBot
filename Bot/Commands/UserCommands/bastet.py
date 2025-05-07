@@ -226,9 +226,6 @@ def get_bastet_conversation_handler():
 				LANGUAGE: [CallbackQueryHandler(bastet_language)],
 			},
 			fallbacks=[CommandHandler("cancel", bastet_cancel), MessageHandler(filters.Regex(r'^/.*'), timeout)],
-			allow_reentry=False,
-			per_chat=False,
-			per_message=False
 		)
 		logger.info("Bastet conversation handler initialized successfully")
 		return handler
