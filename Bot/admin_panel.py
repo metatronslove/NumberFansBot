@@ -710,19 +710,15 @@ async def set_webhook():
 # Wrap Flask app with WsgiToAsgi for ASGI compatibility
 app = WsgiToAsgi(flask_app)
 
-async def __main__():
-    # Initialize the Telegram application
-    try:
-        await telegram_app.initialize()
-        logger.info("Telegram application initialized successfully")
-    except Exception as e:
-        logger.error(f"Failed to initialize Telegram application: {str(e)}")
-        raise
+# Initialize Telegram application globally
+loop = asyncio.get_event_loop()
+try:
+    loop.run_until_complete(telegram_app.initialize())
+    logger.info("Telegram application initialized successfully")
+except Exception as e:
+    logger.error(f"Failed to initialize Telegram application: {str(e)}")
+    raise
 
 if __name__ == "__main__":
-    # Run the Telegram application initialization
-    asyncio.run(__main__())
-
-    # Start the Uvicorn server
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
