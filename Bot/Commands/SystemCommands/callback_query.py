@@ -225,7 +225,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					i18n.t("ERROR_GENERAL", language, error="No details available"),
 					parse_mode=ParseMode.HTML
 				)
-elif data.startswith("abjad_text_"):
+		elif data.startswith("abjad_text_"):
 			parts = data[len("abjad_text_"):].rsplit("_", 1)
 			if len(parts) != 2:
 				await query.message.reply_text(
