@@ -3,7 +3,7 @@ import logging
 import requests
 import re
 import aiohttp
-import asyncio
+# import asyncio
 from pathlib import Path
 from .i18n import I18n
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, User  # Added User import

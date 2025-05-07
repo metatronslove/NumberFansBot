@@ -1,6 +1,6 @@
 import logging
 import re
-import asyncio
+# import asyncio
 import os
 from Bot.config import Config
 from Bot.database import Database
@@ -19,7 +19,7 @@ from pathlib import Path
 from datetime import datetime
 from .Commands.UserCommands import (
 	start, help, language, numerology, convert_numbers, magic_square,
-	transliterate, name, cancel, settings
+	transliterate, name, cancel, settings, credits
 )
 from .Commands.UserCommands.abjad import get_abjad_conversation_handler
 from .Commands.UserCommands.bastet import get_bastet_conversation_handler

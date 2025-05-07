@@ -1,6 +1,6 @@
 import logging
 import aiohttp
-import asyncio
+# import asyncio
 import requests
 import re
 from Bot.config import Config  # Updated import

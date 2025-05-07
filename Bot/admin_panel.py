@@ -1,9 +1,10 @@
 import logging
 import os
 import re
-import asyncio
+# import asyncio
 import bcrypt
 import yaml
+import requests
 from flask import Flask, request, render_template, redirect, url_for, session, flash, jsonify
 from Bot.config import Config
 from Bot.database import Database
@@ -30,14 +31,15 @@ logger = logging.getLogger(__name__)
 AVAILABLE_LANGUAGES = ["en", "tr", "ar", "he", "la"]
 
 # Use the default event loop
-loop = asyncio.get_event_loop()
+# loop = asyncio.get_event_loop()
 
 # Initialize Telegram application
 telegram_app = Application.builder().token(config.telegram_token).build()
 
 # Initialize the application
 try:
-	loop.run_until_complete(telegram_app.initialize())
+	# loop.run_until_complete(telegram_app.initialize())
+	await telegram_app.initialize()
 	logger.info("Telegram application initialized successfully")
 except Exception as e:
 	logger.error(f"Failed to initialize Telegram application: {str(e)}")
@@ -690,7 +692,8 @@ def webhook():
 	config = Config()
 	try:
 		update = Update.de_json(request.get_json(), telegram_app.bot)
-		loop.run_until_complete(telegram_app.process_update(update))
+		# loop.run_until_complete(telegram_app.process_update(update))
+		await telegram_app.process_update(update)
 		return "", 200
 	except Exception as e:
 		logger.error(f"Webhook error: {str(e)}")
@@ -708,7 +711,8 @@ def set_webhook():
 		webhook_url = f"https://{request.host}/bot{config.telegram_token}"
 
 	try:
-		result = loop.run_until_complete(telegram_app.bot.set_webhook(url=webhook_url))
+		# result = loop.run_until_complete(telegram_app.bot.set_webhook(url=webhook_url))
+		result = await telegram_app.bot.set_webhook(url=webhook_url)
 		if result:
 			logger.info(f"Webhook set successfully to {webhook_url}")
 			return f"Webhook set to {webhook_url}", 200
