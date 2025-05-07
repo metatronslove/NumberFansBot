@@ -277,7 +277,7 @@ body {
 
 .CodeMirror {
     max-height: 31.5rem;
-    min-height: 20rem;
+    min-height: 31.5rem;
     height: auto;
     border: 1px solid #48ff00;
     opacity: .5;
