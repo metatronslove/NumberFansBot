@@ -140,7 +140,7 @@
 	"BASTET_RESULT": "Resultatum Bastet pro numero {number} cum {repetition} repetitionibus utens tabula {table} est {value}.",
 	"BASTET_CANCEL": "Calculus Bastet cancellatus.",
 	"HUDDAM_USAGE": "Usus: /huddam <numerus>",
-	"HUDDAM_RESULT": "Nomen generatum pro numero {number} (typus: {type}, lingua: {lang}) est '{name}'.",
+	"HUDDAM_RESULT": "Nomen generatum pro numero {number} (typus: {type}, lingua: {huddam_lang}) est '{name}'.",
 	"HUDDAM_PROMPT_ENTITY_TYPE": "Quaeso elige typum entitatis:",
 	"HUDDAM_PROMPT_LANGUAGE": "Quaeso elige ordinem alphabeti:",
 	"HUDDAM_PROMPT_MULTIPLIAR": "Litterae multiplicatoris in Modo 1 aggregantur, pro singulis digitis in Modo 2 repetuntur",

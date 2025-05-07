@@ -140,7 +140,7 @@
 	"BASTET_RESULT": "نتيجة باستت للرقم {number} مع {repetition} تكرارات باستخدام الجدول {table} هي {value}.",
 	"BASTET_CANCEL": "تم إلغاء حساب باستت.",
 	"HUDDAM_USAGE": "الاستخدام: /huddam <رقم>",
-	"HUDDAM_RESULT": "الاسم المولد للرقم {number} (النوع: {type}، اللغة: {lang}) هو '{name}'.",
+	"HUDDAM_RESULT": "الاسم المولد للرقم {number} (النوع: {type}، اللغة: {huddam_lang}) هو '{name}'.",
 	"HUDDAM_PROMPT_ENTITY_TYPE": "يرجى اختيار نوع الكيان:",
 	"HUDDAM_PROMPT_LANGUAGE": "يرجى اختيار ترتيب الأبجدية:",
 	"HUDDAM_PROMPT_MULTIPLIAR": "يتم تجميع حروف المضاعف في النمط 1، وتكرارها لكل رقم في النمط 2",

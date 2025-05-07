@@ -140,7 +140,7 @@
 	"BASTET_RESULT": "Bastet result for number {number} with {repetition} repetitions using table {table} is {value}.",
 	"BASTET_CANCEL": "Bastet calculation cancelled.",
 	"HUDDAM_USAGE": "Usage: /huddam <number>",
-	"HUDDAM_RESULT": "Generated name for number {number} (type: {type}, language: {lang}) is '{name}'.",
+	"HUDDAM_RESULT": "Generated name for number {number} (type: {type}, language: {huddam_lang}) is '{name}'.",
 	"HUDDAM_PROMPT_ENTITY_TYPE": "Please select the entity type:",
 	"HUDDAM_PROMPT_LANGUAGE": "Please select the alphabet order:",
 	"HUDDAM_PROMPT_MULTIPLIAR": "Multiplier letters are grouped in Mode 1, repeated for each digit in Mode 2",

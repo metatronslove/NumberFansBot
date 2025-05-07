@@ -140,7 +140,7 @@
 	"BASTET_RESULT": "תוצאת בסטט עבור מספר {number} עם {repetition} חזרות בשימוש בטבלה {table} היא {value}.",
 	"BASTET_CANCEL": "חישוב בסטט בוטל.",
 	"HUDDAM_USAGE": "שימוש: /huddam <מספר>",
-	"HUDDAM_RESULT": "שם שנוצר עבור מספר {number} (סוג: {type}, שפה: {lang}) הוא '{name}'.",
+	"HUDDAM_RESULT": "שם שנוצר עבור מספר {number} (סוג: {type}, שפה: {huddam_lang}) הוא '{name}'.",
 	"HUDDAM_PROMPT_ENTITY_TYPE": "אנא בחר את סוג הישות:",
 	"HUDDAM_PROMPT_LANGUAGE": "אנא בחר את סדר האלפבית:",
 	"HUDDAM_PROMPT_MULTIPLIAR": "אותיות מכפיל מקובצות במצב 1, חוזרות עבור כל ספרה במצב 2",

@@ -140,7 +140,7 @@
 	"BASTET_RESULT": "{number} sayısı için {repetition} tekrarlı Bastet sonucu, {table} tablosu kullanılarak: {value}.",
 	"BASTET_CANCEL": "Bastet hesaplama iptal edildi.",
 	"HUDDAM_USAGE": "Kullanım: /huddam <sayı>",
-	"HUDDAM_RESULT": "{number} sayısı için oluşturulan isim (tür: {type}, dil: {lang}): '{name}'.",
+	"HUDDAM_RESULT": "{number} sayısı için oluşturulan isim (tür: {type}, dil: {huddam_lang}): '{name}'.",
 	"HUDDAM_PROMPT_ENTITY_TYPE": "Lütfen varlık türünü seçin:",
 	"HUDDAM_PROMPT_LANGUAGE": "Lütfen alfabe sırasını seçin:",
 	"HUDDAM_PROMPT_MULTIPLIAR": "Çarpan harfler Mod 1'de gruplandırılır, Mod 2'de her rakam için tekrarlanır",
