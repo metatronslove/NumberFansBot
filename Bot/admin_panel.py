@@ -54,21 +54,30 @@ async def initialize_telegram_app():
         logger.info("Telegram application already initialized")
 
 # Run initialization during app setup
+async def setup_telegram_app():
+    """Schedule or run Telegram initialization based on event loop state."""
+    try:
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            logger.info("Event loop is running, scheduling Telegram initialization as a task")
+            task = asyncio.create_task(initialize_telegram_app())
+            # Allow the task to start without blocking
+            await asyncio.sleep(0)  # Yield control to the event loop
+            if task.done() and task.exception():
+                raise task.exception()
+        else:
+            logger.info("Event loop is not running, running Telegram initialization directly")
+            await initialize_telegram_app()
+    except Exception as e:
+        logger.error(f"Initialization error: {str(e)}")
+        raise
+
+# Execute initialization
 try:
-    loop = asyncio.get_event_loop()
-    if loop.is_running():
-        logger.info("Event loop is running, scheduling Telegram initialization as a task")
-        # Schedule initialization as a task to avoid blocking
-        task = asyncio.ensure_future(initialize_telegram_app())
-        # Wait briefly to ensure task starts
-        loop.run_until_complete(asyncio.sleep(0.1))
-        if task.done() and task.exception():
-            raise task.exception()
-    else:
-        logger.info("Event loop is not running, running Telegram initialization directly")
-        loop.run_until_complete(initialize_telegram_app())
+    # Since Uvicorn runs an event loop, use async setup
+    asyncio.get_event_loop().create_task(setup_telegram_app())
 except Exception as e:
-    logger.error(f"Initialization error: {str(e)}")
+    logger.error(f"Failed to schedule Telegram initialization: {str(e)}")
     raise
 
 # Register handlers
