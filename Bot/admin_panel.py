@@ -102,16 +102,52 @@ def register_handlers():
 	from .Commands.SystemCommands.callback_query import set_language_handle, handle_callback_query
 
 	try:
-		telegram_app.add_handler(CallbackQueryHandler(handle_callback_query))
-		logger.info("Registered CallbackQueryHandler for handle_callback_query")
+		telegram_app.add_handler(get_abjad_conversation_handler())
+		logger.info("Registered ConversationHandler for /abjad")
 	except Exception as e:
-		logger.error(f"Failed to register handle_callback_query: {str(e)}")
+		logger.error(f"Failed to register /abjad conversation handler: {str(e)}")
+
+	try:
+		telegram_app.add_handler(get_bastet_conversation_handler())
+		logger.info("Registered ConversationHandler for /bastet")
+	except Exception as e:
+		logger.error(f"Failed to register /bastet conversation handler: {str(e)}")
+
+	try:
+		telegram_app.add_handler(get_huddam_conversation_handler())
+		logger.info("Registered ConversationHandler for /huddam")
+	except Exception as e:
+		logger.error(f"Failed to register /huddam conversation handler: {str(e)}")
+
+	try:
+		telegram_app.add_handler(get_unsur_conversation_handler())
+		logger.info("Registered ConversationHandler for /unsur")
+	except Exception as e:
+		logger.error(f"Failed to register /unsur conversation handler: {str(e)}")
+
+	try:
+		telegram_app.add_handler(PreCheckoutQueryHandler(handle_pre_checkout))
+		logger.info("Registered PreCheckoutQueryHandler")
+	except Exception as e:
+		logger.error(f"Failed to register PreCheckoutQueryHandler: {str(e)}")
+
+	try:
+		telegram_app.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, handle_successful_payment))
+		logger.info("Registered MessageHandler for successful payment")
+	except Exception as e:
+		logger.error(f"Failed to register successful payment handler: {str(e)}")
 
 	try:
 		telegram_app.add_handler(CallbackQueryHandler(set_language_handle, pattern=r"lang\|.+"))
 		logger.info("Registered CallbackQueryHandler for set_language_handle")
 	except Exception as e:
 		logger.error(f"Failed to register set_language_handle: {str(e)}")
+
+	try:
+		telegram_app.add_handler(CallbackQueryHandler(handle_callback_query))
+		logger.info("Registered CallbackQueryHandler for handle_callback_query")
+	except Exception as e:
+		logger.error(f"Failed to register handle_callback_query: {str(e)}")
 
 	try:
 		telegram_app.add_handler(CommandHandler("start", start.start_handle))
@@ -184,42 +220,6 @@ def register_handlers():
 		logger.info("Registered CommandHandler for /payment")
 	except Exception as e:
 		logger.error(f"Failed to register /payment: {str(e)}")
-
-	try:
-		telegram_app.add_handler(PreCheckoutQueryHandler(handle_pre_checkout))
-		logger.info("Registered PreCheckoutQueryHandler")
-	except Exception as e:
-		logger.error(f"Failed to register PreCheckoutQueryHandler: {str(e)}")
-
-	try:
-		telegram_app.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, handle_successful_payment))
-		logger.info("Registered MessageHandler for successful payment")
-	except Exception as e:
-		logger.error(f"Failed to register successful payment handler: {str(e)}")
-
-	try:
-		telegram_app.add_handler(get_abjad_conversation_handler())
-		logger.info("Registered ConversationHandler for /abjad")
-	except Exception as e:
-		logger.error(f"Failed to register /abjad conversation handler: {str(e)}")
-
-	try:
-		telegram_app.add_handler(get_bastet_conversation_handler())
-		logger.info("Registered ConversationHandler for /bastet")
-	except Exception as e:
-		logger.error(f"Failed to register /bastet conversation handler: {str(e)}")
-
-	try:
-		telegram_app.add_handler(get_huddam_conversation_handler())
-		logger.info("Registered ConversationHandler for /huddam")
-	except Exception as e:
-		logger.error(f"Failed to register /huddam conversation handler: {str(e)}")
-
-	try:
-		telegram_app.add_handler(get_unsur_conversation_handler())
-		logger.info("Registered ConversationHandler for /unsur")
-	except Exception as e:
-		logger.error(f"Failed to register /unsur conversation handler: {str(e)}")
 
 try:
 	register_handlers()
