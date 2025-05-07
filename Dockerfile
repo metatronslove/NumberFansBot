@@ -40,4 +40,4 @@ EXPOSE 8000
 
 # Use entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["sh", "-c", "python Bot/seed_admin.py && gunicorn Bot.admin_panel:app -b 0.0.0.0:8000 --worker-class uvicorn.workers.UvicornWorker"]
+CMD ["sh", "-c", "python Bot/seed_admin.py && uvicorn Bot.admin_panel:app --host 0.0.0.0 --port 8000"]
