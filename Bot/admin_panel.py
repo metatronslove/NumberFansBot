@@ -21,6 +21,9 @@ from telegram.ext import (
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
+from uvicorn import Config as UvicornConfig
+from uvicorn import Server
+from contextlib import asynccontextmanager
 
 # Initialize Flask app
 flask_app = Flask(__name__, template_folder="../Templates/", static_folder="../Assets", static_url_path="/Assets")
@@ -35,7 +38,7 @@ AVAILABLE_LANGUAGES = ["en", "tr", "ar", "he", "la"]
 # Initialize Telegram application
 telegram_app = Application.builder().token(config.telegram_token).build()
 
-# Register handlers (unchanged)
+# Register handlers
 def register_handlers():
     from .Commands.UserCommands import (
         start, help, language, numerology, convert_numbers, magic_square,
@@ -710,15 +713,35 @@ async def set_webhook():
 # Wrap Flask app with WsgiToAsgi for ASGI compatibility
 app = WsgiToAsgi(flask_app)
 
-# Initialize Telegram application globally
-loop = asyncio.get_event_loop()
-try:
-    loop.run_until_complete(telegram_app.initialize())
-    logger.info("Telegram application initialized successfully")
-except Exception as e:
-    logger.error(f"Failed to initialize Telegram application: {str(e)}")
-    raise
+# Define lifespan handler for Uvicorn
+@asynccontextmanager
+async def lifespan(app):
+    """Handle startup and shutdown events for the application."""
+    # Startup: Initialize Telegram application
+    try:
+        await telegram_app.initialize()
+        logger.info("Telegram application initialized successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize Telegram application: {str(e)}")
+        raise
+
+    yield  # Run the application
+
+    # Shutdown: Clean up Telegram application
+    try:
+        await telegram_app.shutdown()
+        logger.info("Telegram application shut down successfully")
+    except Exception as e:
+        logger.error(f"Failed to shut down Telegram application: {str(e)}")
+
+# Configure Uvicorn with lifespan handler
+uvicorn_config = UvicornConfig(
+    app=app,
+    host="0.0.0.0",
+    port=int(os.getenv("PORT", 8000)),  # Use Render's PORT env variable
+    lifespan="on",
+)
+uvicorn_server = Server(uvicorn_config)
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    asyncio.run(uvicorn_server.serve())
