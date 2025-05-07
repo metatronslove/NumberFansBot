@@ -168,7 +168,8 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 		if not query.data.startswith("abjad_shadda_"):
 			logger.debug(f"Ignoring callback: {query.data}")
-			return SHADDA
+			if context.user_data["shadda"] != 1:
+				return SHADDA
 		context.user_data["shadda"] = int(query.data[len("abjad_shadda_"):]) or 1
 
 		keyboard = [
