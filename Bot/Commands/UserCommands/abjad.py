@@ -279,19 +279,14 @@ async def abjad_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		return ConversationHandler.END
 
 def get_abjad_conversation_handler():
-	try:
-		handler = ConversationHandler(
-			entry_points=[CommandHandler("abjad", abjad_start)],
-			states={
-				ALPHABET_ORDER: [CallbackQueryHandler(abjad_alphabet_order)],
-				ABJAD_TYPE: [CallbackQueryHandler(abjad_type)],
-				SHADDA: [CallbackQueryHandler(abjad_shadda)],
-				DETAIL: [CallbackQueryHandler(abjad_detail)],
-			},
-			fallbacks=[CommandHandler("cancel", abjad_cancel), MessageHandler(filters.Regex(r'^/.*'), timeout)],
-		)
-		logger.info("Abjad conversation handler initialized successfully")
-		return handler
-	except Exception as e:
-		logger.error(f"Failed to initialize abjad conversation handler: {str(e)}")
-		raise
+	logger.info("Abjad conversation handler initialized successfully")
+	return ConversationHandler(
+		entry_points=[CommandHandler("abjad", abjad_start)],
+		states={
+			ALPHABET_ORDER: [CallbackQueryHandler(abjad_alphabet_order)],
+			ABJAD_TYPE: [CallbackQueryHandler(abjad_type)],
+			SHADDA: [CallbackQueryHandler(abjad_shadda)],
+			DETAIL: [CallbackQueryHandler(abjad_detail)],
+		},
+		fallbacks=[CommandHandler("cancel", abjad_cancel), MessageHandler(filters.Regex(r'^/.*'), timeout)],
+	)
