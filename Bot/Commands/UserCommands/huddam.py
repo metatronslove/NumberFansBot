@@ -13,7 +13,7 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.Abjad import Abjad
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
@@ -140,135 +140,61 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		return ConversationHandler.END
 
 async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	logger.debug(f"Processing huddam_multipliar for user {update.effective_user.id}")
-	try:
-		query = update.callback_query
-		await query.answer()
-		user_id = query.from_user.id
-		db = Database()
-		i18n = I18n()
-		language = db.get_user_language(user_id)
-		db.set_user_attribute(user_id, "last_interaction", datetime.now())
-		db.increment_command_usage("huddam", user_id)
+    logger.info(f"Processing huddam_multipliar for user {update.effective_user.id}")
+    try:
+        query = update.callback_query
+        await query.answer()
+        user_id = query.from_user.id
+        db = Database()
+        i18n = I18n()
+        language = db.get_user_language(user_id)
 
-		if not query.data.startswith("huddam_multi_"):
-			logger.debug(f"Ignoring unrelated callback in huddam_multipliar: {query.data}")
-			return MULTIPLIAR
-		multipliar = query.data.split("huddam_multi_")[1]
-		context.user_data["multipliar"] = multipliar
+        # Credit check
+        from Bot.bot import check_credits
+        if not await check_credits(update, context):
+            await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
+            return ConversationHandler.END
 
-		lang = context.user_data["language"]
-		number = context.user_data["huddam_number"]
-		entity_type = context.user_data["entity_type"]
-		alphabet_order = lang
+        if not query.data.startswith("huddam_multi_"):
+            logger.debug(f"Ignoring callback: {query.data}")
+            return MULTIPLIAR
+        context.user_data["multipliar"] = query.data[len("huddam_multi_"):]
 
-		if alphabet_order == "0-4":
-			alphabeta = "arabic"
-			tablebase = 1
-		elif alphabet_order == "6-10":
-			alphabeta = "arabic"
-			tablebase = 7
-		elif alphabet_order == "11-15":
-			alphabeta = "arabic"
-			tablebase = 12
-		elif alphabet_order == "16-20":
-			alphabeta = "arabic"
-			tablebase = 17
-		elif alphabet_order == "21-25":
-			alphabeta = "arabic"
-			tablebase = 22
-		elif alphabet_order == "26-30":
-			alphabeta = "arabic"
-			tablebase = 27
-		elif alphabet_order == "31-35":
-			alphabeta = "arabic"
-			tablebase = 32
-		elif alphabet_order == "HE":
-			alphabeta = "hebrew"
-			tablebase = 1
-		elif alphabet_order == "TR":
-			alphabeta = "turkish"
-			tablebase = 1
-		elif alphabet_order == "EN":
-			alphabeta = "english"
-			tablebase = 1
-		elif alphabet_order == "LA":
-			alphabeta = "latin"
-			tablebase = 1
-		method = tablebase
+        lang = context.user_data["language"]
+        number = context.user_data["huddam_number"]
+        entity_type = context.user_data["entity_type"]
 
-		abjad = Abjad()
-		logger.debug(f"Calling abjad.generate_name with number={number}, entity_type={entity_type}, method={method}, alphabeta={alphabeta}, multipliar={multipliar}")
-		result = abjad.generate_name(number, entity_type, method, alphabeta, multipliar)
-		if isinstance(result, str) and result.startswith("Error"):
-			logger.error(f"Huddam computation failed: {result}")
-			await query.message.reply_text(
-				i18n.t("ERROR_GENERAL", language, error=result),
-				parse_mode=ParseMode.MARKDOWN
-			)
-			context.user_data.clear()
-			return ConversationHandler.END
+        alphabet_map = {
+            "0-4": ("arabic", 1), "6-10": ("arabic", 7), "11-15": ("arabic", 12),
+            "16-20": ("arabic", 17), "21-25": ("arabic", 22), "26-30": ("arabic", 27),
+            "31-35": ("arabic", 32), "HE": ("hebrew", 1), "TR": ("turkish", 1),
+            "EN": ("english", 1), "LA": ("latin", 1)
+        }
+        alphabeta, method = alphabet_map[lang]
 
-		name = result
-		value = number
-		response = i18n.t("HUDDAM_RESULT", language, number=number, type=entity_type, lang=lang, name=name)
+        abjad = Abjad()
+        result = abjad.generate_name(number, entity_type, method, alphabeta, context.user_data["multipliar"])
+        if isinstance(result, str) and result.startswith("Error"):
+            await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
+            return ConversationHandler.END
 
-		commentary = await get_ai_commentary(response, language)
-		if commentary:
-			response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
-
-		keyboard = []
-		if value >= 15:
-			keyboard.append(
-				[
-					InlineKeyboardButton(
-						i18n.t("CREATE_MAGIC_SQUARE", language),
-						callback_data=f"magic_square_{value}",
-					)
-				]
-			)
-			keyboard.append(
-				[
-					InlineKeyboardButton(
-						i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
-						callback_data=f"indian_square_{value}",
-					)
-				]
-			)
-		keyboard.append(
-			[
-				InlineKeyboardButton(
-					i18n.t("SPELL_NUMBER", language),
-					callback_data=f"nutket_{value}_{lang}",
-				)
-			]
-		)
-		keyboard.append(
-			[
-				InlineKeyboardButton(
-					i18n.t("CALCULATE_ABJAD", language),
-					callback_data=f"abjad_text_{name}_{lang}",
-				)
-			]
-		)
-		reply_markup = InlineKeyboardMarkup(keyboard)
-
-		await query.message.reply_text(
-			response,
-			parse_mode=ParseMode.MARKDOWN,
-			reply_markup=reply_markup,
-		)
-		context.user_data.clear()
-		return ConversationHandler.END
-
-	except Exception as e:
-		logger.error(f"Huddam error: {str(e)}")
-		await query.message.reply_text(
-			i18n.t("ERROR_GENERAL", language, error=str(e)),
-			parse_mode=ParseMode.MARKDOWN
-		)
-		context.user_data.clear()
-		return ConversationHandler.END
+        response = i18n.t("HUDDAM_RESULT", language, number=number, type=entity_type, lang=lang, name=result)
+        keyboard = [
+            [InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{number}")],
+            [InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{number}_{alphabeta}")],
+            [InlineKeyboardButton(i18n.t("CALCULATE_ABJAD", language), callback_data=f"abjad_text_{urllib.parse.quote(result)}_{alphabeta}")]
+        ]
+        await query.message.reply_text(
+            response,
+            parse_mode="HTML",
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
+        context.user_data.clear()
+        return ConversationHandler.END
+    except Exception as e:
+        logger.error(f"Error in huddam_multipliar: {str(e)}")
+        await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
+        return ConversationHandler.END
 
 async def huddam_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.info(f"Cancelling /huddam for user {update.effective_user.id}")
@@ -300,7 +226,7 @@ def get_huddam_conversation_handler():
 				LANGUAGE: [CallbackQueryHandler(huddam_language)],
 				MULTIPLIAR: [CallbackQueryHandler(huddam_multipliar)],
 			},
-			fallbacks=[CommandHandler("cancel", huddam_cancel)],
+			fallbacks=[CommandHandler("cancel", huddam_cancel), MessageHandler(filters.Regex(r'^/.*'), timeout)],
 			allow_reentry=True,
 			per_message=True
 		)

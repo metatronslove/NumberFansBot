@@ -13,7 +13,7 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.MagicSquare import MagicSquareGenerator
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime

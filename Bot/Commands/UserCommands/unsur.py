@@ -14,8 +14,8 @@ from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.Abjad import Abjad
 from Bot.element_classifier import ElementClassifier
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary
-from urllib.parse import urlparse
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
+import urllib.parse
 from pathlib import Path
 from datetime import datetime
 
@@ -91,170 +91,146 @@ async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		return ConversationHandler.END
 
 async def unsur_language(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	logger.debug(f"Processing unsur_language for user {update.effective_user.id}")
-	try:
-		query = update.callback_query
-		await query.answer()
-		user_id = query.from_user.id
-		db = Database()
-		i18n = I18n()
-		language = db.get_user_language(user_id)
+    logger.info(f"Processing unsur_language for user {update.effective_user.id}")
+    try:
+        query = update.callback_query
+        await query.answer()
+        user_id = query.from_user.id
+        db = Database()
+        i18n = I18n()
+        language = db.get_user_language(user_id)
 
-		if not query.data.startswith("unsur_lang_"):
-			logger.debug(f"Ignoring unrelated callback in unsur_language: {query.data}")
-			return LANGUAGE
-		lang = query.data.split("unsur_lang_")[1]
-		context.user_data["language"] = lang
+        # Credit check
+        from Bot.bot import check_credits
+        if not await check_credits(update, context):
+            await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
+            return ConversationHandler.END
 
-		keyboard = [
-			[InlineKeyboardButton(i18n.t("ELEMENT_FIRE", language), callback_data="unsur_table_fire")],
-			[InlineKeyboardButton(i18n.t("ELEMENT_WATER", language), callback_data="unsur_table_water")],
-			[InlineKeyboardButton(i18n.t("ELEMENT_AIR", language), callback_data="unsur_table_air")],
-			[InlineKeyboardButton(i18n.t("ELEMENT_EARTH", language), callback_data="unsur_table_earth")]
-		]
-		reply_markup = InlineKeyboardMarkup(keyboard)
-		await query.message.reply_text(
-			i18n.t("UNSUR_PROMPT_TABLE", language),
-			reply_markup=reply_markup
-		)
-		return TABLE
-	except Exception as e:
-		logger.error(f"Error in unsur_language: {str(e)}")
-		await query.message.reply_text(
-			i18n.t("ERROR_GENERAL", language, error=str(e)),
-			parse_mode=ParseMode.MARKDOWN
-		)
-		return ConversationHandler.END
+        if not query.data.startswith("unsur_lang_"):
+            logger.debug(f"Ignoring callback: {query.data}")
+            return LANGUAGE
+        context.user_data["language"] = query.data[len("unsur_lang_"):].lower()
+
+        keyboard = [
+            [InlineKeyboardButton(i18n.t("ELEMENT_FIRE", language), callback_data="unsur_table_fire")],
+            [InlineKeyboardButton(i18n.t("ELEMENT_WATER", language), callback_data="unsur_table_water")],
+            [InlineKeyboardButton(i18n.t("ELEMENT_AIR", language), callback_data="unsur_table_air")],
+            [InlineKeyboardButton(i18n.t("ELEMENT_EARTH", language), callback_data="unsur_table_earth")]
+        ]
+        await query.message.reply_text(
+            i18n.t("UNSUR_PROMPT_TABLE", language),
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode="HTML"
+        )
+        return TABLE
+    except Exception as e:
+        logger.error(f"Error in unsur_language: {str(e)}")
+        await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
+        return ConversationHandler.END
 
 async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	logger.debug(f"Processing unsur_table for user {update.effective_user.id}")
-	try:
-		query = update.callback_query
-		await query.answer()
-		user_id = query.from_user.id
-		db = Database()
-		i18n = I18n()
-		language = db.get_user_language(user_id)
+    logger.info(f"Processing unsur_table for user {update.effective_user.id}")
+    try:
+        query = update.callback_query
+        await query.answer()
+        user_id = query.from_user.id
+        db = Database()
+        i18n = I18n()
+        language = db.get_user_language(user_id)
 
-		if not query.data.startswith("unsur_table_"):
-			logger.debug(f"Ignoring unrelated callback in unsur_table: {query.data}")
-			return TABLE
-		table = query.data.split("unsur_table_")[1]
-		context.user_data["table"] = table
+        # Credit check
+        from Bot.bot import check_credits
+        if not await check_credits(update, context):
+            await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
+            return ConversationHandler.END
 
-		if context.user_data.get("is_arabic"):
-			keyboard = [
-				[InlineKeyboardButton(i18n.t("SHADDA_USE_ONCE", language), callback_data="unsur_shadda_1")],
-				[InlineKeyboardButton(i18n.t("SHADDA_USE_TWICE", language), callback_data="unsur_shadda_2")]
-			]
-			reply_markup = InlineKeyboardMarkup(keyboard)
-			await query.message.reply_text(
-				i18n.t("UNSUR_PROMPT_SHADDA", language),
-				reply_markup=reply_markup
-			)
-			return SHADDA
-		else:
-			context.user_data["shadda"] = 1
-			return await unsur_shadda(update, context)
-	except Exception as e:
-		logger.error(f"Error in unsur_table: {str(e)}")
-		await query.message.reply_text(
-			i18n.t("ERROR_GENERAL", language, error=str(e)),
-			parse_mode=ParseMode.MARKDOWN
-		)
-		return ConversationHandler.END
+        if not query.data.startswith("unsur_table_"):
+            logger.debug(f"Ignoring callback: {query.data}")
+            return TABLE
+        context.user_data["table"] = query.data[len("unsur_table_"):].lower()
+
+        input_text = context.user_data["input_text"]
+        lang = context.user_data["language"]
+        table = context.user_data["table"]
+        shadda = context.user_data.get("shadda", 1)
+
+        unsur = ElementClassifier()
+        result = unsur.classify_elements(input_text, table, shadda, lang)
+        if isinstance(result, str) and result.startswith("Error"):
+            await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
+            return ConversationHandler.END
+
+        value = result["adet"]
+        liste = result["liste"]
+        elements = {
+            "fire": i18n.t("ELEMENT_FIRE", language),
+            "water": i18n.t("ELEMENT_WATER", language),
+            "air": i18n.t("ELEMENT_AIR", language),
+            "earth": i18n.t("ELEMENT_EARTH", language)
+        }
+        element = elements.get(table, i18n.t("ELEMENT_UNKNOWN", language))
+
+        response = i18n.t("UNSUR_RESULT", language, input=input_text, liste=liste, value=value, element=element)
+        keyboard = [
+            [InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{value}")],
+            [InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{value}_{lang}")]
+        ]
+        if not input_text.replace(" ", "").isdigit():
+            encoded_text = urllib.parse.quote(input_text)
+            keyboard.append([InlineKeyboardButton(i18n.t("CALCULATE_ABJAD", language), callback_data=f"abjad_text_{encoded_text}_{lang}")])
+
+        await query.message.reply_text(
+            response,
+            parse_mode="HTML",
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
+        context.user_data.clear()
+        return ConversationHandler.END
+    except Exception as e:
+        logger.error(f"Error in unsur_table: {str(e)}")
+        await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
+        return ConversationHandler.END
 
 async def unsur_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	logger.debug(f"Processing unsur_shadda for user {update.effective_user.id}")
-	try:
-		query = update.callback_query
-		await query.answer()
-		user_id = query.from_user.id if query else update.message.from_user.id
-		db = Database()
-		i18n = I18n()
-		language = db.get_user_language(user_id)
-		db.set_user_attribute(user_id, "last_interaction", datetime.now())
-		db.increment_command_usage("unsur", user_id)
+    logger.info(f"Processing unsur_shadda for user {update.effective_user.id}")
+    try:
+        query = update.callback_query
+        await query.answer()
+        user_id = query.from_user.id
+        db = Database()
+        i18n = I18n()
+        language = db.get_user_language(user_id)
 
-		if query:
-			if not query.data.startswith("unsur_shadda_"):
-				logger.debug(f"Ignoring unrelated callback in unsur_shadda: {query.data}")
-				return SHADDA
-			shadda = int(query.data.split("unsur_shadda_")[1])
-			context.user_data["shadda"] = shadda
-			await query.answer()
-		else:
-			shadda = context.user_data.get("shadda", 1)
+        # Credit check
+        from Bot.bot import check_credits
+        if not await check_credits(update, context):
+            await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
+            return ConversationHandler.END
 
-		input_text = context.user_data["input_text"]
-		lang = context.user_data["language"]
-		table = context.user_data["table"]
+        if not query.data.startswith("unsur_shadda_"):
+            logger.debug(f"Ignoring callback: {query.data}")
+            return SHADDA
+        context.user_data["shadda"] = int(query.data[len("unsur_shadda_"):]) or 1
 
-		unsur = ElementClassifier()
-		logger.debug(f"Calling unsur.classify_elements with input_text={input_text}, table={table}, shadda={shadda}, lang={lang}")
-		result = unsur.classify_elements(input_text, table, shadda, lang)
-		if isinstance(result, str) and result.startswith("Error"):
-			logger.error(f"Unsur computation failed: {result}")
-			await (query.message.reply_text if query else update.message.reply_text)(
-				i18n.t("ERROR_GENERAL", language, error=result),
-				parse_mode=ParseMode.MARKDOWN
-			)
-			context.user_data.clear()
-			return ConversationHandler.END
-
-		value = result["adet"]
-		liste = result["liste"]
-		elements = {
-			'fire': i18n.t("ELEMENT_FIRE", language),
-			'water': i18n.t("ELEMENT_WATER", language),
-			'air': i18n.t("ELEMENT_AIR", language),
-			'earth': i18n.t("ELEMENT_EARTH", language)
-		}
-		element = elements.get(table, i18n.t("ELEMENT_UNKNOWN", language))
-
-		response = i18n.t("UNSUR_RESULT", language, input=input_text, liste=liste, value=value, element=element)
-
-		commentary = await get_ai_commentary(response, language)
-		if commentary:
-			response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
-
-		keyboard = []
-		if value >= 15:
-			keyboard.append([InlineKeyboardButton(
-				i18n.t("CREATE_MAGIC_SQUARE", language),
-				callback_data=f"magic_square_{value}"
-			)])
-			keyboard.append([InlineKeyboardButton(
-				i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
-				callback_data=f"indian_square_{value}"
-			)])
-		keyboard.append([InlineKeyboardButton(
-			i18n.t("SPELL_NUMBER", language),
-			callback_data=f"nutket_{value}_{lang}"
-		)])
-		if not input_text.replace(" ", "").isdigit():
-			keyboard.append([InlineKeyboardButton(
-				i18n.t("CALCULATE_ABJAD", language),
-				callback_data=f"abjad_text_{input_text}_{lang}"
-			)])
-		reply_markup = InlineKeyboardMarkup(keyboard)
-
-		await (query.message.reply_text if query else update.message.reply_text)(
-			response,
-			parse_mode=ParseMode.MARKDOWN,
-			reply_markup=reply_markup
-		)
-		context.user_data.clear()
-		return ConversationHandler.END
-
-	except Exception as e:
-		logger.error(f"Unsur error: {str(e)}")
-		await (query.message.reply_text if query else update.message.reply_text)(
-			i18n.t("ERROR_GENERAL", language, error=str(e)),
-			parse_mode=ParseMode.MARKDOWN
-		)
-		context.user_data.clear()
-		return ConversationHandler.END
+        keyboard = [
+            [InlineKeyboardButton(i18n.t("TURKISH", language), callback_data="unsur_lang_turkish")],
+            [InlineKeyboardButton(i18n.t("ARABIC", language), callback_data="unsur_lang_arabic")],
+            [InlineKeyboardButton(i18n.t("BUNI", language), callback_data="unsur_lang_buni")],
+            [InlineKeyboardButton(i18n.t("HUSEYNI", language), callback_data="unsur_lang_huseyni")],
+            [InlineKeyboardButton(i18n.t("HEBREW", language), callback_data="unsur_lang_hebrew")],
+            [InlineKeyboardButton(i18n.t("ENGLISH", language), callback_data="unsur_lang_english")],
+            [InlineKeyboardButton(i18n.t("LATIN", language), callback_data="unsur_lang_latin")]
+        ]
+        await query.message.reply_text(
+            i18n.t("UNSUR_PROMPT_LANGUAGE", language),
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode="HTML"
+        )
+        return LANGUAGE
+    except Exception as e:
+        logger.error(f"Error in unsur_shadda: {str(e)}")
+        await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
+        return ConversationHandler.END
 
 async def unsur_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.info(f"Cancelling /unsur for user {update.effective_user.id}")
@@ -287,7 +263,7 @@ def get_unsur_conversation_handler():
 				TABLE: [CallbackQueryHandler(unsur_table)],
 				SHADDA: [CallbackQueryHandler(unsur_shadda)],
 			},
-			fallbacks=[CommandHandler("cancel", unsur_cancel)],
+			fallbacks=[CommandHandler("cancel", unsur_cancel), MessageHandler(filters.Regex(r'^/.*'), timeout)],
 			allow_reentry=True,
 			per_message=True
 		)

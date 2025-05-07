@@ -46,14 +46,14 @@ async def set_language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 		)
 
 async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	query = update.callback_query
-	data = query.data
-	user_id = query.from_user.id
-	db = Database()
-	i18n = I18n()
-	transliteration = Transliteration(db, i18n)
-	cache = Cache()
-	language = db.get_user_language(user_id)
+    query = update.callback_query
+    data = query.data
+    user_id = query.from_user.id
+    db = Database()
+    i18n = I18n()
+    transliteration = Transliteration(db, i18n)
+    cache = Cache()
+    language = db.get_user_language(user_id)
 
 	if not (data.startswith("payment_select_") or data == "help_group_chat"):
 		if db.is_blacklisted(user_id):
@@ -193,9 +193,26 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			reply_markup = InlineKeyboardMarkup(buttons)
 			await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup)
 		elif data.startswith("nutket_"):
-			parts = data[len("nutket_"):].split("_")
-			number, lang = int(parts[0]), parts[1]
-			await nutket_handle(update, context, number=number, lang=lang)
+            parts = data[len("nutket_"):].split("_")
+            if len(parts) != 2:
+                await query.message.reply_text(
+                    i18n.t("ERROR_INVALID_INPUT", language, error="Invalid nutket callback data"),
+                    parse_mode=ParseMode.HTML
+                )
+                await query.answer()
+                return
+            number, lang = int(parts[0]), parts[1]
+            # Map lang to alphabeta
+            lang_map = {
+                "0-4": "arabic", "6-10": "arabic", "11-15": "arabic", "16-20": "arabic",
+                "21-25": "arabic", "26-30": "arabic", "31-35": "arabic",
+                "HE": "hebrew", "TR": "turkish", "EN": "english", "LA": "latin",
+                "-1": "arabic", "0": "arabic", "+1": "arabic", "+2": "arabic", "+3": "arabic", "5": "arabic",
+                "turkce": "turkish", "arabi": "arabic", "buni": "buni", "huseyni": "huseyni",
+                "hebrew": "hebrew", "english": "english", "latin": "latin", "default": "arabic"
+            }
+            normalized_lang = lang_map.get(lang.lower(), "arabic")
+            await nutket_handle(update, context, number=number, lang=normalized_lang)
 		elif data.startswith("abjad_details_"):
 			details = context.user_data.get("abjad_result", {}).get("details", "")
 			if details:
@@ -208,46 +225,52 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					i18n.t("ERROR_GENERAL", language, error="No details available"),
 					parse_mode=ParseMode.HTML
 				)
-		elif data.startswith("abjad_text_"):
-			parts = data[len("abjad_text_"):].rsplit("_", 1)
-			text, lang = parts[0], parts[1]
-			abjad = Abjad()
-			result = abjad.abjad(text, tablo=1, shadda=1, detail=0, lang=lang)
-			if isinstance(result, str) and result.startswith("Error"):
-				await query.message.reply_text(
-					i18n.t("ERROR_GENERAL", language, error=result),
-					parse_mode=ParseMode.HTML
-				)
-			else:
-				value = result["sum"] if isinstance(result, dict) else result
-				response = i18n.t("ABJAD_RESULT", language, text=text, value=value)
-				commentary = await get_ai_commentary(response, language)
-				if commentary:
-					response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
-				keyboard = []
-				if value >= 15:
-					keyboard.append(
-						[
-							InlineKeyboardButton(
-								i18n.t("CREATE_MAGIC_SQUARE", language),
-								callback_data=f"magic_square_{value}",
-							)
-						]
-					)
-				keyboard.append(
-					[
-						InlineKeyboardButton(
-							i18n.t("SPELL_NUMBER", language),
-							callback_data=f"nutket_{value}_{lang}",
-						)
-					]
-				)
-				reply_markup = InlineKeyboardMarkup(keyboard)
-				await query.message.reply_text(
-					response,
-					parse_mode=ParseMode.HTML,
-					reply_markup=reply_markup,
-				)
+elif data.startswith("abjad_text_"):
+            parts = data[len("abjad_text_"):].rsplit("_", 1)
+            if len(parts) != 2:
+                await query.message.reply_text(
+                    i18n.t("ERROR_INVALID_INPUT", language, error="Invalid abjad_text callback data"),
+                    parse_mode=ParseMode.HTML
+                )
+                await query.answer()
+                return
+            text, lang = urllib.parse.unquote(parts[0]), parts[1]
+            # Map lang to alphabeta
+            lang_map = {
+                "0-4": "arabic", "6-10": "arabic", "11-15": "arabic", "16-20": "arabic",
+                "21-25": "arabic", "26-30": "arabic", "31-35": "arabic",
+                "HE": "hebrew", "TR": "turkish", "EN": "english", "LA": "latin",
+                "turkce": "turkish", "arabi": "arabic", "buni": "buni", "huseyni": "huseyni",
+                "hebrew": "hebrew", "english": "english", "latin": "latin", "default": "arabic"
+            }
+            normalized_lang = lang_map.get(lang.lower(), "arabic")
+            abjad = Abjad()
+            result = abjad.abjad(text, tablo=1, shadda=1, detail=0, lang=normalized_lang)
+            if isinstance(result, str) and result.startswith("Error"):
+                await query.message.reply_text(
+                    i18n.t("ERROR_GENERAL", language, error=result),
+                    parse_mode=ParseMode.HTML
+                )
+            else:
+                value = result["sum"] if isinstance(result, dict) else result
+                response = i18n.t("ABJAD_RESULT", language, text=text, value=value)
+                commentary = await get_ai_commentary(response, language)
+                if commentary:
+                    response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
+                keyboard = []
+                if value >= 15:
+                    keyboard.append(
+                        [InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{value}")]
+                    )
+                keyboard.append(
+                    [InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{value}_{normalized_lang}")]
+                )
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                await query.message.reply_text(
+                    response,
+                    parse_mode=ParseMode.HTML,
+                    reply_markup=reply_markup,
+                )
 		elif data.startswith("payment_select_"):
 			await payment_handle(update, context)
 		elif data.startswith("numerology_prompt_"):
@@ -396,21 +419,33 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					parse_mode=ParseMode.HTML
 				)
 		await query.answer()
-	except Exception as e:
-		logger.error(f"Callback error: {str(e)}")
-		await query.message.reply_text(
-			i18n.t("ERROR_GENERAL", language, error="An error occurred while processing the callback"),
-			parse_mode=ParseMode.HTML
-		)
-		await query.answer()
-
+    except BadRequest as e:
+        logger.error(f"Telegram BadRequest: {str(e)}")
+        if "Query is too old" in str(e):
+            await query.message.reply_text(
+                i18n.t("ERROR_TIMEOUT", language, error="Processing took too long. Please try again."),
+                parse_mode=ParseMode.HTML
+            )
+        else:
+            await query.message.reply_text(
+                i18n.t("ERROR_GENERAL", language, error=str(e)),
+                parse_mode=ParseMode.HTML
+            )
+        await query.answer()
+    except Exception as e:
+        logger.error(f"Callback error: {str(e)}")
+        await query.message.reply_text(
+            i18n.t("ERROR_GENERAL", language, error="An error occurred while processing the callback"),
+            parse_mode=ParseMode.HTML
+        )
+        await query.answer()
 def register_handlers(application):
-	"""Register callback query handlers."""
-	application.add_handler(CallbackQueryHandler(
-		handle_callback_query,
-		pattern="^(name_alt_|magic_square_|indian_square_|next_size_|nutket_|abjad_details_|abjad_text_|payment_select_|numerology_prompt_|numerology_|convertnumbers_|settings_lang_|transliterate_suggest_|transliterate_history_|help_group_chat)"
-	))
-	application.add_handler(CallbackQueryHandler(
-		set_language_handle,
-		pattern="^set_lang\\|"
-	))
+    """Register callback query handlers."""
+    application.add_handler(CallbackQueryHandler(
+        handle_callback_query,
+        pattern="^(name_alt_|magic_square_|indian_square_|next_size_|nutket_|abjad_details_|abjad_text_.*|payment_select_|numerology_prompt_|numerology_|convertnumbers_|settings_lang_|transliterate_suggest_|transliterate_history_|help_group_chat)"
+    ))
+    application.add_handler(CallbackQueryHandler(
+        set_language_handle,
+        pattern="^lang\\|"
+    ))
