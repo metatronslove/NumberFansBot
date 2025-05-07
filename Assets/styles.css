@@ -63,23 +63,24 @@ body {
     margin-bottom: 20px;
 }
 
-.tab,
-.link-tab a {
-    background: initial;
-    transition: none;
+.tab {
     padding: 10px 20px;
     cursor: pointer;
-    color: initial;
-    color: white;
+}
+
+,
+.link-tab a{
+    background: inherit;
+    color: inherit;
+    transition: inherit;
+    padding: 10px 0px 10px 0px;
+    margin: 0px 0px 0px 0px;
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
 }
 
-.link-tab a:hover, .link-tab a,
-.link-tab.active:hover {
-    transition: none;
-    background: darkgreen;
-    color: white;
+.link-tab a:hover {
+    color: black;
 }
 
 .tab:hover,
