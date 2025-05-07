@@ -21,7 +21,7 @@ NumberFansBot, Telegram üzerinden numeroloji, ebced (abjad) ve sihirli kare hes
 - **GitHub Hesabı**: Kodu saklamak ve Render.com ile entegre etmek için.
 - **Render.com Hesabı**: Botu barındırmak için.
 - **Telegram BotFather**: Bot oluşturmak ve `TELEGRAM_TOKEN` almak için.
-- **MongoDB Atlas**: Kullanıcı verilerini saklamak için `MONGODB_URI`.
+- DEPRECATED **MongoDB Atlas**: Kullanıcı verilerini saklamak için `MONGODB_URI`. //Now you need an SQL host.
 - **Hugging Face API**: AI yorumları için `HUGGINGFACE_ACCESS_TOKEN` ve `AI_ACCESS_TOKEN`.
 
 ### Adım Adım Kurulum
@@ -37,7 +37,7 @@ NumberFansBot, Telegram üzerinden numeroloji, ebced (abjad) ve sihirli kare hes
    - "Ortam" sekmesinde aşağıdaki ortam değişkenlerini ekleyin:
 	 ```plaintext
 	 TELEGRAM_TOKEN=123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
-	 MONGODB_URI=mongodb+srv://kullanici:sifre@cluster0.mongodb.net/numberfansbot
+	 MONGODB_URI=mongodb+srv://kullanici:sifre@cluster0.mongodb.net/numberfansbot // Deprecated, now SQL
 	 GITHUB_USERNAME=kullanici-adi
 	 GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	 PAYMENT_PROVIDER_TOKEN=pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -123,7 +123,7 @@ NumberFansBot, Telegram üzerinden numeroloji, ebced (abjad) ve sihirli kare hes
 - **Çeviri Sorunları**:
   - `/Locales/` klasöründe `en.json`, `tr.json`, `ar.json`, `he.json`, `la.json` dosyalarının varlığını doğrulayın.
 - **Veritabanı Hataları**:
-  - `MONGODB_URI` doğru mu? MongoDB Atlas bağlantısını test edin.
+  - `MONGODB_URI` doğru mu? MongoDB Atlas bağlantısını test edin. // DEPRECATED, FIND AN SQL HOSTING
 - **Uyarı Numaraları Görünmüyor**:
   - `/Config/warningNumbers.json` dosyasının varlığını ve içeriğini kontrol edin.
 
@@ -136,4 +136,4 @@ Bu proje MIT Lisansı altında lisanslanmıştır. Ayrıntılar için `LICENSE` 
 
 ---
 
-**İletişim**: Sorularınız için GitHub üzerinden iletişime geçin veya Telegram'da `@BotKullaniciAdi` ile test edin!
+**İletişim**: Sorularınız için GitHub üzerinden iletişime geçin veya Telegram'da `@BotKullaniciAdi` ile test edin! Bir bot var deney yaptığım ama deneylerin selameti için bildirmiyorum şimdilik.
