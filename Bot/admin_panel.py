@@ -11,7 +11,7 @@ from Bot.config import Config
 from Bot.database import Database
 from Bot.i18n import I18n
 from .seed_admin import seed_admin
-from urllib.parse import urlparse
+from urllib.parse import urlparse, unquote
 from pathlib import Path
 from datetime import datetime
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -35,23 +35,17 @@ AVAILABLE_LANGUAGES = ["en", "tr", "ar", "he", "la"]
 # Initialize Telegram application
 telegram_app = Application.builder().token(config.telegram_token).build()
 
-# Initialize Telegram application synchronously at module level
-def initialize_telegram_app_sync():
-    """Initialize the Telegram application in a new event loop."""
+# Initialize Telegram application before first request
+@flask_app.before_first_request
+def initialize_telegram_app():
+    """Initialize the Telegram application asynchronously using the existing event loop."""
     try:
-        # Create a new event loop for initialization
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
+        loop = asyncio.get_event_loop()
         loop.run_until_complete(telegram_app.initialize())
         logger.info("Telegram application initialized successfully")
     except Exception as e:
         logger.error(f"Failed to initialize Telegram application: {str(e)}")
         raise
-    finally:
-        loop.close()
-
-# Run initialization immediately
-initialize_telegram_app_sync()
 
 # Register handlers
 def register_handlers():
@@ -698,6 +692,7 @@ def toggle_beta_tester(lang="en"):
 async def webhook():
     config = Config()
     try:
+        # Decode URL-encoded token in case it's sent encoded
         update = Update.de_json(request.get_json(), telegram_app.bot)
         if update:
             await telegram_app.process_update(update)
