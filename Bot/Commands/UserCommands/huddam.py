@@ -164,12 +164,12 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 		entity_type = context.user_data["entity_type"]
 
 		alphabet_map = {
-			"0-4": ("arabic", 1), "6-10": ("arabic", 7), "11-15": ("arabic", 12),
-			"16-20": ("arabic", 17), "21-25": ("arabic", 22), "26-30": ("arabic", 27),
-			"31-35": ("arabic", 32), "HE": ("hebrew", 1), "TR": ("turkish", 1),
-			"EN": ("english", 1), "LA": ("latin", 1)
+			"0-4": ("arabic", 1, "LANGUAGE_NAME_AR"), "6-10": ("arabic", 7, "LANGUAGE_NAME_AR"), "11-15": ("arabic", 12, "LANGUAGE_NAME_AR"),
+			"16-20": ("arabic", 17, "LANGUAGE_NAME_AR"), "21-25": ("arabic", 22, "LANGUAGE_NAME_AR"), "26-30": ("arabic", 27, "LANGUAGE_NAME_AR"),
+			"31-35": ("arabic", 32, "LANGUAGE_NAME_AR"), "HE": ("hebrew", 1, "LANGUAGE_NAME_HE"), "TR": ("turkish", 1, "LANGUAGE_NAME_TR"),
+			"EN": ("english", 1, "LANGUAGE_NAME_EN"), "LA": ("latin", 1, "LANGUAGE_NAME_LA")
 		}
-		alphabeta, method = alphabet_map[huddam_lang]
+		alphabeta, method, huddam_lang_text = alphabet_map[huddam_lang]
 
 		abjad = Abjad()
 		result = abjad.generate_name(number, entity_type, method, alphabeta, context.user_data["multipliar"])
@@ -177,7 +177,7 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 			await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
 			return ConversationHandler.END
 
-		response = i18n.t("HUDDAM_RESULT", language, number=number, type=entity_type, huddam_lang=huddam_lang, name=result)
+		response = i18n.t("HUDDAM_RESULT", language, number=number, type=entity_type, huddam_lang=i18n.t(huddam_lang_text, language), name=result)
 		keyboard = [
 			[InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{number}")],
 			[InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{number}_{alphabeta}")],
