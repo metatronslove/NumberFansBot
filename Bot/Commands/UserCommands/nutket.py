@@ -57,7 +57,7 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 			nutket_lang = args[-1].lower() if len(args) > 1 and args[-1].lower() in ["arabic", "hebrew", "turkish", "english", "latin"] else language
 
 		if not number:
-			await (query_message.reply_text if update.message else update.callback_query_message.reply_text)(
+			await (query_message.reply_text)(
 				i18n.t("ERROR_INVALID_INPUT", language, error="Number is required"),
 				parse_mode=ParseMode.MARKDOWN
 			)
@@ -75,13 +75,13 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 		spelled = abjad.nutket(number, abjad_lang)
 
 		if spelled.startswith("Error"):
-			await (query_message.reply_text if update.message else update.callback_query_message.reply_text)(
+			await (query_message.reply_text)(
 				i18n.t("ERROR_GENERAL", language, error=spelled),
 				parse_mode=ParseMode.MARKDOWN
 			)
 			return
 
-		response = i18n.t("NUTKET_RESULT", language, number=number, lang=nutket_lang, spelled=spelled)
+		response = i18n.t("NUTKET_RESULT", language, number=number, nutket_lang=nutket_lang, spelled=spelled)
 
 		commentary = await get_ai_commentary(response, language)
 		if commentary:
@@ -99,7 +99,7 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 		)])
 		reply_markup = InlineKeyboardMarkup(keyboard)
 
-		await (query_message.reply_text if update.message else update.callback_query_message.reply_text)(
+		await (query_message.reply_text)(
 			response,
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup
@@ -109,7 +109,7 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 
 	except Exception as e:
 		logger.error(f"Nutket error: {str(e)}")
-		await (query_message.reply_text if update.message else update.callback_query_message.reply_text)(
+		await (query_message.reply_text)(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN
 		)

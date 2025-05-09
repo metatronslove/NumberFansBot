@@ -166,7 +166,7 @@
 	"UNSUR_PROMPT_SHADDA": "Letters under shadda ?",
 	"UNSUR_CANCEL": "Unsur calculation cancelled.",
 	"NUTKET_USAGE": "Usage: /nutket <number> [language]",
-	"NUTKET_RESULT": "Number {number} spelled in {lang} is: {spelled}.",
+	"NUTKET_RESULT": "Number {number} spelled in {nutket_lang} is: {spelled}.",
 	"NAME_USAGE": "Usage: /name <prefix> <turkish|english|hebrew|latin|arabic>",
 	"NAME_RESULT": "Generated name for prefix '{prefix}' (type: {type}, method: {method}) is '{name}'.",
 	"START_MESSAGE": "Welcome to NumberFansBot! You have {remaining_credits} credits. Explore the magic of numbers!",
@@ -320,7 +320,7 @@
 	"ERROR_LOADING_REPOS": "Error loading repositories",
 	"COMMAND_USAGE_CHART": "Command Usage Distribution",
 	"COMMAND_USAGE_PERCENTAGE": "Usage Percentage",
-    "GENERATE_ENTITY": "Generate Entity Name",
+	"GENERATE_ENTITY": "Generate Entity Name",
 	"COMMAND_ALIASES": {
 		"abjad": ["abjad"],
 		"huddam": ["huddâm"],

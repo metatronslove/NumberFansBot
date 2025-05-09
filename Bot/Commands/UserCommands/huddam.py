@@ -107,7 +107,7 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
 		if not query.data.startswith("huddam_entity_"):
 			logger.debug(f"Ignoring unrelated callback in huddam_entity_type: {query.data}")
 			return ENTITY_TYPE
-		entity_type = query.data.split("huddam_entity_")[1]
+		entity_type = query.data.[len("huddam_entity_"):]
 		context.user_data["entity_type"] = entity_type
 
 		keyboard = [
@@ -166,8 +166,8 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		if not query.data.startswith("huddam_lang_"):
 			logger.debug(f"Ignoring unrelated callback in huddam_language: {query.data}")
 			return LANGUAGE
-		lang = query.data.split("huddam_lang_")[1]
-		context.user_data["language"] = lang
+		huddam_lang = query.data.[len("huddam_lang_"):]
+		context.user_data["language"] = huddam_lang
 
 		keyboard = [
 			[InlineKeyboardButton(i18n.t("HUDDAM_REGULAR", language), callback_data="huddam_multi_regular"),
