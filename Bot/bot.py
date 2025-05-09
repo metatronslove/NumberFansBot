@@ -9,7 +9,7 @@ from Bot.cache import Cache
 from Bot.config import Config
 from Bot.database import Database
 from Bot.i18n import I18n
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup- User
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, User
 from telegram.ext import (
 	Application, ExtBot, ConversationHandler, CommandHandler, MessageHandler,
 	ContextTypes, CallbackContext, CallbackQueryHandler, filters,
