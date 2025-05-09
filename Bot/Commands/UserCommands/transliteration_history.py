@@ -26,10 +26,12 @@ async def transliteration_history_handle(update: Update, context: ContextTypes.D
 		query = update.message
 		user = query.from_user
 		chat = query.chat
+		query_message = query
 	elif update.callback_query:
 		query = update.callback_query
 		user = query.from_user
 		chat = query.message.chat
+		query_message = query.message
 	else:
 		logging.error("Invalid update type received")
 		return
@@ -45,7 +47,7 @@ async def transliteration_history_handle(update: Update, context: ContextTypes.D
 
 	history = db.get_transliteration_history(user_id)
 	if not history:
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("TRANSLITERATION_HISTORY_RESULT", language, history="No transliteration history found"),
 			parse_mode=ParseMode.HTML
 		)
@@ -54,7 +56,7 @@ async def transliteration_history_handle(update: Update, context: ContextTypes.D
 	history_str = "\n".join([f"{item['original']} -> {item['transliterated']} ({item['target_lang']})" for item in history])
 	response = i18n.t("TRANSLITERATION_HISTORY_RESULT", language, history=history_str)
 
-	await query.reply_text(
+	await query_message.reply_text(
 		response,
 		parse_mode=ParseMode.MARKDOWN
 	)

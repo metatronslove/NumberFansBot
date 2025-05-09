@@ -24,10 +24,12 @@ async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, la
 		query = update.message
 		user = query.from_user
 		chat = query.chat
+		query_message = query
 	elif update.callback_query:
 		query = update.callback_query
 		user = query.from_user
 		chat = query.message.chat
+		query_message = query.message
 	else:
 		logging.error("Invalid update type received")
 		return
@@ -55,7 +57,7 @@ async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, la
 			return
 
 		if lang_code not in config.available_languages:
-			await query.reply_text(
+			await query_message.reply_text(
 				i18n.t("LANGUAGE_INVALID", current_lang, languages=", ".join(config.available_languages)),
 				parse_mode=ParseMode.MARKDOWN
 			)
@@ -64,14 +66,14 @@ async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, la
 		db.set_user_language(user_id, lang_code)
 		db.set_user_attribute(user_id, "last_interaction", datetime.now())
 
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("LANGUAGE_CHANGED", lang_code, selected_lang=lang_code.upper()),
 			parse_mode=ParseMode.MARKDOWN
 		)
 
 	except Exception as e:
 		logger.error(f"LanguageCommand error: {str(e)}")
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("LANGUAGE_ERROR_GENERAL", current_lang),
 			parse_mode=ParseMode.MARKDOWN
 		)

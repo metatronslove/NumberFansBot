@@ -29,10 +29,12 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE, numbe
 			query = update.message
 			user = query.from_user
 			chat = query.chat
+			query_message = query
 		elif update.callback_query:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
+		query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -49,7 +51,7 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE, numbe
 		args = context.args
 		if number is None:
 			if not args or not args[0].isdigit():
-				await query.reply_text(
+				await query_message.reply_text(
 					i18n.t("HUDDAM_USAGE", language),
 					parse_mode=ParseMode.MARKDOWN
 				)
@@ -64,14 +66,14 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE, numbe
 			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("HUDDAM_PROMPT_ENTITY_TYPE", language),
 			reply_markup=reply_markup
 		)
 		return ENTITY_TYPE
 	except Exception as e:
 		logger.error(f"Error in huddam_start: {str(e)}")
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN
 		)
@@ -84,10 +86,12 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
 			query = update.message
 			user = query.from_user
 			chat = query.chat
+			query_message = query
 		elif update.callback_query:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
+		query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -121,14 +125,14 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
 			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("HUDDAM_PROMPT_LANGUAGE", language),
 			reply_markup=reply_markup
 		)
 		return LANGUAGE
 	except Exception as e:
 		logger.error(f"Error in huddam_entity_type: {str(e)}")
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN
 		)
@@ -141,10 +145,12 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			query = update.message
 			user = query.from_user
 			chat = query.chat
+			query_message = query
 		elif update.callback_query:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
+		query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -169,14 +175,14 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			[InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("HUDDAM_PROMPT_MULTIPLIAR", language),
 			reply_markup=reply_markup
 		)
 		return MULTIPLIAR
 	except Exception as e:
 		logger.error(f"Error in huddam_language: {str(e)}")
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN
 		)
@@ -189,10 +195,12 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 			query = update.message
 			user = query.from_user
 			chat = query.chat
+			query_message = query
 		elif update.callback_query:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
+		query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -225,7 +233,7 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 		abjad = Abjad()
 		result = abjad.generate_name(number, entity_type, method, alphabeta, context.user_data["multipliar"])
 		if isinstance(result, str) and result.startswith("Error"):
-			await query.reply_text(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
+			await query_message.reply_text(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
 			return ConversationHandler.END
 
 		response = i18n.t("HUDDAM_RESULT", language, number=number, type=entity_type, huddam_lang=i18n.t(huddam_lang_text, language), name=result)
@@ -235,7 +243,7 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 			[InlineKeyboardButton(i18n.t("CALCULATE_ABJAD", language), callback_data=f"abjad_text_{result}"),
 			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation_huddam")],
 		]
-		await query.reply_text(
+		await query_message.reply_text(
 			response,
 			parse_mode="HTML",
 			reply_markup=InlineKeyboardMarkup(keyboard)
@@ -244,7 +252,7 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 		return ConversationHandler.END
 	except Exception as e:
 		logger.error(f"Error in huddam_multipliar: {str(e)}")
-		await query.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
+		await query_message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
 		return ConversationHandler.END
 
 async def huddam_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
@@ -254,10 +262,12 @@ async def huddam_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			query = update.message
 			user = query.from_user
 			chat = query.chat
+			query_message = query
 		elif update.callback_query:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
+		query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -266,7 +276,7 @@ async def huddam_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("HUDDAM_CANCEL", language),
 			parse_mode=ParseMode.MARKDOWN
 		)
@@ -274,7 +284,7 @@ async def huddam_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		return ConversationHandler.END
 	except Exception as e:
 		logger.error(f"Error in huddam_cancel: {str(e)}")
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN
 		)

@@ -29,10 +29,12 @@ async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			query = update.message
 			user = query.from_user
 			chat = query.chat
+			query_message = query
 		elif update.callback_query:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
+		query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -49,7 +51,7 @@ async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		args = context.args
 		if len(args) == 1:
 			if not args[0].isdigit():
-				await query.reply_text(
+				await query_message.reply_text(
 					i18n.t("BASTET_USAGE", language),
 					parse_mode=ParseMode.MARKDOWN
 				)
@@ -58,13 +60,13 @@ async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			number = int(args[0])
 			context.user_data["bastet_number"] = number
 
-			await query.reply_text(
+			await query_message.reply_text(
 				i18n.t("BASTET_PROMPT_REPETITION", language)
 			)
 			return REPETITION
 		elif len(args) == 2:
 			if not args[0].isdigit() or not args[1].isdigit():
-				await query.reply_text(
+				await query_message.reply_text(
 					i18n.t("BASTET_USAGE", language),
 					parse_mode=ParseMode.MARKDOWN
 				)
@@ -76,14 +78,14 @@ async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			context.user_data["repetition"] = int(repetition)
 			return TABLE
 		elif not args:
-			await query.reply_text(
+			await query_message.reply_text(
 				i18n.t("BASTET_USAGE", language),
 				parse_mode=ParseMode.MARKDOWN
 			)
 			return ConversationHandler.END
 	except Exception as e:
 		logger.error(f"Error in bastet_start: {str(e)}")
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN
 		)
@@ -99,7 +101,7 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 
 		repetition = update.message.text.strip()
 		if not repetition.isdigit() or int(repetition) < 1 or int(repetition) > 1000:  # Add upper limit
-			await query.reply_text(
+			await query_message.reply_text(
 				i18n.t("ERROR_INVALID_INPUT", language, error="Repetition must be a positive integer between 1 and 1000"),
 				parse_mode=ParseMode.HTML
 			)
@@ -122,14 +124,14 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("BASTET_PROMPT_TABLE", language),
 			reply_markup=reply_markup
 		)
 		return TABLE
 	except Exception as e:
 		logger.error(f"Error in bastet_repetition: {str(e)}")
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN
 		)
@@ -142,10 +144,12 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			query = update.message
 			user = query.from_user
 			chat = query.chat
+			query_message = query
 		elif update.callback_query:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
+		query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -174,14 +178,14 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			[InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("BASTET_PROMPT_LANGUAGE", language),
 			reply_markup=reply_markup
 		)
 		return LANGUAGE
 	except Exception as e:
 		logger.error(f"Error in bastet_table: {str(e)}")
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN
 		)
@@ -194,10 +198,12 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			query = update.message
 			user = query.from_user
 			chat = query.chat
+			query_message = query
 		elif update.callback_query:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
+		query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -231,7 +237,7 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		abjad = Abjad()
 		result = abjad.bastet(number, int(repetition), tablebase, 1, alphabeta.upper(), 0)
 		if isinstance(result, str) and result.startswith("Error"):
-			await query.reply_text(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
+			await query_message.reply_text(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
 			return ConversationHandler.END
 
 		response = i18n.t("BASTET_RESULT", language, number=number, repetition=repetition, table=tablebase, value=result)
@@ -250,7 +256,7 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			[InlineKeyboardButton(i18n.t("GENERATE_ENTITY", language), callback_data=f"huddam_{number}"),
 			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation_bastet")],
 		]
-		await query.reply_text(
+		await query_message.reply_text(
 			response,
 			parse_mode="HTML",
 			reply_markup=InlineKeyboardMarkup(keyboard)
@@ -259,7 +265,7 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		return ConversationHandler.END
 	except Exception as e:
 		logger.error(f"Error in bastet_language: {str(e)}")
-		await query.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
+		await query_message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
 		return ConversationHandler.END
 
 async def bastet_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
@@ -269,10 +275,12 @@ async def bastet_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			query = update.message
 			user = query.from_user
 			chat = query.chat
+			query_message = query
 		elif update.callback_query:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
+		query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -281,7 +289,7 @@ async def bastet_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("BASTET_CANCEL", language),
 			parse_mode=ParseMode.MARKDOWN
 		)
@@ -289,7 +297,7 @@ async def bastet_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		return ConversationHandler.END
 	except Exception as e:
 		logger.error(f"Error in bastet_cancel: {str(e)}")
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN
 		)

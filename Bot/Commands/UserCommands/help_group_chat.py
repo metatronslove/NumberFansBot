@@ -24,10 +24,12 @@ async def help_group_chat_handle(update: Update, context: ContextTypes.DEFAULT_T
 		query = update.message
 		user = query.from_user
 		chat = query.chat
+		query_message = query
 	elif update.callback_query:
 		query = update.callback_query
 		user = query.from_user
 		chat = query.message.chat
+		query_message = query.message
 	else:
 		logging.error("Invalid update type received")
 		return
@@ -49,7 +51,7 @@ async def help_group_chat_handle(update: Update, context: ContextTypes.DEFAULT_T
 			parse_mode=ParseMode.HTML
 		)
 	except Exception as e:
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("ERROR_GENERAL", language, error="Failed to send help video"),
 			parse_mode=ParseMode.HTML
 		)

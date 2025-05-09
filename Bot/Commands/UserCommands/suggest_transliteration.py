@@ -28,10 +28,12 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
 		query = update.message
 		user = query.from_user
 		chat = query.chat
+		query_message = query
 	elif update.callback_query:
 		query = update.callback_query
 		user = query.from_user
 		chat = query.message.chat
+		query_message = query.message
 	else:
 		logging.error("Invalid update type received")
 		return
@@ -47,7 +49,7 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
 
 	args = context.args
 	if len(args) < 1:
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("SUGGEST_TRANSLITERATION_USAGE", language),
 			parse_mode=ParseMode.HTML
 		)
@@ -61,7 +63,7 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
 	valid_languages = transliteration.valid_languages
 
 	if target_lang not in valid_languages:
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid target language. Use: {', '.join(valid_languages)}"),
 			parse_mode=ParseMode.HTML
 		)
@@ -70,7 +72,7 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
 	try:
 		source_lang = source_lang or transliteration.guess_source_lang(text)
 		if source_lang not in valid_languages:
-			await query.reply_text(
+			await query_message.reply_text(
 				i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid source language: {source_lang}"),
 				parse_mode=ParseMode.HTML
 			)
@@ -78,7 +80,7 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
 
 		suggestions = transliteration.suggest_transliterations(text, source_lang, target_lang)
 		if not suggestions:
-			await query.reply_text(
+			await query_message.reply_text(
 				i18n.t("SUGGEST_TRANSLITERATION_RESULT", language, text=text, source_lang=source_lang, target_lang=target_lang, results="No suggestions available"),
 				parse_mode=ParseMode.HTML
 			)
@@ -98,14 +100,14 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
 		]
 		reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
 
-		await query.reply_text(
+		await query_message.reply_text(
 			response,
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup
 		)
 	except Exception as e:
 		logger.error(f"Suggest transliteration error: {str(e)}")
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
 			parse_mode=ParseMode.HTML
 		)

@@ -28,10 +28,12 @@ async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_T
 		query = update.message
 		user = query.from_user
 		chat = query.chat
+		query_message = query
 	elif update.callback_query:
 		query = update.callback_query
 		user = query.from_user
 		chat = query.message.chat
+		query_message = query.message
 	else:
 		logging.error("Invalid update type received")
 		return

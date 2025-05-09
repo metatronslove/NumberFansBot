@@ -28,10 +28,12 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 		query = update.message
 		user = query.from_user
 		chat = query.chat
+		query_message = query
 	elif update.callback_query:
 		query = update.callback_query
 		user = query.from_user
 		chat = query.message.chat
+		query_message = query.message
 	else:
 		logging.error("Invalid update type received")
 		return
@@ -47,7 +49,7 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 
 	args = context.args
 	if len(args) < 3:
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("TRANSLITERATION_USAGE", language, source_lang="source_lang", target_lang="target_lang", text="text"),
 			parse_mode=ParseMode.HTML
 		)
@@ -61,7 +63,7 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 		transliteration = Transliteration(db, i18n)
 	except Exception as e:
 		logger.error(f"Failed to initialize Transliteration: {str(e)}")
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("ERROR_GENERAL", language, error="Failed to initialize transliteration system"),
 			parse_mode=ParseMode.HTML
 		)
@@ -70,7 +72,7 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 	valid_languages = transliteration.valid_languages
 
 	if source_lang not in valid_languages or target_lang not in valid_languages:
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("LANGUAGE_INVALID", language, languages=", ".join(valid_languages)),
 			parse_mode=ParseMode.HTML
 		)
@@ -111,14 +113,14 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 		]
 		reply_markup = InlineKeyboardMarkup(buttons)
 
-		await query.reply_text(
+		await query_message.reply_text(
 			response,
 			parse_mode=ParseMode.HTML,
 			reply_markup=reply_markup
 		)
 	except Exception as e:
 		logger.error(f"Transliteration error for user {user_id}: {str(e)}")
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
 			parse_mode=ParseMode.HTML
 		)

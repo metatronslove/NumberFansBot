@@ -28,10 +28,12 @@ async def numerology_square_handle(update: Update, context: ContextTypes.DEFAULT
 		query = update.message
 		user = query.from_user
 		chat = query.chat
+		query_message = query
 	elif update.callback_query:
 		query = update.callback_query
 		user = query.from_user
 		chat = query.message.chat
+		query_message = query.message
 	else:
 		logging.error("Invalid update type received")
 		return
@@ -47,7 +49,7 @@ async def numerology_square_handle(update: Update, context: ContextTypes.DEFAULT
 
 	args = context.args
 	if len(args) < 1:
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("NUMEROLOGYSQUARE_USAGE", language),
 			parse_mode=ParseMode.HTML
 		)
@@ -65,7 +67,7 @@ async def numerology_square_handle(update: Update, context: ContextTypes.DEFAULT
 	method = "normal"
 
 	if alphabet not in numerology.get_available_alphabets():
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("ERROR_INVALID_INPUT", language, error="Invalid alphabet"),
 			parse_mode=ParseMode.HTML
 		)
@@ -93,13 +95,13 @@ async def numerology_square_handle(update: Update, context: ContextTypes.DEFAULT
 		]
 		reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
 
-		await query.reply_text(
+		await query_message.reply_text(
 			response,
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup
 		)
 	except Exception as e:
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
 			parse_mode=ParseMode.HTML
 		)

@@ -34,10 +34,12 @@ async def set_language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 		query = update.message
 		user = query.from_user
 		chat = query.chat
+		query_message = query
 	elif update.callback_query:
 		query = update.callback_query
 		user = query.from_user
 		chat = query.message.chat
+		query_message = query.message
 	else:
 		logging.error("Invalid update type received")
 		return
@@ -68,10 +70,12 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 		query = update.message
 		user = query.from_user
 		chat = query.chat
+		query_message = query
 	elif update.callback_query:
 		query = update.callback_query
 		user = query.from_user
 		chat = query.message.chat
+		query_message = query.message
 	else:
 		logging.error("Invalid update type received")
 		return
@@ -99,7 +103,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 		elif data.startswith("name_alt_"):
 			parts = data.split("_")
 			if len(parts) != 3:
-				await query.reply_text(
+				await query_message.reply_text(
 					i18n.t("ERROR_INVALID_INPUT", language, error="Invalid callback data"),
 					parse_mode=ParseMode.HTML
 				)
@@ -109,7 +113,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			alt_index = int(parts[2])
 			cache_data = cache.get_alternatives(cache_id)
 			if not cache_data or alt_index >= len(cache_data.get("alternatives", [])):
-				await query.reply_text(
+				await query_message.reply_text(
 					i18n.t("ERROR_INVALID_INPUT", language, error="Invalid or expired cache data"),
 					parse_mode=ParseMode.HTML
 				)
@@ -123,9 +127,9 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			try:
 				transliteration.store_transliteration(original_name, source_lang, target_lang, transliterated_name, user_id=user_id)
 				response = transliteration.format_response(suffix, target_lang, language, language)
-				await query.reply_text(response, parse_mode=ParseMode.HTML)
+				await query_message.reply_text(response, parse_mode=ParseMode.HTML)
 			except Exception as e:
-				await query.reply_text(
+				await query_message.reply_text(
 					i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
 					parse_mode=ParseMode.HTML
 				)
@@ -158,7 +162,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				],
 			]
 			reply_markup = InlineKeyboardMarkup(buttons)
-			await query.reply_text(response, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup)
+			await query_message.reply_text(response, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup)
 		elif data.startswith("next_size_"):
 			parts = data[len("next_size_"):].split("_")
 			row_sum, current_n, output_numbering = int(parts[0]), int(parts[1]), parts[2]
@@ -195,11 +199,11 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				]
 			)
 			reply_markup = InlineKeyboardMarkup(buttons)
-			await query.reply_text(response, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup)
+			await query_message.reply_text(response, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup)
 		elif data.startswith("nutket_"):
 			parts = data[len("nutket_"):].split("_")
 			if len(parts) != 2:
-				await query.reply_text(
+				await query_message.reply_text(
 					i18n.t("ERROR_INVALID_INPUT", language, error="Invalid nutket callback data"),
 					parse_mode=ParseMode.HTML
 				)
@@ -210,7 +214,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 		elif data.startswith("abjad_text_"):
 			parts = data[len("abjad_text_"):]
 			if len(parts) != 1:
-				await query.reply_text(
+				await query_message.reply_text(
 					i18n.t("ERROR_INVALID_INPUT", language, error="Invalid abjad_text callback data"),
 					parse_mode=ParseMode.HTML
 				)
@@ -235,12 +239,12 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			new_language = data[len("settings_lang_"):]
 			if new_language in transliteration.valid_languages:
 				db.set_user_language(user_id, new_language)
-				await query.reply_text(
+				await query_message.reply_text(
 					i18n.t("LANGUAGE_CHANGED", language, selected_lang=new_language.upper()),
 					parse_mode=ParseMode.HTML
 				)
 			else:
-				await query.reply_text(
+				await query_message.reply_text(
 					i18n.t("ERROR_INVALID_INPUT", language, error="Invalid language"),
 					parse_mode=ParseMode.HTML
 				)
@@ -250,7 +254,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			text = urllib.parse.unquote(encoded_text)
 			alternatives = transliteration.get_transliteration_alternatives(text, source_lang, target_lang)
 			if not alternatives:
-				await query.reply_text(
+				await query_message.reply_text(
 					i18n.t("SUGGEST_TRANSLITERATION_RESULT", language, text=text, source_lang=source_lang, target_lang=target_lang, results="No suggestions available"),
 					parse_mode=ParseMode.HTML
 				)
@@ -269,13 +273,13 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					for i, alt in enumerate(alternatives)
 				]
 				reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
-				await query.reply_text(response, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
+				await query_message.reply_text(response, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
 		elif data.startswith("transliterate_history_"):
 			user_id = int(data[len("transliterate_history_"):])
 			history = db.transliteration_collection.find({"user_id": user_id})
 			history = list(history)
 			if not history:
-				await query.reply_text(
+				await query_message.reply_text(
 					i18n.t("TRANSLITERATION_HISTORY_RESULT", language, history="No transliteration history found"),
 					parse_mode=ParseMode.HTML
 				)
@@ -287,7 +291,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					]
 				)
 				response = i18n.t("TRANSLITERATION_HISTORY_RESULT", language, history=history_str)
-				await query.reply_text(response, parse_mode=ParseMode.HTML)
+				await query_message.reply_text(response, parse_mode=ParseMode.HTML)
 		elif data == "help_group_chat":
 			try:
 				await query.message.reply_video(
@@ -296,7 +300,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					parse_mode=ParseMode.HTML
 				)
 			except Exception as e:
-				await query.reply_text(
+				await query_message.reply_text(
 					i18n.t("ERROR_GENERAL", language, error="Failed to send help video"),
 					parse_mode=ParseMode.HTML
 				)
@@ -304,19 +308,19 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 	except BadRequest as e:
 		logger.error(f"Telegram BadRequest: {str(e)}")
 		if "Query is too old" in str(e):
-			await query.reply_text(
+			await query_message.reply_text(
 				i18n.t("ERROR_TIMEOUT", language, error="Processing took too long. Please try again."),
 				parse_mode=ParseMode.HTML
 			)
 		else:
-			await query.reply_text(
+			await query_message.reply_text(
 				i18n.t("ERROR_GENERAL", language, error=str(e)),
 				parse_mode=ParseMode.HTML
 			)
 		await query.answer()
 	except Exception as e:
 		logger.error(f"Callback error: {str(e)}")
-		await query.reply_text(
+		await query_message.reply_text(
 			i18n.t("ERROR_GENERAL", language, error="An error occurred while processing the callback"),
 			parse_mode=ParseMode.HTML
 		)

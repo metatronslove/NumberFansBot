@@ -24,10 +24,12 @@ async def cancel_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		query = update.message
 		user = query.from_user
 		chat = query.chat
+		query_message = query
 	elif update.callback_query:
 		query = update.callback_query
 		user = query.from_user
 		chat = query.message.chat
+		query_message = query.message
 	else:
 		logging.error("Invalid update type received")
 		return
@@ -44,7 +46,7 @@ async def cancel_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	# Clear conversation state
 	context.user_data.clear()
 
-	await query.reply_text(
+	await query_message.reply_text(
 		i18n.t("CANCEL_RESULT", language),
 		parse_mode=ParseMode.HTML
 	)
