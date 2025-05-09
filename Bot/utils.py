@@ -17,7 +17,6 @@ from telegram.error import BadRequest
 from .cache import Cache
 from .config import Config
 from .database import Database
-from .bot import check_credits
 from urllib.parse import urlparse
 from datetime import datetime
 
