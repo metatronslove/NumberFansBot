@@ -212,7 +212,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			await numerology_handle(update, context, alphabet=alphabet, method=method, text=text)
 		elif data.startswith("convertnumbers_"):
 			parts = data[len("convertnumbers_"):].split("_")
-			encoded_text- format_type = parts[0], parts[1]
+			encoded_text, format_type = parts[0], parts[1]
 			text = urllib.parse.unquote(encoded_text)
 			format_type = parts[0]
 			await convert_numbers_handle(update, context, text=text, alt_format=format_type)
