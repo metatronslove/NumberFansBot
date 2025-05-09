@@ -69,7 +69,7 @@
 								<td>/{{ usage['command'] }}</td>
 								<td>{{ usage['count'] }}</td>
 								<td>{{ usage['last_used'].strftime('%Y-%m-%d %H:%M:%S') if usage.get('last_used') else 'N/A' }}</td>
-								<td>{{ usage['last_user_id'] if usage.get('last_user_id') else 'N/A' }} {% for user in users %}{{ user.username if usage['last_user_id'] == user.user_id else ''}}{% endif %}</td>
+								<td>{{ usage['last_user_id'] if usage.get('last_user_id') else 'N/A' }} {% for user in users %}{{ user.username if usage['last_user_id'] == user.user_id else ''}}{% endfor %}</td>
 							</tr>
 						{% endfor %}
 					</tbody>
