@@ -22,13 +22,7 @@ from ...NumberConverter import NumberConverter
 from ...cache import Cache
 from ...config import Config
 from ...utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
-import ...Commands.UserCommands.abjad
-import ...Commands.UserCommands.magic_square
-import ...Commands.UserCommands.numerology
-import ...Commands.UserCommands.huddam
-import ...Commands.UserCommands.bastet
-import ...Commands.UserCommands.unsur
-import ...Commands.UserCommands.nutket
+from ...Commands.UserCommands import (abjad, magic_square, numerology, huddam, bastet, unsur, nutket)
 from ...Commands.UserCommands.payment import payment_handle
 
 logger = logging.getLogger(__name__)
