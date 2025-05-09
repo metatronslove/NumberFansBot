@@ -133,16 +133,16 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
 					parse_mode=ParseMode.HTML
 				)
-		elif data.startswith("huddam_"):
-			number = int(data[len("huddam_"):])
+		elif data.startswith("huddam_cb_"):
+			number = int(data[len("huddam_cb_"):])
 			await huddam.huddam_start(update, context, number=number)
 		elif data.startswith("magic_square_"):
 			row_sum = int(data[len("magic_square_"):])
 			await magic_square.magic_square_handle(update, context, number=row_sum)
 		elif data.startswith("indian_square_"):
 			row_sum = int(data[len("indian_square_"):])
-			magic_square = MagicSquareGenerator()
-			square = magic_square.generate_magic_square(3, row_sum, 0, False, "indian")
+			magicsquare = MagicSquareGenerator()
+			square = magicsquare.generate_magic_square(3, row_sum, 0, False, "indian")
 			response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square["box"])
 			commentary = await get_ai_commentary(response, language)
 			if commentary:
@@ -166,8 +166,8 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 		elif data.startswith("next_size_"):
 			parts = data[len("next_size_"):].split("_")
 			row_sum, current_n, output_numbering = int(parts[0]), int(parts[1]), parts[2]
-			magic_square = MagicSquareGenerator()
-			square = magic_square.generate_magic_square(current_n + 1, row_sum, 0, False, output_numbering)
+			magicsquare = MagicSquareGenerator()
+			square = magicsquare.generate_magic_square(current_n + 1, row_sum, 0, False, output_numbering)
 			response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square["box"])
 			commentary = await get_ai_commentary(response, language)
 			if commentary:
