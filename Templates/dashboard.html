@@ -69,7 +69,7 @@
 								<td>/{{ usage['command'] }}</td>
 								<td>{{ usage['count'] }}</td>
 								<td>{{ usage['last_used'].strftime('%Y-%m-%d %H:%M:%S') if usage.get('last_used') else 'N/A' }}</td>
-								<td>{{ usage['last_user_id'] if usage.get('last_user_id') else 'N/A' }}</td>
+								<td>{{ usage['last_user_id'] if usage.get('last_user_id') else 'N/A' }} {% for user in users %}{{ user.username if usage['last_user_id'] == user.user_id else ''}}{% endif %}</td>
 							</tr>
 						{% endfor %}
 					</tbody>
@@ -737,7 +737,7 @@
 				const escapedRepoName = repo.name.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"').replace(/'/g, '');
 				container.innerHTML = `
 					<h3>
-						<a href="https://github.com/${repo.full_name}" target="_blank">🔗 ${repo.full_name} {{ i18n.t('REPO_HEADER', lang) }}.</a> |
+						<a href="https://github.com/${repo.full_name}" target="_blank">🔗 ${escapedRepoName} {{ i18n.t('REPO_HEADER', lang) }}.</a> |
 						<a href="https://github.com/${repo.full_name}/zipball/main" target="_top">zip⬇</a> |
 						<a href="https://github.com/${repo.full_name}/tarball/main" target="_top">tar⬇</a> |
 						<a href="https://github.com/${repo.full_name}/fork" target="_blank">fork🖈</a> |
@@ -970,6 +970,18 @@
 			loadFileTree();
 		}
 
+		// Hex'i RGB'ye çeviren yardımcı fonksiyon
+		function hexToRgb(hex) {
+			const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+			hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
+			const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+			return result ? {
+				r: parseInt(result[1], 16),
+				g: parseInt(result[2], 16),
+				b: parseInt(result[3], 16)
+			} : null;
+		}
+
 		document.addEventListener('DOMContentLoaded', function() {
 			// Initialize CodeMirror editor
 			const editorElement = document.getElementById('editor');
@@ -1014,6 +1026,35 @@
 			document.getElementById('save-file').addEventListener('click', saveFile);
 			document.getElementById('delete-file').addEventListener('click', deleteFile);
 			main();
+			// Tüm CSS değişkenlerini al
+			const rootStyles = getComputedStyle(document.documentElement);
+			const cssVars = Array.from(rootStyles)
+				.filter(prop => prop.startsWith('--bs-') && prop.includes('-bg') && !prop.includes('body-bg'));
+
+			// Yeni stilleri oluştur
+			let newStyles = '';
+			cssVars.forEach(varName => {
+				const value = rootStyles.getPropertyValue(varName).trim();
+				// RGB formatındaki değişkenleri bul (örneğin, --bs-primary-rgb)
+				const rgbVarName = varName.replace('-bg', '-rgb');
+				const rgbValue = rootStyles.getPropertyValue(rgbVarName).trim();
+
+				if (rgbValue) {
+					// RGB varsa, direkt RGBA'ya çevir
+					newStyles += `${varName}: rgba(${rgbValue}, 0.5); `;
+				} else if (value.startsWith('#')) {
+					// Hex ise, RGB'ye çevir ve RGBA yap
+					const rgb = hexToRgb(value);
+					if (rgb) {
+						newStyles += `${varName}: rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.5); `;
+					}
+				}
+			});
+
+			// Yeni stilleri sayfaya ekle
+			const styleSheet = document.createElement('style');
+			styleSheet.textContent = `:root { ${newStyles} }`;
+			document.head.appendChild(styleSheet);
 		});
 
 		// Cloudflare challenge scripts

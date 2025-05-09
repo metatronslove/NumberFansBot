@@ -40,7 +40,7 @@ body {
 }
 
 .language-switcher select {
-	background-color: #2a2a2a;
+	background-color: rgba(42,42,42,.5);
 	color: #fff;
 	border: 1px solid #48ff00;
 	padding: 5px;
@@ -178,7 +178,7 @@ body {
 }
 
 .pagination button:disabled {
-	background-color: #444;
+	background-color: rgba(66,66,66,.5);
 	cursor: not-allowed;
 }
 
@@ -215,7 +215,7 @@ body {
 .install-form input {
 	width: 100%;
 	padding: 8px;
-	background: #2a2a2a;
+	background: rgba(42,42,42,.5);
 	color: #fff;
 	border: 1px solid #48ff00;
 	border-radius: 4px;

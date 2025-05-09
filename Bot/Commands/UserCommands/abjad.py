@@ -12,7 +12,7 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.Abjad import Abjad
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
 from urllib.parse import urlparse
 from datetime import datetime
 
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 ALPHABET_ORDER, ABJAD_TYPE, SHADDA, DETAIL = range(4)
 
-async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE, text: str = None):
 	logger.info(f"Starting /abjad for user {update.effective_user.id}")
 	try:
 		user = update.message.from_user
@@ -30,32 +30,37 @@ async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
+		handle_credits(update, context)
+		db.set_user_attribute(user_id, "last_interaction", datetime.now())
+		db.increment_command_usage("abjad", user_id)
 
 		args = context.args
-		if not args:
+		if not args and text is None:
 			await update.message.reply_text(
 				i18n.t("ABJAD_USAGE", language),
 				parse_mode=ParseMode.MARKDOWN
 			)
 			return ConversationHandler.END
 
-		text = " ".join(args)
+		if text is None:
+			text = " ".join(args)
 		context.user_data["abjad_text"] = text
 		is_arabic = bool(re.search(r"[\u0600-\u06FF]", text))
 		context.user_data["is_arabic"] = is_arabic
 
 		keyboard = [
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ABJADI", language), callback_data="abjad_alphabet_0-4")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI", language), callback_data="abjad_alphabet_6-10")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_QURANIC", language), callback_data="abjad_alphabet_11-15")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HIJA", language), callback_data="abjad_alphabet_16-20")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI_HIJA", language), callback_data="abjad_alphabet_21-25")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_IKLEELS", language), callback_data="abjad_alphabet_26-30")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_SHAMSE_ABJADI", language), callback_data="abjad_alphabet_31-35")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HEBREW", language), callback_data="abjad_alphabet_HE")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_TURKISH", language), callback_data="abjad_alphabet_TR")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ENGLISH", language), callback_data="abjad_alphabet_EN")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_LATIN", language), callback_data="abjad_alphabet_LA")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ABJADI", language), callback_data="abjad_alphabet_0-4"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI", language), callback_data="abjad_alphabet_6-10")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_QURANIC", language), callback_data="abjad_alphabet_11-15"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HIJA", language), callback_data="abjad_alphabet_16-20")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI_HIJA", language), callback_data="abjad_alphabet_21-25"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_IKLEELS", language), callback_data="abjad_alphabet_26-30")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_SHAMSE_ABJADI", language), callback_data="abjad_alphabet_31-35"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HEBREW", language), callback_data="abjad_alphabet_HE")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_TURKISH", language), callback_data="abjad_alphabet_TR"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ENGLISH", language), callback_data="abjad_alphabet_EN")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_LATIN", language), callback_data="abjad_alphabet_LA"),
+			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await update.message.reply_text(
@@ -82,6 +87,9 @@ async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYP
 		i18n = I18n()
 		language = db.get_user_language(user_id)
 
+		if query.data == "end_conversation":
+			return await abjad_cancel(update, context)
+
 		if not query.data.startswith("abjad_alphabet_"):
 			logger.debug(f"Ignoring unrelated callback in abjad_alphabet_order: {query.data}")
 			return ALPHABET_ORDER
@@ -89,12 +97,13 @@ async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYP
 		context.user_data["alphabet_order"] = alphabet_order
 
 		keyboard = [
-			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_ASGHAR", language), callback_data="abjad_type_-1")],
-			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_SAGHIR", language), callback_data="abjad_type_0")],
-			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_KEBEER", language), callback_data="abjad_type_+1")],
-			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_AKBAR", language), callback_data="abjad_type_+2")],
-			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_SAGHIR_PLUS_QUANTITY", language), callback_data="abjad_type_+3")],
-			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_LETTER_QUANTITY", language), callback_data="abjad_type_5")],
+			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_ASGHAR", language), callback_data="abjad_type_-1"),
+			InlineKeyboardButton(i18n.t("ABJAD_TYPE_SAGHIR", language), callback_data="abjad_type_0")],
+			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_KEBEER", language), callback_data="abjad_type_+1"),
+			InlineKeyboardButton(i18n.t("ABJAD_TYPE_AKBAR", language), callback_data="abjad_type_+2")],
+			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_SAGHIR_PLUS_QUANTITY", language), callback_data="abjad_type_+3"),
+			InlineKeyboardButton(i18n.t("ABJAD_TYPE_LETTER_QUANTITY", language), callback_data="abjad_type_5")],
+			[InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await query.message.reply_text(
@@ -121,6 +130,9 @@ async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		i18n = I18n()
 		language = db.get_user_language(user_id)
 
+		if query.data == "end_conversation":
+			return await abjad_cancel(update, context)
+
 		if not query.data.startswith("abjad_type_"):
 			logger.debug(f"Ignoring unrelated callback in abjad_type: {query.data}")
 			return ABJAD_TYPE
@@ -129,8 +141,9 @@ async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 		if context.user_data.get("is_arabic"):
 			keyboard = [
-				[InlineKeyboardButton(i18n.t("SHADDA_USE_ONCE", language), callback_data="abjad_shadda_1")],
-				[InlineKeyboardButton(i18n.t("SHADDA_USE_TWICE", language), callback_data="abjad_shadda_2")],
+				[InlineKeyboardButton(i18n.t("SHADDA_USE_ONCE", language), callback_data="abjad_shadda_1"),
+				InlineKeyboardButton(i18n.t("SHADDA_USE_TWICE", language), callback_data="abjad_shadda_2")],
+				[InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 			]
 			reply_markup = InlineKeyboardMarkup(keyboard)
 			await query.message.reply_text(
@@ -160,11 +173,8 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		i18n = I18n()
 		language = db.get_user_language(user_id)
 
-		# Credit check
-		from Bot.bot import check_credits
-		if not await check_credits(update, context):
-			await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
-			return ConversationHandler.END
+		if query.data == "end_conversation":
+			return await abjad_cancel(update, context)
 
 		if context.user_data.get("shadda") != 1:
 			if not query.data.startswith("abjad_shadda_"):
@@ -174,8 +184,9 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 				context.user_data["shadda"] = int(query.data[len("abjad_shadda_"):]) or 1
 
 		keyboard = [
-			[InlineKeyboardButton(i18n.t("ABJAD-ONLY-RESULT", language), callback_data="abjad_detail_0")],
-			[InlineKeyboardButton(i18n.t("ABJAD-WITH-DETAILS", language), callback_data="abjad_detail_1")]
+			[InlineKeyboardButton(i18n.t("ABJAD-ONLY-RESULT", language), callback_data="abjad_detail_0"),
+			InlineKeyboardButton(i18n.t("ABJAD-WITH-DETAILS", language), callback_data="abjad_detail_1")],
+			[InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		await query.message.reply_text(
 			i18n.t("ABJAD_PROMPT_DETAIL", language),
@@ -199,11 +210,8 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		i18n = I18n()
 		language = db.get_user_language(user_id)
 
-		# Credit check
-		from Bot.bot import check_credits
-		if not await check_credits(update, context):
-			await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
-			return ConversationHandler.END
+		if query.data == "end_conversation":
+			return await abjad_cancel(update, context)
 
 		detail = 1 if str(query.data) == "abjad_detail_1" else 0
 
@@ -233,20 +241,27 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		if details:
 			response += "\n" + i18n.t("ABJAD_DETAILS", language, details=details)
 
+		warning_desc = get_warning_description(value, language)
+		if warning_desc:
+			response += "\n\n" + i18n.t("WARNING_NUMBER", language, value=value, description=warning_desc)
+
+		commentary = await get_ai_commentary(response, language)
+		if commentary:
+			response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
+
 		keyboard = [
-			[InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{value}")],
-			[InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{value}_{alphabeta}")]
+			[InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{value}"),
+			InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{value}_{alphabeta}")],
+			[InlineKeyboardButton(i18n.t("GENERATE_ENTITY", language), callback_data=f"huddam_{value}"),
+			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation_abjad")]
 		]
-		if details:
-			keyboard.append([InlineKeyboardButton(i18n.t("SHOW_DETAILS", language), callback_data=f"abjad_details_{user_id}")])
 
 		await query.message.reply_text(
 			response,
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=InlineKeyboardMarkup(keyboard)
 		)
-		context.user_data["abjad_result"] = result  # Preserve for details
-		for key in ["abjad_text", "alphabet_order", "abjad_type", "shadda", "detail"]:
+		for key in ["abjad_result", "abjad_text", "alphabet_order", "abjad_type", "shadda", "detail"]:
 			context.user_data.pop(key, None)
 		return ConversationHandler.END
 	except Exception as e:

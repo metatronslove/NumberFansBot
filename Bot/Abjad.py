@@ -284,7 +284,7 @@ class Abjad:
 		except Exception as e:
 			return f"Error: {str(e)}"
 
-	def nutket(self, mynumber: Union[int, str], language: str = "ARABIC", gender: str = "male") -> str:
+	def nutket(self, mynumber: Union[int, str], language: str = "ARABIC", gender: str = "female") -> str:
 		try:
 			spell = ""
 			count = 0
@@ -746,7 +746,7 @@ class Abjad:
 		except Exception as e:
 			return f"Error: {str(e)}"
 
-	def arabic(self, metin: str) -> str:
+	def indian(self, metin: str) -> str:
 		try:
 			na = ""
 			chars = re.findall(r'.', metin, re.UNICODE)
@@ -762,7 +762,7 @@ class Abjad:
 		except Exception as e:
 			return f"Error: {str(e)}"
 
-	def indian(self, metin: str) -> str:
+	def arabic(self, metin: str) -> str:
 		try:
 			na = ""
 			chars = re.findall(r'.', metin, re.UNICODE)

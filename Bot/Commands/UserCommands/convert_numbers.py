@@ -14,34 +14,37 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.NumberConverter import NumberConverter
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
 
-async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
+async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, text: str = None, alt_format: str = None):
 	user = update.message.from_user
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id
 	db = Database()
 	i18n = I18n()
 	language = db.get_user_language(user_id)
+	handle_credits(update, context)
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
-
-	# Increment command usage
 	db.increment_command_usage("convertnumbers", user_id)
 
-	args = context.args
-	if len(args) < 1:
-		await update.message.reply_text(
-			i18n.t("CONVERTNUMBERS_USAGE", language),
-			parse_mode=ParseMode.HTML
-		)
-		return
+	if text is None:
+		args = context.args
+		if len(args) < 1:
+			await update.message.reply_text(
+				i18n.t("CONVERTNUMBERS_USAGE", language),
+				parse_mode=ParseMode.HTML
+			)
+			return
+		text = " ".join(args[:-1]) if len(args) >= 2 else ""
 
+	if alt_format is None:
+		format_type = args[-1].lower() if len(args) > 1 else "indian"
+	else:
+		format_type = alt_format
 	try:
-		number = int(args[0])
-		format_type = args[1].lower() if len(args) > 1 else "indian"
 		converter = NumberConverter()
 		available_formats = ["arabic", "indian"]
 
@@ -52,15 +55,13 @@ async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_T
 			)
 			return
 
-		result = converter.arabic(str(number)) if format_type == "arabic" else converter.indian(str(number))
-		response = i18n.t("CONVERTNUMBERS_RESULT", language, number=number, format=format_type, result=result)
+		result = converter.indian(str(text)) if format_type == "indian" else converter.arabic(str(text))
+		response = i18n.t("CONVERTNUMBERS_RESULT", language, result=result)
 
 		# Add buttons for alternative format
 		alt_format = "indian" if format_type == "arabic" else "arabic"
-		buttons = [[InlineKeyboardButton(
-			f"Format: {alt_format.capitalize()}",
-			callback_data=f"convertnumbers_{number}_{alt_format}"
-		)]]
+		encoded_text = urllib.parse.quote(text)
+		buttons = [[InlineKeyboardButton(i18n.t("INDIAN_NUMBERS", language) if format_type == "arabic" else i18n.t("ARABIC_NUMBERS", language), callback_data=f"convertnumbers_{encoded_text}_{alt_format}")]]
 		reply_markup = InlineKeyboardMarkup(buttons)
 
 		await update.message.reply_text(

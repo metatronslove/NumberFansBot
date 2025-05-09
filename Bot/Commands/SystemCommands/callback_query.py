@@ -17,6 +17,10 @@ from Bot.NumberConverter import NumberConverter
 from Bot.cache import Cache
 from Bot.config import Config
 from Bot.utils import get_ai_commentary
+import Bot.Commands.UserCommands.abjad
+import Bot.Commands.UserCommands.magic_square
+import Bot.Commands.UserCommands.numerology
+import Bot.Commands.UserCommands.huddam
 from Bot.Commands.UserCommands.nutket import nutket_handle
 from Bot.Commands.UserCommands.payment import payment_handle
 import urllib.parse
@@ -65,25 +69,17 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			logger.error(f"BadRequest in handle_callback_query: {str(e)}")
 			raise
 
-	if not (data.startswith("payment_select_") or data == "help_group_chat"):
-		if db.is_blacklisted(user_id):
-			await query.message.reply_text(
-				i18n.t("USER_BLACKLISTED", language),
-				parse_mode=ParseMode.HTML
-			)
-			await query.answer()
-			return
-		if not db.is_beta_tester(user_id) and db.get_user_credits(user_id) <= 0:
-			await query.message.reply_text(
-				i18n.t("NO_CREDITS", language),
-				parse_mode=ParseMode.HTML
-			)
-			await query.answer()
-			return
-		if not db.is_beta_tester(user_id):
-			db.decrement_credits(user_id)
-
 	try:
+		if data.startswith("end_conversation_"):
+			commandToEnd = data[len("end_conversation_"):]
+			if commandToEnd == "abjad":
+				return await Bot.Commands.UserCommands.abjad.abjad_cancel(update, context)
+			elif commandToEnd == "bastet":
+				return await Bot.Commands.UserCommands.bastet.bastet_cancel(update, context)
+			elif commandToEnd == "huddam":
+				return await Bot.Commands.UserCommands.huddam.huddam_cancel(update, context)
+			elif commandToEnd == "unsur":
+				return await Bot.Commands.UserCommands.unsur.unsur_cancel(update, context)
 		if data.startswith("name_alt_"):
 			parts = data.split("_")
 			if len(parts) != 3:
@@ -117,30 +113,12 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
 					parse_mode=ParseMode.HTML
 				)
+		elif data.startswith("huddam_"):
+			number = int(data[len("huddam_"):])
+			await huddam_start(update, context, number=number)
 		elif data.startswith("magic_square_"):
 			row_sum = int(data[len("magic_square_"):])
-			magic_square = MagicSquareGenerator()
-			square = magic_square.generate_magic_square(3, row_sum, 0, False, "arabic")
-			response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square["box"])
-			commentary = await get_ai_commentary(response, language)
-			if commentary:
-				response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
-			buttons = [
-				[
-					InlineKeyboardButton(
-						i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
-						callback_data=f"indian_square_{row_sum}",
-					)
-				],
-				[
-					InlineKeyboardButton(
-						i18n.t("NEXT_SIZE", language),
-						callback_data=f"next_size_{row_sum}_{square['size']}_arabic",
-					)
-				],
-			]
-			reply_markup = InlineKeyboardMarkup(buttons)
-			await query.message.reply_text(response, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup)
+			await magic_square_handle(update, context, number=row_sum)
 		elif data.startswith("indian_square_"):
 			row_sum = int(data[len("indian_square_"):])
 			magic_square = MagicSquareGenerator()
@@ -152,7 +130,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			buttons = [
 				[
 					InlineKeyboardButton(
-						i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
+						i18n.t("CREATE_MAGIC_SQUARE", language),
 						callback_data=f"magic_square_{row_sum}",
 					)
 				],
@@ -211,33 +189,11 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				)
 				await query.answer()
 				return
-			number, lang = int(parts[0]), parts[1]
-			# Map lang to alphabeta
-			lang_map = {
-				"0-4": "arabic", "6-10": "arabic", "11-15": "arabic", "16-20": "arabic",
-				"21-25": "arabic", "26-30": "arabic", "31-35": "arabic",
-				"HE": "hebrew", "TR": "turkish", "EN": "english", "LA": "latin",
-				"-1": "arabic", "0": "arabic", "+1": "arabic", "+2": "arabic", "+3": "arabic", "5": "arabic",
-				"turkce": "turkish", "arabi": "arabic", "buni": "buni", "huseyni": "huseyni",
-				"hebrew": "hebrew", "english": "english", "latin": "latin", "default": "arabic"
-			}
-			normalized_lang = lang_map.get(lang.lower(), "arabic")
-			await nutket_handle(update, context, number=number, lang=normalized_lang)
-		elif data.startswith("abjad_details_"):
-			details = context.user_data.get("abjad_result", {}).get("details", "")
-			if details:
-				await query.message.reply_text(
-					i18n.t("ABJAD_DETAILS", language, details=details),
-					parse_mode=ParseMode.HTML
-				)
-			else:
-				await query.message.reply_text(
-					i18n.t("ERROR_GENERAL", language, error="No details available"),
-					parse_mode=ParseMode.HTML
-				)
+			number, nutket_lang = int(parts[0]), parts[1]
+			await nutket_handle(update, context, number=number, lang=nutket_lang)
 		elif data.startswith("abjad_text_"):
 			parts = data[len("abjad_text_"):].rsplit("_", 1)
-			if len(parts) != 2:
+			if len(parts) != 1:
 				await query.message.reply_text(
 					i18n.t("ERROR_INVALID_INPUT", language, error="Invalid abjad_text callback data"),
 					parse_mode=ParseMode.HTML
@@ -245,120 +201,21 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				await query.answer()
 				return
 			text, lang = urllib.parse.unquote(parts[0]), parts[1]
-			# Map lang to alphabeta
-			lang_map = {
-				"0-4": "arabic", "6-10": "arabic", "11-15": "arabic", "16-20": "arabic",
-				"21-25": "arabic", "26-30": "arabic", "31-35": "arabic",
-				"HE": "hebrew", "TR": "turkish", "EN": "english", "LA": "latin",
-				"turkce": "turkish", "arabi": "arabic", "buni": "buni", "huseyni": "huseyni",
-				"hebrew": "hebrew", "english": "english", "latin": "latin", "default": "arabic"
-			}
-			normalized_lang = lang_map.get(lang.lower(), "arabic")
 			abjad = Abjad()
-			result = abjad.abjad(text, tablo=1, shadda=1, detail=0, lang=normalized_lang)
-			if isinstance(result, str) and result.startswith("Error"):
-				await query.message.reply_text(
-					i18n.t("ERROR_GENERAL", language, error=result),
-					parse_mode=ParseMode.HTML
-				)
-			else:
-				value = result["sum"] if isinstance(result, dict) else result
-				response = i18n.t("ABJAD_RESULT", language, text=text, value=value)
-				commentary = await get_ai_commentary(response, language)
-				if commentary:
-					response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
-				keyboard = []
-				if value >= 15:
-					keyboard.append(
-						[InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{value}")]
-					)
-				keyboard.append(
-					[InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{value}_{normalized_lang}")]
-				)
-				reply_markup = InlineKeyboardMarkup(keyboard)
-				await query.message.reply_text(
-					response,
-					parse_mode=ParseMode.HTML,
-					reply_markup=reply_markup,
-				)
+			await abjad_start(update, context, text=text)
 		elif data.startswith("payment_select_"):
 			await payment_handle(update, context)
-		elif data.startswith("numerology_prompt_"):
-			parts = data[len("numerology_prompt_"):].split("_", 2)
-			encoded_text, method, alphabet = parts[0], parts[1], parts[2]
-			text = urllib.parse.unquote(encoded_text)
-			numerology = UnifiedNumerology()
-			result = numerology.numerolog(text, alphabet=alphabet, method=method, detail=False)
-			response = i18n.t("NUMEROLOGY_RESULT", language, text=text, alphabet=alphabet, method=method, value=result)
-			commentary = await get_ai_commentary(response, language)
-			if commentary:
-				response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
-			buttons = [
-				[InlineKeyboardButton(f"Method: {m.capitalize()}", callback_data=f"numerology_{encoded_text}_{alphabet}_{m}")]
-				for m in numerology.get_available_methods()
-				if m != method
-			]
-			if result >= 15:
-				buttons.append(
-					[
-						InlineKeyboardButton(
-							i18n.t("CREATE_MAGIC_SQUARE", language),
-							callback_data=f"magic_square_{result}",
-						)
-					]
-				)
-			reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
-			await query.message.reply_text(response, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
 		elif data.startswith("numerology_"):
 			parts = data[len("numerology_"):].split("_", 2)
-			encoded_text, alphabet, method = parts[0], parts[1], parts[2]
+			alphabet, method, encoded_text = parts[0], parts[1], parts[2]
 			text = urllib.parse.unquote(encoded_text)
-			numerology = UnifiedNumerology()
-			result = numerology.numerolog(text, alphabet=alphabet, method=method, detail=False)
-			response = i18n.t("NUMEROLOGY_RESULT", language, text=text, alphabet=alphabet, method=method, value=result)
-			commentary = await get_ai_commentary(response, language)
-			if commentary:
-				response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
-			buttons = [
-				[InlineKeyboardButton(f"Method: {m.capitalize()}", callback_data=f"numerology_{encoded_text}_{alphabet}_{m}")]
-				for m in numerology.get_available_methods()
-				if m != method
-			]
-			if result >= 15:
-				buttons.append(
-					[
-						InlineKeyboardButton(
-							i18n.t("CREATE_MAGIC_SQUARE", language),
-							callback_data=f"magic_square_{result}",
-						)
-					]
-				)
-			reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
-			await query.message.reply_text(response, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
+			await numerology_handle(update, context, alphabet=alphabet, method=method, text=text)
 		elif data.startswith("convertnumbers_"):
 			parts = data[len("convertnumbers_"):].split("_")
-			number, format_type = int(parts[0]), parts[1]
-			converter = NumberConverter()
-			available_formats = ["arabic", "indian"]
-			if format_type not in available_formats:
-				await query.message.reply_text(
-					i18n.t("ERROR_INVALID_INPUT", language, error="Invalid format"),
-					parse_mode=ParseMode.HTML
-				)
-			else:
-				result = converter.arabic(str(number)) if format_type == "arabic" else converter.indian(str(number))
-				response = i18n.t("CONVERTNUMBERS_RESULT", language, number=number, format=format_type, result=result)
-				alt_format = "indian" if format_type == "arabic" else "arabic"
-				buttons = [
-					[
-						InlineKeyboardButton(
-							f"Format: {alt_format.capitalize()}",
-							callback_data=f"convertnumbers_{number}_{alt_format}",
-						)
-					]
-				]
-				reply_markup = InlineKeyboardMarkup(buttons)
-				await query.message.reply_text(response, parse_mode=ParseMode.HTML, reply_markup=reply_markup)
+			encoded_text- format_type = parts[0], parts[1]
+			text = urllib.parse.unquote(encoded_text)
+			format_type = parts[0]
+			await convert_numbers_handle(update, context, text=text, alt_format=format_type)
 		elif data.startswith("settings_lang_"):
 			new_language = data[len("settings_lang_"):]
 			if new_language in transliteration.valid_languages:

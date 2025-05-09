@@ -13,7 +13,7 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.Abjad import Abjad
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
 from urllib.parse import urlparse
 from datetime import datetime
 from Bot.element_classifier import ElementClassifier
@@ -31,6 +31,9 @@ async def unsur_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
+		handle_credits(update, context)
+		db.set_user_attribute(user_id, "last_interaction", datetime.now())
+		db.increment_command_usage("unsur", user_id)
 
 		await update.message.reply_text(
 			i18n.t("UNSUR_PROMPT_INPUT", language),
@@ -66,14 +69,15 @@ async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		context.user_data["is_arabic"] = is_arabic
 
 		keyboard = [
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_TURKISH", language), callback_data="unsur_lang_TURKCE")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ARABI", language), callback_data="unsur_lang_ARABI")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_BUNI", language), callback_data="unsur_lang_BUNI")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HUSEYNI", language), callback_data="unsur_lang_HUSEYNI")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HEBREW", language), callback_data="unsur_lang_HEBREW")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ENGLISH", language), callback_data="unsur_lang_ENGLISH")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_LATIN", language), callback_data="unsur_lang_LATIN")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_DEFAULT", language), callback_data="unsur_lang_DEFAULT")]
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_TURKISH", language), callback_data="unsur_lang_TURKCE"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ARABI", language), callback_data="unsur_lang_ARABI")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_BUNI", language), callback_data="unsur_lang_BUNI"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HUSEYNI", language), callback_data="unsur_lang_HUSEYNI")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HEBREW", language), callback_data="unsur_lang_HEBREW"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ENGLISH", language), callback_data="unsur_lang_ENGLISH")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_LATIN", language), callback_data="unsur_lang_LATIN"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_DEFAULT", language), callback_data="unsur_lang_DEFAULT")],
+			[InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await update.message.reply_text(
@@ -89,6 +93,42 @@ async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		)
 		return ConversationHandler.END
 
+async def unsur_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
+	logger.info(f"Processing unsur_shadda for user {update.effective_user.id}")
+	try:
+		query = update.callback_query
+		await query.answer()
+		user_id = query.from_user.id
+		db = Database()
+		i18n = I18n()
+		language = db.get_user_language(user_id)
+
+		if not query.data.startswith("unsur_shadda_"):
+			logger.debug(f"Ignoring callback: {query.data}")
+			return SHADDA
+		context.user_data["shadda"] = int(query.data[len("unsur_shadda_"):]) or 1
+
+		keyboard = [
+			[InlineKeyboardButton(i18n.t("TURKISH", language), callback_data="unsur_lang_turkish"),
+			InlineKeyboardButton(i18n.t("ARABIC", language), callback_data="unsur_lang_arabic")],
+			[InlineKeyboardButton(i18n.t("BUNI", language), callback_data="unsur_lang_buni"),
+			InlineKeyboardButton(i18n.t("HUSEYNI", language), callback_data="unsur_lang_huseyni")],
+			[InlineKeyboardButton(i18n.t("HEBREW", language), callback_data="unsur_lang_hebrew"),
+			InlineKeyboardButton(i18n.t("ENGLISH", language), callback_data="unsur_lang_english")],
+			[InlineKeyboardButton(i18n.t("LATIN", language), callback_data="unsur_lang_latin"),
+			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
+		]
+		await query.message.reply_text(
+			i18n.t("UNSUR_PROMPT_LANGUAGE", language),
+			reply_markup=InlineKeyboardMarkup(keyboard),
+			parse_mode="HTML"
+		)
+		return LANGUAGE
+	except Exception as e:
+		logger.error(f"Error in unsur_shadda: {str(e)}")
+		await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
+		return ConversationHandler.END
+
 async def unsur_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Processing unsur_language for user {update.effective_user.id}")
 	try:
@@ -99,22 +139,17 @@ async def unsur_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		i18n = I18n()
 		language = db.get_user_language(user_id)
 
-		# Credit check
-		from Bot.bot import check_credits
-		if not await check_credits(update, context):
-			await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
-			return ConversationHandler.END
-
 		if not query.data.startswith("unsur_lang_"):
 			logger.debug(f"Ignoring callback: {query.data}")
 			return LANGUAGE
 		context.user_data["language"] = query.data[len("unsur_lang_"):].lower()
 
 		keyboard = [
-			[InlineKeyboardButton(i18n.t("ELEMENT_FIRE", language), callback_data="unsur_table_fire")],
-			[InlineKeyboardButton(i18n.t("ELEMENT_WATER", language), callback_data="unsur_table_water")],
-			[InlineKeyboardButton(i18n.t("ELEMENT_AIR", language), callback_data="unsur_table_air")],
-			[InlineKeyboardButton(i18n.t("ELEMENT_EARTH", language), callback_data="unsur_table_earth")]
+			[InlineKeyboardButton(i18n.t("ELEMENT_FIRE", language), callback_data="unsur_table_fire"),
+			InlineKeyboardButton(i18n.t("ELEMENT_WATER", language), callback_data="unsur_table_water")],
+			[InlineKeyboardButton(i18n.t("ELEMENT_AIR", language), callback_data="unsur_table_air"),
+			InlineKeyboardButton(i18n.t("ELEMENT_EARTH", language), callback_data="unsur_table_earth")],
+			[InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		await query.message.reply_text(
 			i18n.t("UNSUR_PROMPT_TABLE", language),
@@ -136,12 +171,6 @@ async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
-
-		# Credit check
-		from Bot.bot import check_credits
-		if not await check_credits(update, context):
-			await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
-			return ConversationHandler.END
 
 		if not query.data.startswith("unsur_table_"):
 			logger.debug(f"Ignoring callback: {query.data}")
@@ -171,12 +200,11 @@ async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 
 		response = i18n.t("UNSUR_RESULT", language, input=input_text, liste=liste, value=value, element=element)
 		keyboard = [
-			[InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{value}")],
-			[InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{value}_{lang}")]
+			[InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{value}"),
+			InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{value}_{lang}")],
+			[InlineKeyboardButton(i18n.t("CALCULATE_ABJAD", language), callback_data=f"abjad_text_{liste}"),
+			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation_unsur")]
 		]
-		if not input_text.replace(" ", "").isdigit():
-			encoded_text = urllib.parse.quote(input_text)
-			keyboard.append([InlineKeyboardButton(i18n.t("CALCULATE_ABJAD", language), callback_data=f"abjad_text_{encoded_text}_{lang}")])
 
 		await query.message.reply_text(
 			response,
@@ -187,47 +215,6 @@ async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		return ConversationHandler.END
 	except Exception as e:
 		logger.error(f"Error in unsur_table: {str(e)}")
-		await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
-		return ConversationHandler.END
-
-async def unsur_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
-	logger.info(f"Processing unsur_shadda for user {update.effective_user.id}")
-	try:
-		query = update.callback_query
-		await query.answer()
-		user_id = query.from_user.id
-		db = Database()
-		i18n = I18n()
-		language = db.get_user_language(user_id)
-
-		# Credit check
-		from Bot.bot import check_credits
-		if not await check_credits(update, context):
-			await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
-			return ConversationHandler.END
-
-		if not query.data.startswith("unsur_shadda_"):
-			logger.debug(f"Ignoring callback: {query.data}")
-			return SHADDA
-		context.user_data["shadda"] = int(query.data[len("unsur_shadda_"):]) or 1
-
-		keyboard = [
-			[InlineKeyboardButton(i18n.t("TURKISH", language), callback_data="unsur_lang_turkish")],
-			[InlineKeyboardButton(i18n.t("ARABIC", language), callback_data="unsur_lang_arabic")],
-			[InlineKeyboardButton(i18n.t("BUNI", language), callback_data="unsur_lang_buni")],
-			[InlineKeyboardButton(i18n.t("HUSEYNI", language), callback_data="unsur_lang_huseyni")],
-			[InlineKeyboardButton(i18n.t("HEBREW", language), callback_data="unsur_lang_hebrew")],
-			[InlineKeyboardButton(i18n.t("ENGLISH", language), callback_data="unsur_lang_english")],
-			[InlineKeyboardButton(i18n.t("LATIN", language), callback_data="unsur_lang_latin")]
-		]
-		await query.message.reply_text(
-			i18n.t("UNSUR_PROMPT_LANGUAGE", language),
-			reply_markup=InlineKeyboardMarkup(keyboard),
-			parse_mode="HTML"
-		)
-		return LANGUAGE
-	except Exception as e:
-		logger.error(f"Error in unsur_shadda: {str(e)}")
 		await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
 		return ConversationHandler.END
 

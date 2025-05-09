@@ -14,14 +14,14 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.Abjad import Abjad
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
 ENTITY_TYPE, LANGUAGE, MULTIPLIAR = range(3)
 
-async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
+async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE, number: int = None):
 	logger.info(f"Starting /huddam for user {update.effective_user.id}")
 	try:
 		user = update.message.from_user
@@ -30,22 +30,26 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
+		handle_credits(update, context)
+		db.set_user_attribute(user_id, "last_interaction", datetime.now())
+		db.increment_command_usage("huddam", user_id)
 
-		args = context.args
-		if not args or not args[0].isdigit():
-			await update.message.reply_text(
-				i18n.t("HUDDAM_USAGE", language),
-				parse_mode=ParseMode.MARKDOWN
-			)
-			return ConversationHandler.END
-
-		number = int(args[0])
+		if number is None:
+			args = context.args
+			if not args or not args[0].isdigit():
+				await update.message.reply_text(
+					i18n.t("HUDDAM_USAGE", language),
+					parse_mode=ParseMode.MARKDOWN
+				)
+				return ConversationHandler.END
+			number = int(args[0])
 		context.user_data["huddam_number"] = number
 
 		keyboard = [
 			[InlineKeyboardButton(i18n.t("HUDDAM_HIGH", language), callback_data="huddam_entity_ulvi")],
-			[InlineKeyboardButton(i18n.t("HUDDAM_LOW", language), callback_data="huddam_entity_sufli")],
-			[InlineKeyboardButton(i18n.t("HUDDAM_BAD", language), callback_data="huddam_entity_ser")],
+			InlineKeyboardButton(i18n.t("HUDDAM_LOW", language), callback_data="huddam_entity_sufli")],
+			[InlineKeyboardButton(i18n.t("HUDDAM_BAD", language), callback_data="huddam_entity_ser"),
+			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await update.message.reply_text(
@@ -71,6 +75,9 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
 		i18n = I18n()
 		language = db.get_user_language(user_id)
 
+		if query.data == "end_conversation":
+			return await huddam_cancel(update, context)
+
 		if not query.data.startswith("huddam_entity_"):
 			logger.debug(f"Ignoring unrelated callback in huddam_entity_type: {query.data}")
 			return ENTITY_TYPE
@@ -78,17 +85,18 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
 		context.user_data["entity_type"] = entity_type
 
 		keyboard = [
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ABJADI", language), callback_data="huddam_lang_0-4")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI", language), callback_data="huddam_lang_6-10")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_QURANIC", language), callback_data="huddam_lang_11-15")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HIJA", language), callback_data="huddam_lang_16-20")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI_HIJA", language), callback_data="huddam_lang_21-25")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_IKLEELS", language), callback_data="huddam_lang_26-30")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_SHAMSE_ABJADI", language), callback_data="huddam_lang_31-35")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HEBREW", language), callback_data="huddam_lang_HE")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_TURKISH", language), callback_data="huddam_lang_TR")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ENGLISH", language), callback_data="huddam_lang_EN")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_LATIN", language), callback_data="huddam_lang_LA")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ABJADI", language), callback_data="huddam_lang_0-4"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI", language), callback_data="huddam_lang_6-10")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_QURANIC", language), callback_data="huddam_lang_11-15"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HIJA", language), callback_data="huddam_lang_16-20")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI_HIJA", language), callback_data="huddam_lang_21-25"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_IKLEELS", language), callback_data="huddam_lang_26-30")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_SHAMSE_ABJADI", language), callback_data="huddam_lang_31-35"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HEBREW", language), callback_data="huddam_lang_HE")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_TURKISH", language), callback_data="huddam_lang_TR"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ENGLISH", language), callback_data="huddam_lang_EN")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_LATIN", language), callback_data="huddam_lang_LA"),
+			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await query.message.reply_text(
@@ -114,6 +122,9 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		i18n = I18n()
 		language = db.get_user_language(user_id)
 
+		if query.data == "end_conversation":
+			return await huddam_cancel(update, context)
+
 		if not query.data.startswith("huddam_lang_"):
 			logger.debug(f"Ignoring unrelated callback in huddam_language: {query.data}")
 			return LANGUAGE
@@ -121,8 +132,9 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		context.user_data["language"] = lang
 
 		keyboard = [
-			[InlineKeyboardButton(i18n.t("HUDDAM_REGULAR", language), callback_data="huddam_multi_regular")],
-			[InlineKeyboardButton(i18n.t("HUDDAM_EACHER", language), callback_data="huddam_multi_eacher")],
+			[InlineKeyboardButton(i18n.t("HUDDAM_REGULAR", language), callback_data="huddam_multi_regular"),
+			InlineKeyboardButton(i18n.t("HUDDAM_EACHER", language), callback_data="huddam_multi_eacher")],
+			[InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await query.message.reply_text(
@@ -147,6 +159,9 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
+
+		if query.data == "end_conversation":
+			return await huddam_cancel(update, context)
 
 		# Credit check
 		from Bot.bot import check_credits
@@ -179,9 +194,10 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 
 		response = i18n.t("HUDDAM_RESULT", language, number=number, type=entity_type, huddam_lang=i18n.t(huddam_lang_text, language), name=result)
 		keyboard = [
-			[InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{number}")],
-			[InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{number}_{alphabeta}")],
-			[InlineKeyboardButton(i18n.t("CALCULATE_ABJAD", language), callback_data=f"abjad_text_{urllib.parse.quote(result)}_{alphabeta}")]
+			[InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{number}"),
+			InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{number}_{alphabeta}")],
+			[InlineKeyboardButton(i18n.t("CALCULATE_ABJAD", language), callback_data=f"abjad_text_{urllib.parse.quote(result)}"),
+			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation_huddam")],
 		]
 		await query.message.reply_text(
 			response,

@@ -13,12 +13,12 @@ from telegram.ext import (
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
 
-async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
+async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, lang_code: str = None):
 	user = update.message.from_user
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id
@@ -31,6 +31,8 @@ async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	if current_lang not in config.available_languages:
 		current_lang = "en"
 
+	# handle_credits(update, context) because language MUST NOT decrement credits
+	db.set_user_attribute(user_id, "last_interaction", datetime.now())
 	db.increment_command_usage("language", user_id)
 
 	try:

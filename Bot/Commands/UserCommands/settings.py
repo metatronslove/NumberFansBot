@@ -14,7 +14,7 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.transliteration import Transliteration
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
@@ -26,9 +26,8 @@ async def settings_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	db = Database()
 	i18n = I18n()
 	language = db.get_user_language(user_id)
+	# handle_credits(update, context) because settings MUST NOT decrement credits
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
-
-	# Increment command usage
 	db.increment_command_usage("settings", user_id)
 
 	transliteration = Transliteration(db, i18n)

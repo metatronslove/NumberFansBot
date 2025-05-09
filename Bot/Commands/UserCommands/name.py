@@ -14,44 +14,57 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.transliteration import Transliteration
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
-async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
+def get_language_name(lang, language, i18n):
+	if lang == 'turkish':
+		return i18n.t("LANGUAGE_NAME_TR", language)
+	elif lang = 'english':
+		return i18n.t("LANGUAGE_NAME_EN", language)
+	elif lang = 'latin':
+		return i18n.t("LANGUAGE_NAME_LA", language)
+	elif lang = 'hebrew':
+		return i18n.t("LANGUAGE_NAME_HE", language)
+	elif lang = 'arabic':
+		return i18n.t("LANGUAGE_NAME_AR", language)
+
+async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, prefix: str = None, target_lang: str = None, name: str = None):
 	user = update.message.from_user
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id
 	db = Database()
 	i18n = I18n()
 	language = db.get_user_language(user_id)
+	handle_credits(update, context)
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
-
 	db.increment_command_usage("name", user_id)
 
-	args = context.args
-	if len(args) < 1:
-		await update.message.reply_text(
-			i18n.t("NAME_USAGE", language),
-			parse_mode=ParseMode.HTML
-		)
-		return
+	if prefix is None
+		args = context.args
+		if len(args) < 1:
+			await update.message.reply_text(
+				i18n.t("NAME_USAGE", language),
+				parse_mode=ParseMode.HTML
+			)
+			return
 
-	prefix = " ".join(args[:-1]) if len(args) > 1 else args[0]
-	target_lang = args[-1].lower() if len(args) >= 1 else "english"
+		prefix = " ".join(args[:-1]) if len(args) > 1 else args[0]
+		target_lang = args[-1].lower() if len(args) >= 1 else "english"
 
-	transliteration = Transliteration(db, i18n)
-	valid_languages = transliteration.valid_languages
+		transliteration = Transliteration(db, i18n)
+		valid_languages = transliteration.valid_languages
 
-	if target_lang not in valid_languages:
-		await update.message.reply_text(
-			i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid language. Use: {', '.join(valid_languages)}"),
-			parse_mode=ParseMode.HTML
-		)
-		return
+		if target_lang not in valid_languages:
+			await update.message.reply_text(
+				i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid language. Use: {', '.join(valid_languages)}"),
+				parse_mode=ParseMode.HTML
+			)
+			return
 
 	try:
 		source_lang = transliteration.guess_source_lang(prefix)
@@ -66,7 +79,7 @@ async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		encoded_prefix = urllib.parse.quote(prefix)
 		buttons = [
 			[InlineKeyboardButton(
-				f"Lang: {lang.capitalize()}",
+				f"{get_language_name(lang, language, i18n)}",
 				callback_data=f"name_alt_{encoded_prefix}_{lang}_{urllib.parse.quote(name)}"
 			)] for lang in valid_languages if lang != target_lang
 		]

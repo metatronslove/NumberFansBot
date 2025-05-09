@@ -13,7 +13,7 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.Abjad import Abjad
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
 from urllib.parse import urlparse
 from datetime import datetime
 
@@ -30,22 +30,45 @@ async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
+		handle_credits(update, context)
+		db.set_user_attribute(user_id, "last_interaction", datetime.now())
+		db.increment_command_usage("bastet", user_id)
 
 		args = context.args
-		if not args or not args[0].isdigit():
+		if len(args) == 1:
+			if not args[0].isdigit():
+				await update.message.reply_text(
+					i18n.t("BASTET_USAGE", language),
+					parse_mode=ParseMode.MARKDOWN
+				)
+				return ConversationHandler.END
+
+			number = int(args[0])
+			context.user_data["bastet_number"] = number
+
+			await update.message.reply_text(
+				i18n.t("BASTET_PROMPT_REPETITION", language)
+			)
+			return REPETITION
+		elif len(args) == 2:
+			if not args[0].isdigit() or not args[1].isdigit():
+				await update.message.reply_text(
+					i18n.t("BASTET_USAGE", language),
+					parse_mode=ParseMode.MARKDOWN
+				)
+				return ConversationHandler.END
+
+			number = int(args[0])
+			context.user_data["bastet_number"] = number
+			repetition = int(args[1])
+			context.user_data["repetition"] = int(repetition)
+			return TABLE
+		elif not args:
 			await update.message.reply_text(
 				i18n.t("BASTET_USAGE", language),
 				parse_mode=ParseMode.MARKDOWN
 			)
 			return ConversationHandler.END
-
-		number = int(args[0])
-		context.user_data["bastet_number"] = number
-
-		await update.message.reply_text(
-			i18n.t("BASTET_PROMPT_REPETITION", language)
-		)
-		return REPETITION
 	except Exception as e:
 		logger.error(f"Error in bastet_start: {str(e)}")
 		await update.message.reply_text(
@@ -73,17 +96,18 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 		context.user_data["repetition"] = int(repetition)
 
 		keyboard = [
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ABJADI", language), callback_data="bastet_table_0-4")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI", language), callback_data="bastet_table_6-10")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_QURANIC", language), callback_data="bastet_table_11-15")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HIJA", language), callback_data="bastet_table_16-20")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI_HIJA", language), callback_data="bastet_table_21-25")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_IKLEELS", language), callback_data="bastet_table_26-30")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_SHAMSE_ABJADI", language), callback_data="bastet_table_31-35")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HEBREW", language), callback_data="bastet_table_HE")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_TURKISH", language), callback_data="bastet_table_TR")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ENGLISH", language), callback_data="bastet_table_EN")],
-			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_LATIN", language), callback_data="bastet_table_LA")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ABJADI", language), callback_data="bastet_table_0-4"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI", language), callback_data="bastet_table_6-10")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_QURANIC", language), callback_data="bastet_table_11-15"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HIJA", language), callback_data="bastet_table_16-20")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_MAGHRIBI_HIJA", language), callback_data="bastet_table_21-25"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_IKLEELS", language), callback_data="bastet_table_26-30")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_SHAMSE_ABJADI", language), callback_data="bastet_table_31-35"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_HEBREW", language), callback_data="bastet_table_HE")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_TURKISH", language), callback_data="bastet_table_TR"),
+			InlineKeyboardButton(i18n.t("ALPHABET_ORDER_ENGLISH", language), callback_data="bastet_table_EN")],
+			[InlineKeyboardButton(i18n.t("ALPHABET_ORDER_LATIN", language), callback_data="bastet_table_LA"),
+			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await update.message.reply_text(
@@ -109,6 +133,9 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		i18n = I18n()
 		language = db.get_user_language(user_id)
 
+		if query.data == "end_conversation":
+			return await bastet_cancel(update, context)
+
 		if not query.data.startswith("bastet_table_"):
 			logger.debug(f"Ignoring unrelated callback in bastet_table: {query.data}")
 			return TABLE
@@ -116,12 +143,13 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		context.user_data["table"] = table
 
 		keyboard = [
-			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_ASGHAR", language), callback_data="bastet_lang_-1")],
-			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_SAGHIR", language), callback_data="bastet_lang_0")],
-			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_KEBEER", language), callback_data="bastet_lang_+1")],
-			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_AKBAR", language), callback_data="bastet_lang_+2")],
-			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_SAGHIR_PLUS_QUANTITY", language), callback_data="bastet_lang_+3")],
-			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_LETTER_QUANTITY", language), callback_data="bastet_lang_5")],
+			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_ASGHAR", language), callback_data="bastet_lang_-1"),
+			InlineKeyboardButton(i18n.t("ABJAD_TYPE_SAGHIR", language), callback_data="bastet_lang_0")],
+			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_KEBEER", language), callback_data="bastet_lang_+1"),
+			InlineKeyboardButton(i18n.t("ABJAD_TYPE_AKBAR", language), callback_data="bastet_lang_+2")],
+			[InlineKeyboardButton(i18n.t("ABJAD_TYPE_SAGHIR_PLUS_QUANTITY", language), callback_data="bastet_lang_+3"),
+			InlineKeyboardButton(i18n.t("ABJAD_TYPE_LETTER_QUANTITY", language), callback_data="bastet_lang_5")],
+			[InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await query.message.reply_text(
@@ -147,11 +175,8 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		i18n = I18n()
 		language = db.get_user_language(user_id)
 
-		# Credit check
-		from Bot.bot import check_credits
-		if not await check_credits(update, context):
-			await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
-			return ConversationHandler.END
+		if query.data == "end_conversation":
+			return await bastet_cancel(update, context)
 
 		if not query.data.startswith("bastet_lang_"):
 			logger.debug(f"Ignoring callback: {query.data}")
@@ -178,9 +203,20 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			return ConversationHandler.END
 
 		response = i18n.t("BASTET_RESULT", language, number=number, repetition=repetition, table=tablebase, value=result)
+
+		warning_desc = get_warning_description(result, language)
+		if warning_desc:
+			response += "\n\n" + i18n.t("WARNING_NUMBER", language, value=result, description=warning_desc)
+
+		commentary = await get_ai_commentary(response, language)
+		if commentary:
+			response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
+
 		keyboard = [
-			[InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{number}")],
-			[InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{number}_{alphabeta}")]
+			[InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{number}"),
+			InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{number}_{alphabeta}")],
+			[InlineKeyboardButton(i18n.t("GENERATE_ENTITY", language), callback_data=f"huddam_{number}"),
+			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation_bastet")],
 		]
 		await query.message.reply_text(
 			response,

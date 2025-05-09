@@ -13,7 +13,7 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 import asyncio
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
@@ -29,7 +29,9 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	config = Config()
 	i18n = I18n()
 	language = db.get_user_language(user_id)
+	# handle_credits(update, context) because payment MUST NOT decrement credits
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
+	db.increment_command_usage("payment", user_id)
 
 	# Check blacklist
 	if db.is_blacklisted(user_id):
@@ -56,9 +58,6 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	# Existing payment logic (placeholder, replace with actual implementation)
 	reply_text = i18n.t("PAYMENT_INSTRUCTIONS", language)
 	await update.message.reply_text(reply_text, parse_mode=ParseMode.HTML)
-
-	# Increment command usage
-	db.increment_command_usage("payment", user_id)
 
 	# Check if payment provider token is set
 	if not Config().payment_provider_token:

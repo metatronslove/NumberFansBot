@@ -14,34 +14,36 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.MagicSquare import MagicSquareGenerator
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
-async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
+async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, number: int = None):
 	user = update.message.from_user
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id
 	db = Database()
 	i18n = I18n()
 	language = db.get_user_language(user_id)
+	handle_credits(update, context)
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
-
 	db.increment_command_usage("magicsquare", user_id)
 
 	args = context.args
-	if len(args) < 1:
-		await update.message.reply_text(
-			i18n.t("MAGICSQUARE_USAGE", language),
-			parse_mode=ParseMode.HTML
-		)
+		if not args and number is None:
+			await update.message.reply_text(
+				i18n.t("MAGICSQUARE_USAGE", language),
+				parse_mode=ParseMode.HTML
+			)
 		return
 
+		if number is None:
+			row_sum = int(args[0])
+
 	try:
-		row_sum = int(args[0])
 		if row_sum < 15:
 			await update.message.reply_text(
 				i18n.t("ERROR_INVALID_INPUT", language, error="Row sum must be at least 15"),
@@ -51,9 +53,11 @@ async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 		magic_square = MagicSquareGenerator()
 		square = magic_square.generate_magic_square(3, row_sum, 0, False, 'arabic')
 		response = i18n.t("MAGICSQUARE_RESULT", language, number=row_sum, square=square["box"])
+
 		commentary = await get_ai_commentary(response, language)
 		if commentary:
 			response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
+
 		buttons = [
 			[InlineKeyboardButton(
 				i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),

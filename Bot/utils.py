@@ -17,6 +17,7 @@ from telegram.error import BadRequest
 from .cache import Cache
 from .config import Config
 from .database import Database
+from .bot import check_credits
 from urllib.parse import urlparse
 from datetime import datetime
 
@@ -111,3 +112,12 @@ def get_warning_description(value, language):
 	except Exception as e:
 		logger.error(f"Error reading warningNumbers.json: {str(e)}")
 		return ""
+
+def handle_credits(update, context):
+	# Credit check
+	if not await check_credits(update, context):
+		await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
+		return ConversationHandler.END
+	else:
+		db.decrement_credits(user_id) # This is the line decrements credits for all command
+		return True
