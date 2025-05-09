@@ -46,7 +46,7 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE, numbe
 		context.user_data["huddam_number"] = number
 
 		keyboard = [
-			[InlineKeyboardButton(i18n.t("HUDDAM_HIGH", language), callback_data="huddam_entity_ulvi")],
+			[InlineKeyboardButton(i18n.t("HUDDAM_HIGH", language), callback_data="huddam_entity_ulvi"),
 			InlineKeyboardButton(i18n.t("HUDDAM_LOW", language), callback_data="huddam_entity_sufli")],
 			[InlineKeyboardButton(i18n.t("HUDDAM_BAD", language), callback_data="huddam_entity_ser"),
 			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
