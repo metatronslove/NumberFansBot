@@ -1,1 +1,1 @@
-from .callback_query import set_language_handle, handle_callback_query
+import .callback_query
