@@ -100,8 +100,6 @@ MIT Lisansı - Detaylar için `LICENSE` dosyasına bakınız.
 ## 📞 İletişim
 Sorularınız için GitHub Issues kullanın veya Telegram'dan @MetatronsLove hesabına ulaşın.
 
-```
-
 ### Önemli Değişiklikler:
 1. **Veritabanı Güncellemesi**:
    - MongoDB → MySQL geçişi vurgulandı
@@ -122,5 +120,4 @@ Sorularınız için GitHub Issues kullanın veya Telegram'dan @MetatronsLove hes
 
 6. **Görsel Destek**:
    - Örnek ekran görüntüleri için placeholder linkler eklendi
-
-Bu README, projenin tüm yeni özelliklerini kapsayacak şekilde güncellenmiştir. Görseller için `assets/` klasörüne örnek screenshot'lar eklemeyi unutmayın.
+Bu README, projenin tüm yeni özelliklerini kapsayacak şekilde güncellenmiştir. Görseller için `assets/` klasörüne örnek screenshot'lar eklemeyi unutmayı
