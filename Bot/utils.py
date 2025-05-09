@@ -124,6 +124,3 @@ async def handle_credits(update, context):
 	if not await check_credits(update, context):
 		await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
 		return ConversationHandler.END
-	else:
-		db.decrement_credits(user_id) # This is the line decrements credits for all command
-		return True
