@@ -14,7 +14,6 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from .Abjad import Abjad
-from .utils import handle_credits
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
