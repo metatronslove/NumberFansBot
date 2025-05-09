@@ -163,12 +163,6 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 		if query.data == "end_conversation":
 			return await huddam_cancel(update, context)
 
-		# Credit check
-		from Bot.bot import check_credits
-		if not await check_credits(update, context):
-			await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
-			return ConversationHandler.END
-
 		if not query.data.startswith("huddam_multi_"):
 			logger.debug(f"Ignoring callback: {query.data}")
 			return MULTIPLIAR
