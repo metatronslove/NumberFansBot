@@ -138,13 +138,13 @@ def register_handlers():
 		logger.error(f"Failed to register successful payment handler: {str(e)}")
 
 	try:
-		telegram_app.add_handler(CallbackQueryHandler(set_language_handle, pattern=r"lang\|.+"))
+		telegram_app.add_handler(CallbackQueryHandler(callback_query.set_language_handle, pattern=r"lang\|.+"))
 		logger.info("Registered CallbackQueryHandler for set_language_handle")
 	except Exception as e:
 		logger.error(f"Failed to register set_language_handle: {str(e)}")
 
 	try:
-		telegram_app.add_handler(CallbackQueryHandler(handle_callback_query))
+		telegram_app.add_handler(CallbackQueryHandler(callback_query.handle_callback_query))
 		logger.info("Registered CallbackQueryHandler for handle_callback_query")
 	except Exception as e:
 		logger.error(f"Failed to register handle_callback_query: {str(e)}")
