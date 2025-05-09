@@ -90,16 +90,16 @@ except Exception as e:
 
 # Register handlers
 def register_handlers():
-	from .Commands.UserCommands import (
-		start, help, language, numerology, convert_numbers, magic_square,
-		transliterate, name, cancel, settings, credits, nutket
-	)
 	from .Commands.UserCommands.abjad import get_abjad_conversation_handler
 	from .Commands.UserCommands.bastet import get_bastet_conversation_handler
 	from .Commands.UserCommands.huddam import get_huddam_conversation_handler
 	from .Commands.UserCommands.unsur import get_unsur_conversation_handler
 	from .Commands.UserCommands.payment import payment_handle, handle_pre_checkout, handle_successful_payment
 	from .Commands.SystemCommands.callback_query import set_language_handle, handle_callback_query
+	from .Commands.UserCommands import (
+		start, help, language, numerology, convert_numbers, magic_square,
+		transliterate, name, cancel, settings, credits, nutket
+	)
 
 	try:
 		telegram_app.add_handler(get_abjad_conversation_handler())
