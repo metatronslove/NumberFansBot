@@ -19,6 +19,7 @@ from .config import Config
 from .database import Database
 from urllib.parse import urlparse
 from datetime import datetime
+from .bot import check_credits
 
 logger = logging.getLogger(__name__)
 config = Config()
