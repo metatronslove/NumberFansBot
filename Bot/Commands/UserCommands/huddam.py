@@ -80,7 +80,17 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE, numbe
 async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.debug(f"Processing huddam_entity_type for user {update.effective_user.id}")
 	try:
-		query = update.callback_query
+		if update.message:
+			query = update.message
+			user = query.from_user
+			chat = query.chat
+		elif update.callback_query:
+			query = update.callback_query
+			user = query.from_user
+			chat = query.message.chat
+		else:
+			logging.error("Invalid update type received")
+			return
 		await query.answer()
 		user_id = user.id
 		db = Database()
@@ -127,7 +137,17 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
 async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.debug(f"Processing huddam_language for user {update.effective_user.id}")
 	try:
-		query = update.callback_query
+		if update.message:
+			query = update.message
+			user = query.from_user
+			chat = query.chat
+		elif update.callback_query:
+			query = update.callback_query
+			user = query.from_user
+			chat = query.message.chat
+		else:
+			logging.error("Invalid update type received")
+			return
 		await query.answer()
 		user_id = user.id
 		db = Database()
@@ -165,7 +185,17 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Processing huddam_multipliar for user {update.effective_user.id}")
 	try:
-		query = update.callback_query
+		if update.message:
+			query = update.message
+			user = query.from_user
+			chat = query.chat
+		elif update.callback_query:
+			query = update.callback_query
+			user = query.from_user
+			chat = query.message.chat
+		else:
+			logging.error("Invalid update type received")
+			return
 		await query.answer()
 		user_id = user.id
 		db = Database()
@@ -220,7 +250,17 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 async def huddam_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Cancelling /huddam for user {update.effective_user.id}")
 	try:
-		query = update.callback_query
+		if update.message:
+			query = update.message
+			user = query.from_user
+			chat = query.chat
+		elif update.callback_query:
+			query = update.callback_query
+			user = query.from_user
+			chat = query.message.chat
+		else:
+			logging.error("Invalid update type received")
+			return
 		await query.answer()
 		user_id = user.id
 		db = Database()

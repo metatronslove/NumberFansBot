@@ -108,7 +108,17 @@ async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 async def unsur_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Processing unsur_shadda for user {update.effective_user.id}")
 	try:
-		query = update.callback_query
+		if update.message:
+			query = update.message
+			user = query.from_user
+			chat = query.chat
+		elif update.callback_query:
+			query = update.callback_query
+			user = query.from_user
+			chat = query.message.chat
+		else:
+			logging.error("Invalid update type received")
+			return
 		await query.answer()
 		user_id = user.id
 		db = Database()
@@ -144,7 +154,17 @@ async def unsur_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 async def unsur_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Processing unsur_language for user {update.effective_user.id}")
 	try:
-		query = update.callback_query
+		if update.message:
+			query = update.message
+			user = query.from_user
+			chat = query.chat
+		elif update.callback_query:
+			query = update.callback_query
+			user = query.from_user
+			chat = query.message.chat
+		else:
+			logging.error("Invalid update type received")
+			return
 		await query.answer()
 		user_id = user.id
 		db = Database()
@@ -177,7 +197,17 @@ async def unsur_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Processing unsur_table for user {update.effective_user.id}")
 	try:
-		query = update.callback_query
+		if update.message:
+			query = update.message
+			user = query.from_user
+			chat = query.chat
+		elif update.callback_query:
+			query = update.callback_query
+			user = query.from_user
+			chat = query.message.chat
+		else:
+			logging.error("Invalid update type received")
+			return
 		await query.answer()
 		user_id = user.id
 		db = Database()

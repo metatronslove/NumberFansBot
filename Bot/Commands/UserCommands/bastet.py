@@ -138,7 +138,17 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.debug(f"Processing bastet_table for user {update.effective_user.id}")
 	try:
-		query = update.callback_query
+		if update.message:
+			query = update.message
+			user = query.from_user
+			chat = query.chat
+		elif update.callback_query:
+			query = update.callback_query
+			user = query.from_user
+			chat = query.message.chat
+		else:
+			logging.error("Invalid update type received")
+			return
 		await query.answer()
 		user_id = user.id
 		db = Database()
@@ -180,7 +190,17 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Processing bastet_language for user {update.effective_user.id}")
 	try:
-		query = update.callback_query
+		if update.message:
+			query = update.message
+			user = query.from_user
+			chat = query.chat
+		elif update.callback_query:
+			query = update.callback_query
+			user = query.from_user
+			chat = query.message.chat
+		else:
+			logging.error("Invalid update type received")
+			return
 		await query.answer()
 		user_id = user.id
 		db = Database()
@@ -245,7 +265,17 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 async def bastet_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Cancelling /bastet for user {update.effective_user.id}")
 	try:
-		query = update.callback_query
+		if update.message:
+			query = update.message
+			user = query.from_user
+			chat = query.chat
+		elif update.callback_query:
+			query = update.callback_query
+			user = query.from_user
+			chat = query.message.chat
+		else:
+			logging.error("Invalid update type received")
+			return
 		await query.answer()
 		user_id = user.id
 		db = Database()
