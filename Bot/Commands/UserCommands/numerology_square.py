@@ -16,7 +16,7 @@ from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.Numerology import UnifiedNumerology
 from Bot.MagicSquare import MagicSquareGenerator
-from Bot.bot import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
 from datetime import datetime
 import urllib.parse
 

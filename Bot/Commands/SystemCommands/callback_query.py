@@ -16,7 +16,7 @@ from Bot.MagicSquare import MagicSquareGenerator
 from Bot.NumberConverter import NumberConverter
 from Bot.cache import Cache
 from Bot.config import Config
-from Bot.bot import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
 import Bot.Commands.UserCommands.abjad
 import Bot.Commands.UserCommands.magic_square
 import Bot.Commands.UserCommands.numerology
