@@ -76,7 +76,8 @@ CREATE TABLE users (
 ## 💰 Bağış Desteği
 Bu proje eski bir bilgisayarda geliştirilmiştir. Daha fazla özellik ekleyebilmemiz için bağışlarınız büyük önem taşır:
 
-**Papara**: `1234567890` (Yönetici panelinde `/payment` komutuyla da ulaşabilirsiniz)
+**Papara**: 
+[![Papara ile Destekle](https://img.shields.io/badge/Bağış%20Yap-%E2%9D%A4-blue)](https://ppr.ist/1T9dx8tUT)
 
 ## 🌐 Yönetici Paneli
 `https://your-render-url.com/en/login` adresinden erişebilirsiniz:
