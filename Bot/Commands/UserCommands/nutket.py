@@ -41,7 +41,7 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 				)
 				return
 			number = int(args[0])
-			lang = args[-1].lower() if len(args) > 1 and args[-1].lower() in ["arabic", "hebrew", "turkish", "english", "latin"] else language
+			nutket_lang = args[-1].lower() if len(args) > 1 and args[-1].lower() in ["arabic", "hebrew", "turkish", "english", "latin"] else language
 
 		if not number:
 			await (update.message.reply_text if update.message else update.callback_query.message.reply_text)(
@@ -57,7 +57,7 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 			"en": "ENGLISH",
 			"la": "LATIN"
 		}
-		abjad_lang = lang_map.get(lang.upper(), "ENGLISH")
+		abjad_lang = lang_map.get(nutket_lang.upper(), "ENGLISH")
 		abjad = Abjad()
 		spelled = abjad.nutket(number, abjad_lang)
 
@@ -68,7 +68,7 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 			)
 			return
 
-		response = i18n.t("NUTKET_RESULT", language, number=number, lang=lang, spelled=spelled)
+		response = i18n.t("NUTKET_RESULT", language, number=number, lang=nutket_lang, spelled=spelled)
 
 		commentary = await get_ai_commentary(response, language)
 		if commentary:
@@ -82,7 +82,7 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 			)])
 		keyboard.append([InlineKeyboardButton(
 			i18n.t("CALCULATE_ABJAD", language),
-			callback_data=f"abjad_text_{spelled}_{lang}"
+			callback_data=f"abjad_text_{spelled}_{nutket_lang}"
 		)])
 		reply_markup = InlineKeyboardMarkup(keyboard)
 

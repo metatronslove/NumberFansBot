@@ -17,10 +17,10 @@ from Bot.NumberConverter import NumberConverter
 from Bot.cache import Cache
 from Bot.config import Config
 from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
-import Bot.Commands.UserCommands.abjad
-import Bot.Commands.UserCommands.magic_square
-import Bot.Commands.UserCommands.numerology
-import Bot.Commands.UserCommands.huddam
+from Bot.Commands.UserCommands.abjad import abjad_start
+from Bot.Commands.UserCommands.magic_square import magic_square_handle
+from Bot.Commands.UserCommands.numerology import numerology_handle
+from Bot.Commands.UserCommands.huddam import huddam_start
 from Bot.Commands.UserCommands.nutket import nutket_handle
 from Bot.Commands.UserCommands.payment import payment_handle
 import urllib.parse
