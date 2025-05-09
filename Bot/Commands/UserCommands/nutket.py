@@ -19,7 +19,7 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
-async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, number: Union[int, str] = None, nutket_lang: str = None):
+async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, number: int = None, nutket_lang: str = None):
 	user = update.message.from_user if update.message else update.callback_query.from_user
 	chat_id = update.message.chat_id if update.message else update.callback_query.message.chat_id
 	await register_user_if_not_exists(update, context, user)

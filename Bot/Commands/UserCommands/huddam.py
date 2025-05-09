@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 ENTITY_TYPE, LANGUAGE, MULTIPLIAR = range(3)
 
-async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE, number: Union[int, str] = None):
+async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE, number: int = None):
 	logger.info(f"Starting /huddam for user {update.effective_user.id}")
 	try:
 		user = update.message.from_user
