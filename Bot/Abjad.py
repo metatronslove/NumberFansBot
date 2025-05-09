@@ -286,150 +286,216 @@ class Abjad:
 
 	def nutket(self, mynumber: Union[int, str], language: str = "ARABIC", gender: str = "female") -> str:
 		try:
-			spell = ""
-			count = 0
 			language = language.upper()
 			gender = gender.lower()
-
+			if isinstance(mynumber, str):
+				if not mynumber.isdigit():
+					return "Geçersiz sayı formatı"
+				mynumber = int(mynumber)
 			if mynumber == 0:
-				return {
-					"ARABIC": "صفر",
-					"HEBREW": "אֶפֶס",
-					"LATIN": "nulla",
-					"ENGLISH": "zero",
-					"TURKISH": "sıfır"
-				}.get(language, "zero")
-
-			mynumber = str(mynumber)
-
-			if language == "ARABIC":
-				place_ones = ["", "ألف", "مليون", "مليار", "تريليون"]
-				place_twos = ["", "ألفان", "مليونان", "ملياران", "تريليونان"]
-				place_appent = ["", "ألفاً", "مليوناً", "ملياراً", "تريليوناً"]
-				place_plural = ["", "آلاف", "ملايين", "مليارات", "تريليونات"]
-
-				while mynumber:
-					event_happenned = 0
-					last_three = mynumber[-3:] if len(mynumber) >= 3 else mynumber
-					last_three_float = float(last_three)
-
-					if count > 0 and last_three_float == 1:
-						temp = ""
-						spell = f"{place_ones[count]} {'و ' if spell else ''}{spell}"
-					elif count > 0 and last_three_float == 2:
-						temp = ""
-						spell = f"{place_twos[count]} {'و ' if spell else ''}{spell}"
-					else:
-						temp = self.get_hundreds(last_three, language, count, spell, gender)
-
-					if temp:
-						if count > 0:
-							if spell:
-								spell = f" و {spell}"
-							if last_three_float != 2 and math.floor(last_three_float / 100) != 1:
-								if 3 <= last_three_float <= 10:
-									spell = f" {place_plural[count]}{spell}"
-									event_happenned = 1
-						if not event_happenned:
-							spell = f" {place_appent[count] if spell else place_ones[count]}{spell}"
-						spell = temp + spell
-						temp = ""
-
-					mynumber = mynumber[:-3] if len(mynumber) > 3 else ""
-					count += 1
-
-			# Similar implementations for HEBREW, LATIN, ENGLISH, TURKISH
-			# (Omitted for brevity, but follow similar structure)
-
-			return spell.strip()
+				return self.ZERO_MAP.get(language, {}).get(gender, "zero")
+			return self.convert_large_number(mynumber, language, gender)
 		except Exception as e:
-			return f"Error: {str(e)}"
+			return f"Hata: {str(e)}"
 
-	def get_hundreds(self, mynumber: str, language: str = "ARABIC", count: int = 0, spell: str = "", gender: str = "male") -> str:
-		try:
-			result = ""
-			mynumber = f"{'0' * (3 - len(mynumber))}{mynumber}"[-3:]
+	def convert_large_number(self, num: int, lang: str, gender: str) -> str:
+		parts = []
+		scale_index = 0
+		scales = self.SCALE_MAP.get(lang, [])
+		while num > 0:
+			chunk = num % 1000
+			num = num // 1000
+			if chunk != 0:
+				part = self.convert_chunk(chunk, lang, gender)
+				if scale_index > 0 and scale_index < len(scales):
+					part += " " + self.get_scale_word(chunk, lang, scale_index)
+				parts.insert(0, part)
+			scale_index += 1
+		return self.join_parts(parts, lang)
 
-			if language == "ARABIC":
-				hundreds = int(mynumber[0])
-				if hundreds > 0:
-					if int(mynumber[1]) == 2 and int(mynumber[2]) == 0:
-						result = "مئتان " if count == 0 else "مئتا "
-					else:
-						hundreds_map = {
-							1: "مائة ", 2: "مئتان ", 3: "ثلاثمائة ", 4: "أربعمائة ",
-							5: "خمسمائة ", 6: "ستمائة ", 7: "سبعمائة ", 8: "ثمانمائة ",
-							9: "تسعمائة "
-						}
-						result = hundreds_map.get(hundreds, "")
+	def convert_chunk(self, num: int, lang: str, gender: str) -> str:
+		if num >= 100:
+			return self.convert_hundreds(num, lang, gender)
+		elif num >= 20:
+			return self.convert_tens(num, lang, gender)
+		else:
+			return self.convert_small(num, lang, gender)
 
-				if result and int(mynumber[1:]) != 0:
-					result += " و "
+	def convert_hundreds(self, num: int, lang: str, gender: str) -> str:
+		hundreds_digit = num // 100
+		remainder = num % 100
+		result = []
+		if hundreds_digit > 0:
+			if lang == "ARABIC":
+				result.append(self.ARABIC_HUNDREDS[hundreds_digit])
+			elif lang == "TURKISH":
+				prefix = self.TURKISH_NUMBERS[hundreds_digit] + " " if hundreds_digit > 1 else ""
+				result.append(f"{prefix}yüz")
+			elif lang == "ENGLISH":
+				result.append(self.ENGLISH_BELOW_20[hundreds_digit] + " hundred")
+			elif lang == "LATIN":
+				result.append(self.LATIN_HUNDREDS[hundreds_digit])
+			elif lang == "HEBREW":
+				result.append(self.HEBREW_HUNDREDS[hundreds_digit])
+		if remainder > 0:
+			result.append(self.convert_tens(remainder, lang, gender))
+		return " ".join(result).strip()
 
-				if mynumber[1] != "0":
-					result += self.get_tens(mynumber[1:], language, count, hundreds, result + spell, gender)
-				else:
-					result += self.get_digit(mynumber[2], language, count, result + spell, gender)
+	def convert_tens(self, num: int, lang: str, gender: str) -> str:
+		if lang == "TURKISH":
+			tens = (num // 10) * 10
+			ones = num % 10
+			return f"{self.TURKISH_NUMBERS[tens]} {self.TURKISH_NUMBERS[ones]}".strip()
+		elif lang == "ENGLISH":
+			if num < 20:
+				return self.ENGLISH_BELOW_20[num]
+			tens = num // 10
+			ones = num % 10
+			return f"{self.ENGLISH_TENS[tens]}-{self.ENGLISH_BELOW_20[ones]}" if ones > 0 else self.ENGLISH_TENS[tens]
+		elif lang == "LATIN":
+			tens = num // 10
+			ones = num % 10
+			latin = self.LATIN_TENS.get(tens * 10, "")
+			return f"{latin} {self.LATIN_UNITS.get(ones, '')}".strip()
+		elif lang == "ARABIC":
+			return self.convert_small(num, lang, gender)
+		elif lang == "HEBREW":
+			return self.convert_small(num, lang, gender)
+		return str(num)
 
-			# Similar implementations for other languages
-			return result
-		except Exception as e:
-			return f"Error: {str(e)}"
+	def convert_small(self, num: int, lang: str, gender: str) -> str:
+		if lang == "TURKISH":
+			return self.TURKISH_NUMBERS.get(num, "")
+		elif lang == "ENGLISH":
+			return self.ENGLISH_BELOW_20[num]
+		elif lang == "LATIN":
+			return self.LATIN_UNITS.get(num, "")
+		elif lang == "ARABIC":
+			return self.ARABIC_NUMBERS[gender].get(num, "")
+		elif lang == "HEBREW":
+			return self.HEBREW_NUMBERS[gender].get(num, "")
+		return str(num)
 
-	def get_tens(self, tenstext: str, language: str = "ARABIC", count: int = 0, hundreds: int = 0, spell: str = "", gender: str = "male") -> str:
-		try:
-			result = ""
-			if language == "ARABIC":
-				tens = int(tenstext[0])
-				units = int(tenstext[1])
-				number = int(tenstext)
+	def get_scale_word(self, chunk: int, lang: str, index: int) -> str:
+		word = self.SCALE_MAP.get(lang, [""])[index]
+		if lang == "TURKISH" and chunk == 1 and index == 1:
+			return "bin"  # Türkçede 'bir bin' denmez
+		return word
 
-				if tens == 1:
-					tens_map = {
-						10: "عشر" if gender == "female" else "عشرة",
-						11: "إحدى عشر" if gender == "female" else "إحدى عشرة",
-						12: "اثنتا عشر" if gender == "female" else "اثنتا عشرة",
-						13: "ثلاث عشر" if gender == "female" else "ثلاث عشرة",
-						14: "أربع عشر" if gender == "female" else "أربع عشرة",
-						15: "خمس عشر" if gender == "female" else "خمس عشرة",
-						16: "ست عشر" if gender == "female" else "ست عشرة",
-						17: "سبع عشر" if gender == "female" else "سبع عشرة",
-						18: "ثمان عشر" if gender == "female" else "ثمان عشرة",
-						19: "تسع عشر" if gender == "female" else "تسع عشرة"
-					}
-					result = tens_map.get(number, "")
-				else:
-					tens_map = {
-						2: "عشرون ", 3: "ثلاثون ", 4: "أربعون ", 5: "خمسون ",
-						6: "ستون ", 7: "سبعون ", 8: "ثمانون ", 9: "تسعون "
-					}
-					result = tens_map.get(tens, "")
-					if units != 0:
-						result = self.get_digit(str(units), language, count, spell, gender) + " و " + result
+	def join_parts(self, parts: List[str], lang: str) -> str:
+		if lang == "ARABIC":
+			return " و ".join(parts)
+		elif lang == "TURKISH":
+			return " ".join(parts)
+		elif lang == "ENGLISH":
+			return ", ".join(parts)
+		elif lang == "HEBREW":
+			return " ו ".join(parts)
+		elif lang == "LATIN":
+			return " et ".join(parts)
+		return " ".join(parts)
 
-			return result
-		except Exception as e:
-			return f"Error: {str(e)}"
+	# Veri Haritaları:
+	ZERO_MAP = {
+		"ARABIC": {"male": "صفر", "female": "صفر"},
+		"HEBREW": {"male": "אפס", "female": "אפס"},
+		"LATIN": {"male": "nulla", "female": "nulla"},
+		"ENGLISH": {"male": "zero", "female": "zero"},
+		"TURKISH": {"male": "sıfır", "female": "sıfır"}
+	}
 
-	def get_digit(self, digit: str, language: str = "ARABIC", count: int = 0, spell: str = "", gender: str = "male") -> str:
-		try:
-			digit = int(digit)
-			if language == "ARABIC":
-				digit_map = {
-					1: "واحد" if gender == "male" else "واحدة",
-					2: "اثنان" if gender == "male" else "اثنتان",
-					3: "ثلاثة" if count == 0 else "ثلاث",
-					4: "أربعة" if count == 0 else "أربع",
-					5: "خمسة" if count == 0 else "خمس",
-					6: "ستة" if count == 0 else "ست",
-					7: "سبعة" if count == 0 else "سبع",
-					8: "ثمانية" if count == 0 else "ثمان",
-					9: "تسعة" if count == 0 else "تسع"
-				}
-				return digit_map.get(digit, "")
-			return ""
-		except Exception as e:
-			return f"Error: {str(e)}"
+	SCALE_MAP = {
+		"TURKISH": ["", "bin", "milyon", "milyar", "trilyon"],
+		"ENGLISH": ["", "thousand", "million", "billion", "trillion"],
+		"HEBREW": ["", "אלף", "מיליון", "מיליארד", "טריליון"],
+		"LATIN": ["", "milia", "milionem", "miliardum", "trilio"],
+		"ARABIC": ["", "ألف", "مليون", "مليار", "تريليون"]
+	}
+
+	TURKISH_NUMBERS = {
+		0: "", 1: "bir", 2: "iki", 3: "üç", 4: "dört", 5: "beş",
+		6: "altı", 7: "yedi", 8: "sekiz", 9: "dokuz",
+		10: "on", 20: "yirmi", 30: "otuz", 40: "kırk",
+		50: "elli", 60: "altmış", 70: "yetmiş",
+		80: "seksen", 90: "doksan"
+	}
+
+	ENGLISH_BELOW_20 = ["", "one", "two", "three", "four", "five", "six",
+						"seven", "eight", "nine", "ten", "eleven", "twelve",
+						"thirteen", "fourteen", "fifteen", "sixteen",
+						"seventeen", "eighteen", "nineteen"]
+
+	ENGLISH_TENS = ["", "ten", "twenty", "thirty", "forty", "fifty",
+					"sixty", "seventy", "eighty", "ninety"]
+
+	ARABIC_NUMBERS = {
+		"male": {
+			1: "واحد", 2: "اثنان", 3: "ثلاثة", 4: "أربعة",
+			5: "خمسة", 6: "ستة", 7: "سبعة", 8: "ثمانية",
+			9: "تسعة", 10: "عشرة", 11: "أحد عشر", 12: "اثنا عشر",
+			13: "ثلاثة عشر", 14: "أربعة عشر", 15: "خمسة عشر",
+			16: "ستة عشر", 17: "سبعة عشر", 18: "ثمانية عشر", 19: "تسعة عشر",
+			20: "عشرون", 30: "ثلاثون", 40: "أربعون", 50: "خمسون",
+			60: "ستون", 70: "سبعون", 80: "ثمانون", 90: "تسعون"
+		},
+		"female": {
+			1: "واحدة", 2: "اثنتان", 3: "ثلاث", 4: "أربع",
+			5: "خمس", 6: "ست", 7: "سبع", 8: "ثمان",
+			9: "تسع", 10: "عشر", 11: "إحدى عشرة", 12: "اثنتا عشرة",
+			13: "ثلاث عشرة", 14: "أربع عشرة", 15: "خمس عشرة",
+			16: "ست عشرة", 17: "سبع عشرة", 18: "ثماني عشرة", 19: "تسع عشرة",
+			20: "عشرون", 30: "ثلاثون", 40: "أربعون", 50: "خمسون",
+			60: "ستون", 70: "سبعون", 80: "ثمانون", 90: "تسعون"
+		}
+	}
+
+	ARABIC_HUNDREDS = {
+		1: "مائة", 2: "مائتان", 3: "ثلاثمائة", 4: "أربعمائة",
+		5: "خمسمائة", 6: "ستمائة", 7: "سبعمائة", 8: "ثمانمائة", 9: "تسعمائة"
+	}
+
+	LATIN_UNITS = {
+		0: "", 1: "unus", 2: "duo", 3: "tres", 4: "quattuor",
+		5: "quinque", 6: "sex", 7: "septem", 8: "octo", 9: "novem",
+		10: "decem", 11: "undecim", 12: "duodecim", 13: "tredecim",
+		14: "quattuordecim", 15: "quindecim", 16: "sedecim",
+		17: "septendecim", 18: "duodeviginti", 19: "undeviginti"
+	}
+
+	LATIN_TENS = {
+		20: "viginti", 30: "triginta", 40: "quadraginta",
+		50: "quinquaginta", 60: "sexaginta", 70: "septuaginta",
+		80: "octoginta", 90: "nonaginta"
+	}
+
+	LATIN_HUNDREDS = {
+		1: "centum", 2: "ducenti", 3: "trecenti", 4: "quadringenti",
+		5: "quingenti", 6: "sescenti", 7: "septingenti", 8: "octingenti", 9: "nongenti"
+	}
+
+	HEBREW_NUMBERS = {
+		"male": {
+			1: "אחד", 2: "שניים", 3: "שלושה", 4: "ארבעה",
+			5: "חמישה", 6: "שישה", 7: "שבעה", 8: "שמונה",
+			9: "תשעה", 10: "עשרה", 20: "עשרים", 30: "שלושים",
+			40: "ארבעים", 50: "חמישים", 60: "שישים", 70: "שבעים",
+			80: "שמונים", 90: "תשעים"
+		},
+		"female": {
+			1: "אחת", 2: "שתיים", 3: "שלוש", 4: "ארבע",
+			5: "חמש", 6: "שש", 7: "שבע", 8: "שמונה",
+			9: "תשע", 10: "עשר", 20: "עשרים", 30: "שלושים",
+			40: "ארבעים", 50: "חמישים", 60: "שישים", 70: "שבעים",
+			80: "שמונים", 90: "תשעים"
+		}
+	}
+
+	HEBREW_HUNDREDS = {
+		1: "מאה", 2: "מאתיים", 3: "שלוש מאות", 4: "ארבע מאות",
+		5: "חמש מאות", 6: "שש מאות", 7: "שבע מאות",
+		8: "שמונה מאות", 9: "תשע מאות"
+	}
+
 
 	def generate_name(self, number: Union[str, int], htype: str, method: int = 1, language: str = "arabic", mode: str = "regular") -> str:
 		try:

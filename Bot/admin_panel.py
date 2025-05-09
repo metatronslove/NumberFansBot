@@ -92,7 +92,7 @@ except Exception as e:
 def register_handlers():
 	from .Commands.UserCommands import (
 		start, help, language, numerology, convert_numbers, magic_square,
-		transliterate, name, cancel, settings, credits
+		transliterate, name, cancel, settings, credits, nutket
 	)
 	from .Commands.UserCommands.abjad import get_abjad_conversation_handler
 	from .Commands.UserCommands.bastet import get_bastet_conversation_handler
