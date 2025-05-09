@@ -190,7 +190,7 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 		keyboard = [
 			[InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{number}"),
 			InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{number}_{alphabeta}")],
-			[InlineKeyboardButton(i18n.t("CALCULATE_ABJAD", language), callback_data=f"abjad_text_{urllib.parse.quote(result)}"),
+			[InlineKeyboardButton(i18n.t("CALCULATE_ABJAD", language), callback_data=f"abjad_text_{result}"),
 			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation_huddam")],
 		]
 		await query.message.reply_text(
@@ -208,7 +208,9 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 async def huddam_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Cancelling /huddam for user {update.effective_user.id}")
 	try:
-		user_id = update.message.from_user.id
+		query = update.callback_query
+		await query.answer()
+		user_id = query.from_user.id
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)

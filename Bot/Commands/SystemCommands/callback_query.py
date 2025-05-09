@@ -190,7 +190,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			number, nutket_lang = int(parts[0]), parts[1]
 			await nutket_handle(update, context, number=number, nutket_lang=nutket_lang)
 		elif data.startswith("abjad_text_"):
-			parts = data[len("abjad_text_"):].rsplit("_", 1)
+			parts = data[len("abjad_text_"):]
 			if len(parts) != 1:
 				await query.message.reply_text(
 					i18n.t("ERROR_INVALID_INPUT", language, error="Invalid abjad_text callback data"),
@@ -198,8 +198,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				)
 				await query.answer()
 				return
-			text, lang = urllib.parse.unquote(parts[0]), parts[1]
-			abjad = Abjad()
+			textg = arts[0]
 			await abjad_start(update, context, text=text)
 		elif data.startswith("payment_select_"):
 			await payment_handle(update, context)

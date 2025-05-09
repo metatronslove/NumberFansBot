@@ -272,7 +272,9 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def abjad_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	logger.info(f"Cancelling /abjad for user {update.effective_user.id}")
 	try:
-		user_id = update.message.from_user.id
+		query = update.callback_query
+		await query.answer()
+		user_id = query.from_user.id
 		config=Config()
 		db = Database()
 		i18n = I18n()

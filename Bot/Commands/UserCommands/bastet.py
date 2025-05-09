@@ -233,7 +233,9 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 async def bastet_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Cancelling /bastet for user {update.effective_user.id}")
 	try:
-		user_id = update.message.from_user.id
+		query = update.callback_query
+		await query.answer()
+		user_id = query.from_user.id
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)

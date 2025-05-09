@@ -221,7 +221,9 @@ async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 async def unsur_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Cancelling /unsur for user {update.effective_user.id}")
 	try:
-		user_id = update.message.from_user.id
+		user_id = query = update.callback_query
+		await query.answer()
+		user_id = query.from_user.id
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
