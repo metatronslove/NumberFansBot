@@ -736,7 +736,7 @@ def toggle_beta_tester(lang="en"):
 @flask_app.route("/bot<token>", methods=["POST"])
 async def webhook(token):
 	config = Config()
-	decoded_token = unquote(token)
+	decoded_token = urllib.parse.unquote(token)
 	logger.info(f"Received webhook token: {token}, decoded: {decoded_token}")
 	if decoded_token != config.telegram_token:
 		logger.error(f"Invalid webhook token: {decoded_token}")
