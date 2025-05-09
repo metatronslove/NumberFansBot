@@ -22,13 +22,13 @@ from ...NumberConverter import NumberConverter
 from ...cache import Cache
 from ...config import Config
 from ...utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
-from ...Commands.UserCommands.abjad import abjad_start, abjad_cancel
-from ...Commands.UserCommands.magic_square import magic_square_handle
-from ...Commands.UserCommands.numerology import numerology_handle
-from ...Commands.UserCommands.huddam import huddam_start, huddam_cancel
-from ...Commands.UserCommands.bastet import bastet_cancel
-from ...Commands.UserCommands.unsur import unsur_cancel
-from ...Commands.UserCommands.nutket import nutket_handle
+import ...Commands.UserCommands.abjad
+import ...Commands.UserCommands.magic_square
+import ...Commands.UserCommands.numerology
+import ...Commands.UserCommands.huddam
+import ...Commands.UserCommands.bastet
+import ...Commands.UserCommands.unsur
+import ...Commands.UserCommands.nutket
 from ...Commands.UserCommands.payment import payment_handle
 
 logger = logging.getLogger(__name__)
@@ -95,13 +95,13 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 		if data.startswith("end_conversation_"):
 			commandToEnd = data[len("end_conversation_"):]
 			if commandToEnd == "abjad":
-				return await abjad_cancel(update, context)
+				return await abjad.abjad_cancel(update, context)
 			elif commandToEnd == "bastet":
-				return await bastet_cancel(update, context)
+				return await bastet.bastet_cancel(update, context)
 			elif commandToEnd == "huddam":
-				return await huddam_cancel(update, context)
+				return await huddam.huddam_cancel(update, context)
 			elif commandToEnd == "unsur":
-				return await unsur_cancel(update, context)
+				return await unsur.unsur_cancel(update, context)
 		elif data.startswith("name_alt_"):
 			parts = data.split("_")
 			if len(parts) != 3:
@@ -137,10 +137,10 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				)
 		elif data.startswith("huddam_"):
 			number = int(data[len("huddam_"):])
-			await huddam_start(update, context, number=number)
+			await huddam.huddam_start(update, context, number=number)
 		elif data.startswith("magic_square_"):
 			row_sum = int(data[len("magic_square_"):])
-			await magic_square_handle(update, context, number=row_sum)
+			await magic_square.magic_square_handle(update, context, number=row_sum)
 		elif data.startswith("indian_square_"):
 			row_sum = int(data[len("indian_square_"):])
 			magic_square = MagicSquareGenerator()
@@ -212,7 +212,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				await query.answer()
 				return
 			number, nutket_lang = int(parts[0]), parts[1]
-			await nutket_handle(update, context, number=number, nutket_lang=nutket_lang)
+			await nutket.nutket_handle(update, context, number=number, nutket_lang=nutket_lang)
 		elif data.startswith("abjad_text_"):
 			parts = data[len("abjad_text_"):]
 			if len(parts) != 1:
@@ -223,14 +223,14 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				await query.answer()
 				return
 			textg = arts[0]
-			await abjad_start(update, context, text=text)
+			await abjad.abjad_start(update, context, text=text)
 		elif data.startswith("payment_select_"):
 			await payment_handle(update, context)
 		elif data.startswith("numerology_"):
 			parts = data[len("numerology_"):].split("_", 2)
 			alphabet, method, encoded_text = parts[0], parts[1], parts[2]
 			text = urllib.parse.unquote(encoded_text)
-			await numerology_handle(update, context, alphabet=alphabet, method=method, text=text)
+			await numerology.numerology_handle(update, context, alphabet=alphabet, method=method, text=text)
 		elif data.startswith("convertnumbers_"):
 			parts = data[len("convertnumbers_"):].split("_")
 			encoded_text, format_type = parts[0], parts[1]
