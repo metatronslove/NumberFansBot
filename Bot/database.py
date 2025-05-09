@@ -183,7 +183,24 @@ class Database:
 		self.conn.commit()
 
 	def get_command_usage(self) -> list:
-		query = "SELECT command, count, last_user_id, last_used FROM command_usage ORDER BY count DESC"
+		query = """
+		SELECT
+			cu.command,
+			SUM(cu.count) as total_count,
+			latest.last_user_id,
+			latest.last_used
+		FROM command_usage cu
+		INNER JOIN (
+			SELECT
+				command,
+				last_user_id,
+				last_used,
+				ROW_NUMBER() OVER (PARTITION BY command ORDER BY last_used DESC) as rn
+			FROM command_usage
+		) latest ON cu.command = latest.command AND latest.rn = 1
+		GROUP BY cu.command, latest.last_user_id, latest.last_used
+		ORDER BY total_count DESC
+		"""
 		self.cursor.execute(query)
 		return self.cursor.fetchall()
 

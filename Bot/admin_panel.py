@@ -288,7 +288,7 @@ def index(lang="en"):
 		flash(i18n.t("CONFIGURE_GITHUB_URL", lang), "warning")
 	else:
 		try:
-			parsed_url = urlparse(config.github_pages_url)
+			parsed_url = urllib.parse.urlparse(config.github_pages_url)
 			if not parsed_url.hostname or not parsed_url.hostname.endswith(".github.io"):
 				flash(i18n.t("ERROR_GENERAL", lang, error="URL must be a GitHub Pages URL (e.g., username.github.io)"), "error")
 			else:
