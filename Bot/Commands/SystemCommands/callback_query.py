@@ -4,7 +4,11 @@ import re
 import aiohttp
 import asyncio
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CallbackQueryHandler, ContextTypes
+from telegram.ext import (
+	Application, ExtBot, ConversationHandler, CommandHandler, MessageHandler,
+	ContextTypes, CallbackContext, CallbackQueryHandler, filters,
+	TypeHandler,
+)
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from ...database import Database
@@ -193,7 +197,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				await query.answer()
 				return
 			number, nutket_lang = int(parts[0]), parts[1]
-			await nutket_handle(update, context, number=number, lang=nutket_lang)
+			await nutket_handle(update, context, number=number, nutket_lang=nutket_lang)
 		elif data.startswith("abjad_text_"):
 			parts = data[len("abjad_text_"):].rsplit("_", 1)
 			if len(parts) != 1:

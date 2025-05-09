@@ -33,7 +33,7 @@ async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 	db.increment_command_usage("magicsquare", user_id)
 
 	args = context.args
-	if not args and number is None:
+	if len(args) < 1 and number is None:
 		await update.message.reply_text(
 			i18n.t("MAGICSQUARE_USAGE", language),
 			parse_mode=ParseMode.HTML
