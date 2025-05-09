@@ -5,6 +5,7 @@ import os
 import json
 import requests
 import aiohttp
+import urllib
 from Bot.cache import Cache
 from Bot.config import Config
 from Bot.database import Database
@@ -18,7 +19,6 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from .Abjad import Abjad
-from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
 
