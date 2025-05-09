@@ -44,7 +44,7 @@ async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, prefix
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
 	db.increment_command_usage("name", user_id)
 
-	if prefix is None
+	if prefix is None:
 		args = context.args
 		if len(args) < 1:
 			await update.message.reply_text(
