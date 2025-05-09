@@ -33,7 +33,7 @@ async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE, text: 
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -102,7 +102,7 @@ async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYP
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -157,7 +157,7 @@ async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -212,7 +212,7 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -261,7 +261,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -343,7 +343,7 @@ async def abjad_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return

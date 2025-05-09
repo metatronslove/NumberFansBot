@@ -34,7 +34,7 @@ async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -149,7 +149,7 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -203,7 +203,7 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -280,7 +280,7 @@ async def bastet_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return

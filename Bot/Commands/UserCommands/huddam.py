@@ -34,7 +34,7 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE, numbe
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -91,7 +91,7 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -150,7 +150,7 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -200,7 +200,7 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -267,7 +267,7 @@ async def huddam_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return

@@ -35,7 +35,7 @@ async def unsur_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -119,7 +119,7 @@ async def unsur_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -167,7 +167,7 @@ async def unsur_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
@@ -212,7 +212,7 @@ async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			query = update.callback_query
 			user = query.from_user
 			chat = query.message.chat
-		query_message = query.message
+			query_message = query.message
 		else:
 			logging.error("Invalid update type received")
 			return
