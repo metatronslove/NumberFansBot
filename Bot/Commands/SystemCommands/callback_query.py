@@ -7,28 +7,30 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler, ContextTypes
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
-from Bot.database import Database
-from Bot.i18n import I18n
-from Bot.transliteration import Transliteration
-from Bot.Abjad import Abjad
-from Bot.Numerology import UnifiedNumerology
-from Bot.MagicSquare import MagicSquareGenerator
-from Bot.NumberConverter import NumberConverter
-from Bot.cache import Cache
-from Bot.config import Config
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
-from Bot.Commands.UserCommands.abjad import abjad_start
-from Bot.Commands.UserCommands.magic_square import magic_square_handle
-from Bot.Commands.UserCommands.numerology import numerology_handle
-from Bot.Commands.UserCommands.huddam import huddam_start
-from Bot.Commands.UserCommands.nutket import nutket_handle
-from Bot.Commands.UserCommands.payment import payment_handle
+from ...database import Database
+from ...i18n import I18n
+from ...transliteration import Transliteration
+from ...Abjad import Abjad
+from ...Numerology import UnifiedNumerology
+from ...MagicSquare import MagicSquareGenerator
+from ...NumberConverter import NumberConverter
+from ...cache import Cache
+from ...config import Config
+from ...utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
+from ...Commands.UserCommands.abjad import abjad_start, abjad_cancel
+from ...Commands.UserCommands.magic_square import magic_square_handle
+from ...Commands.UserCommands.numerology import numerology_handle
+from ...Commands.UserCommands.huddam import huddam_start, huddam_cancel
+from ...Commands.UserCommands.bastet import bastet_cancel
+from ...Commands.UserCommands.unsur import unsur_cancel
+from ...Commands.UserCommands.nutket import nutket_handle
+from ...Commands.UserCommands.payment import payment_handle
 import urllib.parse
 
 logger = logging.getLogger(__name__)
 config = Config()
 
-async def set_language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
+async def set_language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	query = update.callback_query
 	await query.answer()
 	user_id = query.from_user.id
@@ -50,8 +52,9 @@ async def set_language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 			parse_mode=ParseMode.HTML
 		)
 
-async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
+async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	query = update.callback_query
+	await query.answer()
 	data = query.data
 	user_id = query.from_user.id
 	db = Database()
@@ -73,13 +76,13 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 		if data.startswith("end_conversation_"):
 			commandToEnd = data[len("end_conversation_"):]
 			if commandToEnd == "abjad":
-				return await Bot.Commands.UserCommands.abjad.abjad_cancel(update, context)
+				return await abjad_cancel(update, context)
 			elif commandToEnd == "bastet":
-				return await Bot.Commands.UserCommands.bastet.bastet_cancel(update, context)
+				return await bastet_cancel(update, context)
 			elif commandToEnd == "huddam":
-				return await Bot.Commands.UserCommands.huddam.huddam_cancel(update, context)
+				return await huddam_cancel(update, context)
 			elif commandToEnd == "unsur":
-				return await Bot.Commands.UserCommands.unsur.unsur_cancel(update, context)
+				return await unsur_cancel(update, context)
 		elif data.startswith("name_alt_"):
 			parts = data.split("_")
 			if len(parts) != 3:
