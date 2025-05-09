@@ -6,7 +6,7 @@ from telegram.constants import ParseMode
 from Bot.config import Config
 from Bot.database import Database
 from Bot.i18n import I18n
-from Bot.utils import register_user_if_not_exists
+from Bot.bot import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -16,6 +16,9 @@ async def credits_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	db = Database()
 	i18n = I18n()
 	language = db.get_user_language(user_id)  # Use database-stored language
+	# await handle_credits(update, context) because credits MUST NOT decrement credits
+	db.set_user_attribute(user_id, "last_interaction", datetime.now())
+	db.increment_command_usage("credits", user_id)
 
 	try:
 		query = "SELECT credits FROM users WHERE user_id = %s"

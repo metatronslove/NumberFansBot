@@ -15,7 +15,7 @@ from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.Abjad import Abjad
 from Bot.transliteration import Transliteration
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
+from Bot.bot import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime

@@ -1,137 +1,125 @@
 # NumberFansBot
 
-NumberFansBot, Telegram üzerinden numeroloji, ebced (abjad) ve sihirli kare hesaplamaları yapan bir bottur. Kullanıcıların metin veya sayılar için çeşitli hesaplamalar yapmasına olanak tanır ve çok dilli destek sunar (Türkçe, İngilizce, Arapça, İbranice, Latince). Bot, Render.com üzerinde çalışır ve yapılandırma için ortam değişkenlerini kullanır.
+NumberFansBot, Telegram üzerinden numeroloji, ebced (abjad), sihirli kare ve element analizi hesaplamaları yapan gelişmiş bir bottur. Kullanıcıların metin veya sayılar için çeşitli hesaplamalar yapmasına olanak tanır ve 5 dilde destek sunar (Türkçe, İngilizce, Arapça, İbranice, Latince). Bot, Render.com üzerinde çalışır ve MySQL veritabanı kullanır.
 
-## Özellikler
-- **Çok Dilli Destek**: Türkçe, İngilizce, Arapça, İbranice ve Latince dillerinde çalışır. Kullanıcılar `/language` komutuyla dil değiştirebilir; `/start` komutu, Telegram dilini otomatik algılar.
-- **Komutlar**:
-  - `/start`: Botu başlatır, kullanıcının Telegram diline göre dili ayarlar (ör. Türkçe için `tr`).
-  - `/abjad <metin>`: Verilen metnin ebced değerini hesaplar, alfabe sırası ve şedde seçenekleriyle.
-  - `/bastet <sayı>`: Sayılar üzerinde tekrarlı ebced hesaplamaları yapar, tablo ve dil seçenekleriyle.
-  - `/numerology <metin> [yöntem] <alfabe>`: Metnin numeroloji değerini hesaplar, farklı alfabe ve yöntemlerle.
-- **Uyarı Numaraları**: `/abjad`, `/bastet` ve `/numerology` komutları, sonuç 36 veya 37 gibi özel değerler döndüğünde `/Config/warningNumbers.json` dosyasından dil bazlı açıklamalar ekler.
-- **Yönetici Paneli**: `https://<your-render-url>/en/login` adresinde kullanıcı verilerini ve komut kullanımını izlemek için Flask tabanlı bir arayüz.
-- **AI Yorumları**: Hesaplama sonuçlarına Hugging Face API üzerinden AI tabanlı yorumlar ekler.
+![Bot Örnek Görseli](https://metatronslove.github.io/github-repo-traffic-viewer/assets/bot-preview.png)
 
-## Kurulum
+## ✨ Öne Çıkan Özellikler
+- **Çok Dilli Destek**: `/language` komutuyla dil değiştirebilir
+- **20+ Komut**: Ebced, numeroloji, element analizi ve sihirli kareler
+- **AI Entegrasyonu**: Hugging Face API ile akıllı yorumlar
+- **Yönetici Paneli**: Kullanıcı yönetimi ve istatistikler için web arayüzü
+- **Kredi Sistemi**: Premium özellikler için esnek ödeme entegrasyonu
+
+## 🛠️ Teknik Yapı
+| Bileşen          | Teknoloji               |
+|------------------|-------------------------|
+| Backend          | Python 3.10+            |
+| Framework        | python-telegram-bot v20 |
+| Veritabanı       | MySQL                   |
+| Web Arayüzü      | Flask + Bootstrap       |
+| Hosting          | Render.com              |
+| Ödeme Sistemi    | Papara API              |
+
+## 📋 Komut Listesi
+| Komut           | Açıklama                          | Örnek Kullanım            |
+|-----------------|-----------------------------------|---------------------------|
+| `/abjad`        | Metnin ebced değerini hesaplar    | `/abjad selam`            |
+| `/bastet`       | Sayısal tekrarlı hesaplama        | `/bastet 19`              |
+| `/huddam`       | Varlık ismi üretir                | `/huddam 36`              |
+| `/unsur`        | Element analizi yapar             | `/unsur ateş`             |
+| `/magicsquare`  | Sihirli kare oluşturur            | `/magicsquare 15`         |
+| `/nutket`       | Sayıyı harflere çevirir           | `/nutket 100`             |
+| `/payment`      | Kredi satın alma paneli           | `/payment`                |
+
+## 🚀 Kurulum Rehberi
 
 ### Ön Koşullar
-- **GitHub Hesabı**: Kodu saklamak ve Render.com ile entegre etmek için.
-- **Render.com Hesabı**: Botu barındırmak için.
-- **Telegram BotFather**: Bot oluşturmak ve `TELEGRAM_TOKEN` almak için.
-- **MongoDB Atlas**: Kullanıcı verilerini saklamak için `MONGODB_URI`.
-- **Hugging Face API**: AI yorumları için `HUGGINGFACE_ACCESS_TOKEN` ve `AI_ACCESS_TOKEN`.
+- **MySQL Veritabanı** (Aiven veya benzeri)
+- **Telegram Bot Token** (@BotFather'dan)
+- **Render.com Hesabı**
+- **Papara API Anahtarı** (Ödeme için)
 
-### Adım Adım Kurulum
+### 1. Ortam Değişkenleri
+`Config/config.yml` dosyasını veya Render.com ortam değişkenlerini şu şekilde ayarlayın:
 
-1. **Depoyu Klonlayın**:
-   ```bash
-   git clone https://github.com/<kullanici-adi>/<depo-adi>.git
-   cd <depo-adi>
-   ```
+```env
+TELEGRAM_TOKEN=123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
+MYSQL_HOST=mysql-numberfansbot-numberfansbot.aivencloud.com
+MYSQL_USER=avnadmin
+MYSQL_PASSWORD=sifreniz
+MYSQL_DATABASE=numberfansbot
+MYSQL_PORT=28236
+PAYMENT_PROVIDER_TOKEN=papara_api_anahtari
+HUGGINGFACE_ACCESS_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FLASK_SECRET_KEY=benzersiz-gizli-anahtar-32-karakter
+```
 
-2. **Ortam Değişkenlerini Ayarlayın**:
-   - Render.com'da yeni bir Web Servisi oluşturun.
-   - "Ortam" sekmesinde aşağıdaki ortam değişkenlerini ekleyin:
-	 ```plaintext
-	 TELEGRAM_TOKEN=123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
-	 MONGODB_URI=mongodb+srv://kullanici:sifre@cluster0.mongodb.net/numberfansbot
-	 GITHUB_USERNAME=kullanici-adi
-	 GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-	 PAYMENT_PROVIDER_TOKEN=pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-	 CURRENCY_EXCHANGE_TOKEN=doviz-api-anahtari
-	 HUGGINGFACE_ACCESS_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-	 AI_ACCESS_TOKEN=hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-	 AI_MODEL_URL=https://api-inference.huggingface.co/models/mixtralai/Mixtral-8x7B-Instruct-v0.1
-	 FLASK_SECRET_KEY=benzersiz-gizli-anahtar
-	 PORT=8000
-	 PYTHONUNBUFFERED=1
-	 BOT_USERNAME=@BotKullaniciAdi
-	 WEBHOOK_URL=https://<your-render-url>/webhook
-	 GITHUB_REPO=kullanici-adi/depo-adi
-	 GITHUB_PAGES_URL=https://kullanici-adi.github.io/depo-adi
-	 ```
-   - `FLASK_SECRET_KEY` oluşturmak için:
-	 ```bash
-	 python -c "import secrets; print(secrets.token_urlsafe(32))"
-	 ```
+### 2. Veritabanı Kurulumu
+MySQL'de şu tabloları oluşturun:
 
-3. **Bağımlılıkları Yükleyin**:
-   - `requirements.txt` dosyasını kontrol edin:
-	 ```plaintext
-	 python-telegram-bot>=20.0
-	 pymongo>=4.0
-	 flask>=2.0
-	 gunicorn>=20.0
-	 requests>=2.0
-	 ```
-   - Render.com otomatik olarak `requirements.txt` üzerinden bağımlılıkları yükler.
+```sql
+CREATE TABLE users (
+    user_id BIGINT PRIMARY KEY,
+    credits INT DEFAULT 100,
+    is_beta_tester BOOLEAN DEFAULT FALSE,
+    language_code VARCHAR(5) DEFAULT 'en'
+);
+```
 
-4. **Değişiklikleri Yükleyin**:
-   ```bash
-   git add .
-   git commit -m "İlk kurulum ve yapılandırma"
-   git push origin main
-   ```
+### 3. Render.com Dağıtımı
+1. GitHub reposunu Render'a bağlayın
+2. `Web Service` tipinde yeni servis oluşturun
+3. Build komutu olarak `pip install -r requirements.txt` ekleyin
+4. Start komutu: `gunicorn admin_panel:app --worker-class gevent`
 
-5. **Render.com'da Dağıtım**:
-   - Render.com, GitHub push'undan sonra otomatik dağıtım yapar.
-   - "Olaylar" sekmesinden dağıtım durumunu izleyin.
+## 💰 Bağış Desteği
+Bu proje eski bir bilgisayarda geliştirilmiştir. Daha fazla özellik ekleyebilmemiz için bağışlarınız büyük önem taşır:
 
-6. **Webhook Ayarlayın**:
-   ```bash
-   curl https://<your-render-url>/set_webhook
-   curl https://api.telegram.org/bot<TELEGRAM_TOKEN>/getWebhookInfo
-   ```
-   - Çıktı: `{"ok":true,"result":{"url":"https://<your-render-url>/webhook",...}}`
+**Papara**: `1234567890` (Yönetici panelinde `/payment` komutuyla da ulaşabilirsiniz)
 
-## Kullanım
+## 🌐 Yönetici Paneli
+`https://your-render-url.com/en/login` adresinden erişebilirsiniz:
 
-1. **Botu Başlatın**:
-   - Telegram'da `@BotKullaniciAdi` ile konuşmaya başlayın.
-   - `/start` komutunu gönderin. Bot, Telegram dilinizi algılar (ör. Türkçe için `Merhaba! NumberFansBot'a hoş geldiniz...`).
+- Kullanıcı yönetimi
+- Komut istatistikleri
+- Gerçek zamanlı log görüntüleme
+- Dosya editörü entegrasyonu
 
-2. **Komut Örnekleri**:
-   - **Ebced Hesaplama**:
-	 ```plaintext
-	 /abjad naber
-	 ```
-	 - Alfabe sırası, tür, şedde ve detay seçeneklerini seçin.
-	 - Sonuç: `Naber için ebced değeri: 36\nUyarı: Bu değer (36) önemlidir: İlah isminin ebced değeri (şeddeliler tek)`
-   - **Bastet Hesaplama**:
-	 ```plaintext
-	 /bastet 37
-	 ```
-	 - Tekrar sayısı, tablo ve dil seçin.
-	 - Sonuç: `37 için Bastet sonucu (tekrar: 1, tablo: 0): 37\nUyarı: Bu değer (37) önemlidir: Evvel isminin ebced değeri (şeddeliler tek)`
-   - **Numeroloji Hesaplama**:
-	 ```plaintext
-	 /numerology naber turkish
-	 ```
-	 - Sonuç: `Naber için numeroloji (türkçe, normal): 36\nUyarı: Bu değer (36) önemlidir: İlah isminin ebced değeri (şeddeliler tek)`
+![Admin Panel](https://metatronslove.github.io/github-repo-traffic-viewer/assets/admin-preview.png)
 
-3. **Yönetici Paneli**:
-   - `https://<your-render-url>/en/login` adresine gidin.
-   - Kullanıcı verilerini ve komut kullanımını görüntüleyin.
+## 📜 Lisans
+MIT Lisansı - Detaylar için `LICENSE` dosyasına bakınız.
 
-## Hata Giderme
-- **Webhook Çalışmıyor**:
-  - `WEBHOOK_URL` değişkenini kontrol edin.
-  - Webhook'u tekrar ayarlayın.
-- **Çeviri Sorunları**:
-  - `/Locales/` klasöründe `en.json`, `tr.json`, `ar.json`, `he.json`, `la.json` dosyalarının varlığını doğrulayın.
-- **Veritabanı Hataları**:
-  - `MONGODB_URI` doğru mu? MongoDB Atlas bağlantısını test edin.
-- **Uyarı Numaraları Görünmüyor**:
-  - `/Config/warningNumbers.json` dosyasının varlığını ve içeriğini kontrol edin.
+## 🤝 Katkıda Bulunma
+1. Forklayın ve `develop` branch'inde değişiklik yapın
+2. Pull Request açın
+3. Yeni dil eklemek için `Bot/Locales/` dizinine JSON dosyası ekleyin
 
-## Katkıda Bulunma
-- Hataları bildirmek veya yeni özellik önermek için GitHub'da bir "Issue" açın.
-- Yeni diller eklemek için `/Locales/` altına `.json` dosyaları ekleyin ve `config.py` içinde `available_languages` listesini güncelleyin.
+## 📞 İletişim
+Sorularınız için GitHub Issues kullanın veya Telegram'dan @MetatronsLove hesabına ulaşın.
 
-## Lisans
-Bu proje MIT Lisansı altında lisanslanmıştır. Ayrıntılar için `LICENSE` dosyasına bakın.
+```
 
----
+### Önemli Değişiklikler:
+1. **Veritabanı Güncellemesi**:
+   - MongoDB → MySQL geçişi vurgulandı
+   - Yeni tablo yapısı eklendi
 
-**İletişim**: Sorularınız için GitHub üzerinden iletişime geçin veya Telegram'da `@BotKullaniciAdi` ile test edin!
+2. **Yeni Komutlar**:
+   - `/huddam`, `/unsur`, `/nutket` komutları eklendi
+   - Tüm komutlar tablo halinde gösterildi
+
+3. **Bağış Bilgisi**:
+   - Papara entegrasyonu ve bağış önemi vurgulandı
+
+4. **Teknoloji Stack**:
+   - Güncel bağımlılıklar ve mimari şema eklendi
+
+5. **Yönetici Paneli**:
+   - Yeni Flask tabanlı admin özellikleri tanıtıldı
+
+6. **Görsel Destek**:
+   - Örnek ekran görüntüleri için placeholder linkler eklendi
+
+Bu README, projenin tüm yeni özelliklerini kapsayacak şekilde güncellenmiştir. Görseller için `assets/` klasörüne örnek screenshot'lar eklemeyi unutmayın.
