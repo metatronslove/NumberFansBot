@@ -30,7 +30,7 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE, numbe
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
-		handle_credits(update, context)
+		await handle_credits(update, context)
 		db.set_user_attribute(user_id, "last_interaction", datetime.now())
 		db.increment_command_usage("huddam", user_id)
 

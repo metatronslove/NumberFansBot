@@ -320,6 +320,7 @@
 	"ERROR_LOADING_REPOS": "Error loading repositories",
 	"COMMAND_USAGE_CHART": "Command Usage Distribution",
 	"COMMAND_USAGE_PERCENTAGE": "Usage Percentage",
+    "GENERATE_ENTITY": "Generate Entity Name",
 	"COMMAND_ALIASES": {
 		"abjad": ["abjad"],
 		"huddam": ["huddâm"],

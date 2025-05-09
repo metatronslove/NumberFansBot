@@ -321,6 +321,7 @@
 	"COMMAND_USAGE_CHART": "Komut Kullanım Dağılımı",
 	"COMMAND_USAGE_PERCENTAGE": "Kullanım Yüzdesi",
     "TIMEOUT_RETRY": "Konuşma zaman aşımına uğradı. Lütfen tekrar başlayın.",
+    "GENERATE_ENTITY": "Vazifeli İsmi Oluştur",
 	"COMMAND_ALIASES": {
 		"abjad": ["ebced"],
 		"huddam": ["hüddam"],

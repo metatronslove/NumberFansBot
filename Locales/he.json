@@ -321,6 +321,7 @@
 	"COMMAND_USAGE_CHART": "התפלגות שימוש בפקודות",
 	"COMMAND_USAGE_PERCENTAGE": "אחוז שימוש",
     "TIMEOUT_RETRY": "השיחה תמה. אנא התחל מחדש.",
+    "GENERATE_ENTITY": "צור שם קצין",
 	"COMMAND_ALIASES": {
 		"abjad": ["אביג'ד"],
 		"huddam": ["חודם"],

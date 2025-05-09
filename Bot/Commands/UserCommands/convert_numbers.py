@@ -26,7 +26,7 @@ async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_T
 	db = Database()
 	i18n = I18n()
 	language = db.get_user_language(user_id)
-	handle_credits(update, context)
+	await handle_credits(update, context)
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
 	db.increment_command_usage("convertnumbers", user_id)
 

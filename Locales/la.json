@@ -321,6 +321,7 @@
 	"COMMAND_USAGE_CHART": "Mandati Usus Distributio",
 	"COMMAND_USAGE_PERCENTAGE": "Usus Percentage",
     "TIMEOUT_RETRY": "Colloquium expletum est. Iterum incipe.",
+    "GENERATE_ENTITY": "Nomine Praefecti Generare",
 	"COMMAND_ALIASES": {
 		"abjad": ["abjad"],
 		"huddam": ["huddam"],

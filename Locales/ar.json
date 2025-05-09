@@ -321,6 +321,7 @@
 	"COMMAND_USAGE_CHART": "توزيع استخدام الأوامر",
 	"COMMAND_USAGE_PERCENTAGE": "نسبة الاستخدام",
     "TIMEOUT_RETRY": "انتهت مهلة المحادثة. يرجى البدء مرة أخرى.",
+    "GENERATE_ENTITY": "إنشاء اسم الضابط",
 	"COMMAND_ALIASES": {
 		"abjad": ["أبجد"],
 		"huddam": ["حُدّام"],

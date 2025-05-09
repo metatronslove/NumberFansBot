@@ -26,7 +26,7 @@ async def settings_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	db = Database()
 	i18n = I18n()
 	language = db.get_user_language(user_id)
-	# handle_credits(update, context) because settings MUST NOT decrement credits
+	# await handle_credits(update, context) because settings MUST NOT decrement credits
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
 	db.increment_command_usage("settings", user_id)
 

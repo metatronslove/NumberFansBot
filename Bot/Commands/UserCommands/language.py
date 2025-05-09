@@ -31,7 +31,7 @@ async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, la
 	if current_lang not in config.available_languages:
 		current_lang = "en"
 
-	# handle_credits(update, context) because language MUST NOT decrement credits
+	# await handle_credits(update, context) because language MUST NOT decrement credits
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
 	db.increment_command_usage("language", user_id)
 

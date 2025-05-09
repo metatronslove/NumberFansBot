@@ -118,7 +118,7 @@ async def get_warning_description(value, language):
 		logger.error(f"Error reading warningNumbers.json: {str(e)}")
 		return ""
 
-async def handle_credits(update, context):
+async def await handle_credits(update, context):
 	# Credit check
 	if not await check_credits(update, context):
 		await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
