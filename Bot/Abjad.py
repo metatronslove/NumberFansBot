@@ -686,7 +686,7 @@ class Abjad:
 		}
 		self._current_suffix = suffix_map.get(language, {}).get(htype, '')
 		self._current_method = method
-		suffix_val = abjad(self._current_suffix, method, 1, 0, language) if self._current_suffix else 0
+		suffix_val = self.abjad(self._current_suffix, method, 1, 0, language) if self._current_suffix else 0
 		num = int(number)
 		while suffix_val >= num:
 			num += 361
