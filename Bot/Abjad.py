@@ -496,163 +496,221 @@ class Abjad:
 		8: "שמונה מאות", 9: "תשע מאות"
 	}
 
-	def generate_arabic_name(self, hpart: Dict[int, str], counts: int, method: int, mode: str) -> str:
-		# Arapça huddam: abjad.py mapping tablosundan ters eşleme
-		mapping = self.mappings['arabic'].get(method, self.mappings['arabic'][1])
-		reverse_map = {v: k for k, v in mapping.items()}
-		gh = ''
-		for grp in range(counts, 0, -1):
-			part = str(hpart[grp])
-			for idx, ch in enumerate(part):
-				d = int(ch)
-				if d == 0:
-					continue
-				power = len(part) - idx - 1
-				value = d * (10 ** power)
-				gh += reverse_map.get(value, '')
-		gh += getattr(self, '_current_suffix', '')
-		return gh
+    def generate_arabic_name(self, hpart: Dict[int, str], counts: int, method: int, mode: str) -> str:
+        """
+        Arabic name generation supports two modes:
+        - 'regular': positional (abjad) mapping
+        - 'sum': sum-based spelling
+        """
+        # build raw numeric string
+        raw = ''.join(hpart[i] for i in range(counts, 0, -1))
+        if mode == 'regular':
+            # positional mapping
+            mapping = self.mappings['arabic'].get(method, self.mappings['arabic'][1])
+            reverse_map = {v: k for k, v in mapping.items()}
+            gh = ''
+            for grp in range(counts, 0, -1):
+                part = str(hpart[grp])
+                for idx, ch in enumerate(part):
+                    d = int(ch)
+                    if d == 0:
+                        continue
+                    power = len(part) - idx - 1
+                    value = d * (10 ** power)
+                    gh += reverse_map.get(value, '')
+            gh += getattr(self, '_current_suffix', '')
+            return gh
+        # eacher mode:
+        # her grup sonrası eacher harfleri ekle
+        mapping = self.mappings['arabic'].get(method, self.mappings['arabic'][1])
+        reverse_map = {v: k for k, v in mapping.items()}
+        gh = ''
+        for counter in range(counts, 0, -1):
+            part = str(hpart[counter])
+            for idx, ch in enumerate(part):
+                d = int(ch)
+                if d == 0:
+                    continue
+                power = len(part) - idx - 1
+                value = d * (10 ** power)
+                gh += reverse_map.get(value, '')
+            # eacher ekle
+            gh += self._current_suffix
+        return gh(raw, 'arabic')
+        # else regular positional
+        mapping = self.mappings['arabic'].get(method, self.mappings['arabic'][1])
+        reverse_map = {v: k for k, v in mapping.items()}
+        gh = ''
+        for grp in range(counts, 0, -1):
+            part = str(hpart[grp])
+            for idx, ch in enumerate(part):
+                d = int(ch)
+                if d == 0:
+                    continue
+                power = len(part) - idx - 1
+                value = d * (10 ** power)
+                gh += reverse_map.get(value, '')
+        gh += getattr(self, '_current_suffix', '')
+        return gh
 
-	def generate_hebrew_name(self, hpart: Dict[int, str], counts: int) -> str:
-		raw = self._generate_generic(hpart, counts, self._current_method, 'hebrew')
-		spelled = self._spell_by_sum(raw, 'hebrew')
-		return self._apply_hebrew_grammar(spelled)
+    def generate_hebrew_name(self, hpart: Dict[int, str], counts: int) -> str:
+        raw = self._generate_generic(hpart, counts, self._current_method, 'hebrew')
+        if self._current_mode == 'position':
+            return self._apply_hebrew_grammar(self._position_spell(raw, 'hebrew'))
+        # default 'sum' or other: sum-based spelling then grammar
+        spelled = self._spell_by_sum(raw, 'hebrew')
+        return self._apply_hebrew_grammar(spelled)
 
-	def generate_english_name(self, hpart: Dict[int, str], counts: int) -> str:
-		raw = self._generate_generic(hpart, counts, self._current_method, 'english')
-		spelled = self._spell_by_sum(raw, 'english')
-		return self._apply_english_grammar(spelled)
+    def generate_english_name(self, hpart: Dict[int, str], counts: int) -> str:
+        raw = self._generate_generic(hpart, counts, self._current_method, 'english')
+        if self._current_mode == 'position':
+            return self._apply_english_grammar(self._position_spell(raw, 'english'))
+        spelled = self._spell_by_sum(raw, 'english')
+        return self._apply_english_grammar(spelled)
 
-	def generate_latin_name(self, hpart: Dict[int, str], counts: int) -> str:
-		raw = self._generate_generic(hpart, counts, self._current_method, 'latin')
-		spelled = self._spell_by_sum(raw, 'latin')
-		return self._apply_latin_grammar(spelled)
+    def generate_latin_name(self, hpart: Dict[int, str], counts: int) -> str:
+        raw = self._generate_generic(hpart, counts, self._current_method, 'latin')
+        if self._current_mode == 'position':
+            return self._apply_latin_grammar(self._position_spell(raw, 'latin'))
+        spelled = self._spell_by_sum(raw, 'latin')
+        return self._apply_latin_grammar(spelled)
 
-	def generate_turkish_name(self, hpart: Dict[int, str], counts: int) -> str:
-		raw = self._generate_generic(hpart, counts, self._current_method, 'turkish')
-		spelled = self._spell_by_sum(raw, 'turkish')
-		return self._apply_turkish_grammar(spelled)
+    def generate_turkish_name(self, hpart: Dict[int, str], counts: int) -> str:
+        raw = self._generate_generic(hpart, counts, self._current_method, 'turkish')
+        if self._current_mode == 'position':
+            return self._apply_turkish_grammar(self._position_spell(raw, 'turkish'))
+        spelled = self._spell_by_sum(raw, 'turkish')
+        return self._apply_turkish_grammar(spelled)
 
-	def _generate_generic(self, hpart: Dict[int, str], counts: int, method: int, language: str) -> str:
-		# Her basamağın pozisyon değerlerini toplar
-		target = sum(int(digit) * (10 ** (len(hpart[idx]) - pos - 1))
-					 for idx in hpart
-					 for pos, digit in enumerate(hpart[idx]))
-		return str(target)
+    def _generate_generic(self, hpart: Dict[int, str], counts: int, method: int, language: str) -> str:
+        # Her basamağın pozisyon değerlerini toplar
+        target = sum(int(digit) * (10 ** (len(hpart[idx]) - pos - 1))
+                     for idx in hpart
+                     for pos, digit in enumerate(hpart[idx]))
+        return str(target)
 
-	def _spell_by_sum(self, raw: str, language: str) -> str:
-		# raw: sayısal string, hedef sayı
-		target = int(raw)
-		mapping = self.mappings[language][1]
-		items = sorted(mapping.items(), key=lambda kv: -kv[1])
-		result = []
-		rem = target
-		for letter, val in items:
-			while val <= rem:
-				result.append(letter)
-				rem -= val
-		if rem > 0:
-			closest = min(items, key=lambda kv: abs(kv[1] - rem))[0]
-			result.append(closest)
-		result.append(getattr(self, '_current_suffix', ''))
-		return ''.join(result)
+    def _position_spell(self, raw: str, language: str) -> str:
+        # Harfleri pozisyon bazlı mapping ile doğrudan eşle
+        mapping = self.mappings[language].get(self._current_method, self.mappings[language][1])
+        reverse_map = {v: k for k, v in mapping.items()}
+        res = ''
+        for ch in raw:
+            d = int(ch)
+            if d == 0:
+                continue
+            # assume single-digit mapping
+            res += reverse_map.get(d, '')
+        res += getattr(self, '_current_suffix', '')
+        return res
 
-	# Dil bazlı gramer düzeltme:
-	def _apply_english_grammar(self, s: str) -> str:
-		vowels = 'aeiou'
-		res = ''
-		consec = 0
-		for ch in s:
-			res += ch
-			if ch.lower() not in vowels:
-				consec += 1
-				if consec > 1:
-					res += random.choice(list(vowels))
-					consec = 0
-			else:
-				consec = 0
-		return res
+    def _spell_by_sum(self, raw: str, language: str) -> str:
+        # raw: sayısal string, hedef sayı
+        target = int(raw)
+        mapping = self.mappings[language][1]
+        items = sorted(mapping.items(), key=lambda kv: -kv[1])
+        result = []
+        rem = target
+        for letter, val in items:
+            while val <= rem:
+                result.append(letter)
+                rem -= val
+        if rem > 0:
+            closest = min(items, key=lambda kv: abs(kv[1] - rem))[0]
+            result.append(closest)
+        result.append(getattr(self, '_current_suffix', ''))
+        return ''.join(result)
 
-	def _apply_turkish_grammar(self, s: str) -> str:
-		# Türkçe ünlü uyumu: ilk ünlü belirler
-		front = set('eiöü')
-		back = set('aıou')
-		# hece ayırmadan basit: ünsüz küme sonrası uygun ünlü
-		res = ''
-		last_vowel = None
-		for ch in s:
-			res += ch
-			if ch in front or ch in back:
-				last_vowel = ch
-			elif ch.isalpha():
-				# ekle bir uyumlu ünlü
-				v = last_vowel if last_vowel in front or last_vowel in back else 'e'
-				res += v
-		return res
+    # Dil bazlı gramer düzeltme:
+    def _apply_english_grammar(self, s: str) -> str:
+        vowels = 'aeiou'
+        res = ''
+        consec = 0
+        for ch in s:
+            res += ch
+            if ch.lower() not in vowels:
+                consec += 1
+                if consec > 1:
+                    res += random.choice(list(vowels))
+                    consec = 0
+            else:
+                consec = 0
+        return res
 
-	def _apply_hebrew_grammar(self, s: str) -> str:
-		# Basit: tüm ünsüzler arasına 'a' ekle
-		res = ''
-		for ch in s:
-			res += ch
-			if re.match(r'[א-ת]', ch):  # İbranice ünsüz
-				res += 'a'
-		return res
+    def _apply_turkish_grammar(self, s: str) -> str:
+        front = set('eiöü')
+        back = set('aıou')
+        res = ''
+        last_vowel = None
+        for ch in s:
+            res += ch
+            if ch in front or ch in back:
+                last_vowel = ch
+            elif ch.isalpha():
+                v = last_vowel if last_vowel in front or last_vowel in back else 'e'
+                res += v
+        return res
 
-	def _apply_latin_grammar(self, s: str) -> str:
-		# Latin kökenli hece: CV(C) yapısı
-		vowels = 'aeiou'
-		res = ''
-		prev_vowel = False
-		for ch in s:
-			res += ch
-			if ch.lower() not in vowels:
-				# ünsüz sonrası eğer önceki de ünsüzse ekle 'i'
-				if not prev_vowel:
-					res += 'i'
-				prev_vowel = False
-			else:
-				prev_vowel = True
-		return res
+    def _apply_hebrew_grammar(self, s: str) -> str:
+        res = ''
+        for ch in s:
+            res += ch
+            if re.match(r'[א-ת]', ch):
+                res += 'a'
+        return res
 
-	def generate_name(self, number: Union[int, str], htype: str = 'ulvi', method: int = 1,
-					  language: str = 'arabic', mode: str = 'regular') -> str:
-		language = language.lower()
-		htype = htype.upper()
-		suffix_map = {
-			'arabic': {'ULVI':'ئيل','SUFLI':'يوش','ŞER':'طيش'},
-			'hebrew': {'ULVI':'אל','SUFLI':'וש','ŞER':'טש'},
-			'english': {'ULVI':'el','SUFLI':'us','ŞER':'is'},
-			'latin': {'ULVI':'el','SUFLI':'us','ŞER':'is'},
-			'turkish': {'ULVI':'el','SUFLI':'uş','ŞER':'iş'}
-		}
-		self._current_suffix = suffix_map.get(language, {}).get(htype, '')
-		self._current_method = method
-		suffix_val = abjad(self._current_suffix, method, 1, 0, language) if self._current_suffix else 0
-		num = int(number)
-		while suffix_val >= num:
-			num += 361
-		prefix = str(num - suffix_val)
-		hpart: Dict[int, str] = {}
-		counts = 0
-		departs = len(prefix)
-		while departs > 0:
-			start = max(departs-3, 0)
-			counts += 1
-			hpart[counts] = prefix[start:departs]
-			departs -= 3
-		if language == 'arabic':
-			return self.generate_arabic_name(hpart, counts, method, mode)
-		elif language == 'hebrew':
-			return self.generate_hebrew_name(hpart, counts)
-		elif language == 'english':
-			return self.generate_english_name(hpart, counts)
-		elif language == 'latin':
-			return self.generate_latin_name(hpart, counts)
-		elif language == 'turkish':
-			return self.generate_turkish_name(hpart, counts)
-		else:
-			return ''
+    def _apply_latin_grammar(self, s: str) -> str:
+        vowels = 'aeiou'
+        res = ''
+        prev_vowel = False
+        for ch in s:
+            res += ch
+            if ch.lower() not in vowels:
+                if not prev_vowel:
+                    res += 'i'
+                prev_vowel = False
+            else:
+                prev_vowel = True
+        return res
+
+    def generate_name(self, number: Union[int, str], htype: str = 'ulvi', method: int = 1,
+                      language: str = 'arabic', mode: str = 'regular') -> str:
+        language = language.lower()
+        htype = htype.upper()
+        self._current_mode = mode  # store mode for use in generation
+        suffix_map = {
+            'arabic': {'ULVI':'ئيل','SUFLI':'يوش','ŞER':'طيش'},
+            'hebrew': {'ULVI':'אל','SUFLI':'וש','ŞER':'טש'},
+            'english': {'ULVI':'el','SUFLI':'us','ŞER':'is'},
+            'latin': {'ULVI':'el','SUFLI':'us','ŞER':'is'},
+            'turkish': {'ULVI':'el','SUFLI':'uş','ŞER':'iş'}
+        }
+        self._current_suffix = suffix_map.get(language, {}).get(htype, '')
+        self._current_method = method
+        suffix_val = abjad(self._current_suffix, method, 1, 0, language) if self._current_suffix else 0
+        num = int(number)
+        while suffix_val >= num:
+            num += 361
+        prefix = str(num - suffix_val)
+        hpart: Dict[int, str] = {}
+        counts = 0
+        departs = len(prefix)
+        while departs > 0:
+            start = max(departs-3, 0)
+            counts += 1
+            hpart[counts] = prefix[start:departs]
+            departs -= 3
+        if language == 'arabic':
+            return self.generate_arabic_name(hpart, counts, method, mode)
+        elif language == 'hebrew':
+            return self.generate_hebrew_name(hpart, counts)
+        elif language == 'english':
+            return self.generate_english_name(hpart, counts)
+        elif language == 'latin':
+            return self.generate_latin_name(hpart, counts)
+        elif language == 'turkish':
+            return self.generate_turkish_name(hpart, counts)
+        else:
+            return ''
 
 	def calculate_abjad_value(self, text: str, method: int, mapping: Dict[str, int]) -> int:
 		value = 0
