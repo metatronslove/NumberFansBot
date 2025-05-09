@@ -38,7 +38,7 @@ async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 			i18n.t("MAGICSQUARE_USAGE", language),
 			parse_mode=ParseMode.HTML
 		)
-	return
+		return
 
 	if number is None:
 		row_sum = int(args[0])

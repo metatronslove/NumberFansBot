@@ -34,8 +34,8 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE, numbe
 		db.set_user_attribute(user_id, "last_interaction", datetime.now())
 		db.increment_command_usage("huddam", user_id)
 
+		args = context.args
 		if number is None:
-			args = context.args
 			if not args or not args[0].isdigit():
 				await update.message.reply_text(
 					i18n.t("HUDDAM_USAGE", language),
