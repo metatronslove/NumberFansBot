@@ -20,7 +20,19 @@ from pathlib import Path
 from datetime import datetime
 
 async def settings_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
-	user = update.message.from_user
+	# Determine if this is a message or callback query
+	if update.message:
+		query = update.message
+		user = query.from_user
+		chat = query.chat
+	elif update.callback_query:
+		query = update.callback_query
+		user = query.from_user
+		chat = query.message.chat
+	else:
+		logging.error("Invalid update type received")
+		return
+
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id
 	db = Database()

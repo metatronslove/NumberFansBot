@@ -23,7 +23,19 @@ from .language import language_handle
 logger = logging.getLogger(__name__)
 
 async def start_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
-	user = update.message.from_user
+	# Determine if this is a message or callback query
+	if update.message:
+		query = update.message
+		user = query.from_user
+		chat = query.chat
+	elif update.callback_query:
+		query = update.callback_query
+		user = query.from_user
+		chat = query.message.chat
+	else:
+		logging.error("Invalid update type received")
+		return
+
 	user_language = user.language_code.split('-')[0] if user.language_code else 'en'
 	await register_user_if_not_exists(update, context, user, language=user_language)
 	user_id = user.id

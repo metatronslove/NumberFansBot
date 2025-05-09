@@ -35,7 +35,19 @@ logger = logging.getLogger(__name__)
 config = Config()
 
 async def set_language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	query = update.callback_query
+	# Determine if this is a message or callback query
+	if update.message:
+		query = update.message
+		user = query.from_user
+		chat = query.chat
+	elif update.callback_query:
+		query = update.callback_query
+		user = query.from_user
+		chat = query.message.chat
+	else:
+		logging.error("Invalid update type received")
+		return
+
 	await query.answer()
 	user_id = query.from_user.id
 	db = Database()
@@ -57,7 +69,19 @@ async def set_language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 		)
 
 async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TYPE):
-	query = update.callback_query
+	# Determine if this is a message or callback query
+	if update.message:
+		query = update.message
+		user = query.from_user
+		chat = query.chat
+	elif update.callback_query:
+		query = update.callback_query
+		user = query.from_user
+		chat = query.message.chat
+	else:
+		logging.error("Invalid update type received")
+		return
+
 	await query.answer()
 	data = query.data
 	user_id = query.from_user.id

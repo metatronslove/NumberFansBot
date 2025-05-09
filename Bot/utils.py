@@ -26,7 +26,19 @@ logger = logging.getLogger(__name__)
 config = Config()
 
 async def timeout(update: Update, context: ContextTypes.DEFAULT_TYPE, lang: str = "en"):
-	user = update.message.from_user
+	# Determine if this is a message or callback query
+	if update.message:
+		query = update.message
+		user = query.from_user
+		chat = query.chat
+	elif update.callback_query:
+		query = update.callback_query
+		user = query.from_user
+		chat = query.message.chat
+	else:
+		logging.error("Invalid update type received")
+		return
+
 	user_id = user.id
 	config=Config()
 	db = Database()

@@ -20,7 +20,19 @@ from datetime import datetime
 logger = logging.getLogger(__name__)
 
 async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, number: int = None, nutket_lang: str = None):
-	user = update.message.from_user if update.message else update.callback_query.from_user
+	# Determine if this is a message or callback query
+	if update.message:
+		query = update.message
+		user = query.from_user
+		chat = query.chat
+	elif update.callback_query:
+		query = update.callback_query
+		user = query.from_user
+		chat = query.message.chat
+	else:
+		logging.error("Invalid update type received")
+		return
+ if update.message else update.callback_query.from_user
 	chat_id = update.message.chat_id if update.message else update.callback_query.message.chat_id
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id
