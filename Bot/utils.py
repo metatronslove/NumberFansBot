@@ -24,8 +24,14 @@ from datetime import datetime
 logger = logging.getLogger(__name__)
 config = Config()
 
-async def timeout(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
-	await update.message.reply_text("Conversation timed out. Please start again.", parse_mode="HTML")
+async def timeout(update: Update, context: ContextTypes.DEFAULT_TYPE, lang: str = "en"):
+	user = update.message.from_user
+	user_id = user.id
+	config=Config()
+	db = Database()
+	i18n = I18n()
+	lang = db.get_user_language(user_id)
+	await update.message.reply_text(i18n.t("TIMEOUT_RETRY", lang), parse_mode="HTML")
 	context.user_data.clear()
 	return ConversationHandler.END
 
@@ -88,7 +94,7 @@ async def register_user_if_not_exists(update: Update, context: ContextTypes.DEFA
 			user_credits=100
 		)
 
-def get_warning_description(value, language):
+async def get_warning_description(value, language):
 	"""
 	Check if the value exists in warningNumbers.json and return the description for the given language.
 	Args:
@@ -113,7 +119,7 @@ def get_warning_description(value, language):
 		logger.error(f"Error reading warningNumbers.json: {str(e)}")
 		return ""
 
-def handle_credits(update, context):
+async def handle_credits(update, context):
 	# Credit check
 	if not await check_credits(update, context):
 		await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
