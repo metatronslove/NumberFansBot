@@ -204,10 +204,10 @@ class Database:
 		self.cursor.execute(query)
 		return [
 			{
-				'command': row[0],
-				'count': row[1],  # Map total_count to count
-				'last_user_id': row[2],
-				'last_used': row[3]
+				'command': row['command'],
+				'count': row['total_count'],  # Map total_count to count
+				'last_user_id': row['last_user_id'],
+				'last_used': row['last_used']
 			}
 			for row in self.cursor.fetchall()
 		]
