@@ -5,13 +5,13 @@ import bcrypt
 import yaml
 import requests
 import asyncio
+import urllib
 from flask import Flask, request, render_template, redirect, url_for, session, flash, jsonify
 from asgiref.wsgi import WsgiToAsgi
 from Bot.config import Config
 from Bot.database import Database
 from Bot.i18n import I18n
 from .seed_admin import seed_admin
-from urllib.parse import urlparse, unquote
 from pathlib import Path
 from datetime import datetime
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup

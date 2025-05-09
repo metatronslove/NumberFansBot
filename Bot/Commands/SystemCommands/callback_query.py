@@ -3,6 +3,7 @@ import requests
 import re
 import aiohttp
 import asyncio
+import urllib
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
 	Application, ExtBot, ConversationHandler, CommandHandler, MessageHandler,
@@ -29,7 +30,6 @@ from ...Commands.UserCommands.bastet import bastet_cancel
 from ...Commands.UserCommands.unsur import unsur_cancel
 from ...Commands.UserCommands.nutket import nutket_handle
 from ...Commands.UserCommands.payment import payment_handle
-import urllib.parse
 
 logger = logging.getLogger(__name__)
 config = Config()
