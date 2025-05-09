@@ -68,15 +68,6 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 	language = db.get_user_language(user_id)
 
 	try:
-		await query.answer()
-	except BadRequest as e:
-		if "Query is too old" in str(e) or "query id is invalid" in str(e):
-			logger.info(f"Ignoring old or invalid callback query: {str(e)}")
-		else:
-			logger.error(f"BadRequest in handle_callback_query: {str(e)}")
-			raise
-
-	try:
 		if data.startswith("end_conversation_"):
 			commandToEnd = data[len("end_conversation_"):]
 			if commandToEnd == "abjad":
