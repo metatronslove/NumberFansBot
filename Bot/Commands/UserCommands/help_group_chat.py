@@ -49,7 +49,7 @@ async def help_group_chat_handle(update: Update, context: ContextTypes.DEFAULT_T
 			parse_mode=ParseMode.HTML
 		)
 	except Exception as e:
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("ERROR_GENERAL", language, error="Failed to send help video"),
 			parse_mode=ParseMode.HTML
 		)

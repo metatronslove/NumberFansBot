@@ -47,7 +47,7 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 
 	args = context.args
 	if len(args) < 3:
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("TRANSLITERATION_USAGE", language, source_lang="source_lang", target_lang="target_lang", text="text"),
 			parse_mode=ParseMode.HTML
 		)
@@ -61,7 +61,7 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 		transliteration = Transliteration(db, i18n)
 	except Exception as e:
 		logger.error(f"Failed to initialize Transliteration: {str(e)}")
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("ERROR_GENERAL", language, error="Failed to initialize transliteration system"),
 			parse_mode=ParseMode.HTML
 		)
@@ -70,7 +70,7 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 	valid_languages = transliteration.valid_languages
 
 	if source_lang not in valid_languages or target_lang not in valid_languages:
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("LANGUAGE_INVALID", language, languages=", ".join(valid_languages)),
 			parse_mode=ParseMode.HTML
 		)
@@ -111,14 +111,14 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 		]
 		reply_markup = InlineKeyboardMarkup(buttons)
 
-		await update.message.reply_text(
+		await query.reply_text(
 			response,
 			parse_mode=ParseMode.HTML,
 			reply_markup=reply_markup
 		)
 	except Exception as e:
 		logger.error(f"Transliteration error for user {user_id}: {str(e)}")
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
 			parse_mode=ParseMode.HTML
 		)

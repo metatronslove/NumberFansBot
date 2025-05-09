@@ -45,7 +45,7 @@ async def transliteration_history_handle(update: Update, context: ContextTypes.D
 
 	history = db.get_transliteration_history(user_id)
 	if not history:
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("TRANSLITERATION_HISTORY_RESULT", language, history="No transliteration history found"),
 			parse_mode=ParseMode.HTML
 		)
@@ -54,7 +54,7 @@ async def transliteration_history_handle(update: Update, context: ContextTypes.D
 	history_str = "\n".join([f"{item['original']} -> {item['transliterated']} ({item['target_lang']})" for item in history])
 	response = i18n.t("TRANSLITERATION_HISTORY_RESULT", language, history=history_str)
 
-	await update.message.reply_text(
+	await query.reply_text(
 		response,
 		parse_mode=ParseMode.MARKDOWN
 	)

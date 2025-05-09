@@ -48,7 +48,7 @@ async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE, text: 
 
 		args = context.args
 		if not args and text is None:
-			await update.message.reply_text(
+			await query.reply_text(
 				i18n.t("ABJAD_USAGE", language),
 				parse_mode=ParseMode.MARKDOWN
 			)
@@ -75,14 +75,14 @@ async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE, text: 
 			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("ABJAD_PROMPT_ALPHABET", language),
 			reply_markup=reply_markup
 		)
 		return ALPHABET_ORDER
 	except Exception as e:
 		logger.error(f"Error in abjad_start: {str(e)}")
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN
 		)
@@ -93,7 +93,7 @@ async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYP
 	try:
 		query = update.callback_query
 		await query.answer()
-		user_id = query.from_user.id
+		user_id = user.id
 		config=Config()
 		db = Database()
 		i18n = I18n()
@@ -118,14 +118,14 @@ async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYP
 			[InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
-		await query.message.reply_text(
+		await query.reply_text(
 			i18n.t("ABJAD_PROMPT_TYPE", language),
 			reply_markup=reply_markup
 		)
 		return ABJAD_TYPE
 	except Exception as e:
 		logger.error(f"Error in abjad_alphabet_order: {str(e)}")
-		await query.message.reply_text(
+		await query.reply_text(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN
 		)
@@ -136,7 +136,7 @@ async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	try:
 		query = update.callback_query
 		await query.answer()
-		user_id = query.from_user.id
+		user_id = user.id
 		config=Config()
 		db = Database()
 		i18n = I18n()
@@ -158,7 +158,7 @@ async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 				[InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 			]
 			reply_markup = InlineKeyboardMarkup(keyboard)
-			await query.message.reply_text(
+			await query.reply_text(
 				i18n.t("ABJAD_PROMPT_SHADDA", language),
 				reply_markup=reply_markup
 			)
@@ -168,7 +168,7 @@ async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			return await abjad_shadda(update, context)
 	except Exception as e:
 		logger.error(f"Error in abjad_type: {str(e)}")
-		await query.message.reply_text(
+		await query.reply_text(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN
 		)
@@ -179,7 +179,7 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	try:
 		query = update.callback_query
 		await query.answer()
-		user_id = query.from_user.id
+		user_id = user.id
 		config=Config()
 		db = Database()
 		i18n = I18n()
@@ -200,7 +200,7 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			InlineKeyboardButton(i18n.t("ABJAD-WITH-DETAILS", language), callback_data="abjad_detail_1")],
 			[InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
-		await query.message.reply_text(
+		await query.reply_text(
 			i18n.t("ABJAD_PROMPT_DETAIL", language),
 			reply_markup=InlineKeyboardMarkup(keyboard),
 			parse_mode="HTML"
@@ -208,7 +208,7 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		return DETAIL
 	except Exception as e:
 		logger.error(f"Error in abjad_shadda: {str(e)}")
-		await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
+		await query.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
 		return ConversationHandler.END
 
 async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -216,7 +216,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	try:
 		query = update.callback_query
 		await query.answer()
-		user_id = query.from_user.id
+		user_id = user.id
 		config=Config()
 		db = Database()
 		i18n = I18n()
@@ -244,7 +244,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		abjad = Abjad()
 		result = abjad.abjad(text, tablebase, shadda, detail, alphabeta)
 		if isinstance(result, str) and result.startswith("Error"):
-			await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
+			await query.reply_text(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
 			return ConversationHandler.END
 
 		value = result["sum"] if detail == 1 else result
@@ -268,7 +268,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation_abjad")]
 		]
 
-		await query.message.reply_text(
+		await query.reply_text(
 			response,
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=InlineKeyboardMarkup(keyboard)
@@ -278,7 +278,7 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		return ConversationHandler.END
 	except Exception as e:
 		logger.error(f"Error in abjad_detail: {str(e)}")
-		await query.message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
+		await query.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
 		return ConversationHandler.END
 
 async def abjad_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -286,12 +286,12 @@ async def abjad_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	try:
 		query = update.callback_query
 		await query.answer()
-		user_id = query.from_user.id
+		user_id = user.id
 		config=Config()
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("ABJAD_CANCEL", language),
 			parse_mode=ParseMode.MARKDOWN
 		)
@@ -299,7 +299,7 @@ async def abjad_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		return ConversationHandler.END
 	except Exception as e:
 		logger.error(f"Error in abjad_cancel: {str(e)}")
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN
 		)

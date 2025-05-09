@@ -83,7 +83,7 @@ async def numerology_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 	if alphabet is None or alphabet not in numerology.get_available_alphabets():
 		args = context.args
 		if not args:
-			await update.message.reply_text(
+			await query.reply_text(
 				i18n.t("NUMEROLOGY_USAGE", language),
 				parse_mode=ParseMode.HTML
 			)
@@ -98,7 +98,7 @@ async def numerology_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 				)] for alphabet in available_alphabets
 			]
 			reply_markup = InlineKeyboardMarkup(buttons)
-			await update.message.reply_text(
+			await query.reply_text(
 				i18n.t("NUMEROLOGY_PROMPT_ALPHABET", language),
 				parse_mode=ParseMode.HTML,
 				reply_markup=reply_markup
@@ -112,7 +112,7 @@ async def numerology_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 	encoded_text = urllib.parse.quote(text)
 	try:
 		if alphabet not in available_alphabets:
-			await update.message.reply_text(
+			await query.reply_text(
 				i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid alphabet. Use: {', '.join(available_alphabets)}"),
 				parse_mode=ParseMode.HTML
 			)
@@ -120,7 +120,7 @@ async def numerology_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 
 		result = numerology.numerolog(text, alphabet=alphabet, method=method, detail=False)
 		if isinstance(result, dict) and "error" in result:
-			await update.message.reply_text(
+			await query.reply_text(
 				i18n.t("ERROR_INVALID_INPUT", language, error=result["error"]),
 				parse_mode=ParseMode.HTML
 			)
@@ -151,13 +151,13 @@ async def numerology_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 		buttons.append(keyboard)
 		reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
 
-		await update.message.reply_text(
+		await query.reply_text(
 			response,
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup
 		)
 	except Exception as e:
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.HTML
 		)

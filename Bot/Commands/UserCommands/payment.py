@@ -47,7 +47,7 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 
 	# Check blacklist
 	if db.is_blacklisted(user_id):
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("PAYMENT_BLACKLISTED", language),
 			parse_mode=ParseMode.HTML
 		)
@@ -64,16 +64,16 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 				reply_text = i18n.t("TESKILAT_ACTIVATED", language)
 			else:
 				reply_text = i18n.t("TESKILAT_ACTIVATION_FAILED", language)
-		await update.message.reply_text(reply_text, parse_mode=ParseMode.HTML)
+		await query.reply_text(reply_text, parse_mode=ParseMode.HTML)
 		return
 
 	# Existing payment logic (placeholder, replace with actual implementation)
 	reply_text = i18n.t("PAYMENT_INSTRUCTIONS", language)
-	await update.message.reply_text(reply_text, parse_mode=ParseMode.HTML)
+	await query.reply_text(reply_text, parse_mode=ParseMode.HTML)
 
 	# Check if payment provider token is set
 	if not Config().payment_provider_token:
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("PAYMENT_MISSING_PROVIDER_TOKEN", language),
 			parse_mode=ParseMode.HTML
 		)
@@ -81,7 +81,7 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 
 	# Check if user is a beta tester
 	if db.is_beta_tester(user_id):
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("PAYMENT_BETA_TESTER", language),
 			parse_mode=ParseMode.HTML
 		)
@@ -94,7 +94,7 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	)]]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 
-	await update.message.reply_text(
+	await query.reply_text(
 		i18n.t("PAYMENT_SELECT_PRODUCT", language),
 		parse_mode=ParseMode.HTML,
 		reply_markup=reply_markup
@@ -114,7 +114,7 @@ async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_
 		logging.error("Invalid update type received")
 		return
 
-	user_id = query.from_user.id
+	user_id = user.id
 	db = Database()
 	i18n = I18n()
 	language = db.get_user_language(user_id)
@@ -123,21 +123,21 @@ async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_
 
 	if query.data == "payment_select_credit_500":
 		if db.is_blacklisted(user_id):
-			await query.message.reply_text(
+			await query.reply_text(
 				i18n.t("PAYMENT_BLACKLISTED", language),
 				parse_mode=ParseMode.HTML
 			)
 			return
 
 		if not Config().payment_provider_token:
-			await query.message.reply_text(
+			await query.reply_text(
 				i18n.t("PAYMENT_MISSING_PROVIDER_TOKEN", language),
 				parse_mode=ParseMode.HTML
 			)
 			return
 
 		try:
-			await query.message.reply_text(
+			await query.reply_text(
 				i18n.t("PAYMENT_INVOICE_TITLE", language),
 				parse_mode=ParseMode.HTML
 			)
@@ -154,14 +154,14 @@ async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_
 			)
 		except Exception as e:
 			logger.error(f"Payment invoice error: {str(e)}")
-			await query.message.reply_text(
+			await query.reply_text(
 				i18n.t("PAYMENT_FAILED", language),
 				parse_mode=ParseMode.HTML
 			)
 
 async def handle_pre_checkout(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	query = update.pre_checkout_query
-	user_id = query.from_user.id
+	user_id = user.id
 	db = Database()
 	i18n = I18n()
 	language = db.get_user_language(user_id)
@@ -189,12 +189,12 @@ async def handle_successful_payment(update: Update, context: ContextTypes.DEFAUL
 		db.save_order(user_id, payment)
 		db.log_user_activity(user_id, "purchase_credits", {"amount": 500, "cost": 2.00, "currency": "USD"})
 
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("PAYMENT_THANK_YOU", language, product="500 Credits", amount="2.00", currency="USD"),
 			parse_mode=ParseMode.HTML
 		)
 	else:
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("PAYMENT_FAILED", language),
 			parse_mode=ParseMode.HTML
 		)

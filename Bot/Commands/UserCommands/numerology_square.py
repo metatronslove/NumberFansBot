@@ -47,7 +47,7 @@ async def numerology_square_handle(update: Update, context: ContextTypes.DEFAULT
 
 	args = context.args
 	if len(args) < 1:
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("NUMEROLOGYSQUARE_USAGE", language),
 			parse_mode=ParseMode.HTML
 		)
@@ -65,7 +65,7 @@ async def numerology_square_handle(update: Update, context: ContextTypes.DEFAULT
 	method = "normal"
 
 	if alphabet not in numerology.get_available_alphabets():
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("ERROR_INVALID_INPUT", language, error="Invalid alphabet"),
 			parse_mode=ParseMode.HTML
 		)
@@ -93,13 +93,13 @@ async def numerology_square_handle(update: Update, context: ContextTypes.DEFAULT
 		]
 		reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
 
-		await update.message.reply_text(
+		await query.reply_text(
 			response,
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup
 		)
 	except Exception as e:
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
 			parse_mode=ParseMode.HTML
 		)

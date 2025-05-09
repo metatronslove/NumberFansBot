@@ -59,7 +59,7 @@ async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, prefix
 	if prefix is None:
 		args = context.args
 		if len(args) < 1:
-			await update.message.reply_text(
+			await query.reply_text(
 				i18n.t("NAME_USAGE", language),
 				parse_mode=ParseMode.HTML
 			)
@@ -72,7 +72,7 @@ async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, prefix
 		valid_languages = transliteration.valid_languages
 
 		if target_lang not in valid_languages:
-			await update.message.reply_text(
+			await query.reply_text(
 				i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid language. Use: {', '.join(valid_languages)}"),
 				parse_mode=ParseMode.HTML
 			)
@@ -97,13 +97,13 @@ async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, prefix
 		]
 		reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
 
-		await update.message.reply_text(
+		await query.reply_text(
 			response,
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup
 		)
 	except Exception as e:
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
 			parse_mode=ParseMode.HTML
 		)

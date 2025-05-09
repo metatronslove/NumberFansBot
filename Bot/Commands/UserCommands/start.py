@@ -57,10 +57,10 @@ async def start_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 
 		reply_text = i18n.t("START_MESSAGE", language, remaining_credits=remaining_credits)
 		reply_text += "\n" + i18n.t("HELP_MESSAGE", language)
-		await update.message.reply_text(reply_text, parse_mode=ParseMode.HTML)
+		await query.reply_text(reply_text, parse_mode=ParseMode.HTML)
 	except Exception as e:
 		logger.error(f"StartCommand error: {str(e)}")
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.HTML
 		)

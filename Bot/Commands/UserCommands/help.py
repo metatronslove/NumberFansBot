@@ -48,7 +48,7 @@ async def help_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	)]]
 	reply_markup = InlineKeyboardMarkup(buttons)
 
-	await update.message.reply_text(
+	await query.reply_text(
 		i18n.t("HELP_MESSAGE", language),
 		parse_mode=ParseMode.HTML,
 		reply_markup=reply_markup

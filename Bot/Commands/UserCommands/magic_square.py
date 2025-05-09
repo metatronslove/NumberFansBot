@@ -46,7 +46,7 @@ async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 	args = context.args
 	if len(args) < 1 and number is None:
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("MAGICSQUARE_USAGE", language),
 			parse_mode=ParseMode.HTML
 		)
@@ -59,7 +59,7 @@ async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 	try:
 		if row_sum < 15:
-			await update.message.reply_text(
+			await query.reply_text(
 				i18n.t("ERROR_INVALID_INPUT", language, error="Row sum must be at least 15"),
 				parse_mode=ParseMode.HTML
 			)
@@ -83,18 +83,18 @@ async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 			)]
 		]
 		reply_markup = InlineKeyboardMarkup(buttons)
-		await update.message.reply_text(
+		await query.reply_text(
 			response,
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup
 		)
 	except ValueError:
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("ERROR_INVALID_INPUT", language, error="Invalid row sum"),
 			parse_mode=ParseMode.HTML
 		)
 	except Exception as e:
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.HTML
 		)

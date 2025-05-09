@@ -44,7 +44,7 @@ async def timeout(update: Update, context: ContextTypes.DEFAULT_TYPE, lang: str 
 	db = Database()
 	i18n = I18n()
 	lang = db.get_user_language(user_id)
-	await update.message.reply_text(i18n.t("TIMEOUT_RETRY", lang), parse_mode="HTML")
+	await query.reply_text(i18n.t("TIMEOUT_RETRY", lang), parse_mode="HTML")
 	context.user_data.clear()
 	return ConversationHandler.END
 
@@ -135,7 +135,7 @@ async def get_warning_description(value, language):
 async def handle_credits(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	# Credit check
 	if not await check_credits(update, context):
-		await query.message.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
+		await query.reply_text(i18n.t("NO_CREDITS", language), parse_mode="HTML")
 		return ConversationHandler.END
 	return
 
@@ -154,7 +154,7 @@ async def check_credits(update, context):
 
 	# Check blacklist
 	if db.is_blacklisted(user_id):
-		await update.message.reply_text(
+		await query.reply_text(
 			i18n.t("USER_BLACKLISTED", language),
 			parse_mode=filters.ParseMode.HTML
 		)
@@ -165,7 +165,7 @@ async def check_credits(update, context):
 	if credits <= 0:
 		if not db.is_beta_tester(user_id):
 			if not db.is_teskilat(user_id):
-				await update.message.reply_text(
+				await query.reply_text(
 					i18n.t("NO_CREDITS", language),
 					parse_mode=filters.ParseMode.HTML
 				)

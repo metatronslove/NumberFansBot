@@ -44,7 +44,7 @@ async def cancel_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	# Clear conversation state
 	context.user_data.clear()
 
-	await update.message.reply_text(
+	await query.reply_text(
 		i18n.t("CANCEL_RESULT", language),
 		parse_mode=ParseMode.HTML
 	)

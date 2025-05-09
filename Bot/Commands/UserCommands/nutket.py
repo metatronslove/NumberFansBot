@@ -37,7 +37,7 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 	user_id = user.id
 	db = Database()
 	i18n = I18n()
-	language = lang or db.get_user_language(user_id)
+	language = db.get_user_language(user_id)
 	await handle_credits(update, context)
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
 	db.increment_command_usage("nutket", user_id)
@@ -46,7 +46,7 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 		if update.message:
 			args = context.args
 			if not args or not args[0].isdigit():
-				await update.message.reply_text(
+				await query.reply_text(
 					i18n.t("NUTKET_USAGE", language),
 					parse_mode=ParseMode.MARKDOWN
 				)
@@ -55,7 +55,7 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 			nutket_lang = args[-1].lower() if len(args) > 1 and args[-1].lower() in ["arabic", "hebrew", "turkish", "english", "latin"] else language
 
 		if not number:
-			await (update.message.reply_text if update.message else update.callback_query.message.reply_text)(
+			await (query.reply_text if update.message else update.callback_query.reply_text)(
 				i18n.t("ERROR_INVALID_INPUT", language, error="Number is required"),
 				parse_mode=ParseMode.MARKDOWN
 			)
@@ -73,7 +73,7 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 		spelled = abjad.nutket(number, abjad_lang)
 
 		if spelled.startswith("Error"):
-			await (update.message.reply_text if update.message else update.callback_query.message.reply_text)(
+			await (query.reply_text if update.message else update.callback_query.reply_text)(
 				i18n.t("ERROR_GENERAL", language, error=spelled),
 				parse_mode=ParseMode.MARKDOWN
 			)
@@ -97,7 +97,7 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 		)])
 		reply_markup = InlineKeyboardMarkup(keyboard)
 
-		await (update.message.reply_text if update.message else update.callback_query.message.reply_text)(
+		await (query.reply_text if update.message else update.callback_query.reply_text)(
 			response,
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup
@@ -107,7 +107,7 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 
 	except Exception as e:
 		logger.error(f"Nutket error: {str(e)}")
-		await (update.message.reply_text if update.message else update.callback_query.message.reply_text)(
+		await (query.reply_text if update.message else update.callback_query.reply_text)(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN
 		)
