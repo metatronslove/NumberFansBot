@@ -80,7 +80,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				return await Bot.Commands.UserCommands.huddam.huddam_cancel(update, context)
 			elif commandToEnd == "unsur":
 				return await Bot.Commands.UserCommands.unsur.unsur_cancel(update, context)
-		if data.startswith("name_alt_"):
+		elif data.startswith("name_alt_"):
 			parts = data.split("_")
 			if len(parts) != 3:
 				await query.message.reply_text(

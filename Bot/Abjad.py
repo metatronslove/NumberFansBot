@@ -496,269 +496,163 @@ class Abjad:
 		8: "שמונה מאות", 9: "תשע מאות"
 	}
 
-
-	def generate_name(self, number: Union[str, int], htype: str, method: int = 1, language: str = "arabic", mode: str = "regular") -> str:
-		try:
-			suffix = ""
-			prefix = 0
-			if language == "arabic":
-				if method in [1, 7, 12, 17, 22, 27, 32]:
-					suffix = {"ULVI": "ئيل", "SUFLI": "يوش", "ŞER": "طيش", "ULVİ": "ئيل", "SUFLİ": "يوش", "SER": "طيش"}.get(htype.upper(), htype)
-				abjad_suffix = self.abjad(suffix, method, 1, 0, language)
-			elif language == "hebrew":
-				suffix = {"ULVI": "אל", "SUFLI": "וש", "ŞER": "טש", "ULVİ": "אל", "SUFLİ": "וש", "SER": "טש"}.get(htype.upper(), htype)
-				abjad_suffix = self.abjad(suffix, 1, 1, 0, language)
-			elif language == "english":
-				suffix = {"ULVI": "el", "SUFLI": "us", "ŞER": "is", "ULVİ": "el", "SUFLİ": "us", "SER": "is"}.get(htype.upper(), htype.lower())
-				abjad_suffix = self.abjad(suffix, 1, 1, 0, language)
-			elif language == "latin":
-				suffix = {"ULVI": "el", "SUFLI": "us", "ŞER": "is", "ULVİ": "el", "SUFLİ": "us", "SER": "is"}.get(htype.upper(), htype.lower())
-				abjad_suffix = self.abjad(suffix, 1, 1, 0, language)
-			elif language == "turkish":
-				suffix = {"ULVI": "el", "SUFLI": "uş", "ŞER": "iş", "ULVİ": "el", "SUFLİ": "uş", "SER": "iş"}.get(htype.upper(), htype.lower())
-				abjad_suffix = self.abjad(suffix, 1, 1, 0, language)
-			while int(prefix) <= 0:
-				prefix = str(int(number) - int(abjad_suffix))
-				number += 361
-			hpart = {}
-			counts = 0
-
-			if len(prefix) > 3:
-				departs = len(prefix)
-				counts = 0
-				while departs > 0:
-					hpart[counts + 1] = prefix[max(departs - 3, 0):departs]
-					departs -= 3
-					counts += 1
-				if hpart[counts][-1] == "0":
-					counts -= 1
-			else:
-				hpart[1] = prefix
-				counts = 1
-
-			language = language.lower()
-			gh = ""
-			if language == "arabic":
-				gh = self.generate_arabic_name(hpart, counts, method, mode)
-				if method in [1, 7, 12, 17, 22, 27, 32]:
-					gh += {"ULVI": "ئيل", "SUFLI": "يوش", "ŞER": "طيش", "ULVİ": "ئيل", "SUFLİ": "يوش", "SER": "طيش"}.get(htype.upper(), htype)
-			elif language == "hebrew":
-				gh = self.generate_hebrew_name(hpart, counts)
-				gh += {"ULVI": "אל", "SUFLI": "וש", "ŞER": "טש", "ULVİ": "אל", "SUFLİ": "וש", "SER": "טש"}.get(htype.upper(), htype)
-			elif language == "english":
-				gh = self.generate_english_name(hpart, counts)
-				gh += {"ULVI": "el", "SUFLI": "us", "ŞER": "is", "ULVİ": "el", "SUFLİ": "us", "SER": "is"}.get(htype.upper(), htype.lower())
-			elif language == "latin":
-				gh = self.generate_latin_name(hpart, counts)
-				gh += {"ULVI": "el", "SUFLI": "us", "ŞER": "is", "ULVİ": "el", "SUFLİ": "us", "SER": "is"}.get(htype.upper(), htype.lower())
-			elif language == "turkish":
-				gh = self.generate_turkish_name(hpart, counts)
-				gh += {"ULVI": "el", "SUFLI": "uş", "ŞER": "iş", "ULVİ": "el", "SUFLİ": "uş", "SER": "iş"}.get(htype.upper(), htype.lower())
-
-			return gh
-		except Exception as e:
-			return f"Error: {str(e)}"
-
 	def generate_arabic_name(self, hpart: Dict[int, str], counts: int, method: int, mode: str) -> str:
-		gh = ""
-		eacher = ""
-
-		for counter in range(counts, 0, -1):
-			for counting in range(len(hpart[counter])):
-				choosen = hpart[counter][counting]
-				turn = 4 - len(hpart[counter]) + counting
-
-				h = ""
-				if turn == 3:
-					if choosen == "1":
-						h = "ا" if len(hpart[counter]) > 1 or counts == 1 else ""
-					elif choosen == "2":
-						h = "ل" if method == 12 else "ب"
-					elif choosen == "3":
-						h = "ن" if method == 12 else "ت" if method in [17, 22, 27, 32] else "ج"
-					# Add other cases similarly
-				elif turn == 2:
-					# Implement similar logic
-					pass
-				elif turn == 1:
-					# Implement similar logic
-					pass
-
-				if h:
-					gh += h
-
-				eacher = ""
-				for counted in range(1, counter):
-					eacher += {"7": "ش", "12": "ظ", "1": "غ"}.get(str(method), "ي" if method in [17, 22, 27, 32] else "غ")
-
-				if mode == "eacher":
-					gh += eacher
-					eacher = ""
-
-			if mode == "regular":
-				gh += eacher
-
+		# Arapça huddam: abjad.py mapping tablosundan ters eşleme
+		mapping = self.mappings['arabic'].get(method, self.mappings['arabic'][1])
+		reverse_map = {v: k for k, v in mapping.items()}
+		gh = ''
+		for grp in range(counts, 0, -1):
+			part = str(hpart[grp])
+			for idx, ch in enumerate(part):
+				d = int(ch)
+				if d == 0:
+					continue
+				power = len(part) - idx - 1
+				value = d * (10 ** power)
+				gh += reverse_map.get(value, '')
+		gh += getattr(self, '_current_suffix', '')
 		return gh
 
 	def generate_hebrew_name(self, hpart: Dict[int, str], counts: int) -> str:
-		gh = ""
-		hebrew_chars = {"1": "א", "2": "ב", "3": "ג", "4": "ד", "5": "ה", "6": "ו", "7": "ז", "8": "ח", "9": "ט", "0": "י"}
-
-		for counter in range(counts, 0, -1):
-			part_name = ""
-			for counting in range(len(hpart[counter])):
-				choosen = hpart[counter][counting]
-				part_name += hebrew_chars.get(choosen, "")
-			gh += self.ensure_hebrew_readability(part_name)
-
-		return gh
-
-	def ensure_hebrew_readability(self, name: str) -> str:
-		vowels = ["א", "ה", "ו", "י"]
-		has_vowel = any(char in vowels for char in name)
-
-		if not has_vowel and name:
-			return name[0] + "א" + name[1:]
-		return name
+		raw = self._generate_generic(hpart, counts, self._current_method, 'hebrew')
+		spelled = self._spell_by_sum(raw, 'hebrew')
+		return self._apply_hebrew_grammar(spelled)
 
 	def generate_english_name(self, hpart: Dict[int, str], counts: int) -> str:
-		gh = ""
-		english_chars = {"1": "a", "2": "b", "3": "c", "4": "d", "5": "e", "6": "f", "7": "g", "8": "h", "9": "i", "0": "j"}
-		syllables = ["an", "ar", "ba", "be", "bi", "bo", "ca", "ce", "ch", "co", "da", "de", "di", "do", "el", "en", "er", "es", "et", "fa", "fe", "fi", "fo", "ga", "ge", "gi", "go", "ha", "he", "hi", "ho", "in", "is", "it", "ja", "je", "ji", "jo", "ka", "ke", "ki", "ko", "la", "le", "li", "lo", "ma", "me", "mi", "mo", "na", "ne", "ni", "no", "on", "or", "pa", "pe", "pi", "po", "ra", "re", "ri", "ro", "sa", "se", "si", "so", "ta", "te", "ti", "to", "un", "ur", "va", "ve", "vi", "vo", "za", "ze", "zi", "zo"]
-
-		for counter in range(counts, 0, -1):
-			raw_name = "".join(english_chars.get(c, "") for c in hpart[counter])
-			gh += self.ensure_english_readability(raw_name, syllables)
-
-		return gh.capitalize()
-
-	def ensure_english_readability(self, raw_name: str, syllables: List[str]) -> str:
-		if len(raw_name) <= 2:
-			return raw_name
-
-		readable = ""
-		vowels = "aeiou"
-		has_vowel = any(c in vowels for c in raw_name)
-
-		if not has_vowel:
-			i = 0
-			while i < len(raw_name):
-				pair = raw_name[i:i+2]
-				if len(pair) == 2:
-					found = False
-					for syllable in syllables:
-						if syllable[0] == pair[0]:
-							readable += syllable
-							found = True
-							break
-					if not found:
-						readable += pair[0] + "a"
-				else:
-					readable += raw_name[i] + "a"
-				i += 2
-		else:
-			readable = raw_name
-
-		return readable
+		raw = self._generate_generic(hpart, counts, self._current_method, 'english')
+		spelled = self._spell_by_sum(raw, 'english')
+		return self._apply_english_grammar(spelled)
 
 	def generate_latin_name(self, hpart: Dict[int, str], counts: int) -> str:
-		gh = ""
-		latin_chars = {"1": "a", "2": "b", "3": "c", "4": "d", "5": "e", "6": "f", "7": "g", "8": "h", "9": "i", "0": "j"}
-		syllables = ["am", "an", "ar", "as", "at", "em", "en", "er", "es", "et", "im", "in", "ir", "is", "it", "om", "on", "or", "os", "ot", "um", "un", "ur", "us", "ut", "ba", "be", "bi", "bo", "bu", "ca", "ce", "ci", "co", "cu", "da", "de", "di", "do", "du", "fa", "fe", "fi", "fo", "fu", "ga", "ge", "gi", "go", "gu", "la", "le", "li", "lo", "lu", "ma", "me", "mi", "mo", "mu", "na", "ne", "ni", "no", "nu", "pa", "pe", "pi", "po", "pu", "ra", "re", "ri", "ro", "ru", "sa", "se", "si", "so", "su", "ta", "te", "ti", "to", "tu", "va", "ve", "vi", "vo", "vu"]
-		endings = ["us", "um", "is", "ix", "ex", "ax", "or", "er", "io", "ius"]
-
-		for counter in range(counts, 0, -1):
-			raw_name = "".join(latin_chars.get(c, "") for c in hpart[counter])
-			gh += self.ensure_latin_readability(raw_name, syllables)
-
-		if not any(gh.endswith(end) for end in endings) and gh:
-			gh += endings[random.randint(0, len(endings) - 1)]
-
-		return gh.capitalize()
-
-	def ensure_latin_readability(self, raw_name: str, syllables: List[str]) -> str:
-		if len(raw_name) <= 2:
-			return raw_name
-
-		readable = ""
-		vowels = "aeiou"
-		has_vowel = any(c in vowels for c in raw_name)
-
-		if not has_vowel:
-			i = 0
-			while i < len(raw_name):
-				pair = raw_name[i:i+2]
-				if len(pair) == 2:
-					found = False
-					for syllable in syllables:
-						if syllable[0] == pair[0]:
-							readable += syllable
-							found = True
-							break
-					if not found:
-						readable += pair[0] + "a"
-				else:
-					readable += raw_name[i] + "a"
-				i += 2
-		else:
-			readable = raw_name
-
-		return readable
+		raw = self._generate_generic(hpart, counts, self._current_method, 'latin')
+		spelled = self._spell_by_sum(raw, 'latin')
+		return self._apply_latin_grammar(spelled)
 
 	def generate_turkish_name(self, hpart: Dict[int, str], counts: int) -> str:
-		gh = ""
-		turkish_chars = {"1": "a", "2": "b", "3": "c", "4": "ç", "5": "d", "6": "e", "7": "f", "8": "g", "9": "ğ", "0": "h"}
-		syllables = ["an", "ar", "as", "at", "ay", "ba", "be", "bi", "bo", "bu", "ca", "ce", "ci", "co", "cu", "ça", "çe", "çi", "ço", "çu", "da", "de", "di", "do", "du", "el", "em", "en", "er", "es", "et", "ev", "ey", "fa", "fe", "fi", "fo", "fu", "ga", "ge", "gi", "go", "gu", "ha", "he", "hi", "ho", "hu", "ık", "ıl", "ın", "ır", "iç", "il", "im", "in", "ir", "iş", "it", "iz", "ka", "ke", "ki", "ko", "ku", "la", "le", "li", "lo", "lu", "ma", "me", "mi", "mo", "mu", "na", "ne", "ni", "no", "nu", "ok", "ol", "on", "or", "oy", "pa", "pe", "pi", "po", "pu", "ra", "re", "ri", "ro", "ru", "sa", "se", "si", "so", "su", "şa", "şe", "şi", "şo", "şu", "ta", "te", "ti", "to", "tu", "ul", "um", "un", "ur", "ut", "uç", "uş", "üç", "ül", "ün", "üs", "üz", "va", "ve", "vi", "vo", "vu", "ya", "ye", "yi", "yo", "yu", "za", "ze", "zi", "zo", "zu"]
+		raw = self._generate_generic(hpart, counts, self._current_method, 'turkish')
+		spelled = self._spell_by_sum(raw, 'turkish')
+		return self._apply_turkish_grammar(spelled)
 
-		for counter in range(counts, 0, -1):
-			raw_name = "".join(turkish_chars.get(c, "") for c in hpart[counter])
-			gh += self.ensure_turkish_readability(raw_name, syllables)
+	def _generate_generic(self, hpart: Dict[int, str], counts: int, method: int, language: str) -> str:
+		# Her basamağın pozisyon değerlerini toplar
+		target = sum(int(digit) * (10 ** (len(hpart[idx]) - pos - 1))
+					 for idx in hpart
+					 for pos, digit in enumerate(hpart[idx]))
+		return str(target)
 
-		return gh.capitalize()
+	def _spell_by_sum(self, raw: str, language: str) -> str:
+		# raw: sayısal string, hedef sayı
+		target = int(raw)
+		mapping = self.mappings[language][1]
+		items = sorted(mapping.items(), key=lambda kv: -kv[1])
+		result = []
+		rem = target
+		for letter, val in items:
+			while val <= rem:
+				result.append(letter)
+				rem -= val
+		if rem > 0:
+			closest = min(items, key=lambda kv: abs(kv[1] - rem))[0]
+			result.append(closest)
+		result.append(getattr(self, '_current_suffix', ''))
+		return ''.join(result)
 
-	def ensure_turkish_readability(self, raw_name: str, syllables: List[str]) -> str:
-		if len(raw_name) <= 2:
-			return raw_name
+	# Dil bazlı gramer düzeltme:
+	def _apply_english_grammar(self, s: str) -> str:
+		vowels = 'aeiou'
+		res = ''
+		consec = 0
+		for ch in s:
+			res += ch
+			if ch.lower() not in vowels:
+				consec += 1
+				if consec > 1:
+					res += random.choice(list(vowels))
+					consec = 0
+			else:
+				consec = 0
+		return res
 
-		readable = ""
-		vowels = "aeıioöuü"
-		has_vowel = any(c in vowels for c in raw_name)
+	def _apply_turkish_grammar(self, s: str) -> str:
+		# Türkçe ünlü uyumu: ilk ünlü belirler
+		front = set('eiöü')
+		back = set('aıou')
+		# hece ayırmadan basit: ünsüz küme sonrası uygun ünlü
+		res = ''
+		last_vowel = None
+		for ch in s:
+			res += ch
+			if ch in front or ch in back:
+				last_vowel = ch
+			elif ch.isalpha():
+				# ekle bir uyumlu ünlü
+				v = last_vowel if last_vowel in front or last_vowel in back else 'e'
+				res += v
+		return res
 
-		if not has_vowel:
-			i = 0
-			while i < len(raw_name):
-				pair = raw_name[i:i+2]
-				if len(pair) == 2:
-					found = False
-					for syllable in syllables:
-						if syllable[0] == pair[0]:
-							readable += syllable
-							found = True
-							break
-					if not found:
-						readable += pair[0] + "a"
-				else:
-					readable += raw_name[i] + "a"
-				i += 2
+	def _apply_hebrew_grammar(self, s: str) -> str:
+		# Basit: tüm ünsüzler arasına 'a' ekle
+		res = ''
+		for ch in s:
+			res += ch
+			if re.match(r'[א-ת]', ch):  # İbranice ünsüz
+				res += 'a'
+		return res
+
+	def _apply_latin_grammar(self, s: str) -> str:
+		# Latin kökenli hece: CV(C) yapısı
+		vowels = 'aeiou'
+		res = ''
+		prev_vowel = False
+		for ch in s:
+			res += ch
+			if ch.lower() not in vowels:
+				# ünsüz sonrası eğer önceki de ünsüzse ekle 'i'
+				if not prev_vowel:
+					res += 'i'
+				prev_vowel = False
+			else:
+				prev_vowel = True
+		return res
+
+	def generate_name(self, number: Union[int, str], htype: str = 'ulvi', method: int = 1,
+					  language: str = 'arabic', mode: str = 'regular') -> str:
+		language = language.lower()
+		htype = htype.upper()
+		suffix_map = {
+			'arabic': {'ULVI':'ئيل','SUFLI':'يوش','ŞER':'طيش'},
+			'hebrew': {'ULVI':'אל','SUFLI':'וש','ŞER':'טש'},
+			'english': {'ULVI':'el','SUFLI':'us','ŞER':'is'},
+			'latin': {'ULVI':'el','SUFLI':'us','ŞER':'is'},
+			'turkish': {'ULVI':'el','SUFLI':'uş','ŞER':'iş'}
+		}
+		self._current_suffix = suffix_map.get(language, {}).get(htype, '')
+		self._current_method = method
+		suffix_val = abjad(self._current_suffix, method, 1, 0, language) if self._current_suffix else 0
+		num = int(number)
+		while suffix_val >= num:
+			num += 361
+		prefix = str(num - suffix_val)
+		hpart: Dict[int, str] = {}
+		counts = 0
+		departs = len(prefix)
+		while departs > 0:
+			start = max(departs-3, 0)
+			counts += 1
+			hpart[counts] = prefix[start:departs]
+			departs -= 3
+		if language == 'arabic':
+			return self.generate_arabic_name(hpart, counts, method, mode)
+		elif language == 'hebrew':
+			return self.generate_hebrew_name(hpart, counts)
+		elif language == 'english':
+			return self.generate_english_name(hpart, counts)
+		elif language == 'latin':
+			return self.generate_latin_name(hpart, counts)
+		elif language == 'turkish':
+			return self.generate_turkish_name(hpart, counts)
 		else:
-			readable = raw_name
-
-		return self.apply_turkish_vowel_harmony(readable)
-
-	def apply_turkish_vowel_harmony(self, name: str) -> str:
-		front_vowels = "eiöü"
-		back_vowels = "aıou"
-		last_vowel = ""
-
-		for char in reversed(name):
-			if char in front_vowels + back_vowels:
-				last_vowel = char
-				break
-
-		if not last_vowel:
-			return name
-
-		return name + ("i" if last_vowel in front_vowels else "ı")
+			return ''
 
 	def calculate_abjad_value(self, text: str, method: int, mapping: Dict[str, int]) -> int:
 		value = 0
