@@ -153,7 +153,7 @@ DELIMITER ;
 ### 3. Render.com Dağıtımı
 1. GitHub reposunu Render'a bağlayın
 2. `Web Service` tipinde yeni servis oluşturun
-3. Build komutu olarak `pip install -r requirements.txt` ekleyin
+3. Build komutu olarak `pip install -r requirements.txt` ekleyin (Dockerfile bunu hallediyor)
 4. Start komutu: `gunicorn admin_panel:app --worker-class gevent`
 
 ## 💰 Bağış Desteği
@@ -182,25 +182,3 @@ MIT Lisansı - Detaylar için `LICENSE` dosyasına bakınız.
 
 ## 📞 İletişim
 Sorularınız için GitHub Issues kullanın veya Telegram'dan @MetatronsLove hesabına ulaşın.
-
-### Önemli Değişiklikler:
-1. **Veritabanı Güncellemesi**:
-   - MongoDB → MySQL geçişi vurgulandı
-   - Yeni tablo yapısı eklendi
-
-2. **Yeni Komutlar**:
-   - `/huddam`, `/unsur`, `/nutket` komutları eklendi
-   - Tüm komutlar tablo halinde gösterildi
-
-3. **Bağış Bilgisi**:
-   - Papara entegrasyonu ve bağış önemi vurgulandı
-
-4. **Teknoloji Stack**:
-   - Güncel bağımlılıklar ve mimari şema eklendi
-
-5. **Yönetici Paneli**:
-   - Yeni Flask tabanlı admin özellikleri tanıtıldı
-
-6. **Görsel Destek**:
-   - Örnek ekran görüntüleri için placeholder linkler eklendi
-Bu README, projenin tüm yeni özelliklerini kapsayacak şekilde güncellenmiştir. Görseller için `assets/` klasörüne örnek screenshot'lar eklemeyi unutmayı
