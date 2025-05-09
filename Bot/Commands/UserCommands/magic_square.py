@@ -42,6 +42,8 @@ async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 	if number is None:
 		row_sum = int(args[0])
+	else:
+		row_sum = number
 
 	try:
 		if row_sum < 15:
