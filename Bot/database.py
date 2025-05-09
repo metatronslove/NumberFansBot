@@ -202,7 +202,15 @@ class Database:
 		ORDER BY total_count DESC
 		"""
 		self.cursor.execute(query)
-		return self.cursor.fetchall()
+		return [
+			{
+				'command': row[0],
+				'count': row[1],  # Map total_count to count
+				'last_user_id': row[2],
+				'last_used': row[3]
+			}
+			for row in self.cursor.fetchall()
+		]
 
 	def save_order(self, user_id: int, payment) -> bool:
 		try:
