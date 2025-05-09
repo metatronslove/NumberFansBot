@@ -24,13 +24,13 @@ logger = logging.getLogger(__name__)
 def get_language_name(lang, language, i18n):
 	if lang == 'turkish':
 		return i18n.t("LANGUAGE_NAME_TR", language)
-	elif lang = 'english':
+	elif lang == 'english':
 		return i18n.t("LANGUAGE_NAME_EN", language)
-	elif lang = 'latin':
+	elif lang == 'latin':
 		return i18n.t("LANGUAGE_NAME_LA", language)
-	elif lang = 'hebrew':
+	elif lang == 'hebrew':
 		return i18n.t("LANGUAGE_NAME_HE", language)
-	elif lang = 'arabic':
+	elif lang == 'arabic':
 		return i18n.t("LANGUAGE_NAME_AR", language)
 
 async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, prefix: str = None, target_lang: str = None, name: str = None):
