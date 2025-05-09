@@ -32,8 +32,7 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 	else:
 		logging.error("Invalid update type received")
 		return
- if update.message else update.callback_query.from_user
-	chat_id = update.message.chat_id if update.message else update.callback_query.message.chat_id
+
 	await register_user_if_not_exists(update, context, user)
 	user_id = user.id
 	db = Database()
