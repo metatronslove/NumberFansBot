@@ -150,16 +150,19 @@ async def check_credits(update, context):
 
 	# Check credits
 	credits = db.get_user_credits(user_id)
-	if credits <= 0 and not db.is_beta_tester(user_id) or not db.is_teskilat(user_id):
-		await update.message.reply_text(
-			i18n.t("NO_CREDITS", language),
-			parse_mode=filters.ParseMode.HTML
-		)
-		return False
+	if credits <= 0:
+		if not db.is_beta_tester(user_id):
+			if not db.is_teskilat(user_id):
+				await update.message.reply_text(
+					i18n.t("NO_CREDITS", language),
+					parse_mode=filters.ParseMode.HTML
+				)
+				return False
 
 	# Decrement credits if not beta tester
-	if not db.is_beta_tester(user_id) or not db.is_teskilat(user_id):
-		db.decrement_credits(user_id)
+	if not db.is_beta_tester(user_id):
+		if not db.is_teskilat(user_id):
+			db.decrement_credits(user_id)
 
 	return True
 
