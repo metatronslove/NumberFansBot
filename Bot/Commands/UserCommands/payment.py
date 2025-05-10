@@ -13,7 +13,7 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 import asyncio
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
@@ -22,19 +22,8 @@ from .language import language_handle
 logger = logging.getLogger(__name__)
 
 async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
-	# Determine if this is a message or callback query
-	if update.message:
-		query = update.message
-		user = query.from_user
-		chat = query.chat
-		query_message = query
-	elif update.callback_query:
-		query = update.callback_query
-		user = query.from_user
-		chat = query.message.chat
-		query_message = query.message
-	else:
-		logging.error("Invalid update type received")
+	update, context, query, user, query_message = await uptodate_query(update, context)
+	if not query_message:
 		return
 
 	await register_user_if_not_exists(update, context, user)
@@ -49,9 +38,11 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 
 	# Check blacklist
 	if db.is_blacklisted(user_id):
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("PAYMENT_BLACKLISTED", language),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)
 		return
 
@@ -66,26 +57,30 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 				reply_text = i18n.t("TESKILAT_ACTIVATED", language)
 			else:
 				reply_text = i18n.t("TESKILAT_ACTIVATION_FAILED", language)
-		await query_message.reply_text(reply_text, parse_mode=ParseMode.HTML)
+		await send_long_message(reply_text, parse_mode=ParseMode.HTML, update=update, query_message=query_message)
 		return
 
 	# Existing payment logic (placeholder, replace with actual implementation)
 	reply_text = i18n.t("PAYMENT_INSTRUCTIONS", language)
-	await query_message.reply_text(reply_text, parse_mode=ParseMode.HTML)
+	await send_long_message(reply_text, parse_mode=ParseMode.HTML, update=update, query_message=query_message)
 
 	# Check if payment provider token is set
 	if not Config().payment_provider_token:
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("PAYMENT_MISSING_PROVIDER_TOKEN", language),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)
 		return
 
 	# Check if user is a beta tester
 	if db.is_beta_tester(user_id):
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("PAYMENT_BETA_TESTER", language),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)
 		return
 
@@ -96,26 +91,17 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	)]]
 	reply_markup = InlineKeyboardMarkup(keyboard)
 
-	await query_message.reply_text(
+	await send_long_message(
 		i18n.t("PAYMENT_SELECT_PRODUCT", language),
 		parse_mode=ParseMode.HTML,
-		reply_markup=reply_markup
+		reply_markup=reply_markup,
+		update=update,
+		query_message=query_message
 	)
 
 async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
-	# Determine if this is a message or callback query
-	if update.message:
-		query = update.message
-		user = query.from_user
-		chat = query.chat
-		query_message = query
-	elif update.callback_query:
-		query = update.callback_query
-		user = query.from_user
-		chat = query.message.chat
-		query_message = query.message
-	else:
-		logging.error("Invalid update type received")
+	update, context, query, user, query_message = await uptodate_query(update, context)
+	if not query_message:
 		return
 
 	user_id = user.id
@@ -127,23 +113,29 @@ async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_
 
 	if query.data == "payment_select_credit_500":
 		if db.is_blacklisted(user_id):
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("PAYMENT_BLACKLISTED", language),
-				parse_mode=ParseMode.HTML
+				parse_mode=ParseMode.HTML,
+				update=update,
+				query_message=query_message
 			)
 			return
 
 		if not Config().payment_provider_token:
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("PAYMENT_MISSING_PROVIDER_TOKEN", language),
-				parse_mode=ParseMode.HTML
+				parse_mode=ParseMode.HTML,
+				update=update,
+				query_message=query_message
 			)
 			return
 
 		try:
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("PAYMENT_INVOICE_TITLE", language),
-				parse_mode=ParseMode.HTML
+				parse_mode=ParseMode.HTML,
+				update=update,
+				query_message=query_message
 			)
 
 			await context.bot.send_invoice(
@@ -158,9 +150,11 @@ async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_
 			)
 		except Exception as e:
 			logger.error(f"Payment invoice error: {str(e)}")
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("PAYMENT_FAILED", language),
-				parse_mode=ParseMode.HTML
+				parse_mode=ParseMode.HTML,
+				update=update,
+				query_message=query_message
 			)
 
 async def handle_pre_checkout(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
@@ -193,14 +187,18 @@ async def handle_successful_payment(update: Update, context: ContextTypes.DEFAUL
 		db.save_order(user_id, payment)
 		db.log_user_activity(user_id, "purchase_credits", {"amount": 500, "cost": 2.00, "currency": "USD"})
 
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("PAYMENT_THANK_YOU", language, product="500 Credits", amount="2.00", currency="USD"),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)
 	else:
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("PAYMENT_FAILED", language),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)
 
 def get_payment_handlers():

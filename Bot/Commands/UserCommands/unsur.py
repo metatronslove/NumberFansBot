@@ -14,7 +14,7 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.Abjad import Abjad
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
 from datetime import datetime
 from Bot.element_classifier import ElementClassifier
 
@@ -26,18 +26,8 @@ async def unsur_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Starting /unsur for user {update.effective_user.id}")
 	try:
 		# Determine if this is a message or callback query
-		if update.message:
-			query = update.message
-			user = query.from_user
-			chat = query.chat
-			query_message = query
-		elif update.callback_query:
-			query = update.callback_query
-			user = query.from_user
-			chat = query.message.chat
-			query_message = query.message
-		else:
-			logging.error("Invalid update type received")
+		update, context, query, user, query_message = await uptodate_query(update, context)
+		if not query_message:
 			return
 
 		await register_user_if_not_exists(update, context, user)
@@ -49,16 +39,20 @@ async def unsur_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		db.set_user_attribute(user_id, "last_interaction", datetime.now())
 		db.increment_command_usage("unsur", user_id)
 
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("UNSUR_PROMPT_INPUT", language),
-			parse_mode=ParseMode.MARKDOWN
+			parse_mode=ParseMode.MARKDOWN,
+			update=update,
+			query_message=query_message
 		)
 		return INPUT
 	except Exception as e:
 		logger.error(f"Error in unsur_start: {str(e)}")
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
-			parse_mode=ParseMode.MARKDOWN
+			parse_mode=ParseMode.MARKDOWN,
+			update=update,
+			query_message=query_message
 		)
 		return ConversationHandler.END
 
@@ -72,9 +66,11 @@ async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 
 		input_text = update.message.text.strip()
 		if not input_text:
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("ERROR_INVALID_INPUT", language, error="Input is required"),
-				parse_mode=ParseMode.MARKDOWN
+				parse_mode=ParseMode.MARKDOWN,
+				update=update,
+				query_message=query_message
 			)
 			return INPUT
 
@@ -94,34 +90,28 @@ async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			[InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("UNSUR_PROMPT_LANGUAGE", language),
 			reply_markup=reply_markup
+			update=update,
+			query_message=query_message
 		)
 		return LANGUAGE
 	except Exception as e:
 		logger.error(f"Error in unsur_input: {str(e)}")
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
-			parse_mode=ParseMode.MARKDOWN
+			parse_mode=ParseMode.MARKDOWN,
+			update=update,
+			query_message=query_message
 		)
 		return ConversationHandler.END
 
 async def unsur_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Processing unsur_shadda for user {update.effective_user.id}")
 	try:
-		if update.message:
-			query = update.message
-			user = query.from_user
-			chat = query.chat
-			query_message = query
-		elif update.callback_query:
-			query = update.callback_query
-			user = query.from_user
-			chat = query.message.chat
-			query_message = query.message
-		else:
-			logging.error("Invalid update type received")
+		update, context, query, user, query_message = await uptodate_query(update, context)
+		if not query_message:
 			return
 		await query.answer()
 		user_id = user.id
@@ -144,7 +134,7 @@ async def unsur_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			[InlineKeyboardButton(i18n.t("LATIN", language), callback_data="unsur_lang_latin"),
 			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("UNSUR_PROMPT_LANGUAGE", language),
 			reply_markup=InlineKeyboardMarkup(keyboard),
 			parse_mode="HTML"
@@ -152,24 +142,14 @@ async def unsur_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		return LANGUAGE
 	except Exception as e:
 		logger.error(f"Error in unsur_shadda: {str(e)}")
-		await query_message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
+		await send_long_message(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
 		return ConversationHandler.END
 
 async def unsur_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Processing unsur_language for user {update.effective_user.id}")
 	try:
-		if update.message:
-			query = update.message
-			user = query.from_user
-			chat = query.chat
-			query_message = query
-		elif update.callback_query:
-			query = update.callback_query
-			user = query.from_user
-			chat = query.message.chat
-			query_message = query.message
-		else:
-			logging.error("Invalid update type received")
+		update, context, query, user, query_message = await uptodate_query(update, context)
+		if not query_message:
 			return
 		await query.answer()
 		user_id = user.id
@@ -189,7 +169,7 @@ async def unsur_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			InlineKeyboardButton(i18n.t("ELEMENT_EARTH", language), callback_data="unsur_table_earth")],
 			[InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("UNSUR_PROMPT_TABLE", language),
 			reply_markup=InlineKeyboardMarkup(keyboard),
 			parse_mode="HTML"
@@ -197,24 +177,14 @@ async def unsur_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		return TABLE
 	except Exception as e:
 		logger.error(f"Error in unsur_language: {str(e)}")
-		await query_message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
+		await send_long_message(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
 		return ConversationHandler.END
 
 async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Processing unsur_table for user {update.effective_user.id}")
 	try:
-		if update.message:
-			query = update.message
-			user = query.from_user
-			chat = query.chat
-			query_message = query
-		elif update.callback_query:
-			query = update.callback_query
-			user = query.from_user
-			chat = query.message.chat
-			query_message = query.message
-		else:
-			logging.error("Invalid update type received")
+		update, context, query, user, query_message = await uptodate_query(update, context)
+		if not query_message:
 			return
 		await query.answer()
 		user_id = user.id
@@ -235,7 +205,7 @@ async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		unsur = ElementClassifier()
 		result = unsur.classify_elements(input_text, table, shadda, lang)
 		if isinstance(result, str) and result.startswith("Error"):
-			await query_message.reply_text(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
+			await send_long_message(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
 			return ConversationHandler.END
 
 		value = result["adet"]
@@ -256,16 +226,18 @@ async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation_unsur")]
 		]
 
-		await query_message.reply_text(
+		await send_long_message(
 			response,
-			parse_mode="HTML",
-			reply_markup=InlineKeyboardMarkup(keyboard)
+			parse_mode=ParseMode.HTML,
+			reply_markup=InlineKeyboardMarkup(keyboard),
+			update=update,
+			query_message=query_message
 		)
 		context.user_data.clear()
 		return ConversationHandler.END
 	except Exception as e:
 		logger.error(f"Error in unsur_table: {str(e)}")
-		await query_message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
+		await send_long_message(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
 		return ConversationHandler.END
 
 async def unsur_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
@@ -277,17 +249,21 @@ async def unsur_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("UNSUR_CANCEL", language),
-			parse_mode=ParseMode.MARKDOWN
+			parse_mode=ParseMode.MARKDOWN,
+			update=update,
+			query_message=query_message
 		)
 		context.user_data.clear()
 		return ConversationHandler.END
 	except Exception as e:
 		logger.error(f"Error in unsur_cancel: {str(e)}")
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
-			parse_mode=ParseMode.MARKDOWN
+			parse_mode=ParseMode.MARKDOWN,
+			update=update,
+			query_message=query_message
 		)
 		return ConversationHandler.END
 

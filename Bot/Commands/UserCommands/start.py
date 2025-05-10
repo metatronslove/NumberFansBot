@@ -13,7 +13,7 @@ from telegram.constants import ParseMode
 from telegram.error import BadRequest
 import asyncio
 from Bot.Abjad import Abjad
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
@@ -23,19 +23,8 @@ from .language import language_handle
 logger = logging.getLogger(__name__)
 
 async def start_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
-	# Determine if this is a message or callback query
-	if update.message:
-		query = update.message
-		user = query.from_user
-		chat = query.chat
-		query_message = query
-	elif update.callback_query:
-		query = update.callback_query
-		user = query.from_user
-		chat = query.message.chat
-		query_message = query.message
-	else:
-		logging.error("Invalid update type received")
+	update, context, query, user, query_message = await uptodate_query(update, context)
+	if not query_message:
 		return
 
 	user_language = user.language_code.split('-')[0] if user.language_code else 'en'
@@ -59,10 +48,12 @@ async def start_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 
 		reply_text = i18n.t("START_MESSAGE", language, remaining_credits=remaining_credits)
 		reply_text += "\n" + i18n.t("HELP_MESSAGE", language)
-		await query_message.reply_text(reply_text, parse_mode=ParseMode.HTML)
+		await send_long_message(reply_text, parse_mode=ParseMode.HTML, update=update, query_message=query_message)
 	except Exception as e:
 		logger.error(f"StartCommand error: {str(e)}")
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)

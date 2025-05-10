@@ -14,7 +14,7 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.Abjad import Abjad
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -25,18 +25,8 @@ async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Starting /bastet for user {update.effective_user.id}")
 	try:
 		# Determine if this is a message or callback query
-		if update.message:
-			query = update.message
-			user = query.from_user
-			chat = query.chat
-			query_message = query
-		elif update.callback_query:
-			query = update.callback_query
-			user = query.from_user
-			chat = query.message.chat
-			query_message = query.message
-		else:
-			logging.error("Invalid update type received")
+		update, context, query, user, query_message = await uptodate_query(update, context)
+		if not query_message:
 			return
 
 		await register_user_if_not_exists(update, context, user)
@@ -51,24 +41,28 @@ async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		args = context.args
 		if len(args) == 1:
 			if not args[0].isdigit():
-				await query_message.reply_text(
+				await send_long_message(
 					i18n.t("BASTET_USAGE", language),
-					parse_mode=ParseMode.MARKDOWN
+					parse_mode=ParseMode.MARKDOWN,
+					update=update,
+					query_message=query_message
 				)
 				return ConversationHandler.END
 
 			number = int(args[0])
 			context.user_data["bastet_number"] = number
 
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("BASTET_PROMPT_REPETITION", language)
 			)
 			return REPETITION
 		elif len(args) == 2:
 			if not args[0].isdigit() or not args[1].isdigit():
-				await query_message.reply_text(
+				await send_long_message(
 					i18n.t("BASTET_USAGE", language),
-					parse_mode=ParseMode.MARKDOWN
+					parse_mode=ParseMode.MARKDOWN,
+					update=update,
+					query_message=query_message
 				)
 				return ConversationHandler.END
 
@@ -78,16 +72,20 @@ async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			context.user_data["repetition"] = int(repetition)
 			return TABLE
 		elif not args:
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("BASTET_USAGE", language),
-				parse_mode=ParseMode.MARKDOWN
+				parse_mode=ParseMode.MARKDOWN,
+				update=update,
+				query_message=query_message
 			)
 			return ConversationHandler.END
 	except Exception as e:
 		logger.error(f"Error in bastet_start: {str(e)}")
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
-			parse_mode=ParseMode.MARKDOWN
+			parse_mode=ParseMode.MARKDOWN,
+			update=update,
+			query_message=query_message
 		)
 		return ConversationHandler.END
 
@@ -101,9 +99,11 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 
 		repetition = update.message.text.strip()
 		if not repetition.isdigit() or int(repetition) < 1 or int(repetition) > 1000:  # Add upper limit
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("ERROR_INVALID_INPUT", language, error="Repetition must be a positive integer between 1 and 1000"),
-				parse_mode=ParseMode.HTML
+				parse_mode=ParseMode.HTML,
+				update=update,
+				query_message=query_message
 			)
 			return REPETITION
 
@@ -124,34 +124,28 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("BASTET_PROMPT_TABLE", language),
 			reply_markup=reply_markup
+			update=update,
+			query_message=query_message
 		)
 		return TABLE
 	except Exception as e:
 		logger.error(f"Error in bastet_repetition: {str(e)}")
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
-			parse_mode=ParseMode.MARKDOWN
+			parse_mode=ParseMode.MARKDOWN,
+			update=update,
+			query_message=query_message
 		)
 		return ConversationHandler.END
 
 async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.debug(f"Processing bastet_table for user {update.effective_user.id}")
 	try:
-		if update.message:
-			query = update.message
-			user = query.from_user
-			chat = query.chat
-			query_message = query
-		elif update.callback_query:
-			query = update.callback_query
-			user = query.from_user
-			chat = query.message.chat
-			query_message = query.message
-		else:
-			logging.error("Invalid update type received")
+		update, context, query, user, query_message = await uptodate_query(update, context)
+		if not query_message:
 			return
 		await query.answer()
 		user_id = user.id
@@ -178,34 +172,28 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			[InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")],
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("BASTET_PROMPT_LANGUAGE", language),
 			reply_markup=reply_markup
+			update=update,
+			query_message=query_message
 		)
 		return LANGUAGE
 	except Exception as e:
 		logger.error(f"Error in bastet_table: {str(e)}")
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
-			parse_mode=ParseMode.MARKDOWN
+			parse_mode=ParseMode.MARKDOWN,
+			update=update,
+			query_message=query_message
 		)
 		return ConversationHandler.END
 
 async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Processing bastet_language for user {update.effective_user.id}")
 	try:
-		if update.message:
-			query = update.message
-			user = query.from_user
-			chat = query.chat
-			query_message = query
-		elif update.callback_query:
-			query = update.callback_query
-			user = query.from_user
-			chat = query.message.chat
-			query_message = query.message
-		else:
-			logging.error("Invalid update type received")
+		update, context, query, user, query_message = await uptodate_query(update, context)
+		if not query_message:
 			return
 		await query.answer()
 		user_id = user.id
@@ -237,7 +225,7 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		abjad = Abjad()
 		result = abjad.bastet(number, int(repetition), tablebase, 1, alphabeta.upper(), 0)
 		if isinstance(result, str) and result.startswith("Error"):
-			await query_message.reply_text(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
+			await send_long_message(i18n.t("ERROR_GENERAL", language, error=result), parse_mode="HTML")
 			return ConversationHandler.END
 
 		response = i18n.t("BASTET_RESULT", language, number=number, repetition=repetition, table=tablebase, value=result)
@@ -253,53 +241,49 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		keyboard = [
 			[InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{number}"),
 			InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{number}_{alphabeta}")],
-			[InlineKeyboardButton(i18n.t("GENERATE_ENTITY", language), callback_data=f"huddam_{number}"),
+			[InlineKeyboardButton(i18n.t("GENERATE_ENTITY", language), callback_data=f"huddam_cb_{number}"),
 			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation_bastet")],
 		]
-		await query_message.reply_text(
+		await send_long_message(
 			response,
-			parse_mode="HTML",
-			reply_markup=InlineKeyboardMarkup(keyboard)
+			parse_mode=ParseMode.HTML,
+			reply_markup=InlineKeyboardMarkup(keyboard),
+			update=update,
+			query_message=query_message
 		)
 		context.user_data.clear()
 		return ConversationHandler.END
 	except Exception as e:
 		logger.error(f"Error in bastet_language: {str(e)}")
-		await query_message.reply_text(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
+		await send_long_message(i18n.t("ERROR_GENERAL", language, error=str(e)), parse_mode="HTML")
 		return ConversationHandler.END
 
 async def bastet_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	logger.info(f"Cancelling /bastet for user {update.effective_user.id}")
 	try:
-		if update.message:
-			query = update.message
-			user = query.from_user
-			chat = query.chat
-			query_message = query
-		elif update.callback_query:
-			query = update.callback_query
-			user = query.from_user
-			chat = query.message.chat
-			query_message = query.message
-		else:
-			logging.error("Invalid update type received")
+		update, context, query, user, query_message = await uptodate_query(update, context)
+		if not query_message:
 			return
 		await query.answer()
 		user_id = user.id
 		db = Database()
 		i18n = I18n()
 		language = db.get_user_language(user_id)
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("BASTET_CANCEL", language),
-			parse_mode=ParseMode.MARKDOWN
+			parse_mode=ParseMode.MARKDOWN,
+			update=update,
+			query_message=query_message
 		)
 		context.user_data.clear()
 		return ConversationHandler.END
 	except Exception as e:
 		logger.error(f"Error in bastet_cancel: {str(e)}")
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
-			parse_mode=ParseMode.MARKDOWN
+			parse_mode=ParseMode.MARKDOWN,
+			update=update,
+			query_message=query_message
 		)
 		return ConversationHandler.END
 

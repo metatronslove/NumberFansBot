@@ -15,7 +15,7 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.NumberConverter import NumberConverter
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
 from pathlib import Path
 from datetime import datetime
 
@@ -23,19 +23,8 @@ async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_T
 	db = Database()
 	i18n = I18n()
 
-	# Determine if this is a message or callback query
-	if update.message:
-		query = update.message
-		user = query.from_user
-		chat = query.chat
-		query_message = query
-	elif update.callback_query:
-		query = update.callback_query
-		user = query.from_user
-		chat = query.message.chat
-		query_message = query.message
-	else:
-		logging.error("Invalid update type received")
+	update, context, query, user, query_message = await uptodate_query(update, context)
+	if not query_message:
 		return
 
 	await register_user_if_not_exists(update, context, user)
@@ -49,9 +38,11 @@ async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_T
 	if text is None:
 		args = context.args
 		if not args:
-			await chat.send_message(
+			await send_long_message(
 				i18n.t("CONVERTNUMBERS_USAGE", language),
-				parse_mode=ParseMode.HTML
+				parse_mode=ParseMode.HTML,
+				update=update,
+				query_message=query_message
 			)
 			return
 		text = " ".join(args[:-1]) if len(args) >= 2 else ""
@@ -62,9 +53,11 @@ async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_T
 		available_formats = ["arabic", "indian"]
 
 		if alt_format not in available_formats:
-			await chat.send_message(
+			await send_long_message(
 				i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid format. Use: {', '.join(available_formats)}"),
-				parse_mode=ParseMode.HTML
+				parse_mode=ParseMode.HTML,
+				update=update,
+				query_message=query_message
 			)
 			return
 
@@ -86,21 +79,36 @@ async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_T
 				response,
 				parse_mode=ParseMode.MARKDOWN,
 				reply_markup=reply_markup
+				update=update,
+				query_message=query_message
 			)
 		else:
-			await chat.send_message(
+			await send_long_message(
 				response,
 				parse_mode=ParseMode.MARKDOWN,
 				reply_markup=reply_markup
+				update=update,
+				query_message=query_message
+			)
+			await send_long_message(
+				message=i18n.t("ABJAD_USAGE", language),
+				parse_mode=ParseMode.MARKDOWN,
+				reply_markup=reply_markup
+				update=update,
+				query_message=query_message
 			)
 
 	except ValueError:
-		await chat.send_message(
+		await send_long_message(
 			i18n.t("ERROR_INVALID_INPUT", language, error="Invalid number"),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)
 	except Exception as e:
-		await chat.send_message(
+		await send_long_message(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)

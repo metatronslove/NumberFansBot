@@ -14,7 +14,7 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.Numerology import UnifiedNumerology
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
@@ -56,19 +56,8 @@ def get_alphabet_name(alphabet, language, i18n):
 		return i18n.t("ALPHABET_ORDER_OTTOMAN", language)
 
 async def numerology_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, alphabet: str = None, method: str = None, text: str = None):
-	# Determine if this is a message or callback query
-	if update.message:
-		query = update.message
-		user = query.from_user
-		chat = query.chat
-		query_message = query
-	elif update.callback_query:
-		query = update.callback_query
-		user = query.from_user
-		chat = query.message.chat
-		query_message = query.message
-	else:
-		logging.error("Invalid update type received")
+	update, context, query, user, query_message = await uptodate_query(update, context)
+	if not query_message:
 		return
 
 	await register_user_if_not_exists(update, context, user)
@@ -85,9 +74,11 @@ async def numerology_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 	if alphabet is None or alphabet not in numerology.get_available_alphabets():
 		args = context.args
 		if not args:
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("NUMEROLOGY_USAGE", language),
-				parse_mode=ParseMode.HTML
+				parse_mode=ParseMode.HTML,
+				update=update,
+				query_message=query_message
 			)
 			return
 		if text is None:
@@ -100,10 +91,12 @@ async def numerology_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 				)] for alphabet in available_alphabets
 			]
 			reply_markup = InlineKeyboardMarkup(buttons)
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("NUMEROLOGY_PROMPT_ALPHABET", language),
 				parse_mode=ParseMode.HTML,
-				reply_markup=reply_markup
+				reply_markup=reply_markup,
+				update=update,
+				query_message=query_message
 			)
 			return
 		alphabet = args[-1].lower()
@@ -114,17 +107,21 @@ async def numerology_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 	encoded_text = urllib.parse.quote(text)
 	try:
 		if alphabet not in available_alphabets:
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid alphabet. Use: {', '.join(available_alphabets)}"),
-				parse_mode=ParseMode.HTML
+				parse_mode=ParseMode.HTML,
+				update=update,
+				query_message=query_message
 			)
 			return
 
 		result = numerology.numerolog(text, alphabet=alphabet, method=method, detail=False)
 		if isinstance(result, dict) and "error" in result:
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("ERROR_INVALID_INPUT", language, error=result["error"]),
-				parse_mode=ParseMode.HTML
+				parse_mode=ParseMode.HTML,
+				update=update,
+				query_message=query_message
 			)
 			return
 
@@ -147,19 +144,24 @@ async def numerology_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 		keyboard = [
 			[InlineKeyboardButton(i18n.t("CREATE_MAGIC_SQUARE", language), callback_data=f"magic_square_{value}"),
 			InlineKeyboardButton(i18n.t("SPELL_NUMBER", language), callback_data=f"nutket_{value}_{alphabeta}")],
-			[InlineKeyboardButton(i18n.t("GENERATE_ENTITY", language), callback_data=f"huddam_{value}"),
+			[InlineKeyboardButton(i18n.t("GENERATE_ENTITY", language), callback_data=f"huddam_cb_{value}"),
 			InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation_abjad")]
 		]
 		buttons.append(keyboard)
 		reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
 
-		await query_message.reply_text(
+		await send_long_message(
 			response,
 			parse_mode=ParseMode.MARKDOWN,
-			reply_markup=reply_markup
+			reply_markup=reply_markup,
+			update=update,
+			query_message=query_message
 		)
+
 	except Exception as e:
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)

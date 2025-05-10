@@ -14,7 +14,7 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.transliteration import Transliteration
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
@@ -34,19 +34,8 @@ def get_language_name(lang, language, i18n):
 		return i18n.t("LANGUAGE_NAME_AR", language)
 
 async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, prefix: str = None, target_lang: str = None, name: str = None):
-	# Determine if this is a message or callback query
-	if update.message:
-		query = update.message
-		user = query.from_user
-		chat = query.chat
-		query_message = query
-	elif update.callback_query:
-		query = update.callback_query
-		user = query.from_user
-		chat = query.message.chat
-		query_message = query.message
-	else:
-		logging.error("Invalid update type received")
+	update, context, query, user, query_message = await uptodate_query(update, context)
+	if not query_message:
 		return
 
 	await register_user_if_not_exists(update, context, user)
@@ -61,9 +50,11 @@ async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, prefix
 	if prefix is None:
 		args = context.args
 		if len(args) < 1:
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("NAME_USAGE", language),
-				parse_mode=ParseMode.HTML
+				parse_mode=ParseMode.HTML,
+				update=update,
+				query_message=query_message
 			)
 			return
 
@@ -74,9 +65,11 @@ async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, prefix
 		valid_languages = transliteration.valid_languages
 
 		if target_lang not in valid_languages:
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid language. Use: {', '.join(valid_languages)}"),
-				parse_mode=ParseMode.HTML
+				parse_mode=ParseMode.HTML,
+				update=update,
+				query_message=query_message
 			)
 			return
 
@@ -99,13 +92,17 @@ async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, prefix
 		]
 		reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
 
-		await query_message.reply_text(
+		await send_long_message(
 			response,
 			parse_mode=ParseMode.MARKDOWN,
-			reply_markup=reply_markup
+			reply_markup=reply_markup,
+			update=update,
+			query_message=query_message
 		)
 	except Exception as e:
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)

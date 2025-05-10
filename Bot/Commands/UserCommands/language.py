@@ -13,25 +13,14 @@ from telegram.ext import (
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
 
 async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, lang_code: str = None):
-	# Determine if this is a message or callback query
-	if update.message:
-		query = update.message
-		user = query.from_user
-		chat = query.chat
-		query_message = query
-	elif update.callback_query:
-		query = update.callback_query
-		user = query.from_user
-		chat = query.message.chat
-		query_message = query.message
-	else:
-		logging.error("Invalid update type received")
+	update, context, query, user, query_message = await uptodate_query(update, context)
+	if not query_message:
 		return
 
 	await register_user_if_not_exists(update, context, user)
@@ -57,23 +46,29 @@ async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, la
 			return
 
 		if lang_code not in config.available_languages:
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("LANGUAGE_INVALID", current_lang, languages=", ".join(config.available_languages)),
-				parse_mode=ParseMode.MARKDOWN
+				parse_mode=ParseMode.MARKDOWN,
+				update=update,
+				query_message=query_message
 			)
 			return
 
 		db.set_user_language(user_id, lang_code)
 		db.set_user_attribute(user_id, "last_interaction", datetime.now())
 
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("LANGUAGE_CHANGED", lang_code, selected_lang=lang_code.upper()),
-			parse_mode=ParseMode.MARKDOWN
+			parse_mode=ParseMode.MARKDOWN,
+			update=update,
+			query_message=query_message
 		)
 
 	except Exception as e:
 		logger.error(f"LanguageCommand error: {str(e)}")
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("LANGUAGE_ERROR_GENERAL", current_lang),
-			parse_mode=ParseMode.MARKDOWN
+			parse_mode=ParseMode.MARKDOWN,
+			update=update,
+			query_message=query_message
 		)

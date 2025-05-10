@@ -13,7 +13,7 @@ from telegram.ext import (
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
@@ -23,19 +23,8 @@ from Bot.cache import Cache  # Added import
 logger = logging.getLogger(__name__)
 
 async def suggest_transliteration_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
-	# Determine if this is a message or callback query
-	if update.message:
-		query = update.message
-		user = query.from_user
-		chat = query.chat
-		query_message = query
-	elif update.callback_query:
-		query = update.callback_query
-		user = query.from_user
-		chat = query.message.chat
-		query_message = query.message
-	else:
-		logging.error("Invalid update type received")
+	update, context, query, user, query_message = await uptodate_query(update, context)
+	if not query_message:
 		return
 
 	await register_user_if_not_exists(update, context, user)
@@ -49,9 +38,11 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
 
 	args = context.args
 	if len(args) < 1:
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("SUGGEST_TRANSLITERATION_USAGE", language),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)
 		return
 
@@ -63,26 +54,32 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
 	valid_languages = transliteration.valid_languages
 
 	if target_lang not in valid_languages:
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid target language. Use: {', '.join(valid_languages)}"),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)
 		return
 
 	try:
 		source_lang = source_lang or transliteration.guess_source_lang(text)
 		if source_lang not in valid_languages:
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid source language: {source_lang}"),
-				parse_mode=ParseMode.HTML
+				parse_mode=ParseMode.HTML,
+				update=update,
+				query_message=query_message
 			)
 			return
 
 		suggestions = transliteration.suggest_transliterations(text, source_lang, target_lang)
 		if not suggestions:
-			await query_message.reply_text(
+			await send_long_message(
 				i18n.t("SUGGEST_TRANSLITERATION_RESULT", language, text=text, source_lang=source_lang, target_lang=target_lang, results="No suggestions available"),
-				parse_mode=ParseMode.HTML
+				parse_mode=ParseMode.HTML,
+				update=update,
+				query_message=query_message
 			)
 			return
 
@@ -100,14 +97,18 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
 		]
 		reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
 
-		await query_message.reply_text(
+		await send_long_message(
 			response,
 			parse_mode=ParseMode.MARKDOWN,
-			reply_markup=reply_markup
+			reply_markup=reply_markup,
+			update=update,
+			query_message=query_message
 		)
 	except Exception as e:
 		logger.error(f"Suggest transliteration error: {str(e)}")
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)

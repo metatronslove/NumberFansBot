@@ -14,25 +14,14 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.Abjad import Abjad
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
 async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, number: int = None, nutket_lang: str = None):
-	# Determine if this is a message or callback query
-	if update.message:
-		query = update.message
-		user = query.from_user
-		chat = query.chat
-		query_message = query
-	elif update.callback_query:
-		query = update.callback_query
-		user = query.from_user
-		chat = query.message.chat
-		query_message = query.message
-	else:
-		logging.error("Invalid update type received")
+	update, context, query, user, query_message = await uptodate_query(update, context)
+	if not query_message:
 		return
 
 	await register_user_if_not_exists(update, context, user)
@@ -48,9 +37,11 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 		if update.message:
 			args = context.args
 			if not args or not args[0].isdigit():
-				await query_message.reply_text(
+				await send_long_message(
 					i18n.t("NUTKET_USAGE", language),
-					parse_mode=ParseMode.MARKDOWN
+					parse_mode=ParseMode.MARKDOWN,
+					update=update,
+					query_message=query_message
 				)
 				return
 			number = int(args[0])
@@ -59,7 +50,9 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 		if not number:
 			await (query_message.reply_text)(
 				i18n.t("ERROR_INVALID_INPUT", language, error="Number is required"),
-				parse_mode=ParseMode.MARKDOWN
+				parse_mode=ParseMode.MARKDOWN,
+				update=update,
+				query_message=query_message
 			)
 			return
 
@@ -77,7 +70,9 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 		if spelled.startswith("Error"):
 			await (query_message.reply_text)(
 				i18n.t("ERROR_GENERAL", language, error=spelled),
-				parse_mode=ParseMode.MARKDOWN
+				parse_mode=ParseMode.MARKDOWN,
+				update=update,
+				query_message=query_message
 			)
 			return
 
@@ -102,7 +97,9 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 		await (query_message.reply_text)(
 			response,
 			parse_mode=ParseMode.MARKDOWN,
-			reply_markup=reply_markup
+			reply_markup=reply_markup,
+			update=update,
+			query_message=query_message
 		)
 		if update.callback_query:
 			await update.callback_query.answer()
@@ -111,7 +108,9 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 		logger.error(f"Nutket error: {str(e)}")
 		await (query_message.reply_text)(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
-			parse_mode=ParseMode.MARKDOWN
+			parse_mode=ParseMode.MARKDOWN,
+			update=update,
+			query_message=query_message
 		)
 		if update.callback_query:
 			await update.callback_query.answer()

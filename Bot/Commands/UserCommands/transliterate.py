@@ -15,7 +15,7 @@ from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.Abjad import Abjad
 from Bot.transliteration import Transliteration
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
 from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
@@ -23,19 +23,8 @@ from datetime import datetime
 logger = logging.getLogger(__name__)  # Single logger declaration
 
 async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
-	# Determine if this is a message or callback query
-	if update.message:
-		query = update.message
-		user = query.from_user
-		chat = query.chat
-		query_message = query
-	elif update.callback_query:
-		query = update.callback_query
-		user = query.from_user
-		chat = query.message.chat
-		query_message = query.message
-	else:
-		logging.error("Invalid update type received")
+	update, context, query, user, query_message = await uptodate_query(update, context)
+	if not query_message:
 		return
 
 	await register_user_if_not_exists(update, context, user)
@@ -49,12 +38,13 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 
 	args = context.args
 	if len(args) < 3:
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("TRANSLITERATION_USAGE", language, source_lang="source_lang", target_lang="target_lang", text="text"),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)
 		return
-
 	source_lang = args[0].lower()
 	target_lang = args[1].lower()
 	text = " ".join(args[2:])
@@ -63,18 +53,22 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 		transliteration = Transliteration(db, i18n)
 	except Exception as e:
 		logger.error(f"Failed to initialize Transliteration: {str(e)}")
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("ERROR_GENERAL", language, error="Failed to initialize transliteration system"),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)
 		return
 
 	valid_languages = transliteration.valid_languages
 
 	if source_lang not in valid_languages or target_lang not in valid_languages:
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("LANGUAGE_INVALID", language, languages=", ".join(valid_languages)),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)
 		return
 
@@ -113,14 +107,19 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 		]
 		reply_markup = InlineKeyboardMarkup(buttons)
 
-		await query_message.reply_text(
+		await send_long_message(
 			response,
 			parse_mode=ParseMode.HTML,
-			reply_markup=reply_markup
+			reply_markup=reply_markup,
+			update=update,
+			query_message=query_message
 		)
+
 	except Exception as e:
 		logger.error(f"Transliteration error for user {user_id}: {str(e)}")
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)

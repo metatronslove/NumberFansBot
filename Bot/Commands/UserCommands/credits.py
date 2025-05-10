@@ -6,7 +6,7 @@ from telegram.constants import ParseMode
 from Bot.config import Config
 from Bot.database import Database
 from Bot.i18n import I18n
-from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -26,10 +26,12 @@ async def credits_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		user = db.cursor.fetchone()
 		remaining_credits = user['credits'] if user else 0
 		reply_text = i18n.t("CREDITS_REMAINS", language, remaining_credits=remaining_credits)
-		await query_message.reply_text(reply_text, parse_mode=ParseMode.HTML)
+		await send_long_message(reply_text, parse_mode=ParseMode.HTML, update=update, query_message=query_message)
 	except Exception as e:
 		logger.error(f"CreditsCommand error: {str(e)}")
-		await query_message.reply_text(
+		await send_long_message(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
-			parse_mode=ParseMode.HTML
+			parse_mode=ParseMode.HTML,
+			update=update,
+			query_message=query_message
 		)
