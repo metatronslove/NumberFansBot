@@ -770,37 +770,24 @@ function mergeDuplicateDates(data) {
     return Object.values(merged);
 }
 
-function safeDateParse(timestamp) {
-  try {
-    const fixedTimestamp = fixTimestamp(timestamp);
-    const date = new Date(fixedTimestamp);
-
-    // Geçersiz tarih kontrolü
-    if (isNaN(date.getTime())) {
-      console.warn('Invalid date:', timestamp);
-      return new Date(); // Varsayılan olarak bugünün tarihini döndür
-    }
-
-    return date;
-  } catch (e) {
-    console.error('Date parse error:', e);
-    return new Date(); // Varsayılan olarak bugünün tarihini döndür
-  }
+function fixTimestamp(timestamp) {
+  // "Above" içerenleri basitçe düzelt
+  if (typeof timestamp !== 'string') return '1970-01-01T00:00:00Z';
+  return timestamp.replace(' Above', '');
 }
 
-function fixTimestamp(timestamp) {
-  // "Above" içeren tarihleri düzelt (örn: "2025-04-24T Above:00:00Z" -> "2025-04-24T00:00:00Z")
-  if (timestamp.includes("Above")) {
-    return timestamp.replace(" Above", "");
+function safeDateParse(timestamp) {
+  const fixed = fixTimestamp(timestamp);
+  const date = new Date(fixed);
+
+  // Fallback için tarih kontrolü
+  if (isNaN(date.getTime())) {
+    console.warn('Invalid date detected, using fallback:', timestamp);
+    const datePart = fixed.split('T')[0] || '1970-01-01';
+    return new Date(`${datePart}T00:00:00Z`);
   }
 
-  // ISO formatına uymayan diğer tarihler için düzeltme
-  if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/.test(timestamp)) {
-    const datePart = timestamp.split('T')[0];
-    return `${datePart}T00:00:00Z`; // Varsayılan saat bilgisi ekle
-  }
-
-  return timestamp;
+  return date;
 }
 
 function formatDate(isoString) {
