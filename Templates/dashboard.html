@@ -582,7 +582,7 @@
 
 		function formatDate(isoString) {
 			const date = new Date(isoString);
-			return date.split('T')[0].toLocaleDateString(lang, { year: 'numeric', month: 'short', day: 'numeric' });
+			return date.toLocaleDateString(lang, { year: 'numeric', month: 'short', day: 'numeric' });
 		}
 
 		function fillMissingDates(data, range) {
