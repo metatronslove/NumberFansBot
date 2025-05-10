@@ -88,22 +88,22 @@ async def send_long_message(
 	MAX_MESSAGE_LENGTH = 4096
 	messages = []
 
-	# Derive chat from query_message or update
-	chat = None
+	# Derive chat_id and context
+	chat_id = None
 	if query_message:
-		chat = query_message.chat
+		chat_id = query_message.chat_id
 	elif update:
 		if update.message:
-			chat = update.message.chat
+			chat_id = update.message.chat_id
 			query_message = query_message or update.message
 		elif update.callback_query:
-			chat = update.callback_query.message.chat
+			chat_id = update.callback_query.message.chat_id
 			query_message = query_message or update.callback_query.message
 		elif update.channel_post:
-			chat = update.channel_post.chat
+			chat_id = update.channel_post.chat_id
 			query_message = query_message or update.channel_post
 		elif update.edited_channel_post:
-			chat = update.edited_channel_post.chat
+			chat_id = update.edited_channel_post.chat_id
 			query_message = query_message or update.edited_channel_post
 		else:
 			logger.error("Invalid update type received")
@@ -112,8 +112,8 @@ async def send_long_message(
 		logger.error("No valid chat derived from update or query_message")
 		return
 
-	if not chat:
-		logger.error("No valid chat provided or derived")
+	if not chat_id:
+		logger.error("No valid chat_id provided or derived")
 		return
 
 	context = context or ContextTypes.DEFAULT_TYPE()
@@ -149,23 +149,28 @@ async def send_long_message(
 					if "Message is too long" not in str(e):
 						logger.warning(f"Failed to edit message: {e}")
 						# Continue to send as new message if edit fails for other reasons
-			# Send as a new message
-			await send_long_message(
+			# Send as a new message using context.bot
+			await context.bot.send_message(
+				chat_id=chat_id,
 				text=msg,
 				parse_mode=parse_mode,
 				reply_markup=markup
 			)
 		except BadRequest as e:
 			logger.error(f"Error sending message chunk: {e}")
-			if context and chat:
-				db = Database()
-				i18n = I18n()
-				user_id = update.effective_user.id if update and update.effective_user else 0
-				language = db.get_user_language(user_id) if user_id else "en"
-				await send_long_message(
+			db = Database()
+			i18n = I18n()
+			user_id = update.effective_user.id if update and update.effective_user else 0
+			language = db.get_user_language(user_id) if user_id else "en"
+			# Send error message using context.bot, avoid recursion
+			try:
+				await context.bot.send_message(
+					chat_id=chat_id,
 					text=i18n.t("ERROR_GENERAL", language, error=str(e)),
 					parse_mode=ParseMode.HTML
 				)
+			except Exception as send_error:
+				logger.error(f"Failed to send error message: {send_error}")
 
 async def timeout(update: Update, context: ContextTypes.DEFAULT_TYPE, lang: str = "en"):
 	update, context, query, user, query_message = await uptodate_query(update, context)
