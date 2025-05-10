@@ -25,6 +25,18 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 
+# Paylaşımlarımı  parası  olduğu  halde bana  bağış yapmadan kullananlar
+# Anayasa'nın 18.maddesinin içinden geçmiş  günahkar, suçlulardır.
+# Sağladığım, yararlandıkları kaynaklarımın ve edindikleri ilhamların
+# Bedeli olarak her türlü ruhsal yaptırımı ve yaşama izin verdikleri
+# Her sıkıntının misliyle kendilerine yaşatılmasını kabul etmiş
+# ve onaylamış olurlar. Bağış yapmaları bu sorumluluğu ancak bağışlarının
+# yararının sağladığım yarara denkliği üzerinden değerlendirmesi tarafıma
+# ait bir hakkımdır. Yükümlülük ve yaptırımlarından kaçınma yolu ancak
+# paylaşımlarımdan, hizmetlerimden hiç bir şekilde yararlanmamış onları
+# indirmemiş hakkında bir fikre sahip olacak kadar bile incelememiş olmayı
+# gerektirir. # Kahrolsun istibdat, yaşasın hürriyet.
+
 # Initialize Flask app
 flask_app = Flask(__name__, template_folder="../Templates/", static_folder="../Assets", static_url_path="/Assets")
 config = Config()
@@ -543,6 +555,29 @@ def reload_file(lang="en"):
 					return jsonify({"message": i18n.t("TEMPLATE_RELOADED", lang)})
 				else:
 					return jsonify({"error": "Template not in template folder"}), 400
+			except Exception as e:
+				logger.error(f"Error reloading template {file_path}: {str(e)}")
+				return jsonify({"error": f"Failed to reload template: {str(e)}"}), 500
+
+		# Handle Assets templates (Yes I prefer you to create javascripts here)
+		elif path.suffix.lower() in [".css", ".webmanifest", ".txt", ".js"]:
+			if flask_app.jinja_env.cache:
+				flask_app.jinja_env.cache.clear()
+			try:
+				# Get absolute path to templates folder
+				assets_path = Path(flask_app.static_folder).resolve()
+				# Get absolute path to the file
+				file_abs_path = path.resolve()
+
+				# Check if file is within templates folder
+				if assets_path in file_abs_path.parents or file_abs_path.parent == assets_path:
+					# Get relative path from templates folder
+					template_name = str(file_abs_path.relative_to(assets_path))
+					flask_app.jinja_env.get_template(template_name)  # Trigger reload
+					logger.info(f"Reloaded template: {file_path}")
+					return jsonify({"message": i18n.t("TEMPLATE_RELOADED", lang)})
+				else:
+					return jsonify({"error": "Template not in assets folder"}), 400
 			except Exception as e:
 				logger.error(f"Error reloading template {file_path}: {str(e)}")
 				return jsonify({"error": f"Failed to reload template: {str(e)}"}), 500
