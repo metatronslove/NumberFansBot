@@ -793,7 +793,7 @@ function safeDateParse(timestamp) {
 function formatDate(isoString) {
   try {
     const date = safeDateParse(isoString);
-    return date.toLocaleDateString(currentLang, {
+    return date.toLocaleDateString(lang, {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
