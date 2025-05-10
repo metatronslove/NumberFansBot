@@ -327,6 +327,8 @@
 	"TEMPLATE_RELOADED": "Şablon başarıyla yeniden yüklendi",
 	"LOCALE_RELOADED": "Yerel çeviriler başarıyla yeniden yüklendi",
 	"FILE_RELOAD_UNSUPPORTED": "Bu dosya türü için yeniden yükleme desteklenmiyor",
+	"DONATE": "Bağış Yap",
+	"USE_PAPARA": "Papara ile Destekle",
 	"COMMAND_ALIASES": {
 		"abjad": ["ebced"],
 		"huddam": ["hüddam"],

@@ -327,6 +327,8 @@
 	"TEMPLATE_RELOADED": "התבנית נטענה מחדש בהצלחה",
 	"LOCALE_RELOADED": "תרגומים נטענו מחדש בהצלחה",
 	"FILE_RELOAD_UNSUPPORTED": "טעינה מחדש אינה נתמכת עבור סוג קובץ זה",
+	"DONATE": "תרום",
+	"USE_PAPARA": "תמוך עם Papara",
 	"COMMAND_ALIASES": {
 		"abjad": ["אביג'ד"],
 		"huddam": ["חודם"],

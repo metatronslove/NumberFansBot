@@ -327,6 +327,8 @@
 	"TEMPLATE_RELOADED": "Formula feliciter reloadata est",
 	"LOCALE_RELOADED": "Translationes locales feliciter reloadatae sunt",
 	"FILE_RELOAD_UNSUPPORTED": "Reload non supportatur pro hoc genere documenti",
+	"DONATE": "Donar",
+	"USE_PAPARA": "Apoyar con Papara",
 	"COMMAND_ALIASES": {
 		"abjad": ["abjad"],
 		"huddam": ["huddam"],

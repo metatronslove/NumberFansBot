@@ -327,6 +327,8 @@
 	"TEMPLATE_RELOADED": "تم إعادة تحميل القالب بنجاح",
 	"LOCALE_RELOADED": "تم إعادة تحميل الترجمات بنجاح",
 	"FILE_RELOAD_UNSUPPORTED": "إعادة التحميل غير مدعوم لهذا النوع من الملفات",
+	"DONATE": "تبرع",
+	"USE_PAPARA": "ادعم باستخدام Papara",
 	"COMMAND_ALIASES": {
 		"abjad": ["أبجد"],
 		"huddam": ["حُدّام"],
