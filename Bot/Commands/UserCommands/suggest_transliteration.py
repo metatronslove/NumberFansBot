@@ -42,7 +42,8 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
 			i18n.t("SUGGEST_TRANSLITERATION_USAGE", language),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return
 
@@ -58,7 +59,8 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
 			i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid target language. Use: {', '.join(valid_languages)}"),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return
 
@@ -69,7 +71,8 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
 				i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid source language: {source_lang}"),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return
 
@@ -79,7 +82,8 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
 				i18n.t("SUGGEST_TRANSLITERATION_RESULT", language, text=text, source_lang=source_lang, target_lang=target_lang, results="No suggestions available"),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return
 
@@ -102,7 +106,8 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 	except Exception as e:
 		logger.error(f"Suggest transliteration error: {str(e)}")
@@ -110,5 +115,6 @@ async def suggest_transliteration_handle(update: Update, context: ContextTypes.D
 			i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)

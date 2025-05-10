@@ -78,7 +78,8 @@ async def numerology_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 				i18n.t("NUMEROLOGY_USAGE", language),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return
 		if text is None:
@@ -96,7 +97,8 @@ async def numerology_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 				parse_mode=ParseMode.HTML,
 				reply_markup=reply_markup,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return
 		alphabet = args[-1].lower()
@@ -111,7 +113,8 @@ async def numerology_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 				i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid alphabet. Use: {', '.join(available_alphabets)}"),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return
 
@@ -121,7 +124,8 @@ async def numerology_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 				i18n.t("ERROR_INVALID_INPUT", language, error=result["error"]),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return
 
@@ -155,7 +159,8 @@ async def numerology_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 
 	except Exception as e:
@@ -163,5 +168,6 @@ async def numerology_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)

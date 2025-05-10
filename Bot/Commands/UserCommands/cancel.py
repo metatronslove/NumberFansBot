@@ -39,5 +39,6 @@ async def cancel_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		i18n.t("CANCEL_RESULT", language),
 		parse_mode=ParseMode.HTML,
 		update=update,
-		query_message=query_message
+		query_message=query_message,
+		context=context
 	)

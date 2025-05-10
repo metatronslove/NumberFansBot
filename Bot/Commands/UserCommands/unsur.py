@@ -43,7 +43,8 @@ async def unsur_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("UNSUR_PROMPT_INPUT", language),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return INPUT
 	except Exception as e:
@@ -52,7 +53,8 @@ async def unsur_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 
@@ -70,7 +72,8 @@ async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 				i18n.t("ERROR_INVALID_INPUT", language, error="Input is required"),
 				parse_mode=ParseMode.MARKDOWN,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return INPUT
 
@@ -94,7 +97,8 @@ async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("UNSUR_PROMPT_LANGUAGE", language),
 			reply_markup=reply_markup,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return LANGUAGE
 	except Exception as e:
@@ -103,7 +107,8 @@ async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 
@@ -231,7 +236,8 @@ async def unsur_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			parse_mode=ParseMode.HTML,
 			reply_markup=InlineKeyboardMarkup(keyboard),
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		context.user_data.clear()
 		return ConversationHandler.END
@@ -253,7 +259,8 @@ async def unsur_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("UNSUR_CANCEL", language),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		context.user_data.clear()
 		return ConversationHandler.END
@@ -263,7 +270,8 @@ async def unsur_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 

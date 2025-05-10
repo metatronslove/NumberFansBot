@@ -42,7 +42,8 @@ async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_T
 				i18n.t("CONVERTNUMBERS_USAGE", language),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return
 		text = " ".join(args[:-1]) if len(args) >= 2 else ""
@@ -57,7 +58,8 @@ async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_T
 				i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid format. Use: {', '.join(available_formats)}"),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return
 
@@ -80,7 +82,8 @@ async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_T
 				parse_mode=ParseMode.MARKDOWN,
 				reply_markup=reply_markup,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 		else:
 			await send_long_message(
@@ -88,14 +91,16 @@ async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_T
 				parse_mode=ParseMode.MARKDOWN,
 				reply_markup=reply_markup,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			await send_long_message(
 				message=i18n.t("ABJAD_USAGE", language),
 				parse_mode=ParseMode.MARKDOWN,
 				reply_markup=reply_markup,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 
 	except ValueError:
@@ -103,12 +108,14 @@ async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_T
 			i18n.t("ERROR_INVALID_INPUT", language, error="Invalid number"),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 	except Exception as e:
 		await send_long_message(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)

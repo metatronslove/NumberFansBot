@@ -41,7 +41,8 @@ async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 			i18n.t("MAGICSQUARE_USAGE", language),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return
 
@@ -56,7 +57,8 @@ async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 				i18n.t("ERROR_INVALID_INPUT", language, error="Row sum must be at least 15"),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return
 		magic_square = MagicSquareGenerator()
@@ -83,19 +85,22 @@ async def magic_square_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 	except ValueError:
 		await send_long_message(
 			i18n.t("ERROR_INVALID_INPUT", language, error="Invalid row sum"),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 	except Exception as e:
 		await send_long_message(
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)

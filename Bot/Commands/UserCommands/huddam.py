@@ -45,7 +45,8 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE, numbe
 					i18n.t("HUDDAM_USAGE", language),
 					parse_mode=ParseMode.MARKDOWN,
 					update=update,
-					query_message=query_message
+					query_message=query_message,
+					context=context
 				)
 				return ConversationHandler.END
 			number = int(args[0])
@@ -62,7 +63,8 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE, numbe
 			i18n.t("HUDDAM_PROMPT_ENTITY_TYPE", language),
 			reply_markup=reply_markup,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ENTITY_TYPE
 	except Exception as e:
@@ -71,7 +73,8 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE, numbe
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 
@@ -115,7 +118,8 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
 			i18n.t("HUDDAM_PROMPT_LANGUAGE", language),
 			reply_markup=reply_markup,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return LANGUAGE
 	except Exception as e:
@@ -124,7 +128,8 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 
@@ -159,7 +164,8 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("HUDDAM_PROMPT_MULTIPLIAR", language),
 			reply_markup=reply_markup,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return MULTIPLIAR
 	except Exception as e:
@@ -168,7 +174,8 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 
@@ -222,7 +229,8 @@ async def huddam_multipliar(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 			parse_mode=ParseMode.HTML,
 			reply_markup=InlineKeyboardMarkup(keyboard),
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		context.user_data.clear()
 		return ConversationHandler.END
@@ -246,7 +254,8 @@ async def huddam_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("HUDDAM_CANCEL", language),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		context.user_data.clear()
 		return ConversationHandler.END
@@ -256,7 +265,8 @@ async def huddam_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 

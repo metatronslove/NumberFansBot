@@ -42,7 +42,8 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("PAYMENT_BLACKLISTED", language),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return
 
@@ -57,12 +58,12 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 				reply_text = i18n.t("TESKILAT_ACTIVATED", language)
 			else:
 				reply_text = i18n.t("TESKILAT_ACTIVATION_FAILED", language)
-		await send_long_message(reply_text, parse_mode=ParseMode.HTML, update=update, query_message=query_message)
+		await send_long_message(reply_text, parse_mode=ParseMode.HTML, update=update, query_message=query_message,	context=context)
 		return
 
 	# Existing payment logic (placeholder, replace with actual implementation)
 	reply_text = i18n.t("PAYMENT_INSTRUCTIONS", language)
-	await send_long_message(reply_text, parse_mode=ParseMode.HTML, update=update, query_message=query_message)
+	await send_long_message(reply_text, parse_mode=ParseMode.HTML, update=update, query_message=query_message,	context=context)
 
 	# Check if payment provider token is set
 	if not Config().payment_provider_token:
@@ -70,7 +71,8 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("PAYMENT_MISSING_PROVIDER_TOKEN", language),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return
 
@@ -80,7 +82,8 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("PAYMENT_BETA_TESTER", language),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return
 
@@ -96,7 +99,8 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		parse_mode=ParseMode.HTML,
 		reply_markup=reply_markup,
 		update=update,
-		query_message=query_message
+		query_message=query_message,
+		context=context
 	)
 
 async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
@@ -117,7 +121,8 @@ async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_
 				i18n.t("PAYMENT_BLACKLISTED", language),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return
 
@@ -126,7 +131,8 @@ async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_
 				i18n.t("PAYMENT_MISSING_PROVIDER_TOKEN", language),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return
 
@@ -135,7 +141,8 @@ async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_
 				i18n.t("PAYMENT_INVOICE_TITLE", language),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 
 			await context.bot.send_invoice(
@@ -154,7 +161,8 @@ async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_
 				i18n.t("PAYMENT_FAILED", language),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 
 async def handle_pre_checkout(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
@@ -191,14 +199,16 @@ async def handle_successful_payment(update: Update, context: ContextTypes.DEFAUL
 			i18n.t("PAYMENT_THANK_YOU", language, product="500 Credits", amount="2.00", currency="USD"),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 	else:
 		await send_long_message(
 			i18n.t("PAYMENT_FAILED", language),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 
 def get_payment_handlers():

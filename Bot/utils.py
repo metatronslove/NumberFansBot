@@ -180,7 +180,8 @@ async def timeout(update: Update, context: ContextTypes.DEFAULT_TYPE, lang: str 
 		message=i18n.t("TIMEOUT_RETRY", lang),
 		parse_mode=ParseMode.HTML,
 		update=update,
-		query_message=query_message
+		query_message=query_message,
+		context=context
 	)
 	context.user_data.clear()
 	return ConversationHandler.END
@@ -284,7 +285,8 @@ async def handle_credits(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			message=i18n.t("NO_CREDITS", language),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 	return
@@ -310,7 +312,8 @@ async def check_credits(update, context):
 			message=i18n.t("USER_BLACKLISTED", language),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return False
 
@@ -323,7 +326,8 @@ async def check_credits(update, context):
 					message=i18n.t("NO_CREDITS", language),
 					parse_mode=ParseMode.HTML,
 					update=update,
-					query_message=query_message
+					query_message=query_message,
+					context=context
 				)
 				return False
 

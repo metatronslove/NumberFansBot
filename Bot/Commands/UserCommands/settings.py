@@ -47,5 +47,6 @@ async def settings_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		parse_mode=ParseMode.HTML,
 		reply_markup=reply_markup,
 		update=update,
-		query_message=query_message
+		query_message=query_message,
+		context=context
 	)

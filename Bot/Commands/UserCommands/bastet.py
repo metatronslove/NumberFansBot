@@ -45,7 +45,8 @@ async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 					i18n.t("BASTET_USAGE", language),
 					parse_mode=ParseMode.MARKDOWN,
 					update=update,
-					query_message=query_message
+					query_message=query_message,
+					context=context
 				)
 				return ConversationHandler.END
 
@@ -62,7 +63,8 @@ async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 					i18n.t("BASTET_USAGE", language),
 					parse_mode=ParseMode.MARKDOWN,
 					update=update,
-					query_message=query_message
+					query_message=query_message,
+					context=context
 				)
 				return ConversationHandler.END
 
@@ -76,7 +78,8 @@ async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 				i18n.t("BASTET_USAGE", language),
 				parse_mode=ParseMode.MARKDOWN,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return ConversationHandler.END
 	except Exception as e:
@@ -85,7 +88,8 @@ async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 
@@ -103,7 +107,8 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 				i18n.t("ERROR_INVALID_INPUT", language, error="Repetition must be a positive integer between 1 and 1000"),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return REPETITION
 
@@ -128,7 +133,8 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 			i18n.t("BASTET_PROMPT_TABLE", language),
 			reply_markup=reply_markup,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return TABLE
 	except Exception as e:
@@ -137,7 +143,8 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 
@@ -176,7 +183,8 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("BASTET_PROMPT_LANGUAGE", language),
 			reply_markup=reply_markup,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return LANGUAGE
 	except Exception as e:
@@ -185,7 +193,8 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 
@@ -249,7 +258,8 @@ async def bastet_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			parse_mode=ParseMode.HTML,
 			reply_markup=InlineKeyboardMarkup(keyboard),
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		context.user_data.clear()
 		return ConversationHandler.END
@@ -273,7 +283,8 @@ async def bastet_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("BASTET_CANCEL", language),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		context.user_data.clear()
 		return ConversationHandler.END
@@ -283,7 +294,8 @@ async def bastet_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 

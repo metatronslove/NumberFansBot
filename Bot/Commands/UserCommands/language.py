@@ -50,7 +50,8 @@ async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, la
 				i18n.t("LANGUAGE_INVALID", current_lang, languages=", ".join(config.available_languages)),
 				parse_mode=ParseMode.MARKDOWN,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return
 
@@ -61,7 +62,8 @@ async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, la
 			i18n.t("LANGUAGE_CHANGED", lang_code, selected_lang=lang_code.upper()),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 
 	except Exception as e:
@@ -70,5 +72,6 @@ async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, la
 			i18n.t("LANGUAGE_ERROR_GENERAL", current_lang),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)

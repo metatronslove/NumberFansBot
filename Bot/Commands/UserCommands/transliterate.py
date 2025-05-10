@@ -42,7 +42,8 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 			i18n.t("TRANSLITERATION_USAGE", language, source_lang="source_lang", target_lang="target_lang", text="text"),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return
 	source_lang = args[0].lower()
@@ -57,7 +58,8 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 			i18n.t("ERROR_GENERAL", language, error="Failed to initialize transliteration system"),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return
 
@@ -68,7 +70,8 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 			i18n.t("LANGUAGE_INVALID", language, languages=", ".join(valid_languages)),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return
 
@@ -112,7 +115,8 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 			parse_mode=ParseMode.HTML,
 			reply_markup=reply_markup,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 
 	except Exception as e:
@@ -121,5 +125,6 @@ async def transliterate_handle(update: Update, context: ContextTypes.DEFAULT_TYP
 			i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)

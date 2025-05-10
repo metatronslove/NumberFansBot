@@ -40,7 +40,8 @@ async def transliteration_history_handle(update: Update, context: ContextTypes.D
 			i18n.t("TRANSLITERATION_HISTORY_RESULT", language, history="No transliteration history found"),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return
 

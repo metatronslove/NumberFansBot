@@ -42,7 +42,8 @@ async def numerology_square_handle(update: Update, context: ContextTypes.DEFAULT
 			i18n.t("NUMEROLOGYSQUARE_USAGE", language),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return
 
@@ -62,7 +63,8 @@ async def numerology_square_handle(update: Update, context: ContextTypes.DEFAULT
 			i18n.t("ERROR_INVALID_INPUT", language, error="Invalid alphabet"),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return
 
@@ -93,12 +95,14 @@ async def numerology_square_handle(update: Update, context: ContextTypes.DEFAULT
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 	except Exception as e:
 		await send_long_message(
 			i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)

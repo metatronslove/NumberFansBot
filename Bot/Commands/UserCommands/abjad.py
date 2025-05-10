@@ -45,7 +45,8 @@ async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE, text: 
 				message=i18n.t("ABJAD_USAGE", language),
 				parse_mode=ParseMode.MARKDOWN,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return ConversationHandler.END
 
@@ -75,7 +76,8 @@ async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE, text: 
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ALPHABET_ORDER
 	except Exception as e:
@@ -84,7 +86,8 @@ async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE, text: 
 			message=i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 
@@ -127,7 +130,8 @@ async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYP
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ABJAD_TYPE
 	except Exception as e:
@@ -136,7 +140,8 @@ async def abjad_alphabet_order(update: Update, context: ContextTypes.DEFAULT_TYP
 			message=i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 
@@ -176,7 +181,8 @@ async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 				parse_mode=ParseMode.MARKDOWN,
 				reply_markup=reply_markup,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return SHADDA
 		else:
@@ -188,7 +194,8 @@ async def abjad_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			message=i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 
@@ -227,7 +234,8 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			parse_mode=ParseMode.HTML,
 			reply_markup=InlineKeyboardMarkup(keyboard),
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return DETAIL
 	except Exception as e:
@@ -236,7 +244,8 @@ async def abjad_shadda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			message=i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 
@@ -281,7 +290,8 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 				message=i18n.t("ERROR_GENERAL", language, error=result),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return ConversationHandler.END
 
@@ -311,7 +321,8 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=InlineKeyboardMarkup(keyboard),
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		for key in ["abjad_result", "abjad_text", "alphabet_order", "abjad_type", "shadda", "detail"]:
 			context.user_data.pop(key, None)
@@ -322,7 +333,8 @@ async def abjad_detail(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			message=i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 
@@ -344,7 +356,8 @@ async def abjad_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			message=i18n.t("ABJAD_CANCEL", language),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		context.user_data.clear()
 		return ConversationHandler.END
@@ -354,7 +367,8 @@ async def abjad_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 			message=i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		return ConversationHandler.END
 

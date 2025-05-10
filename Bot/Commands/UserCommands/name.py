@@ -54,7 +54,8 @@ async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, prefix
 				i18n.t("NAME_USAGE", language),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return
 
@@ -69,7 +70,8 @@ async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, prefix
 				i18n.t("ERROR_INVALID_INPUT", language, error=f"Invalid language. Use: {', '.join(valid_languages)}"),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return
 
@@ -97,12 +99,14 @@ async def name_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, prefix
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 	except Exception as e:
 		await send_long_message(
 			i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)

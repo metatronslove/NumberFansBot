@@ -47,14 +47,16 @@ async def set_language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE
 			i18n.t("LANGUAGE_CHANGED", new_language, selected_lang=new_language.upper()),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 	else:
 		await query.edit_message_text(
 			i18n.t("ERROR_INVALID_INPUT", language, error="Invalid language"),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 
 async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -89,7 +91,8 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					i18n.t("ERROR_INVALID_INPUT", language, error="Invalid callback data"),
 					parse_mode=ParseMode.HTML,
 					update=update,
-					query_message=query_message
+					query_message=query_message,
+					context=context
 				)
 				await query.answer()
 				return
@@ -101,7 +104,8 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					i18n.t("ERROR_INVALID_INPUT", language, error="Invalid or expired cache data"),
 					parse_mode=ParseMode.HTML,
 					update=update,
-					query_message=query_message
+					query_message=query_message,
+					context=context
 				)
 				await query.answer()
 				return
@@ -113,13 +117,14 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			try:
 				transliteration.store_transliteration(original_name, source_lang, target_lang, transliterated_name, user_id=user_id)
 				response = transliteration.format_response(suffix, target_lang, language, language)
-				await send_long_message(response, parse_mode=ParseMode.HTML, update=update, query_message=query_message)
+				await send_long_message(response, parse_mode=ParseMode.HTML, update=update, query_message=query_message,	context=context)
 			except Exception as e:
 				await send_long_message(
 					i18n.t("ERROR_INVALID_INPUT", language, error=str(e)),
 					parse_mode=ParseMode.HTML,
 					update=update,
-					query_message=query_message
+					query_message=query_message,
+					context=context
 				)
 		elif data.startswith("huddam_cb_"):
 			number = int(data[len("huddam_cb_"):])
@@ -150,7 +155,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				],
 			]
 			reply_markup = InlineKeyboardMarkup(buttons)
-			await send_long_message(response, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup, update=update, query_message=query_message)
+			await send_long_message(response, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup, update=update, query_message=query_message,	context=context)
 		elif data.startswith("next_size_"):
 			parts = data[len("next_size_"):].split("_")
 			row_sum, current_n, output_numbering = int(parts[0]), int(parts[1]), parts[2]
@@ -187,7 +192,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				]
 			)
 			reply_markup = InlineKeyboardMarkup(buttons)
-			await send_long_message(response, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup, update=update, query_message=query_message)
+			await send_long_message(response, parse_mode=ParseMode.MARKDOWN, reply_markup=reply_markup, update=update, query_message=query_message, context=context)
 		elif data.startswith("nutket_"):
 			parts = data[len("nutket_"):].split("_")
 			if len(parts) != 2:
@@ -195,7 +200,8 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					i18n.t("ERROR_INVALID_INPUT", language, error="Invalid nutket callback data"),
 					parse_mode=ParseMode.HTML,
 					update=update,
-					query_message=query_message
+					query_message=query_message,
+					context=context
 				)
 				await query.answer()
 				return
@@ -208,7 +214,8 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					i18n.t("ERROR_INVALID_INPUT", language, error="Invalid abjad_text callback data"),
 					parse_mode=ParseMode.HTML,
 					update=update,
-					query_message=query_message
+					query_message=query_message,
+					context=context
 				)
 				await query.answer()
 				return
@@ -235,14 +242,16 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					i18n.t("LANGUAGE_CHANGED", language, selected_lang=new_language.upper()),
 					parse_mode=ParseMode.HTML,
 					update=update,
-					query_message=query_message
+					query_message=query_message,
+					context=context
 				)
 			else:
 				await send_long_message(
 					i18n.t("ERROR_INVALID_INPUT", language, error="Invalid language"),
 					parse_mode=ParseMode.HTML,
 					update=update,
-					query_message=query_message
+					query_message=query_message,
+					context=context
 				)
 		elif data.startswith("transliterate_suggest_"):
 			parts = data[len("transliterate_suggest_"):].split("_", 2)
@@ -254,7 +263,8 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					i18n.t("SUGGEST_TRANSLITERATION_RESULT", language, text=text, source_lang=source_lang, target_lang=target_lang, results="No suggestions available"),
 					parse_mode=ParseMode.HTML,
 					update=update,
-					query_message=query_message
+					query_message=query_message,
+					context=context
 				)
 			else:
 				# Store alternatives in cache
@@ -271,7 +281,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					for i, alt in enumerate(alternatives)
 				]
 				reply_markup = InlineKeyboardMarkup(buttons) if buttons else None
-				await send_long_message(response, parse_mode=ParseMode.HTML, reply_markup=reply_markup, update=update, query_message=query_message)
+				await send_long_message(response, parse_mode=ParseMode.HTML, reply_markup=reply_markup, update=update, query_message=query_message, context=context)
 		elif data.startswith("transliterate_history_"):
 			user_id = int(data[len("transliterate_history_"):])
 			history = db.transliteration_collection.find({"user_id": user_id})
@@ -281,7 +291,8 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					i18n.t("TRANSLITERATION_HISTORY_RESULT", language, history="No transliteration history found"),
 					parse_mode=ParseMode.HTML,
 					update=update,
-					query_message=query_message
+					query_message=query_message,
+					context=context
 				)
 			else:
 				history_str = "\n".join(
@@ -291,7 +302,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					]
 				)
 				response = i18n.t("TRANSLITERATION_HISTORY_RESULT", language, history=history_str)
-				await send_long_message(response, parse_mode=ParseMode.HTML, update=update, query_message=query_message)
+				await send_long_message(response, parse_mode=ParseMode.HTML, update=update, query_message=query_message, context=context)
 		elif data == "help_group_chat":
 			try:
 				await query.message.reply_video(
@@ -299,14 +310,16 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 					caption=i18n.t("HELP_GROUP_CHAT_USAGE", language),
 					parse_mode=ParseMode.HTML,
 					update=update,
-					query_message=query_message
+					query_message=query_message,
+					context=context
 				)
 			except Exception as e:
 				await send_long_message(
 					i18n.t("ERROR_GENERAL", language, error="Failed to send help video"),
 					parse_mode=ParseMode.HTML,
 					update=update,
-					query_message=query_message
+					query_message=query_message,
+					context=context
 				)
 		await query.answer()
 	except BadRequest as e:
@@ -316,14 +329,16 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				i18n.t("ERROR_TIMEOUT", language, error="Processing took too long. Please try again."),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 		else:
 			await send_long_message(
 				i18n.t("ERROR_GENERAL", language, error=str(e)),
 				parse_mode=ParseMode.HTML,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 		await query.answer()
 	except Exception as e:
@@ -332,7 +347,8 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			i18n.t("ERROR_GENERAL", language, error="An error occurred while processing the callback"),
 			parse_mode=ParseMode.HTML,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		await query.answer()
 def register_handlers(application):

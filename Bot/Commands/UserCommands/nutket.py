@@ -41,7 +41,8 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 					i18n.t("NUTKET_USAGE", language),
 					parse_mode=ParseMode.MARKDOWN,
 					update=update,
-					query_message=query_message
+					query_message=query_message,
+					context=context
 				)
 				return
 			number = int(args[0])
@@ -52,7 +53,8 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 				i18n.t("ERROR_INVALID_INPUT", language, error="Number is required"),
 				parse_mode=ParseMode.MARKDOWN,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return
 
@@ -72,7 +74,8 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 				i18n.t("ERROR_GENERAL", language, error=spelled),
 				parse_mode=ParseMode.MARKDOWN,
 				update=update,
-				query_message=query_message
+				query_message=query_message,
+				context=context
 			)
 			return
 
@@ -99,7 +102,8 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 			parse_mode=ParseMode.MARKDOWN,
 			reply_markup=reply_markup,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		if update.callback_query:
 			await update.callback_query.answer()
@@ -110,7 +114,8 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 			i18n.t("ERROR_GENERAL", language, error=str(e)),
 			parse_mode=ParseMode.MARKDOWN,
 			update=update,
-			query_message=query_message
+			query_message=query_message,
+			context=context
 		)
 		if update.callback_query:
 			await update.callback_query.answer()
