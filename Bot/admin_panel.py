@@ -53,7 +53,7 @@ from telegram.error import BadRequest
 # https://ebced.free.nf/count/
 
 # Initialize Flask app
-flask_app = Flask(__name__, template_folder="./code/Templates/", static_folder="./code/Assets", static_url_path="/Assets")
+flask_app = Flask(__name__, template_folder="/code/Templates/", static_folder="/code/Assets", static_url_path="/Assets")
 config = Config()
 flask_app.secret_key = config.flask_secret_key
 logging.basicConfig(level=logging.INFO)
