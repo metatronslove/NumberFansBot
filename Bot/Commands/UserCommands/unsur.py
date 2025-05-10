@@ -92,7 +92,7 @@ async def unsur_input(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await send_long_message(
 			i18n.t("UNSUR_PROMPT_LANGUAGE", language),
-			reply_markup=reply_markup
+			reply_markup=reply_markup,
 			update=update,
 			query_message=query_message
 		)

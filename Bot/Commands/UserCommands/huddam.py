@@ -60,7 +60,7 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE, numbe
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await send_long_message(
 			i18n.t("HUDDAM_PROMPT_ENTITY_TYPE", language),
-			reply_markup=reply_markup
+			reply_markup=reply_markup,
 			update=update,
 			query_message=query_message
 		)
@@ -113,7 +113,7 @@ async def huddam_entity_type(update: Update, context: ContextTypes.DEFAULT_TYPE)
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await send_long_message(
 			i18n.t("HUDDAM_PROMPT_LANGUAGE", language),
-			reply_markup=reply_markup
+			reply_markup=reply_markup,
 			update=update,
 			query_message=query_message
 		)
@@ -157,7 +157,7 @@ async def huddam_language(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await send_long_message(
 			i18n.t("HUDDAM_PROMPT_MULTIPLIAR", language),
-			reply_markup=reply_markup
+			reply_markup=reply_markup,
 			update=update,
 			query_message=query_message
 		)

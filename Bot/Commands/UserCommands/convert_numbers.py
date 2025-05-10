@@ -78,7 +78,7 @@ async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_T
 			await update.callback_query.message.edit_text(
 				response,
 				parse_mode=ParseMode.MARKDOWN,
-				reply_markup=reply_markup
+				reply_markup=reply_markup,
 				update=update,
 				query_message=query_message
 			)
@@ -86,14 +86,14 @@ async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_T
 			await send_long_message(
 				response,
 				parse_mode=ParseMode.MARKDOWN,
-				reply_markup=reply_markup
+				reply_markup=reply_markup,
 				update=update,
 				query_message=query_message
 			)
 			await send_long_message(
 				message=i18n.t("ABJAD_USAGE", language),
 				parse_mode=ParseMode.MARKDOWN,
-				reply_markup=reply_markup
+				reply_markup=reply_markup,
 				update=update,
 				query_message=query_message
 			)

@@ -126,7 +126,7 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await send_long_message(
 			i18n.t("BASTET_PROMPT_TABLE", language),
-			reply_markup=reply_markup
+			reply_markup=reply_markup,
 			update=update,
 			query_message=query_message
 		)
@@ -174,7 +174,7 @@ async def bastet_table(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		reply_markup = InlineKeyboardMarkup(keyboard)
 		await send_long_message(
 			i18n.t("BASTET_PROMPT_LANGUAGE", language),
-			reply_markup=reply_markup
+			reply_markup=reply_markup,
 			update=update,
 			query_message=query_message
 		)
