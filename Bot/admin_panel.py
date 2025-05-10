@@ -53,7 +53,7 @@ from telegram.error import BadRequest
 # https://ebced.free.nf/count/
 
 # Initialize Flask app
-flask_app = Flask(__name__, template_folder="../Templates/", static_folder="../Assets", static_url_path="/Assets")
+flask_app = Flask(__name__, template_folder="./code/Templates/", static_folder="./code/Assets", static_url_path="/Assets")
 config = Config()
 flask_app.secret_key = config.flask_secret_key
 logging.basicConfig(level=logging.INFO)
@@ -579,7 +579,7 @@ def reload_file(lang="en"):
 			if flask_app.jinja_env.cache:
 				flask_app.jinja_env.cache.clear()
 			try:
-				# Get absolute path to templates folder
+				# Get absolute path to assets folder
 				assets_path = Path(flask_app.static_folder).resolve()
 				# Get absolute path to the file
 				file_abs_path = path.resolve()
@@ -587,8 +587,6 @@ def reload_file(lang="en"):
 				# Check if file is within templates folder
 				if assets_path in file_abs_path.parents or file_abs_path.parent == assets_path:
 					# Get relative path from templates folder
-					template_name = str(file_abs_path.relative_to(assets_path))
-					flask_app.jinja_env.get_template(template_name)  # Trigger reload
 					logger.info(f"Reloaded template: {file_path}")
 					return jsonify({"message": i18n.t("TEMPLATE_RELOADED", lang)})
 				else:
