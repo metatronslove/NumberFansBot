@@ -97,11 +97,22 @@ body {
 }
 
 .tab-content.active {
+	.mb-3 * {
+		display: inline-table;
+	}
+	label {
+		min-width: 16rem;
+    text-align: right;
+	}
+	.text-muted {
+    display: none;
+	}
 	input{
 		background: rgba(40,40,56,.75);
 	}
-	input[type=text]{
-		width: 800px;
+	input[type=text] {
+		max-width: calc(68vw - 16rem);
+    min-width: 60vw;
 	}
 	input[type=checkbox]{
 		width: 1rem;
@@ -322,7 +333,7 @@ body {
 }
 
 .create-file-form input {
-	width: calc(100% - 16rem);
+	max-width: calc(100vw - 18rem);
 	display: inline-block;
 	vertical-align: middle;
 }
