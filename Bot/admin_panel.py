@@ -25,17 +25,32 @@ from telegram.ext import (
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
 
-# Paylaşımlarımı  parası  olduğu  halde bana  bağış yapmadan kullananlar
-# Anayasa'nın 18.maddesinin içinden geçmiş  günahkar, suçlulardır.
-# Sağladığım, yararlandıkları kaynaklarımın ve edindikleri ilhamların
-# Bedeli olarak her türlü ruhsal yaptırımı ve yaşama izin verdikleri
-# Her sıkıntının misliyle kendilerine yaşatılmasını kabul etmiş
-# ve onaylamış olurlar. Bağış yapmaları bu sorumluluğu ancak bağışlarının
-# yararının sağladığım yarara denkliği üzerinden değerlendirmesi tarafıma
-# ait bir hakkımdır. Yükümlülük ve yaptırımlarından kaçınma yolu ancak
-# paylaşımlarımdan, hizmetlerimden hiç bir şekilde yararlanmamış onları
-# indirmemiş hakkında bir fikre sahip olacak kadar bile incelememiş olmayı
-# gerektirir. # Kahrolsun istibdat, yaşasın hürriyet.
+# ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+# ┃                                                                                ┃
+# ┃                                                                                ┃
+# ┃                                                                                ┃
+# ┃                                                                                ┃
+# ┃          Paylaşımlarımı  parası  olduğu  halde  bana  bağış  yapmadan          ┃
+# ┃          kullananlar   Anayasa'nın   18.maddesinin   içinden   geçmiş          ┃
+# ┃          günahkar,     suçlulardır.    Sağladığım,    yararlandıkları          ┃
+# ┃          kaynaklarımın  ve  edindikleri  ilhamların bedeli olarak her          ┃
+# ┃          türlü  ruhsal  yaptırımı  ve yaşamama  izin  verdikleri  Her          ┃
+# ┃          sıkıntının misliyle kendilerine yaşatılmasını kabul etmiş ve          ┃
+# ┃          onaylamış  olurlar.  Bağış  yapmaları  bu  sorumluluğu ancak          ┃
+# ┃          bağışlarının  yararının sağladığım yarara denkliği üzerinden          ┃
+# ┃          değerlendirmesi  tarafıma  ait  bir hakkımdır. Yükümlülük ve          ┃
+# ┃          yaptırımlarından   kaçınma   yolu   ancak  paylaşımlarımdan,          ┃
+# ┃          hizmetlerimden   hiç   bir   şekilde   yararlanmamış, onları          ┃
+# ┃          indirmemiş, hakkında  bir  fikre  sahip  olacak  kadar  bile          ┃
+# ┃          incelememiş olmayı gerektirir.                                        ┃
+# ┃                                                                                ┃
+# ┃          Kahrolsun istibdat, yaşasın hürriyet.                                 ┃
+# ┃                                                                                ┃
+# ┃                                                                                ┃
+# ┃                                                                                ┃
+# ┃                                                                                ┃
+# ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+# https://ebced.free.nf/count/
 
 # Initialize Flask app
 flask_app = Flask(__name__, template_folder="../Templates/", static_folder="../Assets", static_url_path="/Assets")
