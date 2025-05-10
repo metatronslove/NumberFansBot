@@ -322,6 +322,11 @@
 	"COMMAND_USAGE_PERCENTAGE": "אחוז שימוש",
 	"TIMEOUT_RETRY": "השיחה תמה. אנא התחל מחדש.",
 	"GENERATE_ENTITY": "צור שם קצין",
+	"RELOAD": "טען מחדש",
+	"FILE_RELOADED": "הקובץ נטען מחדש בהצלחה",
+	"TEMPLATE_RELOADED": "התבנית נטענה מחדש בהצלחה",
+	"LOCALE_RELOADED": "תרגומים נטענו מחדש בהצלחה",
+	"FILE_RELOAD_UNSUPPORTED": "טעינה מחדש אינה נתמכת עבור סוג קובץ זה",
 	"COMMAND_ALIASES": {
 		"abjad": ["אביג'ד"],
 		"huddam": ["חודם"],

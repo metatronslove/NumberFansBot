@@ -6,6 +6,9 @@ import yaml
 import requests
 import asyncio
 import urllib
+import importlib
+import sys
+import json
 from flask import Flask, request, render_template, redirect, url_for, session, flash, jsonify
 from asgiref.wsgi import WsgiToAsgi
 from Bot.config import Config
@@ -477,6 +480,86 @@ def delete_file(lang="en"):
 	except Exception as e:
 		logger.error(f"Error deleting {file_path}: {str(e)}")
 		return jsonify({"error": f"Failed to delete: {str(e)}"}), 500
+
+@flask_app.route("/<lang>/files/reload", methods=["POST"])
+def reload_file(lang="en"):
+	"""Reload a file to apply changes without restarting the server."""
+	if "username" not in session:
+		return jsonify({"error": "Unauthorized access"}), 401
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+	data = request.get_json()
+	file_path = data.get("path")
+	if not file_path or not is_safe_path(file_path):
+		return jsonify({"error": "Invalid or unsafe file path"}), 400
+	try:
+		path = PROJECT_ROOT / file_path
+		# Prevent reloading sensitive files
+		restricted_files = ["admin_panel.py", "config.py", ".env"]
+		if path.name in restricted_files:
+			return jsonify({"error": "Reloading this file is restricted"}), 403
+		if not path.exists() or not path.is_file():
+			return jsonify({"error": "File does not exist or is not a file"}), 404
+
+		# Initialize I18n for translations
+		i18n = I18n()
+
+		# Handle Python files
+		if path.suffix.lower() == ".py":
+			module_name = str(path.relative_to(PROJECT_ROOT).with_suffix("")).replace(os.sep, ".")
+			if module_name.startswith("."):
+				return jsonify({"error": "Invalid module path"}), 400
+			try:
+				if module_name in sys.modules:
+					module = sys.modules[module_name]
+					importlib.reload(module)
+				else:
+					module = importlib.import_module(module_name)
+				# Reinitialize Telegram handlers if the module affects bot logic
+				if module_name.startswith("Bot.") or module_name.startswith("Commands."):
+					register_handlers()
+				logger.info(f"Reloaded Python module: {module_name}")
+				return jsonify({"message": i18n.t("FILE_RELOADED", lang)})
+			except ImportError as e:
+				logger.error(f"Error reloading module {module_name}: {str(e)}")
+				return jsonify({"error": f"Failed to reload module: {str(e)}"}), 500
+
+		# Handle HTML templates
+		elif path.suffix.lower() == ".html":
+			if flask_app.jinja_env.cache:
+				flask_app.jinja_env.cache.clear()
+			try:
+				if str(path).startswith(str(Path(flask_app.template_folder))):
+					template_name = str(path.relative_to(flask_app.template_folder))
+					flask_app.jinja_env.get_template(template_name)  # Trigger reload
+					logger.info(f"Reloaded template: {file_path}")
+					return jsonify({"message": i18n.t("TEMPLATE_RELOADED", lang)})
+				else:
+					return jsonify({"error": "Template not in template folder"}), 400
+			except Exception as e:
+				logger.error(f"Error reloading template {file_path}: {str(e)}")
+				return jsonify({"error": f"Failed to reload template: {str(e)}"}), 500
+
+		# Handle JSON locale files
+		elif path.suffix.lower() == ".json" and str(path).startswith(str(PROJECT_ROOT / "Locales")):
+			try:
+				# Clear I18n translations cache and reload
+				i18n.translations.clear()
+				i18n._load_translations(lang)
+				logger.info(f"Reloaded locale file: {file_path}")
+				return jsonify({"message": i18n.t("LOCALE_RELOADED", lang)})
+			except Exception as e:
+				logger.error(f"Error reloading locale {file_path}: {str(e)}")
+				return jsonify({"error": f"Failed to reload locale: {str(e)}"}), 500
+
+		# Handle other file types
+		else:
+			logger.info(f"Reload requested for unsupported file type: {file_path}")
+			return jsonify({"message": i18n.t("FILE_RELOAD_UNSUPPORTED", lang)})
+
+	except Exception as e:
+		logger.error(f"Error reloading file {file_path}: {str(e)}")
+		return jsonify({"error": f"Failed to reload file: {str(e)}"}), 500
 
 @flask_app.route("/<lang>/toggle_blacklist", methods=["POST"])
 def toggle_blacklist(lang="en"):

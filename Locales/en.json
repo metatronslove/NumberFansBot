@@ -321,6 +321,11 @@
 	"COMMAND_USAGE_CHART": "Command Usage Distribution",
 	"COMMAND_USAGE_PERCENTAGE": "Usage Percentage",
 	"GENERATE_ENTITY": "Generate Entity Name",
+	"RELOAD": "Reload",
+	"FILE_RELOADED": "File reloaded successfully",
+	"TEMPLATE_RELOADED": "Template reloaded successfully",
+	"LOCALE_RELOADED": "Locale translations reloaded successfully",
+	"FILE_RELOAD_UNSUPPORTED": "Reload not supported for this file type",
 	"COMMAND_ALIASES": {
 		"abjad": ["abjad"],
 		"huddam": ["huddâm"],

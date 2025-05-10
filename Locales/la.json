@@ -322,6 +322,11 @@
 	"COMMAND_USAGE_PERCENTAGE": "Usus Percentage",
 	"TIMEOUT_RETRY": "Colloquium expletum est. Iterum incipe.",
 	"GENERATE_ENTITY": "Nomine Praefecti Generare",
+	"RELOAD": "Reload",
+	"FILE_RELOADED": "Documentum feliciter reloadatum est",
+	"TEMPLATE_RELOADED": "Formula feliciter reloadata est",
+	"LOCALE_RELOADED": "Translationes locales feliciter reloadatae sunt",
+	"FILE_RELOAD_UNSUPPORTED": "Reload non supportatur pro hoc genere documenti",
 	"COMMAND_ALIASES": {
 		"abjad": ["abjad"],
 		"huddam": ["huddam"],

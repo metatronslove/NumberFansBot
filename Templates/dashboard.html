@@ -263,6 +263,7 @@
 					<div class="file-actions">
 						<button class="btn btn-primary" id="save-file">{{ i18n.t('SAVE', lang) }}</button>
 						<button class="btn btn-danger" id="delete-file">{{ i18n.t('DELETE', lang) }}</button>
+						<button class="btn btn-warning" id="reload-file" style="display: none;">{{ i18n.t('RELOAD', lang) }}</button>
 					</div>
 				</div>
 			</div>
@@ -829,17 +830,20 @@
 				currentFilePath = path;
 				document.getElementById('editor-title').textContent = `Editing: ${path}`;
 				document.getElementById('editor-container').style.display = 'block';
+				document.getElementById('reload-file').style.display = 'inline-block'; // Show Reload button
 				const modeMap = {
-					python: 'python',
-					htmlmixed: 'htmlmixed',
-					javascript: 'javascript',
-					css: 'css',
-					yaml: 'yaml',
-					sql: 'sql',
-					markdown: 'markdown',
-					text: 'text/plain'
+					'.py': 'python',
+					'.html': 'htmlmixed',
+					'.js': 'javascript',
+					'.json': 'javascript',
+					'.css': 'css',
+					'.yml': 'yaml',
+					'.md': 'markdown',
+					'.sql': 'sql',
+					'.txt': 'text'
 				};
-				editor.setOption('mode', modeMap[data.mode] || 'python');
+				const extension = path.substring(path.lastIndexOf('.')).toLowerCase();
+				editor.setOption('mode', modeMap[extension] || 'text');
 				editor.setValue(data.content);
 			}).catch(error => {
 				console.error('Error loading file:', error);
@@ -873,6 +877,27 @@
 			});
 		}
 
+		function reloadFile() {
+			if (!currentFilePath) {
+				alert('No file selected');
+				return;
+			}
+			fetch(`/${lang}/files/reload`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ path: currentFilePath })
+			}).then(response => response.json()).then(data => {
+				if (data.error) {
+					alert(data.error);
+				} else {
+					alert(data.message);
+				}
+			}).catch(error => {
+				console.error('Error reloading file:', error);
+				alert('Failed to reload file');
+			});
+		}
+
 		function deleteFile() {
 			if (!currentFilePath) {
 				alert('No file selected');
@@ -891,6 +916,7 @@
 				} else {
 					alert(data.message);
 					document.getElementById('editor-container').style.display = 'none';
+					document.getElementById('reload-file').style.display = 'none';
 					currentFilePath = null;
 					if (editor) {
 						editor.setValue('');
@@ -1025,6 +1051,7 @@
 			});
 			document.getElementById('save-file').addEventListener('click', saveFile);
 			document.getElementById('delete-file').addEventListener('click', deleteFile);
+			document.getElementById('reload-file').addEventListener('click', reloadFile);
 			main();
 			// Tüm CSS değişkenlerini al
 			const rootStyles = getComputedStyle(document.documentElement);
@@ -1120,5 +1147,5 @@
 			}
 		})();
 	</script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93bd8c7aeec7adde',t:'MTc0NjU4NzY4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93bd8c7aeec7adde',t:'MTc0NjU4NzY4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93d5e84c58bbad5f',t:'MTc0Njg0MzEwMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

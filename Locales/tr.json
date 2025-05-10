@@ -322,6 +322,11 @@
 	"COMMAND_USAGE_PERCENTAGE": "Kullanım Yüzdesi",
 	"TIMEOUT_RETRY": "Konuşma zaman aşımına uğradı. Lütfen tekrar başlayın.",
 	"GENERATE_ENTITY": "Vazifeli İsmi Oluştur",
+	"RELOAD": "Yeniden Yükle",
+	"FILE_RELOADED": "Dosya başarıyla yeniden yüklendi",
+	"TEMPLATE_RELOADED": "Şablon başarıyla yeniden yüklendi",
+	"LOCALE_RELOADED": "Yerel çeviriler başarıyla yeniden yüklendi",
+	"FILE_RELOAD_UNSUPPORTED": "Bu dosya türü için yeniden yükleme desteklenmiyor",
 	"COMMAND_ALIASES": {
 		"abjad": ["ebced"],
 		"huddam": ["hüddam"],

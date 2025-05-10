@@ -322,6 +322,11 @@
 	"COMMAND_USAGE_PERCENTAGE": "نسبة الاستخدام",
 	"TIMEOUT_RETRY": "انتهت مهلة المحادثة. يرجى البدء مرة أخرى.",
 	"GENERATE_ENTITY": "إنشاء اسم الضابط",
+	"RELOAD": "إعادة تحميل",
+	"FILE_RELOADED": "تم إعادة تحميل الملف بنجاح",
+	"TEMPLATE_RELOADED": "تم إعادة تحميل القالب بنجاح",
+	"LOCALE_RELOADED": "تم إعادة تحميل الترجمات بنجاح",
+	"FILE_RELOAD_UNSUPPORTED": "إعادة التحميل غير مدعوم لهذا النوع من الملفات",
 	"COMMAND_ALIASES": {
 		"abjad": ["أبجد"],
 		"huddam": ["حُدّام"],
