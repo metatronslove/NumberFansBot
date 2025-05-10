@@ -738,7 +738,7 @@
 				const escapedRepoName = repo.name.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"').replace(/'/g, '');
 				container.innerHTML = `
 					<h3>
-						<a href="https://github.com/${repo.full_name}" target="_blank">🔗 ${escapedRepoName} {{ i18n.t('REPO_HEADER', lang) }}.</a> |
+						<a href="https://github.com/${repo.full_name}" target="_blank">🔗 ${escapedRepoName} {{ i18n.t('REPO_HEADER', lang) }}</a> |
 						<a href="https://github.com/${repo.full_name}/zipball/main" target="_top">zip⬇</a> |
 						<a href="https://github.com/${repo.full_name}/tarball/main" target="_top">tar⬇</a> |
 						<a href="https://github.com/${repo.full_name}/fork" target="_blank">fork🖈</a> |
