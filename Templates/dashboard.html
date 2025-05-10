@@ -770,64 +770,93 @@ function mergeDuplicateDates(data) {
     return Object.values(merged);
 }
 
+function safeDateParse(timestamp) {
+  try {
+    const fixedTimestamp = fixTimestamp(timestamp);
+    const date = new Date(fixedTimestamp);
+
+    // Geçersiz tarih kontrolü
+    if (isNaN(date.getTime())) {
+      console.warn('Invalid date:', timestamp);
+      return new Date(); // Varsayılan olarak bugünün tarihini döndür
+    }
+
+    return date;
+  } catch (e) {
+    console.error('Date parse error:', e);
+    return new Date(); // Varsayılan olarak bugünün tarihini döndür
+  }
+}
+
 function fixTimestamp(timestamp) {
-    // "Above" içeren tarihleri düzelt (örn: "2025-04-24T Above:00:00Z" ->
-    // "2025-04-24T00:00:00Z")
-    return timestamp.includes("Above")
-        ? timestamp.replace(" Above", "")
-        : timestamp;
+  // "Above" içeren tarihleri düzelt (örn: "2025-04-24T Above:00:00Z" -> "2025-04-24T00:00:00Z")
+  if (timestamp.includes("Above")) {
+    return timestamp.replace(" Above", "");
+  }
+
+  // ISO formatına uymayan diğer tarihler için düzeltme
+  if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z/.test(timestamp)) {
+    const datePart = timestamp.split('T')[0];
+    return `${datePart}T00:00:00Z`; // Varsayılan saat bilgisi ekle
+  }
+
+  return timestamp;
 }
 
 function formatDate(isoString) {
-    try {
-        const fixedTimestamp = fixTimestamp(isoString);
-        const date = new Date(fixedTimestamp);
-        return date.toLocaleDateString(currentLang, {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
-    } catch (e) {
-        console.error('Date formatting error:', e);
-        return 'Invalid Date';
-    }
+  try {
+    const date = safeDateParse(isoString);
+    return date.toLocaleDateString(currentLang, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  } catch (e) {
+    console.error('Date formatting error:', e);
+    return 'Invalid Date';
+  }
 }
 
 function fillMissingDates(data, range) {
-    if (data.length === 0)
-        return data;
+  if (!data || data.length === 0) return [];
 
-    const dateMap = new Map();
+  const dateMap = new Map();
 
-    // Tüm verileri işle (geçersiz tarihleri düzelt)
-    data.forEach(item => {
-        const fixedTimestamp = fixTimestamp(item.timestamp);
-        const dateKey = fixedTimestamp.split('T')[0];
-        dateMap.set(dateKey, {
-            ...item,
-            timestamp: fixedTimestamp // Düzeltilmiş tarihi kullan
-        });
+  // Tüm verileri işle ve geçersiz tarihleri düzelt
+  data.forEach(item => {
+    const fixedTimestamp = fixTimestamp(item.timestamp);
+    const date = safeDateParse(fixedTimestamp);
+    const dateKey = date.toISOString().split('T')[0];
+
+    dateMap.set(dateKey, {
+      ...item,
+      timestamp: fixedTimestamp
     });
+  });
 
-    const sortedDates = [...dateMap.keys()].sort();
-    const startDate = new Date(sortedDates[0]);
-    const endDate = new Date(sortedDates[sortedDates.length - 1]);
+  // Tarih aralığını belirle
+  const sortedDates = Array.from(dateMap.keys()).sort();
+  if (sortedDates.length === 0) return [];
 
-    // Eksik tarihleri doldur
-    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-        const dateStr = d
-            .toISOString()
-            .split('T')[0];
-        if (!dateMap.has(dateStr)) {
-            dateMap.set(dateStr, {
-                timestamp: dateStr + "T00:00:00Z",
-                count: 0,
-                uniques: 0
-            });
-        }
+  const startDate = safeDateParse(sortedDates[0]);
+  const endDate = safeDateParse(sortedDates[sortedDates.length - 1]);
+
+  // Eksik tarihleri doldur
+  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+    const dateStr = d.toISOString().split('T')[0];
+    if (!dateMap.has(dateStr)) {
+      dateMap.set(dateStr, {
+        timestamp: `${dateStr}T00:00:00Z`,
+        count: 0,
+        uniques: 0
+      });
     }
+  }
 
-    return [...dateMap.values()].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+  // Sıralı ve doldurulmuş veriyi döndür
+  return Array.from(dateMap.values()).sort((a, b) => {
+    return safeDateParse(a.timestamp) - safeDateParse(b.timestamp);
+  });
 }
 
 function createChart(canvasId, label, data, labels, total) {
