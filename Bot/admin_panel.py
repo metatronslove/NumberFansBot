@@ -529,8 +529,15 @@ def reload_file(lang="en"):
 			if flask_app.jinja_env.cache:
 				flask_app.jinja_env.cache.clear()
 			try:
-				if str(path).startswith(str(Path(flask_app.template_folder))):
-					template_name = str(path.relative_to(flask_app.template_folder))
+				# Get absolute path to templates folder
+				templates_path = Path(flask_app.template_folder).resolve()
+				# Get absolute path to the file
+				file_abs_path = path.resolve()
+
+				# Check if file is within templates folder
+				if templates_path in file_abs_path.parents or file_abs_path.parent == templates_path:
+					# Get relative path from templates folder
+					template_name = str(file_abs_path.relative_to(templates_path))
 					flask_app.jinja_env.get_template(template_name)  # Trigger reload
 					logger.info(f"Reloaded template: {file_path}")
 					return jsonify({"message": i18n.t("TEMPLATE_RELOADED", lang)})
