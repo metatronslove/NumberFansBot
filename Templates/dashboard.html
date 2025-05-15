@@ -41,6 +41,7 @@
 			{% endif %}
 			<div class="tab{% if not command_usage %} active{% endif %}" data-tab="config">{{ i18n.t('CONFIG_TAB', lang) }}</div>
 			<div class="tab" data-tab="users">{{ i18n.t('USERS_TAB', lang) }}</div>
+			<div class="tab" data-tab="groups">{{ i18n.t('GROUPS_TAB', lang) }}</div>
 			{% if github_info.url %}
 				<div class="tab" data-tab="github">{{ i18n.t('GITHUB_TRAFFIC_TAB', lang) }}</div>
 			{% endif %}
@@ -69,7 +70,7 @@
 								<td>/{{ usage['command'] }}</td>
 								<td>{{ usage['count'] }}</td>
 								<td>{{ usage['last_used'].strftime('%Y-%m-%d %H:%M:%S') if usage.get('last_used') else 'N/A' }}</td>
-								<td>{{ usage['last_user_id'] if usage.get('last_user_id') else 'N/A' }} {% for user in users %}{{ user.username if usage['last_user_id'] == user.user_id else ''}}{% endfor %}</td>
+								<td>{{ usage['last_user_id'] if usage.get('last_user_id') else 'N/A' }} {% for user in users %}{{ user.username if usage['last_user_id'] == user.user_id else ''}}{% endfor %} {% if usage.chat_id %}{% for group in groups %}{% if group.group_id == usage.chat_id %}({{ group.group_name }}){% endif %}{% endfor %}{% endif %}</td>
 							</tr>
 						{% endfor %}
 					</tbody>
@@ -160,11 +161,13 @@
 				}
 			}
 		</style>
-		<div class="tab-content" id="users">
-			<h3>{{ i18n.t('USERS_TAB', lang) }}</h3>
-			<table class="table table-dark">
-				<thead>
-					<tr>
+        <!-- Users Tab -->
+        <section id="users" class="tab-content" hx-target="this" hx-swap="innerHTML">
+            <h3>{{ i18n.t('USERS_TAB', lang) }}</h3>
+            <input type="text" name="search" id="search-users" hx-get="/{{ lang }}/users" hx-trigger="keyup changed delay:500ms" placeholder="{{ i18n.t('SEARCH_USERS', lang) }}">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
 						<th style="text-align: left;">{{ i18n.t('USER_ID', lang) }}</th>
 						<th style="text-align: left;">{{ i18n.t('USERNAME', lang) }}</th>
 						<th style="text-align: center;">{{ i18n.t('BADGES', lang) }}</th>
@@ -172,43 +175,118 @@
 						<th style="text-align: right;">{{ i18n.t('PROMOTE_CREDITS', lang) }}</th>
 						<th style="text-align: right;">{{ i18n.t('BLACKLIST', lang) }}</th>
 						<th style="text-align: right;">{{ i18n.t('BETA_TESTER', lang) }}</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for user in users %}
-						<tr>
-							<td style="text-align: left;">{{ user.user_id }}</td>
-							<td style="text-align: left;">{{ user.username }}</td>
-							<td style="text-align: center;">{{ user.badges | safe }}</td>
-							<td style="text-align: center;">{{ user.credits }}</td>
-							<td style="text-align: right;">
-								<form action="{{ url_for('promote_credits', lang=lang) }}" method="POST" class="promote-credits-form">
-									<input type="hidden" name="user_id" value="{{ user.user_id }}">
-									<input type="number" name="credits" min="1" placeholder="{{ i18n.t('ENTER_CREDITS', lang) }}" required>
-									<button type="submit" class="btn btn-primary">{{ i18n.t('SUBMIT', lang) }}</button>
-								</form>
-							</td>
-							<td style="text-align: right;">
-								<form action="{{ url_for('toggle_blacklist', lang=lang) }}" method="POST" class="toggle-blacklist-form">
-									<input type="hidden" name="user_id" value="{{ user.user_id }}">
-									<button type="submit" class="btn btn-{{ 'danger' if user.is_blacklisted else 'secondary' }}">
-										{{ i18n.t('UNBLACKLIST' if user.is_blacklisted else 'BLACKLIST', lang) }}
-									</button>
-								</form>
-							</td>
-							<td style="text-align: right;">
-								<form action="{{ url_for('toggle_beta_tester', lang=lang) }}" method="POST" class="toggle-beta-tester-form">
-									<input type="hidden" name="user_id" value="{{ user.user_id }}">
-									<button type="submit" class="btn btn-{{ 'secondary' if user.is_beta_tester else 'danger' }}">
-										{{ i18n.t('REVOKE_ACCESS' if user.is_beta_tester else 'GRANT_ACCESS', lang) }}
-									</button>
-								</form>
-							</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if users %}
+                        {% for user in users %}
+                            <tr>
+                                <td style="text-align: left;">{{ user.user_id }}</td>
+                                <td style="text-align: left;">{{ user.username }}</td>
+                                <td style="text-align: center;">{{ user.badges | safe }}</td>
+                                <td style="text-align: center;">{{ user.credits }}</td>
+                                <td style="text-align: right;">
+                                    <form method="post" action="{{ url_for('promote_credits', lang=lang) }}">
+                                        <input type="hidden" name="user_id" value="{{ user.user_id }}">
+                                        <input type="number" name="credits" min="1" required>
+                                        <button type="submit">{{ i18n.t('SUBMIT', lang) }}</button>
+                                    </form>
+                                </td>
+                                <td style="text-align: right;">
+                                    <form method="post" action="{{ url_for('toggle_blacklist', lang=lang) }}">
+                                        <input type="hidden" name="user_id" value="{{ user.user_id }}">
+                                        <button type="submit">{{ i18n.t('UNBLACKLIST' if user.is_blacklisted else 'BLACKLIST', lang) }}</button>
+                                    </form>
+                                </td>
+                                <td style="text-align: right;">
+                                    <form method="post" action="{{ url_for('toggle_beta_tester', lang=lang) }}">
+                                        <input type="hidden" name="user_id" value="{{ user.user_id }}">
+                                        <button type="submit">{{ i18n.t('REVOKE_ACCESS' if user.is_beta_tester else 'GRANT_ACCESS', lang) }}</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="7">{{ i18n.t('NO_USERS_FOUND', lang) }}</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+            <div id="users-pagination" hx-include="#search-users">
+                {% if users_total_pages > 1 %}
+                    {% if current_page > 1 %}
+                        <a href="#" hx-get="/{{ lang }}/users?page={{ current_page - 1 }}">{{ i18n.t('PREVIOUS_PAGE', lang) }}</a>
+                    {% endif %}
+                    {% for p in range(1, users_total_pages + 1) %}
+                        <a href="#" hx-get="/{{ lang }}/users?page={{ p }}" {% if p == current_page %}class="active"{% endif %}>{{ p }}</a>
+                    {% endfor %}
+                    {% if current_page < users_total_pages %}
+                        <a href="#" hx-get="/{{ lang }}/users?page={{ current_page + 1 }}">{{ i18n.t('NEXT_PAGE', lang) }}</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- Groups Tab -->
+        <section id="groups" class="tab-content" hx-target="this" hx-swap="innerHTML">
+            <h3>{{ i18n.t('GROUPS_TAB', lang) }}</h3>
+            <input type="text" name="search" id="search-groups" hx-get="/{{ lang }}/groups" hx-trigger="keyup changed delay:500ms" placeholder="{{ i18n.t('SEARCH_GROUPS', lang) }}">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th style="text-align: left;">{{ i18n.t('GROUP_ID', lang) }}</th>
+                        <th style="text-align: left;">{{ i18n.t('GROUP_NAME', lang) }}</th>
+                        <th style="text-align: center;">{{ i18n.t('GROUP_TYPE', lang) }}</th>
+                        <th style="text-align: center;">{{ i18n.t('GROUP_PUBLIC', lang) }}</th>
+                        <th style="text-align: center;">{{ i18n.t('GROUP_MEMBERS', lang) }}</th>
+                        <th style="text-align: center;">{{ i18n.t('GROUP_CREATOR', lang) }}</th>
+                        <th style="text-align: center;">{{ i18n.t('GROUP_ADMINS', lang) }}</th>
+                        <th style="text-align: right;">{{ i18n.t('GROUP_LAST_INLINE_USER', lang) }}</th>
+                        <th style="text-align: right;">{{ i18n.t('GROUP_LAST_INLINE_QUERY', lang) }}</th>
+                        <th style="text-align: right;">{{ i18n.t('GROUP_LAST_INLINE_TIME', lang) }}</th>
+                        <th style="text-align: right;">{{ i18n.t('BLACKLIST', lang) }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if groups %}
+                        {% for group in groups %}
+                            <tr>
+                                <td style="text-align: left;">{{ group.group_id }}</td>
+                                <td style="text-align: left;">{{ group.group_name }}</td>
+                                <td style="text-align: center;">{{ group.type }}</td>
+                                <td style="text-align: center;">{{ i18n.t('YES' if group.is_public else 'NO', lang) }}</td>
+                                <td style="text-align: center;">{{ group.member_count if group.member_count else i18n.t('NA', lang) }}</td>
+                                <td style="text-align: center;">{{ group.creator_id if group.creator_id else i18n.t('NA', lang) }}</td>
+                                <td style="text-align: center;">{{ group.admins if group.admins else i18n.t('NA', lang) }}</td>
+                                <td style="text-align: right;">{{ group.last_inline_username if group.last_inline_username else i18n.t('NA', lang) }}</td>
+                                <td style="text-align: right;">{{ group.last_inline_query if group.last_inline_query else i18n.t('NA', lang) }}</td>
+                                <td style="text-align: right;">{{ group.last_inline_timestamp.strftime('%Y-%m-%d %H:%M:%S') if group.last_inline_timestamp else i18n.t('NA', lang) }}</td>
+                                <td style="text-align: right;">
+                                    <form method="post" action="{{ url_for('toggle_group_blacklist') }}">
+                                        <input type="hidden" name="group_id" value="{{ group.group_id }}">
+                                        <button type="submit">{{ i18n.t('UNBLACKLIST' if group.is_blacklisted else 'BLACKLIST', lang) }}</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr><td colspan="11">{{ i18n.t('NO_GROUPS_FOUND', lang) }}</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+            <div id="groups-pagination" hx-include="#search-groups">
+                {% if groups_total_pages > 1 %}
+                    {% if current_page > 1 %}
+                        <a href="#" hx-get="/{{ lang }}/groups?page={{ current_page - 1 }}">{{ i18n.t('PREVIOUS_PAGE', lang) }}</a>
+                    {% endif %}
+                    {% for p in range(1, groups_total_pages + 1) %}
+                        <a href="#" hx-get="/{{ lang }}/groups?page={{ p }}" {% if p == current_page %}class="active"{% endif %}>{{ p }}</a>
+                    {% endfor %}
+                    {% if current_page < groups_total_pages %}
+                        <a href="#" hx-get="/{{ lang }}/groups?page={{ current_page + 1 }}">{{ i18n.t('NEXT_PAGE', lang) }}</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </section>
 		<div class="tab-content" id="github">
 			{% if not github_info.url %}
 				<div class="alert alert-warning">{{ i18n.t('CONFIGURE_GITHUB_URL', lang) }}</div>
@@ -1394,6 +1472,27 @@ async function main() {
     loadFileTree();
 }
 
+        // Update URL hash and toggle tab visibility on click
+        function setActiveTab(tabId) {
+            window.location.hash = tabId;
+            const tabs = document.querySelectorAll('nav a');
+            const sections = document.querySelectorAll('section.tab-content');
+            tabs.forEach(tab => {
+                if (tab.getAttribute('href') === '#' + tabId) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            sections.forEach(section => {
+                if (section.id === tabId) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        }
+
 // Hex'i RGB'ye çeviren yardımcı fonksiyon
 function hexToRgb(hex) {
     const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -1410,6 +1509,25 @@ function hexToRgb(hex) {
 
 document
     .addEventListener('DOMContentLoaded', function () {
+
+            const hash = window.location.hash || '#commands';
+            const tabs = document.querySelectorAll('nav a');
+            const sections = document.querySelectorAll('section.tab-content');
+            tabs.forEach(tab => {
+                if (tab.getAttribute('href') === hash) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            sections.forEach(section => {
+                if ('#' + section.id === hash) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+
         // Initialize CodeMirror editor
         const editorElement = document.getElementById('editor');
         if (editorElement) {

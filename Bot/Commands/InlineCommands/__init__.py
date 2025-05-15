@@ -1,0 +1,9 @@
+from .abjad import handle as abjad
+from .bastet import handle as bastet
+from .nutket import handle as nutket
+from .unsur import handle as unsur
+from .huddam import handle as huddam
+from .magic_square import handle as magic_square
+from .transliterate import handle as transliterate
+from .convert_numbers import handle as convert_numbers
+from .numerology import handle as numerology

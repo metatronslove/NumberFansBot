@@ -200,6 +200,29 @@ center img {
 	cursor: not-allowed;
 }
 
+nav a.active {
+    font-weight: bold;
+    text-decoration: underline;
+}
+section.tab-content {
+    display: none;
+}
+.pagination {
+    margin-top: 10px;
+}
+.pagination a {
+    margin: 0 5px;
+    text-decoration: none;
+    color: #007bff;
+}
+.pagination a.active {
+    font-weight: bold;
+    color: #000;
+}
+.pagination a:hover {
+    text-decoration: underline;
+}
+
 .readme-modal-overlay {
 	position: fixed;
 	top: 0;
