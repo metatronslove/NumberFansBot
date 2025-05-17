@@ -27,7 +27,7 @@ class PaparaCommand:
 					CallbackQueryHandler(self.cancel_papara, pattern=r'^cancel$')
 				],
 				ENTERING_AMOUNT: [
-					MessageHandler(filters.Text & ~filters.Command, self.amount_received),
+					MessageHandler(filters.Text & ~filters.COMMAND, self.amount_received),
 					CallbackQueryHandler(self.cancel_papara, pattern=r'^cancel$')
 				],
 				CONFIRMING_PAYMENT: [
@@ -35,7 +35,7 @@ class PaparaCommand:
 					CallbackQueryHandler(self.cancel_papara, pattern=r'^cancel$')
 				],
 				CHECKING_PAYMENT: [
-					MessageHandler(filters.Text & ~filters.Command, self.payment_reference_received),
+					MessageHandler(filters.Text & ~filters.COMMAND, self.payment_reference_received),
 					CallbackQueryHandler(self.cancel_papara, pattern=r'^cancel$')
 				]
 			},

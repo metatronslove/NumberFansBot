@@ -25,15 +25,15 @@ class AddressCommand:
 					CallbackQueryHandler(self.cancel_address, pattern=r'^cancel$')
 				],
 				ADDING_NAME: [
-					MessageHandler(filters.Text & ~filters.Command, self.address_name_received),
+					MessageHandler(filters.Text & ~filters.COMMAND, self.address_name_received),
 					CallbackQueryHandler(self.cancel_address, pattern=r'^cancel$')
 				],
 				ADDING_ADDRESS: [
-					MessageHandler(filters.Text & ~filters.Command, self.address_line_received),
+					MessageHandler(filters.Text & ~filters.COMMAND, self.address_line_received),
 					CallbackQueryHandler(self.cancel_address, pattern=r'^cancel$')
 				],
 				ADDING_CITY: [
-					MessageHandler(filters.Text & ~filters.Command, self.address_city_received),
+					MessageHandler(filters.Text & ~filters.COMMAND, self.address_city_received),
 					CallbackQueryHandler(self.cancel_address, pattern=r'^cancel$')
 				],
 				CONFIRMING_ADDRESS: [

@@ -308,7 +308,7 @@ def get_bastet_conversation_handler():
 		handler = ConversationHandler(
 			entry_points=[CommandHandler("bastet", bastet_start)],
 			states={
-				REPETITION: [MessageHandler(filters.Text & ~filters.Command, bastet_repetition)],
+				REPETITION: [MessageHandler(filters.Text & ~filters.COMMAND, bastet_repetition)],
 				TABLE: [CallbackQueryHandler(bastet_table)],
 				LANGUAGE: [CallbackQueryHandler(bastet_language)],
 			},

@@ -23,7 +23,7 @@ class BuyCommand:
 					CallbackQueryHandler(self.cancel_purchase, pattern=r'^cancel$')
 				],
 				SELECTING_QUANTITY: [
-					MessageHandler(filters.Text & ~filters.Command, self.quantity_selected),
+					MessageHandler(filters.Text & ~filters.COMMAND, self.quantity_selected),
 					CallbackQueryHandler(self.cancel_purchase, pattern=r'^cancel$')
 				],
 				SELECTING_ADDRESS: [
