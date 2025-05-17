@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
     <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='Assets/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="particles" id="particles-js"></div>
@@ -29,7 +29,7 @@
             <h2>{{ i18n.t('USER_DASHBOARD_TITLE', lang) }}</h2>
             <p>{{ i18n.t('USER_DASHBOARD_WELCOME', lang, username=user.username) }}</p>
         </div>
-        
+
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -37,7 +37,7 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-        
+
         <div class="user-dashboard-stats">
             <div class="stat-card">
                 <h3>{{ i18n.t('CREDITS', lang) }}</h3>
@@ -52,7 +52,7 @@
                 <div class="value">{{ products_count }}</div>
             </div>
         </div>
-        
+
         <div class="tabs">
             <div class="tab active" data-tab="orders">{{ i18n.t('ORDERS_TAB', lang) }}</div>
             <div class="tab" data-tab="products">{{ i18n.t('PRODUCTS_TAB', lang) }}</div>
@@ -62,7 +62,7 @@
                 <a href="{{ url_for('logout', lang=lang) }}" class="btn btn-secondary">{{ i18n.t('LOGOUT', lang) }}</a>
             </div>
         </div>
-        
+
         <div class="tab-content active" id="orders">
             <h3>{{ i18n.t('ORDERS_TITLE', lang) }}</h3>
             {% if orders %}
@@ -102,11 +102,11 @@
                 <p>{{ i18n.t('NO_ORDERS', lang) }}</p>
             {% endif %}
         </div>
-        
+
         <div class="tab-content" id="products">
             <h3>{{ i18n.t('PRODUCTS_TITLE', lang) }}</h3>
             <a href="{{ url_for('create_product', lang=lang) }}" class="btn btn-primary mb-3">{{ i18n.t('CREATE_PRODUCT', lang) }}</a>
-            
+
             {% if products %}
                 <table class="table table-dark table-striped">
                     <thead>
@@ -141,11 +141,11 @@
                 <p>{{ i18n.t('NO_PRODUCTS', lang) }}</p>
             {% endif %}
         </div>
-        
+
         <div class="tab-content" id="payments">
             <h3>{{ i18n.t('PAYMENTS_TITLE', lang) }}</h3>
             <button id="create-payment-btn" class="btn btn-primary mb-3">{{ i18n.t('CREATE_PAYMENT', lang) }}</button>
-            
+
             {% if payments %}
                 <table class="table table-dark table-striped">
                     <thead>
@@ -178,7 +178,7 @@
                 <p>{{ i18n.t('NO_PAYMENTS', lang) }}</p>
             {% endif %}
         </div>
-        
+
         <div class="tab-content" id="profile">
             <h3>{{ i18n.t('PROFILE_TITLE', lang) }}</h3>
             <form method="POST" action="{{ url_for('update_profile', lang=lang) }}">
@@ -205,10 +205,10 @@
                 </div>
                 <button type="submit" class="btn btn-primary">{{ i18n.t('UPDATE_PROFILE', lang) }}</button>
             </form>
-            
+
             <h4 class="mt-4">{{ i18n.t('ADDRESSES', lang) }}</h4>
             <a href="{{ url_for('manage_addresses', lang=lang) }}" class="btn btn-primary mb-3">{{ i18n.t('MANAGE_ADDRESSES', lang) }}</a>
-            
+
             {% if addresses %}
                 <table class="table table-dark table-striped">
                     <thead>
@@ -235,7 +235,7 @@
             {% endif %}
         </div>
     </div>
-    
+
     <!-- Payment Modal -->
     <div class="payment-modal-overlay" id="payment-modal" style="display: none;">
         <div class="payment-modal">
@@ -256,7 +256,7 @@
             </form>
         </div>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
@@ -286,28 +286,28 @@
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     const tabId = tab.getAttribute('data-tab');
-                    
+
                     tabs.forEach(t => t.classList.remove('active'));
                     tabContents.forEach(content => content.classList.remove('active'));
-                    
+
                     tab.classList.add('active');
                     document.getElementById(tabId).classList.add('active');
                 });
             });
-            
+
             // Payment modal
             const paymentModal = document.getElementById('payment-modal');
             const createPaymentBtn = document.getElementById('create-payment-btn');
             const closeModalBtn = document.getElementById('close-modal-btn');
-            
+
             createPaymentBtn.addEventListener('click', () => {
                 paymentModal.style.display = 'flex';
             });
-            
+
             closeModalBtn.addEventListener('click', () => {
                 paymentModal.style.display = 'none';
             });
-            
+
             // Close modal when clicking outside
             window.addEventListener('click', (e) => {
                 if (e.target === paymentModal) {
