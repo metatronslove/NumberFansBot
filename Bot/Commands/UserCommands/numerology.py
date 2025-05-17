@@ -8,7 +8,7 @@ from datetime import datetime
 from Bot.config import Config
 from Bot.database import Database
 from Bot.Helpers.i18n import I18n
-from Bot.Numerology import UnifiedNumerology
+from Bot.Helpers.Numerology import UnifiedNumerology
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
 	Application, ExtBot, ConversationHandler, CommandHandler, MessageHandler,
