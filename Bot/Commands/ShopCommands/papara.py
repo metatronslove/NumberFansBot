@@ -1,7 +1,15 @@
 import logging
 import re
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CallbackContext, CommandHandler, ConversationHandler, CallbackQueryHandler, MessageHandler, filters
+from telegram.ext import (
+	Application,
+	CallbackContext,
+	CommandHandler,
+	ConversationHandler,
+	CallbackQueryHandler,
+	MessageHandler,
+	filters,
+)
 from Bot.database import Database
 from Bot.Helpers.papara_integration import PaparaPaymentHandler
 
@@ -13,9 +21,9 @@ logger = logging.getLogger(__name__)
 class PaparaCommand:
 	def __init__(self):
 		self.db = Database()
-		self.papara_handler = PaparaPaymentHandler()
+		self.papara_handler = PaparaPaymentHandler(db_connection=self.db)
 
-	def register_handlers(self, dispatcher):
+	def register_handlers(self, application: Application):
 		# Create a conversation handler for the papara command
 		conv_handler = ConversationHandler(
 			entry_points=[CommandHandler('papara', self.papara_command)],
@@ -41,15 +49,15 @@ class PaparaCommand:
 			},
 			fallbacks=[CommandHandler('cancel', self.cancel_papara)]
 		)
-		dispatcher.add_handler(conv_handler)
+		application.add_handler(conv_handler)
 
-	def papara_command(self, update: Update, context: CallbackContext) -> int:
+	async def papara_command(self, update: Update, context: CallbackContext) -> int:
 		"""Handle the /papara command for payment operations"""
 		user_id = update.effective_user.id
 
 		# Check if user is blacklisted
 		if self.db.is_blacklisted(user_id):
-			update.message.reply_text("You are not allowed to use this command.")
+			await update.message.reply_text("You are not allowed to use this command.")
 			return ConversationHandler.END
 
 		# Log command usage
@@ -65,7 +73,7 @@ class PaparaCommand:
 
 		reply_markup = InlineKeyboardMarkup(keyboard)
 
-		update.message.reply_text(
+		await update.message.reply_text(
 			"Papara Payment System\n\n"
 			"What would you like to do?",
 			reply_markup=reply_markup
@@ -73,12 +81,12 @@ class PaparaCommand:
 
 		return SELECTING_ACTION
 
-	def add_credits(self, update: Update, context: CallbackContext) -> int:
+	async def add_credits(self, update: Update, context: CallbackContext) -> int:
 		"""Start the process of adding credits"""
 		query = update.callback_query
-		query.answer()
+		await query.answer()
 
-		query.edit_message_text(
+		await query.edit_message_text(
 			"Adding Credits\n\n"
 			"Please enter the amount in TL you want to add to your account:\n"
 			"(Minimum: 10 TL, Maximum: 1000 TL)"
@@ -86,20 +94,20 @@ class PaparaCommand:
 
 		return ENTERING_AMOUNT
 
-	def amount_received(self, update: Update, context: CallbackContext) -> int:
+	async def amount_received(self, update: Update, context: CallbackContext) -> int:
 		"""Handle receiving the payment amount"""
 		try:
 			amount = float(update.message.text.strip())
 
 			# Validate amount
 			if amount < 10:
-				update.message.reply_text(
+				await update.message.reply_text(
 					"The minimum amount is 10 TL. Please enter a larger amount."
 				)
 				return ENTERING_AMOUNT
 
 			if amount > 1000:
-				update.message.reply_text(
+				await update.message.reply_text(
 					"The maximum amount is 1000 TL. Please enter a smaller amount."
 				)
 				return ENTERING_AMOUNT
@@ -112,7 +120,7 @@ class PaparaCommand:
 			payment_details = self.db.create_papara_payment(user_id, amount)
 
 			if not payment_details:
-				update.message.reply_text(
+				await update.message.reply_text(
 					"Sorry, there was an error generating your payment request. Please try again later."
 				)
 				return ConversationHandler.END
@@ -129,7 +137,7 @@ class PaparaCommand:
 			]
 			reply_markup = InlineKeyboardMarkup(keyboard)
 
-			update.message.reply_text(
+			await update.message.reply_text(
 				f"Payment Details\n\n"
 				f"Amount: {amount} TL\n"
 				f"Recipient: {payment_details['recipient_name']}\n"
@@ -141,13 +149,13 @@ class PaparaCommand:
 			return CONFIRMING_PAYMENT
 
 		except ValueError:
-			update.message.reply_text("Please enter a valid number.")
+			await update.message.reply_text("Please enter a valid number.")
 			return ENTERING_AMOUNT
 
-	def confirm_payment(self, update: Update, context: CallbackContext) -> int:
+	async def confirm_payment(self, update: Update, context: CallbackContext) -> int:
 		"""Handle payment confirmation"""
 		query = update.callback_query
-		query.answer()
+		await query.answer()
 
 		user_id = update.effective_user.id
 		payment_details = context.user_data['payment_details']
@@ -163,7 +171,7 @@ class PaparaCommand:
 			}
 		)
 
-		query.edit_message_text(
+		await query.edit_message_text(
 			f"✅ Payment request created successfully!\n\n"
 			f"Payment ID: #{payment_details['payment_id']}\n"
 			f"Amount: {amount} TL\n"
@@ -175,19 +183,19 @@ class PaparaCommand:
 
 		return ConversationHandler.END
 
-	def check_payment(self, update: Update, context: CallbackContext) -> int:
+	async def check_payment(self, update: Update, context: CallbackContext) -> int:
 		"""Start the process of checking payment status"""
 		query = update.callback_query
-		query.answer()
+		await query.answer()
 
-		query.edit_message_text(
+		await query.edit_message_text(
 			"Check Payment Status\n\n"
 			"Please enter your payment reference or payment ID:"
 		)
 
 		return CHECKING_PAYMENT
 
-	def payment_reference_received(self, update: Update, context: CallbackContext) -> int:
+	async def payment_reference_received(self, update: Update, context: CallbackContext) -> int:
 		"""Handle receiving the payment reference"""
 		user_id = update.effective_user.id
 		payment_ref = update.message.text.strip()
@@ -196,7 +204,7 @@ class PaparaCommand:
 		payment_status = self.db.check_papara_payment_status(user_id, payment_ref)
 
 		if not payment_status:
-			update.message.reply_text(
+			await update.message.reply_text(
 				"Sorry, we couldn't find a payment with that reference. Please check and try again."
 			)
 			return ConversationHandler.END
@@ -205,7 +213,7 @@ class PaparaCommand:
 			# Payment is already completed
 			amount = payment_status['amount']
 
-			update.message.reply_text(
+			await update.message.reply_text(
 				f"✅ Payment confirmed!\n\n"
 				f"Payment ID: #{payment_status['id']}\n"
 				f"Amount: {amount} TL\n"
@@ -219,7 +227,7 @@ class PaparaCommand:
 				payment_status = self.db.check_papara_payment_status(user_id, payment_ref)
 				amount = payment_status['amount']
 
-				update.message.reply_text(
+				await update.message.reply_text(
 					f"✅ Payment verified and processed!\n\n"
 					f"Payment ID: #{payment_status['id']}\n"
 					f"Amount: {amount} TL\n"
@@ -227,21 +235,21 @@ class PaparaCommand:
 					f"Your account has been credited. Thank you for your payment!"
 				)
 			else:
-				update.message.reply_text(
+				await update.message.reply_text(
 					f"⏳ Payment is still pending\n\n"
 					f"Payment ID: #{payment_status['id']}\n"
 					f"Amount: {payment_status['amount']} TL\n\n"
 					f"Please complete the payment using the Papara app or website, then check again."
 				)
 		elif payment_status['status'] == 'cancelled':
-			update.message.reply_text(
+			await update.message.reply_text(
 				f"❌ Payment was cancelled\n\n"
 				f"Payment ID: #{payment_status['id']}\n"
 				f"Amount: {payment_status['amount']} TL\n\n"
 				f"This payment request has been cancelled. Please create a new payment if needed."
 			)
 		else:
-			update.message.reply_text(
+			await update.message.reply_text(
 				f"❓ Unknown payment status\n\n"
 				f"Payment ID: #{payment_status['id']}\n"
 				f"Status: {payment_status['status']}\n\n"
@@ -250,15 +258,15 @@ class PaparaCommand:
 
 		return ConversationHandler.END
 
-	def view_balance(self, update: Update, context: CallbackContext) -> int:
+	async def view_balance(self, update: Update, context: CallbackContext) -> int:
 		"""Show user's current balance"""
 		query = update.callback_query
-		query.answer()
+		await query.answer()
 
 		user_id = update.effective_user.id
 		credits = self.db.get_user_credits(user_id)
 
-		query.edit_message_text(
+		await query.edit_message_text(
 			f"Your Current Balance\n\n"
 			f"Credits: {credits} TL\n\n"
 			f"You can use these credits to purchase products or services."
@@ -266,13 +274,13 @@ class PaparaCommand:
 
 		return ConversationHandler.END
 
-	def cancel_papara(self, update: Update, context: CallbackContext) -> int:
+	async def cancel_papara(self, update: Update, context: CallbackContext) -> int:
 		"""Cancel the papara payment process"""
 		if update.callback_query:
-			update.callback_query.answer()
-			update.callback_query.edit_message_text("Payment operation cancelled.")
+			await update.callback_query.answer()
+			await update.callback_query.edit_message_text("Payment operation cancelled.")
 		else:
-			update.message.reply_text("Payment operation cancelled.")
+			await update.message.reply_text("Payment operation cancelled.")
 
 		# Clear user data
 		context.user_data.clear()

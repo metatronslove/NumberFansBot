@@ -1,7 +1,15 @@
 import logging
 import re
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CallbackContext, CommandHandler, ConversationHandler, CallbackQueryHandler, MessageHandler, filters
+from telegram.ext import (
+	Application,
+	CallbackContext,
+	CommandHandler,
+	ConversationHandler,
+	CallbackQueryHandler,
+	MessageHandler,
+	filters
+)
 from Bot.database import Database
 
 # States for the conversation handler
@@ -13,7 +21,7 @@ class BuyCommand:
 	def __init__(self):
 		self.db = Database()
 
-	def register_handlers(self, dispatcher):
+	def register_handlers(self, application: Application):
 		# Create a conversation handler for the buy command
 		conv_handler = ConversationHandler(
 			entry_points=[CommandHandler('buy', self.buy_command)],
@@ -37,15 +45,15 @@ class BuyCommand:
 			},
 			fallbacks=[CommandHandler('cancel', self.cancel_purchase)]
 		)
-		dispatcher.add_handler(conv_handler)
+		application.add_handler(conv_handler)
 
-	def buy_command(self, update: Update, context: CallbackContext) -> int:
+	async def buy_command(self, update: Update, context: CallbackContext) -> int:
 		"""Handle the /buy command to start the purchase process"""
 		user_id = update.effective_user.id
 
 		# Check if user is blacklisted
 		if self.db.is_blacklisted(user_id):
-			update.message.reply_text("You are not allowed to use this command.")
+			await update.message.reply_text("You are not allowed to use this command.")
 			return ConversationHandler.END
 
 		# Log command usage
@@ -55,7 +63,7 @@ class BuyCommand:
 		products = self.db.get_available_products(active_only=True)
 
 		if not products:
-			update.message.reply_text("No products are currently available for purchase.")
+			await update.message.reply_text("No products are currently available for purchase.")
 			return ConversationHandler.END
 
 		# Create keyboard with product options
@@ -71,17 +79,17 @@ class BuyCommand:
 
 		reply_markup = InlineKeyboardMarkup(keyboard)
 
-		update.message.reply_text(
+		await update.message.reply_text(
 			"Please select a product to purchase:",
 			reply_markup=reply_markup
 		)
 
 		return SELECTING_PRODUCT
 
-	def product_selected(self, update: Update, context: CallbackContext) -> int:
+	async def product_selected(self, update: Update, context: CallbackContext) -> int:
 		"""Handle product selection"""
 		query = update.callback_query
-		query.answer()
+		await query.answer()
 
 		# Extract product ID from callback data
 		product_id = int(query.data.split('_')[1])
@@ -90,7 +98,7 @@ class BuyCommand:
 		product = self.db.get_product_by_id(product_id)
 
 		if not product:
-			query.edit_message_text("Sorry, this product is no longer available.")
+			await query.edit_message_text("Sorry, this product is no longer available.")
 			return ConversationHandler.END
 
 		# Store product in context for later use
@@ -98,7 +106,7 @@ class BuyCommand:
 
 		# If product has limited quantity, ask for quantity
 		if product['quantity'] is not None:
-			query.edit_message_text(
+			await query.edit_message_text(
 				f"You selected: {product['name']}\n"
 				f"Price: {product['price']} TL\n"
 				f"Available: {product['quantity']}\n\n"
@@ -113,7 +121,7 @@ class BuyCommand:
 			addresses = self.db.get_user_addresses(update.effective_user.id)
 
 			if not addresses:
-				query.edit_message_text(
+				await query.edit_message_text(
 					f"You selected: {product['name']}\n"
 					f"Price: {product['price']} TL\n\n"
 					f"You don't have any saved addresses. Please use /address to add one first."
@@ -133,7 +141,7 @@ class BuyCommand:
 
 			reply_markup = InlineKeyboardMarkup(keyboard)
 
-			query.edit_message_text(
+			await query.edit_message_text(
 				f"You selected: {product['name']}\n"
 				f"Price: {product['price']} TL\n"
 				f"Quantity: 1\n\n"
@@ -143,7 +151,7 @@ class BuyCommand:
 
 			return SELECTING_ADDRESS
 
-	def quantity_selected(self, update: Update, context: CallbackContext) -> int:
+	async def quantity_selected(self, update: Update, context: CallbackContext) -> int:
 		"""Handle quantity selection"""
 		try:
 			quantity = int(update.message.text.strip())
@@ -151,11 +159,11 @@ class BuyCommand:
 
 			# Validate quantity
 			if quantity < 1:
-				update.message.reply_text("Please enter a positive number.")
+				await update.message.reply_text("Please enter a positive number.")
 				return SELECTING_QUANTITY
 
 			if quantity > min(product['quantity'], 10):
-				update.message.reply_text(
+				await update.message.reply_text(
 					f"Maximum allowed quantity is {min(product['quantity'], 10)}. "
 					f"Please enter a smaller number."
 				)
@@ -168,7 +176,7 @@ class BuyCommand:
 			addresses = self.db.get_user_addresses(update.effective_user.id)
 
 			if not addresses:
-				update.message.reply_text(
+				await update.message.reply_text(
 					f"You don't have any saved addresses. Please use /address to add one first."
 				)
 				return ConversationHandler.END
@@ -186,7 +194,7 @@ class BuyCommand:
 
 			reply_markup = InlineKeyboardMarkup(keyboard)
 
-			update.message.reply_text(
+			await update.message.reply_text(
 				f"You selected: {product['name']}\n"
 				f"Price: {product['price']} TL\n"
 				f"Quantity: {quantity}\n"
@@ -198,13 +206,13 @@ class BuyCommand:
 			return SELECTING_ADDRESS
 
 		except ValueError:
-			update.message.reply_text("Please enter a valid number.")
+			await update.message.reply_text("Please enter a valid number.")
 			return SELECTING_QUANTITY
 
-	def address_selected(self, update: Update, context: CallbackContext) -> int:
+	async def address_selected(self, update: Update, context: CallbackContext) -> int:
 		"""Handle address selection"""
 		query = update.callback_query
-		query.answer()
+		await query.answer()
 
 		user_id = update.effective_user.id
 
@@ -215,7 +223,7 @@ class BuyCommand:
 		address = self.db.get_address_by_id(user_id, address_id)
 
 		if not address:
-			query.edit_message_text("Sorry, this address is no longer available.")
+			await query.edit_message_text("Sorry, this address is no longer available.")
 			return ConversationHandler.END
 
 		# Store address in context
@@ -235,7 +243,7 @@ class BuyCommand:
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
 
-		query.edit_message_text(
+		await query.edit_message_text(
 			f"Order Summary:\n\n"
 			f"Product: {product['name']}\n"
 			f"Price: {product['price']} TL\n"
@@ -251,10 +259,10 @@ class BuyCommand:
 
 		return CONFIRMING_PURCHASE
 
-	def confirm_purchase(self, update: Update, context: CallbackContext) -> int:
+	async def confirm_purchase(self, update: Update, context: CallbackContext) -> int:
 		"""Handle purchase confirmation"""
 		query = update.callback_query
-		query.answer()
+		await query.answer()
 
 		user_id = update.effective_user.id
 		product = context.user_data['selected_product']
@@ -266,7 +274,7 @@ class BuyCommand:
 		user_credits = self.db.get_user_credits(user_id)
 
 		if user_credits < total_price:
-			query.edit_message_text(
+			await query.edit_message_text(
 				f"You don't have enough credits for this purchase.\n"
 				f"Required: {total_price} TL\n"
 				f"Your balance: {user_credits} TL\n\n"
@@ -284,7 +292,7 @@ class BuyCommand:
 		)
 
 		if not order_id:
-			query.edit_message_text("Sorry, there was an error processing your order. Please try again later.")
+			await query.edit_message_text("Sorry, there was an error processing your order. Please try again later.")
 			return ConversationHandler.END
 
 		# Deduct credits from user
@@ -307,7 +315,7 @@ class BuyCommand:
 			}
 		)
 
-		query.edit_message_text(
+		await query.edit_message_text(
 			f"🎉 Order placed successfully! 🎉\n\n"
 			f"Order ID: #{order_id}\n"
 			f"Product: {product['name']}\n"
@@ -318,13 +326,13 @@ class BuyCommand:
 
 		return ConversationHandler.END
 
-	def cancel_purchase(self, update: Update, context: CallbackContext) -> int:
+	async def cancel_purchase(self, update: Update, context: CallbackContext) -> int:
 		"""Cancel the purchase process"""
 		if update.callback_query:
-			update.callback_query.answer()
-			update.callback_query.edit_message_text("Purchase cancelled.")
+			await update.callback_query.answer()
+			await update.callback_query.edit_message_text("Purchase cancelled.")
 		else:
-			update.message.reply_text("Purchase cancelled.")
+			await update.message.reply_text("Purchase cancelled.")
 
 		# Clear user data
 		context.user_data.clear()
