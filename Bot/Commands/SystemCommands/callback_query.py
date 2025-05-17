@@ -12,18 +12,18 @@ from telegram.ext import (
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
+from Bot.Helpers.i18n import I18n
+from Bot.Helpers.Transliteration import Transliteration
+from Bot.Helpers.Abjad import Abjad
+from Bot.Helpers.Numerology import UnifiedNumerology
+from Bot.Helpers.MagicSquare import MagicSquareGenerator
+from Bot.Helpers.NumberConverter import NumberConverter
+from Bot.cache import Cache
+from Bot.config import Config
 from Bot.database import Database
-from ...i18n import I18n
-from ...Helpers.Transliteration import Transliteration
-from ...Abjad import Abjad
-from ...Numerology import UnifiedNumerology
-from ..Helpers.MagicSquare import MagicSquareGenerator
-from ...NumberConverter import NumberConverter
-from ...cache import Cache
-from ...config import Config
-from ...utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
-from ...Commands.UserCommands import (abjad, magic_square, numerology, huddam, bastet, unsur, nutket)
-from ...Commands.UserCommands.payment import payment_handle
+from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
+from Bot.Commands.UserCommands import (abjad, magic_square, numerology, huddam, bastet, unsur, nutket)
+from Bot.Commands.UserCommands.payment import payment_handle
 
 logger = logging.getLogger(__name__)
 config = Config()
