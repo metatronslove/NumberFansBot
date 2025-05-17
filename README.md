@@ -75,6 +75,8 @@ CREATE TABLE IF NOT EXISTS users (
 	credits INT DEFAULT 0,
 	is_admin BOOLEAN DEFAULT FALSE,
 	password VARCHAR(255),
+	addresses JSON,
+	payment_info JSON,
 	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 	last_interaction DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -82,11 +84,11 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS groups (
 	group_id BIGINT PRIMARY KEY,
 	group_name VARCHAR(255),
-	type VARCHAR(50),		  	-- e.g., "group", "supergroup", "channel"
-	is_public BOOLEAN,		 	-- True if public, False if private
-	member_count INT,		  	-- Number of members
-	creator_id BIGINT,		 	-- ID of the founder
-	admins JSON,   				-- List of admin IDs as JSON
+	type VARCHAR(50),		  -- e.g., "group", "supergroup", "channel"
+	is_public BOOLEAN,		 -- True if public, False if private
+	member_count INT,		  -- Number of members
+	creator_id BIGINT,		 -- ID of the founder
+	admins JSON,			   -- List of admin IDs as JSON
 	is_blacklisted BOOLEAN DEFAULT FALSE,
 	added_at DATETIME
 );
@@ -144,11 +146,57 @@ CREATE TABLE IF NOT EXISTS user_settings (
 CREATE TABLE IF NOT EXISTS orders (
 	id BIGINT AUTO_INCREMENT PRIMARY KEY,
 	user_id BIGINT NOT NULL,
-	amount INT NOT NULL,
-	currency VARCHAR(10) NOT NULL,
-	payload TEXT,
+	product_id BIGINT,
+	quantity INT DEFAULT 1,
+	total_price DECIMAL(10, 2) NOT NULL,
+	status VARCHAR(50) DEFAULT 'pending',
+	shipping_address_id VARCHAR(36),
+	payment_id VARCHAR(36),
+	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	shipped_date DATETIME,
+	delivery_date DATETIME,
+	cancelled_date DATETIME,
+	notes TEXT,
+	INDEX idx_user_id (user_id),
+	INDEX idx_product_id (product_id),
+	INDEX idx_status (status)
+);
+
+CREATE TABLE IF NOT EXISTS products (
+	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(255) NOT NULL,
+	description TEXT,
+	price DECIMAL(10, 2) NOT NULL,
+	quantity INT,
+	type VARCHAR(50) NOT NULL,
+	image_url VARCHAR(255),
+	features JSON,
+	active BOOLEAN DEFAULT TRUE,
+	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	created_by BIGINT,
+	INDEX idx_type (type),
+	INDEX idx_active (active)
+);
+
+CREATE TABLE IF NOT EXISTS payments (
+	id VARCHAR(36) PRIMARY KEY,
+	user_id BIGINT NOT NULL,
+	amount DECIMAL(10, 2) NOT NULL,
+	payment_method VARCHAR(50) NOT NULL,
+	payment_details JSON,
+	status VARCHAR(50) DEFAULT 'pending',
+	reference VARCHAR(255),
+	created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	completed_at DATETIME,
+	cancelled_at DATETIME,
 	credits_added INT DEFAULT 0,
-	created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+	order_id BIGINT,
+	INDEX idx_user_id (user_id),
+	INDEX idx_status (status),
+	INDEX idx_reference (reference)
 );
 
 CREATE TABLE IF NOT EXISTS user_activity (
