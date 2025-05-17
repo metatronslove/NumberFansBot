@@ -464,7 +464,7 @@ class Database:
 			ON DUPLICATE KEY UPDATE count = count + 1, last_user_id = %s, last_used = %s, chat_id = %s
 			"""
 			now = datetime.now()
-			self.cursor.execute(query, (user_id, now, user_id, command, chat_id, user_id, now, chat_id))
+			self.cursor.execute(query, (user_id, now, user_id, command, 1, chat_id))
 			self.conn.commit()
 		finally:
 			self.cursor.close()
