@@ -22,6 +22,29 @@ class Database:
 		self.cursor = self.conn.cursor(dictionary=True)
 		self.ensure_schema()
 
+	def connect(self):
+		"""Establish a new database connection."""
+		try:
+			if self.conn and self.conn.is_connected():
+				self.cursor.close()
+				self.conn.close()
+			self.conn = mysql.connector.connect(
+				host=config.mysql_host,
+				port=config.mysql_port,
+				user=config.mysql_user,
+				password=config.mysql_password,
+				database=config.mysql_database
+			)
+			self.cursor = self.conn.cursor(dictionary=True)
+			logger.info("Database connection established")
+		except mysql.connector.Error as e:
+			logger.error(f"Failed to connect to database: {str(e)}")
+			raise
+
+	def reset_connection(self):
+		"""Reset the database connection."""
+		self.connect()
+
 	def ensure_schema(self):
 		queries = [
 			"""CREATE TABLE IF NOT EXISTS users (
@@ -170,27 +193,41 @@ class Database:
 		]
 		for query in queries:
 			try:
-				self.cursor.execute(query)
+				# Create a new cursor for each query to avoid state issues
+				cursor = self.conn.cursor(dictionary=True)
+				cursor.execute(query)
+				# Fetch any results to clear the connection state
+				while cursor.next():
+					pass
 				self.conn.commit()
+				cursor.close()
 			except mysql.connector.Error as e:
-				logger.error(f"Schema update error: {str(e)}")
+				logger.error(f"Schema update error for query: {query[:100]}...: {str(e)}")
+				if cursor:
+					cursor.close()
+				raise  # Re-raise to halt initialization if schema creation fails
 
 	def get_users_paginated(self, page: int, per_page: int, search: str = "") -> tuple:
-		offset = (page - 1) * per_page
-		query = """
-		SELECT user_id, username, is_admin, is_beta_tester, is_blacklisted, is_teskilat, credits, created_at, last_interaction, chat_id
-		FROM users
-		WHERE username LIKE %s
-		ORDER BY user_id
-		LIMIT %s OFFSET %s
-		"""
-		self.cursor.execute(query, (f"%{search}%", per_page, offset))
-		users = self.cursor.fetchall()
-		count_query = "SELECT COUNT(*) as total FROM users WHERE username LIKE %s"
-		self.cursor.execute(count_query, (f"%{search}%",))
-		total = self.cursor.fetchone()['total']
-		total_pages = (total + per_page - 1) // per_page
-		return users, total_pages
+		try:
+			offset = (page - 1) * per_page
+			query = """
+			SELECT user_id, username, is_admin, is_beta_tester, is_blacklisted, is_teskilat, credits, created_at, last_interaction, chat_id
+			FROM users
+			WHERE username LIKE %s
+			ORDER BY user_id
+			LIMIT %s OFFSET %s
+			"""
+			self.cursor.execute(query, (f"%{search}%", per_page, offset))
+			users = self.cursor.fetchall()
+			count_query = "SELECT COUNT(*) as total FROM users WHERE username LIKE %s"
+			self.cursor.execute(count_query, (f"%{search}%",))
+			total = self.cursor.fetchone()['total']
+			total_pages = (total + per_page - 1) // per_page
+			return users, total_pages
+		finally:
+			# Reset cursor to clear any unconsumed results
+			self.cursor.close()
+			self.cursor = self.conn.cursor(dictionary=True)
 
 	def get_groups_paginated(self, page: int, per_page: int, search: str = "") -> tuple:
 		offset = (page - 1) * per_page
@@ -1296,6 +1333,29 @@ class Database:
 
 		return stats
 
+	def execute_query(self, query: str, params: tuple = None, fetch: bool = True) -> list:
+		"""Helper method to execute queries safely."""
+		cursor = None
+		try:
+			cursor = self.conn.cursor(dictionary=True)
+			cursor.execute(query, params)
+			results = cursor.fetchall() if fetch else []
+			self.conn.commit()
+			return results
+		except mysql.connector.Error as e:
+			logger.error(f"Query error: {query[:100]}... with params {params}: {str(e)}")
+			raise
+		finally:
+			if cursor:
+				cursor.close()
+
 	def __del__(self):
-		self.cursor.close()
-		self.conn.close()
+		"""Clean up database connection and cursor."""
+		try:
+			if hasattr(self, 'cursor') and self.cursor:
+				self.cursor.close()
+			if hasattr(self, 'conn') and self.conn and self.conn.is_connected():
+				self.conn.close()
+			logger.debug("Database connection closed")
+		except Exception as e:
+			logger.error(f"Error closing database connection: {str(e)}")

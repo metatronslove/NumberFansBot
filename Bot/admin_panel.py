@@ -121,9 +121,14 @@ def register_handlers():
 	from .Commands.InlineShopCommands.update import UpdateInlineCommand
 
 	try:
-		# Reset database connection
+		# Initialize database and reset connection
 		db = Database()
-		db.reset_connection()
+		try:
+			db.reset_connection()
+			logger.info("Database connection reset successfully")
+		except Exception as e:
+			logger.error(f"Failed to reset database connection: {str(e)}")
+			raise
 
 		# Register conversation and command handlers
 		telegram_app.add_handler(get_abjad_conversation_handler())
@@ -146,7 +151,7 @@ def register_handlers():
 		telegram_app.add_handler(CommandHandler("credits", credits.credits_handle))
 		telegram_app.add_handler(CommandHandler("payment", payment_handle))
 
-		# Register inline query handlers (assuming they are functions)
+		# Register inline query handlers
 		telegram_app.add_handler(InlineQueryHandler(abjad, pattern=r"^/abjad"))
 		telegram_app.add_handler(InlineQueryHandler(bastet, pattern=r"^/bastet"))
 		telegram_app.add_handler(InlineQueryHandler(huddam, pattern=r"^/huddam"))
@@ -158,29 +163,64 @@ def register_handlers():
 		telegram_app.add_handler(InlineQueryHandler(convert_numbers, pattern=r"^/convertnumbers"))
 
 		# Register shop command handlers
-		buy_command = BuyCommand()
-		buy_command.register_handlers(telegram_app)
-		address_command = AddressCommand()
-		address_command.register_handlers(telegram_app)
-		password_command = PasswordCommand()
-		password_command.register_handlers(telegram_app)
-		orders_command = OrdersCommand()
-		orders_command.register_handlers(telegram_app)
-		papara_command = PaparaCommand()
-		papara_command.register_handlers(telegram_app)
+		try:
+			buy_command = BuyCommand()
+			buy_command.register_handlers(telegram_app)
+		except Exception as e:
+			logger.error(f"Failed to register BuyCommand handlers: {str(e)}")
+			raise
+		try:
+			address_command = AddressCommand()
+			address_command.register_handlers(telegram_app)
+		except Exception as e:
+			logger.error(f"Failed to register AddressCommand handlers: {str(e)}")
+			raise
+		try:
+			password_command = PasswordCommand()
+			password_command.register_handlers(telegram_app)
+		except Exception as e:
+			logger.error(f"Failed to register PasswordCommand handlers: {str(e)}")
+			raise
+		try:
+			orders_command = OrdersCommand()
+			orders_command.register_handlers(telegram_app)
+		except Exception as e:
+			logger.error(f"Failed to register OrdersCommand handlers: {str(e)}")
+			raise
+		try:
+			papara_command = PaparaCommand()
+			papara_command.register_handlers(telegram_app)
+		except Exception as e:
+			logger.error(f"Failed to register PaparaCommand handlers: {str(e)}")
+			raise
 
 		# Register inline shop command handlers
-		shop_inline_command = ShopInlineCommand()
-		shop_inline_command.register_handlers(telegram_app)
-		product_inline_command = ProductInlineCommand()
-		product_inline_command.register_handlers(telegram_app)
-		update_inline_command = UpdateInlineCommand()
-		update_inline_command.register_handlers(telegram_app)
+		try:
+			shop_inline_command = ShopInlineCommand()
+			shop_inline_command.register_handlers(telegram_app)
+		except Exception as e:
+			logger.error(f"Failed to register ShopInlineCommand handlers: {str(e)}")
+			raise
+		try:
+			product_inline_command = ProductInlineCommand()
+			product_inline_command.register_handlers(telegram_app)
+		except Exception as e:
+			logger.error(f"Failed to register ProductInlineCommand handlers: {str(e)}")
+			raise
+		try:
+			update_inline_command = UpdateInlineCommand()
+			update_inline_command.register_handlers(telegram_app)
+		except Exception as e:
+			logger.error(f"Failed to register UpdateInlineCommand handlers: {str(e)}")
+			raise
 
 		logger.info("All handlers registered successfully")
 	except Exception as e:
 		logger.error(f"Critical error in register_handlers: {str(e)}")
 		raise
+	finally:
+		if 'db' in locals():
+			db.__del__()  # Ensure database connection is closed
 try:
 	register_handlers()
 	logger.info("All handlers registered successfully")
