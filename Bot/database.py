@@ -465,7 +465,7 @@ class Database:
 		"""
 		try:
 			self.cursor.execute(query, (user_id, datetime.now(), command, 1, user_id))
-			self.connection.commit()
+			self.conn.commit()
 		except mysql.connector.Error as err:
 			logging.error(f"Database error in increment_command_usage: {err}")
 			self.connection.rollback()
