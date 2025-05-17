@@ -4,7 +4,7 @@ from typing import Dict, List, Optional
 import mysql.connector
 from .i18n import I18n
 from Bot.config import Config
-from .database import Database
+from Bot.database import Database
 from .Numerology import UnifiedNumerology
 import logging
 
