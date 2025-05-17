@@ -105,7 +105,7 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 		i18n = I18n()
 		language = db.get_user_language(user_id)
 
-		repetition = update.message.Text.strip()
+		repetition = update.message.text.strip()
 		if not repetition.isdigit() or int(repetition) < 1 or int(repetition) > 1000:  # Add upper limit
 			await send_long_message(
 				i18n.t("ERROR_INVALID_INPUT", language, error="Repetition must be a positive integer between 1 and 1000"),
@@ -308,7 +308,7 @@ def get_bastet_conversation_handler():
 		handler = ConversationHandler(
 			entry_points=[CommandHandler("bastet", bastet_start)],
 			states={
-				REPETITION: [MessageHandler(filters.TEXT & ~filters.COMMAND, bastet_repetition)],
+				REPETITION: [MessageHandler(filters.Text & ~filters.Command, bastet_repetition)],
 				TABLE: [CallbackQueryHandler(bastet_table)],
 				LANGUAGE: [CallbackQueryHandler(bastet_language)],
 			},

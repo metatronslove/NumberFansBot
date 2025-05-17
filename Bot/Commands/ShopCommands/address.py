@@ -25,15 +25,15 @@ class AddressCommand:
 					CallbackQueryHandler(self.cancel_address, pattern=r'^cancel$')
 				],
 				ADDING_NAME: [
-					MessageHandler(filters.Text & ~filters.command, self.address_name_received),
+					MessageHandler(filters.Text & ~filters.Command, self.address_name_received),
 					CallbackQueryHandler(self.cancel_address, pattern=r'^cancel$')
 				],
 				ADDING_ADDRESS: [
-					MessageHandler(filters.Text & ~filters.command, self.address_line_received),
+					MessageHandler(filters.Text & ~filters.Command, self.address_line_received),
 					CallbackQueryHandler(self.cancel_address, pattern=r'^cancel$')
 				],
 				ADDING_CITY: [
-					MessageHandler(filters.Text & ~filters.command, self.address_city_received),
+					MessageHandler(filters.Text & ~filters.Command, self.address_city_received),
 					CallbackQueryHandler(self.cancel_address, pattern=r'^cancel$')
 				],
 				CONFIRMING_ADDRESS: [
@@ -93,7 +93,7 @@ class AddressCommand:
 
 	def address_name_received(self, update: Update, context: CallbackContext) -> int:
 		"""Handle receiving the address name"""
-		address_name = update.message.Text.strip()
+		address_name = update.message.text.strip()
 
 		# Validate address name
 		if len(address_name) > 50:
@@ -114,7 +114,7 @@ class AddressCommand:
 
 	def address_line_received(self, update: Update, context: CallbackContext) -> int:
 		"""Handle receiving the street address"""
-		address_line = update.message.Text.strip()
+		address_line = update.message.text.strip()
 
 		# Validate address line
 		if len(address_line) > 200:
@@ -135,7 +135,7 @@ class AddressCommand:
 
 	def address_city_received(self, update: Update, context: CallbackContext) -> int:
 		"""Handle receiving the city"""
-		city = update.message.Text.strip()
+		city = update.message.text.strip()
 
 		# Validate city
 		if len(city) > 50:

@@ -23,7 +23,7 @@ class BuyCommand:
 					CallbackQueryHandler(self.cancel_purchase, pattern=r'^cancel$')
 				],
 				SELECTING_QUANTITY: [
-					MessageHandler(filters.Text & ~filters.command, self.quantity_selected),
+					MessageHandler(filters.Text & ~filters.Command, self.quantity_selected),
 					CallbackQueryHandler(self.cancel_purchase, pattern=r'^cancel$')
 				],
 				SELECTING_ADDRESS: [
@@ -146,7 +146,7 @@ class BuyCommand:
 	def quantity_selected(self, update: Update, context: CallbackContext) -> int:
 		"""Handle quantity selection"""
 		try:
-			quantity = int(update.message.Text.strip())
+			quantity = int(update.message.text.strip())
 			product = context.user_data['selected_product']
 
 			# Validate quantity

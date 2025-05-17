@@ -19,15 +19,15 @@ class PasswordCommand:
 			entry_points=[CommandHandler('password', self.password_command)],
 			states={
 				ENTERING_OLD_PASSWORD: [
-					MessageHandler(filters.Text & ~filters.command, self.old_password_received),
+					MessageHandler(filters.Text & ~filters.Command, self.old_password_received),
 					CommandHandler('cancel', self.cancel_password_change)
 				],
 				ENTERING_NEW_PASSWORD: [
-					MessageHandler(filters.Text & ~filters.command, self.new_password_received),
+					MessageHandler(filters.Text & ~filters.Command, self.new_password_received),
 					CommandHandler('cancel', self.cancel_password_change)
 				],
 				CONFIRMING_PASSWORD: [
-					MessageHandler(filters.Text & ~filters.command, self.confirm_password_received),
+					MessageHandler(filters.Text & ~filters.Command, self.confirm_password_received),
 					CommandHandler('cancel', self.cancel_password_change)
 				]
 			},
@@ -68,7 +68,7 @@ class PasswordCommand:
 	def old_password_received(self, update: Update, context: CallbackContext) -> int:
 		"""Handle receiving the old password"""
 		user_id = update.effective_user.id
-		old_password = update.message.Text
+		old_password = update.message.text
 
 		# Delete the message containing the password for security
 		try:
@@ -93,7 +93,7 @@ class PasswordCommand:
 
 	def new_password_received(self, update: Update, context: CallbackContext) -> int:
 		"""Handle receiving the new password"""
-		new_password = update.message.Text
+		new_password = update.message.text
 
 		# Delete the message containing the password for security
 		try:
@@ -122,7 +122,7 @@ class PasswordCommand:
 	def confirm_password_received(self, update: Update, context: CallbackContext) -> int:
 		"""Handle password confirmation"""
 		user_id = update.effective_user.id
-		confirm_password = update.message.Text
+		confirm_password = update.message.text
 		new_password = context.user_data.get('new_password', '')
 
 		# Delete the message containing the password for security

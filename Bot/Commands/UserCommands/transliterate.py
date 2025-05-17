@@ -79,7 +79,7 @@ async def transliterate_text(update: Update, context: ContextTypes.DEFAULT_TYPE)
 		i18n = I18n()
 		language = db.get_user_language(user_id) if user_id else "en"
 
-		text = query.Text.strip()
+		text = query.text.strip()
 		if not text:
 			await send_long_message(
 				message=i18n.t("ERROR_INVALID_INPUT", language, error="Text cannot be empty"),
@@ -642,7 +642,7 @@ def get_transliterate_conversation_handler():
 		handler = ConversationHandler(
 			entry_points=[CommandHandler("transliterate", transliterate_start)],
 			states={
-				TEXT: [MessageHandler(filters.TEXT & ~filters.COMMAND, transliterate_text)],
+				TEXT: [MessageHandler(filters.Text & ~filters.Command, transliterate_text)],
 				SOURCE_LANG: [CallbackQueryHandler(select_target_lang)],
 				TARGET_LANG: [CallbackQueryHandler(show_suggestions)],
 				SUGGESTIONS: [CallbackQueryHandler(handle_suggestion)],
