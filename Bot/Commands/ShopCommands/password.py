@@ -1,7 +1,7 @@
 import logging
 import re
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CallbackContext, CommandHandler, ConversationHandler, CallbackQueryHandler, MessageHandler, Filters
+from telegram.ext import CallbackContext, CommandHandler, ConversationHandler, CallbackQueryHandler, MessageHandler, filters
 from Bot.database import Database
 
 # States for the conversation handler
@@ -19,15 +19,15 @@ class PasswordCommand:
 			entry_points=[CommandHandler('password', self.password_command)],
 			states={
 				ENTERING_OLD_PASSWORD: [
-					MessageHandler(Filters.text & ~Filters.command, self.old_password_received),
+					MessageHandler(filters.text & ~filters.command, self.old_password_received),
 					CommandHandler('cancel', self.cancel_password_change)
 				],
 				ENTERING_NEW_PASSWORD: [
-					MessageHandler(Filters.text & ~Filters.command, self.new_password_received),
+					MessageHandler(filters.text & ~filters.command, self.new_password_received),
 					CommandHandler('cancel', self.cancel_password_change)
 				],
 				CONFIRMING_PASSWORD: [
-					MessageHandler(Filters.text & ~Filters.command, self.confirm_password_received),
+					MessageHandler(filters.text & ~filters.command, self.confirm_password_received),
 					CommandHandler('cancel', self.cancel_password_change)
 				]
 			},

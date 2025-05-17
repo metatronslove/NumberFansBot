@@ -1,7 +1,7 @@
 import logging
 import re
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CallbackContext, CommandHandler, ConversationHandler, CallbackQueryHandler, MessageHandler, Filters
+from telegram.ext import CallbackContext, CommandHandler, ConversationHandler, CallbackQueryHandler, MessageHandler, filters
 from Bot.database import Database
 from Bot.Helpers.papara_integration import PaparaPaymentHandler
 
@@ -27,7 +27,7 @@ class PaparaCommand:
 					CallbackQueryHandler(self.cancel_papara, pattern=r'^cancel$')
 				],
 				ENTERING_AMOUNT: [
-					MessageHandler(Filters.text & ~Filters.command, self.amount_received),
+					MessageHandler(filters.text & ~filters.command, self.amount_received),
 					CallbackQueryHandler(self.cancel_papara, pattern=r'^cancel$')
 				],
 				CONFIRMING_PAYMENT: [
@@ -35,7 +35,7 @@ class PaparaCommand:
 					CallbackQueryHandler(self.cancel_papara, pattern=r'^cancel$')
 				],
 				CHECKING_PAYMENT: [
-					MessageHandler(Filters.text & ~Filters.command, self.payment_reference_received),
+					MessageHandler(filters.text & ~filters.command, self.payment_reference_received),
 					CallbackQueryHandler(self.cancel_papara, pattern=r'^cancel$')
 				]
 			},

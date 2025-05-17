@@ -1,7 +1,7 @@
 import logging
 import re
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CallbackContext, CommandHandler, ConversationHandler, CallbackQueryHandler, MessageHandler, Filters
+from telegram.ext import CallbackContext, CommandHandler, ConversationHandler, CallbackQueryHandler, MessageHandler, filters
 from Bot.database import Database
 
 # States for the conversation handler
@@ -23,7 +23,7 @@ class BuyCommand:
 					CallbackQueryHandler(self.cancel_purchase, pattern=r'^cancel$')
 				],
 				SELECTING_QUANTITY: [
-					MessageHandler(Filters.text & ~Filters.command, self.quantity_selected),
+					MessageHandler(filters.text & ~filters.command, self.quantity_selected),
 					CallbackQueryHandler(self.cancel_purchase, pattern=r'^cancel$')
 				],
 				SELECTING_ADDRESS: [

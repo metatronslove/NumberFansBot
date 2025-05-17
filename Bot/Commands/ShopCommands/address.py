@@ -1,7 +1,7 @@
 import logging
 import re
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CallbackContext, CommandHandler, ConversationHandler, CallbackQueryHandler, MessageHandler, Filters
+from telegram.ext import CallbackContext, CommandHandler, ConversationHandler, CallbackQueryHandler, MessageHandler, filters
 from Bot.database import Database
 
 # States for the conversation handler
@@ -25,15 +25,15 @@ class AddressCommand:
 					CallbackQueryHandler(self.cancel_address, pattern=r'^cancel$')
 				],
 				ADDING_NAME: [
-					MessageHandler(Filters.text & ~Filters.command, self.address_name_received),
+					MessageHandler(filters.text & ~filters.command, self.address_name_received),
 					CallbackQueryHandler(self.cancel_address, pattern=r'^cancel$')
 				],
 				ADDING_ADDRESS: [
-					MessageHandler(Filters.text & ~Filters.command, self.address_line_received),
+					MessageHandler(filters.text & ~filters.command, self.address_line_received),
 					CallbackQueryHandler(self.cancel_address, pattern=r'^cancel$')
 				],
 				ADDING_CITY: [
-					MessageHandler(Filters.text & ~Filters.command, self.address_city_received),
+					MessageHandler(filters.text & ~filters.command, self.address_city_received),
 					CallbackQueryHandler(self.cancel_address, pattern=r'^cancel$')
 				],
 				CONFIRMING_ADDRESS: [
