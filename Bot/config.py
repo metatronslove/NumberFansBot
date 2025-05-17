@@ -33,7 +33,7 @@ class Config:
 		self.config_dir = Path('Config')
 		self.teskilat_creditentials = self._config.get('teskilat_creditentials') or os.getenv('TESKILAT_CREDITENTIALS')
 		self.telegram_token = self._config.get('telegram_token') or os.getenv('TELEGRAM_TOKEN')
-		self.bot_username = self._config.get('bot_username') or os.getenv('BOT_USERNAME', '@NumberFansBot')
+		self.bot_username = self._config.get('bot_username') or os.getenv('BOT_USERNAME', '@EgrigoreBot')
 		self.webhook_url = self._config.get('webhook_url') or os.getenv('WEBHOOK_URL')
 		self.mysql_host = self._config.get('mysql', {}).get('host') or os.getenv('MYSQL_HOST', 'mysql-numberfansbot-numberfansbot.j.aivencloud.com')
 		self.mysql_user = self._config.get('mysql', {}).get('user') or os.getenv('MYSQL_USER', 'avnadmin')

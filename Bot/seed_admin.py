@@ -50,10 +50,10 @@ def seed_admin():
 
 		# Insert admin user, including chat_id
 		query = """
-		INSERT INTO users (user_id, username, password, is_admin, created_at, last_interaction, chat_id)
-		VALUES (%s, %s, %s, %s, %s, %s, %s)
+		INSERT INTO users (user_id, chat_id, username, first_name, last_name, language_code, is_beta_tester, credits, is_admin, password, created_at, last_interaction)
+		VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 		"""
-		cursor.execute(query, (0, username, hashed_password, True, datetime.now(), datetime.now(), 0))
+		cursor.execute(query, (0, 0, username, 'Abdil Murat', 'ÜNALAN', 'tr', True, 100, True, hashed_password, datetime.now(), datetime.now()))
 		conn.commit()
 
 		logger.info(f"Admin user '{username}' created successfully.")
