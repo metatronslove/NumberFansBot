@@ -250,6 +250,9 @@ def get_fields():
 		{"key": "ai_settings.access_token", "label": "AI Access Token", "value": config.ai_access_token or "", "use_env": config._config.get("ai_settings", {}).get("access_token_use_env", False)}
 	]
 
+# File Management Routes
+PROJECT_ROOT = Path(__file__).parent.parent  # Root directory of the project
+
 @flask_app.route("/<lang>")
 @flask_app.route("/")
 def index(lang="en"):
