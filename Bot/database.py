@@ -2,6 +2,7 @@ import mysql.connector
 from datetime import datetime
 from pathlib import Path
 from .config import Config
+import bcrypt
 import logging
 import json
 import hashlib
@@ -1297,7 +1298,7 @@ class Database:
 
 	def _hash_password(self, password: str) -> str:
 		"""Hash a password (simplified for demonstration)"""
-		return hashlib.sha256(password.encode()).hexdigest()
+		return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 	# ==================== SHOP ADMIN FUNCTIONS ====================
 

@@ -370,12 +370,12 @@ def login(lang="en"):
 			flash(i18n.t("LOGIN_INVALID_CREDENTIALS", lang), "error")
 			return render_template("login.html", lang=lang, i18n=i18n)
 
-		if not user.get("password_hash"):
+		if not user.get("password"):
 			flash(i18n.t("LOGIN_NO_PASSWORD", lang), "error")
 			return render_template("login.html", lang=lang, i18n=i18n)
 
 		try:
-			if user and bcrypt.checkpw(password.encode("utf-8"), user["password_hash"].encode("utf-8")):
+			if user and bcrypt.checkpw(password.encode("utf-8"), user["password"].encode("utf-8")):
 				session["username"] = username
 				session["user_id"] = user["user_id"]
 
