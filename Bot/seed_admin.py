@@ -11,7 +11,6 @@ if project_root not in sys.path:
 	sys.path.insert(0, project_root)
 
 from Bot.config import Config
-from Bot.database import Database
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -19,23 +18,27 @@ logger = logging.getLogger(__name__)
 
 def seed_admin():
 	config = Config()
-	db = Database()
 
 	# Database connection configuration with SSL
-	# db_config = {
-	# 	'host': config.mysql_host or 'mysql-numberfansbot-numberfansbot.j.aivencloud.com',
-	# 	'port': config.mysql_port or 28236,
-	# 	'user': config.mysql_user or 'avnadmin',
-	# 	'password': config.mysql_password or 'real-password',
-	# 	'database': config.mysql_database or 'numberfansbot',
-	# 	'ssl_ca': os.environ.get('MYSQL_SSL_CA', '/code/ca.pem')  # Path to Aiven CA certificate
-	# }
+	db_config = {
+		'host': config.mysql_host or 'mysql-numberfansbot-numberfansbot.j.aivencloud.com',
+		'port': config.mysql_port or 28236,
+		'user': config.mysql_user or 'avnadmin',
+		'password': config.mysql_password or 'real-password',
+		'database': config.mysql_database or 'numberfansbot',
+		'ssl_ca': os.environ.get('MYSQL_SSL_CA', '/code/ca.pem')  # Path to Aiven CA certificate
+	}
 
 	try:
+		# Connect to the database
+		conn = mysql.connector.connect(**db_config)
+		cursor = conn.cursor(dictionary=True)
+
 		# Check if admin user already exists
 		username = os.environ.get('ADMIN_USER')
 		query = "SELECT * FROM users WHERE username = %s"
-		existing_user = db.execute_query(query, (username))
+		cursor.execute(query, (username,))
+		existing_user = cursor.fetchone()
 
 		if existing_user:
 			logger.info(f"Admin user '{username}' already exists.")
@@ -50,7 +53,8 @@ def seed_admin():
 		INSERT INTO users (user_id, chat_id, username, first_name, last_name, language_code, is_beta_tester, credits, is_admin, password, created_at, last_interaction)
 		VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 		"""
-		db.execute_query(query, (0, 0, username, 'Abdil Murat', 'ÜNALAN', 'tr', True, 100, True, hashed_password, datetime.now(), datetime.now()))
+		cursor.execute(query, (0, 0, username, 'Abdil Murat', 'ÜNALAN', 'tr', True, 100, True, hashed_password, datetime.now(), datetime.now()))
+		conn.commit()
 
 		logger.info(f"Admin user '{username}' created successfully.")
 
