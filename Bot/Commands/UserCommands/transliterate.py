@@ -642,7 +642,7 @@ def get_transliterate_conversation_handler():
 		handler = ConversationHandler(
 			entry_points=[CommandHandler("transliterate", transliterate_start)],
 			states={
-				TEXT: [MessageHandler(filters.Text & ~filters.COMMAND, transliterate_text)],
+				TEXT: [MessageHandler(filters.Text() & ~filters.COMMAND, transliterate_text)],
 				SOURCE_LANG: [CallbackQueryHandler(select_target_lang)],
 				TARGET_LANG: [CallbackQueryHandler(show_suggestions)],
 				SUGGESTIONS: [CallbackQueryHandler(handle_suggestion)],

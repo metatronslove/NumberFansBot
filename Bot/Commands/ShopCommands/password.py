@@ -19,15 +19,15 @@ class PasswordCommand:
 			entry_points=[CommandHandler('password', self.password_command)],
 			states={
 				ENTERING_OLD_PASSWORD: [
-					MessageHandler(filters.Text & ~filters.COMMAND, self.old_password_received),
+					MessageHandler(filters.Text() & ~filters.COMMAND, self.old_password_received),
 					CommandHandler('cancel', self.cancel_password_change)
 				],
 				ENTERING_NEW_PASSWORD: [
-					MessageHandler(filters.Text & ~filters.COMMAND, self.new_password_received),
+					MessageHandler(filters.Text() & ~filters.COMMAND, self.new_password_received),
 					CommandHandler('cancel', self.cancel_password_change)
 				],
 				CONFIRMING_PASSWORD: [
-					MessageHandler(filters.Text & ~filters.COMMAND, self.confirm_password_received),
+					MessageHandler(filters.Text() & ~filters.COMMAND, self.confirm_password_received),
 					CommandHandler('cancel', self.cancel_password_change)
 				]
 			},
