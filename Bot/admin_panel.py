@@ -929,6 +929,47 @@ def github_traffic(lang="en"):
 	except Exception as e:
 		return jsonify({"error": str(e)})
 
+def is_safe_path(path):
+	"""Ensure the path is within the project root to prevent directory traversal."""
+	try:
+		resolved_path = (PROJECT_ROOT / path).resolve()
+		return PROJECT_ROOT in resolved_path.parents or resolved_path == PROJECT_ROOT
+	except Exception:
+		return False
+
+@flask_app.route("/<lang>/files/list", methods=["GET"])
+def list_files(lang="en"):
+	if "username" not in session:
+		return jsonify({"error": "Unauthorized access"}), 401
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+	try:
+		def build_file_tree(path, prefix=""):
+			tree = []
+			for item in sorted(path.iterdir()):
+				if item.name.startswith(".") or item.name == "__pycache__":
+					continue
+				relative_path = str(item.relative_to(PROJECT_ROOT))
+				if item.is_dir():
+					tree.append({
+						"name": item.name,
+						"path": relative_path,
+						"type": "directory",
+						"children": build_file_tree(item, prefix + "  ")
+					})
+				else:
+					tree.append({
+						"name": item.name,
+						"path": relative_path,
+						"type": "file"
+					})
+			return tree
+		file_tree = build_file_tree(PROJECT_ROOT)
+		return jsonify({"files": file_tree})
+	except Exception as e:
+		logger.error(f"Error listing files: {str(e)}")
+		return jsonify({"error": f"Failed to list files: {str(e)}"}), 500
+
 @flask_app.route("/<lang>/file_tree", methods=["GET"])
 def file_tree(lang="en"):
 	if "username" not in session:
@@ -963,6 +1004,148 @@ def file_tree(lang="en"):
 		return jsonify({"files": tree})
 	except Exception as e:
 		return jsonify({"error": str(e)})
+
+@flask_app.route("/<lang>/files/reload", methods=["POST"])
+def reload_file(lang="en"):
+	"""Reload a file to apply changes without restarting the server."""
+	if "username" not in session:
+		return jsonify({"error": "Unauthorized access"}), 401
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+	data = request.get_json()
+	file_path = data.get("path")
+	if not file_path or not is_safe_path(file_path):
+		return jsonify({"error": "Invalid or unsafe file path"}), 400
+	try:
+		path = PROJECT_ROOT / file_path
+		# Prevent reloading sensitive files
+		restricted_files = ["admin_panel.py", "config.py", ".env"]
+		if path.name in restricted_files:
+			return jsonify({"error": "Reloading this file is restricted"}), 403
+		if not path.exists() or not path.is_file():
+			return jsonify({"error": "File does not exist or is not a file"}), 404
+
+		# Initialize I18n for translations
+		i18n = I18n()
+
+		# Handle Python files
+		if path.suffix.lower() == ".py":
+			module_name = str(path.relative_to(PROJECT_ROOT).with_suffix("")).replace(os.sep, ".")
+			if module_name.startswith("."):
+				return jsonify({"error": "Invalid module path"}), 400
+			try:
+				if module_name in sys.modules:
+					module = sys.modules[module_name]
+					importlib.reload(module)
+				else:
+					module = importlib.import_module(module_name)
+				# Reinitialize Telegram handlers if the module affects bot logic
+				if module_name.startswith("Bot.") or module_name.startswith("Commands."):
+					register_handlers()
+				logger.info(f"Reloaded Python module: {module_name}")
+				return jsonify({"message": i18n.t("FILE_RELOADED", lang)})
+			except ImportError as e:
+				logger.error(f"Error reloading module {module_name}: {str(e)}")
+				return jsonify({"error": f"Failed to reload module: {str(e)}"}), 500
+
+		# Handle HTML templates
+		elif path.suffix.lower() == ".html":
+			if flask_app.jinja_env.cache:
+				flask_app.jinja_env.cache.clear()
+			try:
+				# Get absolute path to templates folder
+				templates_path = Path(flask_app.template_folder).resolve()
+				# Get absolute path to the file
+				file_abs_path = path.resolve()
+
+				# Check if file is within templates folder
+				if templates_path in file_abs_path.parents or file_abs_path.parent == templates_path:
+					# Get relative path from templates folder
+					template_name = str(file_abs_path.relative_to(templates_path))
+					flask_app.jinja_env.get_template(template_name)  # Trigger reload
+					logger.info(f"Reloaded template: {file_path}")
+					return jsonify({"message": i18n.t("TEMPLATE_RELOADED", lang)})
+				else:
+					return jsonify({"error": "Template not in template folder"}), 400
+			except Exception as e:
+				logger.error(f"Error reloading template {file_path}: {str(e)}")
+				return jsonify({"error": f"Failed to reload template: {str(e)}"}), 500
+
+		# Handle Assets templates (Yes I prefer you to create javascripts here)
+		elif path.suffix.lower() in [".css", ".webmanifest", ".txt", ".js"]:
+			if flask_app.jinja_env.cache:
+				flask_app.jinja_env.cache.clear()
+			try:
+				# Get absolute path to assets folder
+				assets_path = Path(flask_app.static_folder).resolve()
+				# Get absolute path to the file
+				file_abs_path = path.resolve()
+
+				# Check if file is within templates folder
+				if assets_path in file_abs_path.parents or file_abs_path.parent == assets_path:
+					# Get relative path from templates folder
+					logger.info(f"Reloaded template: {file_path}")
+					return jsonify({"message": i18n.t("TEMPLATE_RELOADED", lang)})
+				else:
+					return jsonify({"error": "Template not in assets folder"}), 400
+			except Exception as e:
+				logger.error(f"Error reloading template {file_path}: {str(e)}")
+				return jsonify({"error": f"Failed to reload template: {str(e)}"}), 500
+
+		# Handle JSON locale files
+		elif path.suffix.lower() == ".json" and str(path).startswith(str(PROJECT_ROOT / "Locales")):
+			try:
+				# Clear I18n translations cache and reload
+				i18n.translations.clear()
+				i18n._load_translations(lang)
+				logger.info(f"Reloaded locale file: {file_path}")
+				return jsonify({"message": i18n.t("LOCALE_RELOADED", lang)})
+			except Exception as e:
+				logger.error(f"Error reloading locale {file_path}: {str(e)}")
+				return jsonify({"error": f"Failed to reload locale: {str(e)}"}), 500
+
+		# Handle other file types
+		else:
+			logger.info(f"Reload requested for unsupported file type: {file_path}")
+			return jsonify({"message": i18n.t("FILE_RELOAD_UNSUPPORTED", lang)})
+
+	except Exception as e:
+		logger.error(f"Error reloading file {file_path}: {str(e)}")
+		return jsonify({"error": f"Failed to reload file: {str(e)}"}), 500
+
+@flask_app.route("/<lang>/files/read", methods=["POST"])
+def read_file(lang="en"):
+	if "username" not in session:
+		return jsonify({"error": "Unauthorized access"}), 401
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+	data = request.get_json()
+	file_path = data.get("path")
+	if not file_path or not is_safe_path(file_path):
+		return jsonify({"error": "Invalid or unsafe file path"}), 400
+	try:
+		file = PROJECT_ROOT / file_path
+		if not file.exists() or not file.is_file():
+			return jsonify({"error": "File does not exist or is not a file"}), 404
+		with open(file, "r", encoding="utf-8") as f:
+			content = f.read()
+		extension = file.suffix.lower()
+		mime_types = {
+			".py": "python",
+			".html": "htmlmixed",
+			".js": "javascript",
+			".json": "javascript",
+			".css": "css",
+			".yml": "yaml",
+			".md": "markdown",
+			".sql": "sql",
+			".txt": "text"
+		}
+		mode = mime_types.get(extension, "text")
+		return jsonify({"content": content, "mode": mode})
+	except Exception as e:
+		logger.error(f"Error reading file {file_path}: {str(e)}")
+		return jsonify({"error": f"Failed to read file: {str(e)}"}), 500
 
 @flask_app.route("/<lang>/file_content", methods=["GET"])
 def file_content(lang="en"):
