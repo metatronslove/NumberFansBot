@@ -468,7 +468,7 @@ class Database:
 			self.conn.commit()
 		except mysql.connector.Error as err:
 			logging.error(f"Database error in increment_command_usage: {err}")
-			self.connection.rollback()
+			self.conn.rollback()
 			raise
 
 	def get_command_usage(self):
