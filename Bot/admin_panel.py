@@ -98,9 +98,10 @@ def register_handlers():
 	from .Commands.UserCommands.huddam import get_huddam_conversation_handler
 	from .Commands.UserCommands.unsur import get_unsur_conversation_handler
 	from .Commands.UserCommands.transliterate import get_transliterate_conversation_handler
-	from .Commands.UserCommands import (
-		numerology, convert_numbers, magic_square, nutket
-	)
+	from .Commands.UserCommands import numerology as user_numerology
+	from .Commands.UserCommands import convert_numbers as user_convert_numbers
+	from .Commands.UserCommands import magic_square as user_magic_square
+	from .Commands.UserCommands import nutket as user_nutket
 	from .Commands.SystemCommands.payment import (
 		payment_handle, handle_pre_checkout, handle_successful_payment
 	)
@@ -137,9 +138,10 @@ def register_handlers():
 		telegram_app.add_handler(get_unsur_conversation_handler())
 		telegram_app.add_handler(get_transliterate_conversation_handler())
 		telegram_app.add_handler(PreCheckoutQueryHandler(handle_pre_checkout))
-		telegram_app.add_handler(CommandHandler("numerology", numerology.numerology_handle))
-		telegram_app.add_handler(CommandHandler("convertnumbers", convert_numbers.convert_numbers_handle))
-		telegram_app.add_handler(CommandHandler("magicsquare", magic_square.magic_square_handle))
+		telegram_app.add_handler(CommandHandler("numerology", user_numerology.numerology_handle))
+		telegram_app.add_handler(CommandHandler("convertnumbers", user_convert_numbers.convert_numbers_handle))
+		telegram_app.add_handler(CommandHandler("magicsquare", user_magic_square.magic_square_handle))
+		telegram_app.add_handler(CommandHandler("nutket", user_nutket.nutket_handle))
 		telegram_app.add_handler(CommandHandler("cancel", cancel.cancel_handle))
 		telegram_app.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, handle_successful_payment))
 		telegram_app.add_handler(CallbackQueryHandler(callback_query.set_language_handle, pattern=r"lang\|.+"))
