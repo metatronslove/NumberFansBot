@@ -459,12 +459,12 @@ class Database:
 	def increment_command_usage(self, command: str, user_id: int, chat_id: int = None):
 		try:
 			query = """
-			INSERT INTO `command_usage` (user_id, last_used, last_user_id, command, count, chat_id)
-			VALUES (%s, %s, %s, %s, 1, %s)
-			ON DUPLICATE KEY UPDATE count = count + 1, last_user_id = %s, last_used = %s, chat_id = %s
+			INSERT INTO `command_usage` (user_id, last_used, last_user_id, command, count)
+			VALUES (%s, %s, %s, %s, 1)
+			ON DUPLICATE KEY UPDATE count = count + 1, last_user_id = %s, last_used = %s
 			"""
 			now = datetime.now()
-			self.cursor.execute(query, (user_id, now, user_id, command, 1, chat_id))
+			self.cursor.execute(query, (user_id, now, user_id, command, 1))
 			self.conn.commit()
 		finally:
 			self.cursor.close()
