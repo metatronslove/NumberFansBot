@@ -1,6 +1,6 @@
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle, InputTextMessageContent
-from telegram.ext import CallbackContext, InlineQueryHandler
+from telegram.ext import Application, CallbackContext, InlineQueryHandler
 from uuid import uuid4
 from Bot.database import Database
 
@@ -9,17 +9,19 @@ logger = logging.getLogger(__name__)
 class ProductInlineCommand:
 	def __init__(self):
 		self.db = Database()
+		self.bot_username = "@YourBot"  # Replace with actual bot username or config
 
-	def register_handlers(self, dispatcher):
-		dispatcher.add_handler(InlineQueryHandler(self.inline_product, pattern=r'^product'))
+	def register_handlers(self, application: Application):
+		application.add_handler(InlineQueryHandler(self.inline_product, pattern=r'^product'))
 
-	def inline_product(self, update: Update, context: CallbackContext) -> None:
+	async def inline_product(self, update: Update, context: CallbackContext) -> None:
 		"""Handle inline queries for specific product details"""
 		query = update.inline_query.query
 		user_id = update.effective_user.id
 
 		# Check if user is blacklisted
 		if self.db.is_blacklisted(user_id):
+			logger.info(f"Blacklisted user {user_id} attempted inline product query")
 			return
 
 		# Extract product ID if any (after "product" keyword)
@@ -49,8 +51,8 @@ class ProductInlineCommand:
 			else:
 				# Create keyboard for the product
 				keyboard = [
-					[InlineKeyboardButton("Buy Now", url=f"https://t.me/YourBot?start=buy_{product['id']}")],
-					[InlineKeyboardButton("View All Products", url=f"https://t.me/YourBot?start=shop")]
+					[InlineKeyboardButton("Buy Now", url=f"https://t.me/{self.bot_username}?start=buy_{product['id']}")],
+					[InlineKeyboardButton("View All Products", url=f"https://t.me/{self.bot_username}?start=shop")]
 				]
 				reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -97,9 +99,9 @@ class ProductInlineCommand:
 					title="Product Search",
 					description="Use 'product [ID]' to view details of a specific product",
 					input_message_content=InputTextMessageContent(
-						"To view product details, use the inline query format: @YourBot product [ID]\n"
-						"For example: @YourBot product 1\n\n"
-						"Or browse all products with: @YourBot shop"
+						f"To view product details, use the inline query format: {self.bot_username} product [ID]\n"
+						f"For example: {self.bot_username} product 1\n\n"
+						f"Or browse all products with: {self.bot_username} shop"
 					)
 				)
 			]
@@ -113,8 +115,9 @@ class ProductInlineCommand:
 				details={
 					"query": query,
 					"chat_id": chat_id,
-					"product_id": product_id
+					"product_id": product_id,
+					"user_id": user_id
 				}
 			)
 
-		update.inline_query.answer(results, cache_time=300)
+		await update.inline_query.answer(results, cache_time=300)

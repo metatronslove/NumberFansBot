@@ -1,6 +1,7 @@
 import logging
+import re
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle, InputTextMessageContent
-from telegram.ext import CallbackContext, InlineQueryHandler
+from telegram.ext import Application, CallbackContext, InlineQueryHandler
 from uuid import uuid4
 from Bot.database import Database
 
@@ -9,17 +10,19 @@ logger = logging.getLogger(__name__)
 class UpdateInlineCommand:
 	def __init__(self):
 		self.db = Database()
+		self.bot_username = "@YourBot"  # Replace with actual bot username or config
 
-	def register_handlers(self, dispatcher):
-		dispatcher.add_handler(InlineQueryHandler(self.inline_update, pattern=r'^update'))
+	def register_handlers(self, application: Application):
+		application.add_handler(InlineQueryHandler(self.inline_update, pattern=r'^update'))
 
-	def inline_update(self, update: Update, context: CallbackContext) -> None:
+	async def inline_update(self, update: Update, context: CallbackContext) -> None:
 		"""Handle inline queries for product updates in groups"""
 		query = update.inline_query.query
 		user_id = update.effective_user.id
 
 		# Check if user is blacklisted
 		if self.db.is_blacklisted(user_id):
+			logger.info(f"Blacklisted user {user_id} attempted inline update query")
 			return
 
 		# Check if user is a shop admin
@@ -34,7 +37,7 @@ class UpdateInlineCommand:
 					)
 				)
 			]
-			update.inline_query.answer(results, cache_time=300)
+			await update.inline_query.answer(results, cache_time=300)
 			return
 
 		# Extract update type and parameters
@@ -47,11 +50,11 @@ class UpdateInlineCommand:
 					title="Shop Update Commands",
 					description="Available commands: new, sale, restock, announcement",
 					input_message_content=InputTextMessageContent(
-						"Shop Update Commands:\n\n"
-						"• @YourBot update new [product_name] - Announce a new product\n"
-						"• @YourBot update sale [discount]% - Announce a sale\n"
-						"• @YourBot update restock [product_id] - Announce a product restock\n"
-						"• @YourBot update announcement [text] - Make a general announcement"
+						f"Shop Update Commands:\n\n"
+						f"• {self.bot_username} update new [product_name] - Announce a new product\n"
+						f"• {self.bot_username} update sale [discount]% - Announce a sale\n"
+						f"• {self.bot_username} update restock [product_id] - Announce a product restock\n"
+						f"• {self.bot_username} update announcement [text] - Make a general announcement"
 					)
 				)
 			]
@@ -60,12 +63,17 @@ class UpdateInlineCommand:
 
 			if update_type == "new" and len(parts) > 2:
 				# New product announcement
-				product_name = " ".join(parts[2:])
-				results = self.create_new_product_announcement(product_name)
+				product_name = " ".join(parts[2:]).strip()[:100]  # Limit length
+				if not product_name:
+					results = [self.create_error_result("Product name cannot be empty")]
+				else:
+					results = self.create_new_product_announcement(product_name)
 			elif update_type == "sale" and len(parts) > 2:
 				# Sale announcement
 				try:
 					discount = int(parts[2].rstrip("%"))
+					if not 1 <= discount <= 100:
+						raise ValueError("Discount out of range")
 					results = self.create_sale_announcement(discount)
 				except ValueError:
 					results = [
@@ -74,8 +82,8 @@ class UpdateInlineCommand:
 							title="Invalid Format",
 							description="Use: update sale [number]%",
 							input_message_content=InputTextMessageContent(
-								"Invalid sale format. Use: @YourBot update sale [number]%\n"
-								"Example: @YourBot update sale 20%"
+								f"Invalid sale format. Use: {self.bot_username} update sale [number]%\n"
+								f"Example: {self.bot_username} update sale 20%"
 							)
 						)
 					]
@@ -91,15 +99,18 @@ class UpdateInlineCommand:
 							title="Invalid Format",
 							description="Use: update restock [product_id]",
 							input_message_content=InputTextMessageContent(
-								"Invalid restock format. Use: @YourBot update restock [product_id]\n"
-								"Example: @YourBot update restock 2"
+								f"Invalid restock format. Use: {self.bot_username} update restock [product_id]\n"
+								f"Example: {self.bot_username} update restock 2"
 							)
 						)
 					]
 			elif update_type == "announcement" and len(parts) > 2:
 				# General announcement
-				announcement_text = " ".join(parts[2:])
-				results = self.create_general_announcement(announcement_text)
+				announcement_text = " ".join(parts[2:]).strip()[:500]  # Limit length
+				if not announcement_text:
+					results = [self.create_error_result("Announcement text cannot be empty")]
+				else:
+					results = self.create_general_announcement(announcement_text)
 			else:
 				# Unknown update type
 				results = [
@@ -108,11 +119,11 @@ class UpdateInlineCommand:
 						title="Unknown Update Type",
 						description="Available types: new, sale, restock, announcement",
 						input_message_content=InputTextMessageContent(
-							"Unknown update type. Available commands:\n\n"
-							"• @YourBot update new [product_name] - Announce a new product\n"
-							"• @YourBot update sale [discount]% - Announce a sale\n"
-							"• @YourBot update restock [product_id] - Announce a product restock\n"
-							"• @YourBot update announcement [text] - Make a general announcement"
+							f"Unknown update type. Available commands:\n\n"
+							f"• {self.bot_username} update new [product_name] - Announce a new product\n"
+							f"• {self.bot_username} update sale [discount]% - Announce a sale\n"
+							f"• {self.bot_username} update restock [product_id] - Announce a product restock\n"
+							f"• {self.bot_username} update announcement [text] - Make a general announcement"
 						)
 					)
 				]
@@ -125,16 +136,26 @@ class UpdateInlineCommand:
 				action="inline_update_query",
 				details={
 					"query": query,
-					"chat_id": chat_id
+					"chat_id": chat_id,
+					"user_id": user_id
 				}
 			)
 
-		update.inline_query.answer(results, cache_time=300)
+		await update.inline_query.answer(results, cache_time=300)
+
+	def create_error_result(self, message):
+		"""Create an error result for invalid input"""
+		return InlineQueryResultArticle(
+			id=str(uuid4()),
+			title="Invalid Input",
+			description=message,
+			input_message_content=InputTextMessageContent(message)
+		)
 
 	def create_new_product_announcement(self, product_name):
 		"""Create announcement for a new product"""
 		keyboard = [
-			[InlineKeyboardButton("View Product", url=f"https://t.me/YourBot?start=shop")]
+			[InlineKeyboardButton("View Product", url=f"https://t.me/{self.bot_username}?start=shop")]
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -156,7 +177,7 @@ class UpdateInlineCommand:
 	def create_sale_announcement(self, discount):
 		"""Create announcement for a sale"""
 		keyboard = [
-			[InlineKeyboardButton("Shop Now", url=f"https://t.me/YourBot?start=shop")]
+			[InlineKeyboardButton("Shop Now", url=f"https://t.me/{self.bot_username}?start=shop")]
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -193,7 +214,7 @@ class UpdateInlineCommand:
 			]
 
 		keyboard = [
-			[InlineKeyboardButton("Buy Now", url=f"https://t.me/YourBot?start=buy_{product_id}")]
+			[InlineKeyboardButton("Buy Now", url=f"https://t.me/{self.bot_username}?start=buy_{product_id}")]
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -216,7 +237,7 @@ class UpdateInlineCommand:
 	def create_general_announcement(self, announcement_text):
 		"""Create a general shop announcement"""
 		keyboard = [
-			[InlineKeyboardButton("Visit Shop", url=f"https://t.me/YourBot?start=shop")]
+			[InlineKeyboardButton("Visit Shop", url=f"https://t.me/{self.bot_username}?start=shop")]
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
 

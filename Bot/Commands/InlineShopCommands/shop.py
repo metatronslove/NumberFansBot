@@ -1,6 +1,6 @@
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle, InputTextMessageContent
-from telegram.ext import CallbackContext, InlineQueryHandler
+from telegram.ext import Application, CallbackContext, InlineQueryHandler
 from uuid import uuid4
 from Bot.database import Database
 
@@ -9,17 +9,19 @@ logger = logging.getLogger(__name__)
 class ShopInlineCommand:
 	def __init__(self):
 		self.db = Database()
+		self.bot_username = "@YourBot"  # Replace with actual bot username or config
 
-	def register_handlers(self, dispatcher):
-		dispatcher.add_handler(InlineQueryHandler(self.inline_shop, pattern=r'^shop'))
+	def register_handlers(self, application: Application):
+		application.add_handler(InlineQueryHandler(self.inline_shop, pattern=r'^shop'))
 
-	def inline_shop(self, update: Update, context: CallbackContext) -> None:
+	async def inline_shop(self, update: Update, context: CallbackContext) -> None:
 		"""Handle inline queries for shop listings"""
 		query = update.inline_query.query
 		user_id = update.effective_user.id
 
 		# Check if user is blacklisted
 		if self.db.is_blacklisted(user_id):
+			logger.info(f"Blacklisted user {user_id} attempted inline shop query")
 			return
 
 		# Extract search terms if any (after "shop" keyword)
@@ -46,8 +48,8 @@ class ShopInlineCommand:
 			for product in products:
 				# Create keyboard for the product
 				keyboard = [
-					[InlineKeyboardButton("Buy Now", url=f"https://t.me/YourBot?start=buy_{product['id']}")],
-					[InlineKeyboardButton("View Details", url=f"https://t.me/YourBot?start=product_{product['id']}")]
+					[InlineKeyboardButton("Buy Now", url=f"https://t.me/{self.bot_username}?start=buy_{product['id']}")],
+					[InlineKeyboardButton("View Details", url=f"https://t.me/{self.bot_username}?start=product_{product['id']}")]
 				]
 				reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -84,8 +86,9 @@ class ShopInlineCommand:
 				details={
 					"query": query,
 					"chat_id": chat_id,
-					"results_count": len(results)
+					"results_count": len(results),
+					"user_id": user_id
 				}
 			)
 
-		update.inline_query.answer(results, cache_time=300)
+		await update.inline_query.answer(results, cache_time=300)
