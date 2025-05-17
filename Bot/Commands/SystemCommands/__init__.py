@@ -6,3 +6,4 @@ from .payment import payment_handle, get_payment_handlers
 from .language import language_handle
 from .credits import credits_handle
 from .callback_query import set_language_handle, handle_callback_query
+from .cancel import cancel_handle

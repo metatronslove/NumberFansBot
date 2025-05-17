@@ -7,4 +7,3 @@ from .magic_square import magic_square_handle
 from .convert_numbers import convert_numbers_handle
 from .nutket import nutket_handle
 from .numerology import numerology_handle
-from .cancel import cancel_handle
