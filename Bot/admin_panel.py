@@ -464,11 +464,12 @@ def install(lang="en"):
 
 	if request.method == "POST":
 		# Update configuration
-		telegram_token = request.form.get("telegram_token")
-		mysql_host = request.form.get("mysql_host")
-		mysql_user = request.form.get("mysql_user")
-		mysql_password = request.form.get("mysql_password")
-		mysql_database = request.form.get("mysql_database")
+		telegram_token = config.telegram_token or request.form.get("telegram_token")
+		mysql_host = config.mysql_host or request.form.get("mysql_host")
+		mysql_user = config.mysql_user or request.form.get("mysql_user")
+		mysql_port = config.mysql_port or request.form.get("mysql_port")
+		mysql_password = config.mysql_password or request.form.get("mysql_password")
+		mysql_database = config.mysql_database or request.form.get("mysql_database")
 		admin_username = request.form.get("admin_username")
 		admin_password = request.form.get("admin_password")
 
@@ -482,6 +483,7 @@ def install(lang="en"):
 			"telegram_token": telegram_token,
 			"mysql_host": mysql_host,
 			"mysql_user": mysql_user,
+			"mysql_port": mysql_port,
 			"mysql_password": mysql_password,
 			"mysql_database": mysql_database,
 			"flask_secret_key": os.urandom(24).hex()
