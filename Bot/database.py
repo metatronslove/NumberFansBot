@@ -65,7 +65,7 @@ class Database:
 				created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 				last_interaction DATETIME DEFAULT CURRENT_TIMESTAMP
 			);
-			CREATE TABLE IF NOT EXISTS groups (
+			CREATE TABLE IF NOT EXISTS `groups` (
 				group_id BIGINT PRIMARY KEY,
 				group_name VARCHAR(255),
 				type VARCHAR(50),
