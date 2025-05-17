@@ -23,7 +23,7 @@ from Bot.config import Config
 from Bot.database import Database
 from Bot.utils import register_user_if_not_exists, get_warning_description, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
 from Bot.Commands.UserCommands import (abjad, magic_square, numerology, huddam, bastet, unsur, nutket)
-from Bot.Commands.UserCommands.payment import payment_handle
+from Bot.Commands.SystemCommands.payment import payment_handle
 
 logger = logging.getLogger(__name__)
 config = Config()
