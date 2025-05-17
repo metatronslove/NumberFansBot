@@ -17,7 +17,7 @@ from ...i18n import I18n
 from ...Helpers.Transliteration import Transliteration
 from ...Abjad import Abjad
 from ...Numerology import UnifiedNumerology
-from ..Helpers.Helpers.MagicSquare import MagicSquareGenerator
+from ..Helpers.MagicSquare import MagicSquareGenerator
 from ...NumberConverter import NumberConverter
 from ...cache import Cache
 from ...config import Config

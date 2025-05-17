@@ -1,6 +1,6 @@
 import logging
 from telegram import InlineQueryResultArticle, InputTextMessageContent
-from Bot.Helpers.Helpers.Transliteration import Transliteration
+from Bot.Helpers.Transliteration import Transliteration
 from Bot.database import Database
 from Bot.Helpers.i18n import I18n
 from Bot.utils import get_warning_description, get_ai_commentary
