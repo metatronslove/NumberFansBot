@@ -141,7 +141,7 @@ def register_handlers():
 		telegram_app.add_handler(CallbackQueryHandler(callback_query.handle_callback_query))
 		telegram_app.add_handler(CommandHandler("start", start.start_handle))
 		telegram_app.add_handler(CommandHandler("help", help.help_handle))
-		telegram_app.add_handler(CommandHandler("language", language.language_handle�്�
+		telegram_app.add_handler(CommandHandler("language", language.language_handle))
 		telegram_app.add_handler(CommandHandler("settings", settings.settings_handle))
 		telegram_app.add_handler(CommandHandler("credits", credits.credits_handle))
 		telegram_app.add_handler(CommandHandler("payment", payment_handle))
