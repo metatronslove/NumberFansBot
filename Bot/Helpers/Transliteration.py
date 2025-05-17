@@ -15,7 +15,7 @@ class Transliteration:
 		self.db = db
 		self.i18n = i18n
 		self.numerology = UnifiedNumerology()
-		self.Transliteration_map: Dict = {}
+		self.Helpers.Transliteration_map: Dict = {}
 		self.load_transliteration_map()
 		self.valid_languages = ["arabic", "turkish", "english", "hebrew", "latin"]
 		self.language_mapping = {"arabic": "arabic_hija"}
@@ -35,7 +35,7 @@ class Transliteration:
 		map_path = Path("Config") / "transliteration_map.json"
 		try:
 			with open(map_path, "r", encoding="utf-8") as f:
-				self.Transliteration_map = json.load(f)
+				self.Helpers.Transliteration_map = json.load(f)
 		except Exception as e:
 			logger.error(f"Failed to load transliteration map: {str(e)}")
 			raise ValueError(f"Failed to load transliteration map: {str(e)}")
@@ -70,7 +70,7 @@ class Transliteration:
 		# Map source and target languages to transliteration_map keys
 		source_key = f"from_{self.language_mapping.get(source_lang, source_lang)}"
 		target_key = self.language_mapping.get(target_lang, target_lang)
-		map_data = self.Transliteration_map.get(target_key, {}).get(source_key, {})
+		map_data = self.Helpers.Transliteration_map.get(target_key, {}).get(source_key, {})
 
 		if not map_data:
 			raise ValueError(f"No transliteration mapping from {source_lang} to {target_lang}")

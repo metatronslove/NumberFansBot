@@ -8,7 +8,7 @@ from datetime import datetime
 from Bot.config import Config
 from Bot.database import Database
 from Bot.Helpers.i18n import I18n
-from Bot.MagicSquare import MagicSquareGenerator
+from Bot.Helpers.MagicSquare import MagicSquareGenerator
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
 	Application, ExtBot, ConversationHandler, CommandHandler, MessageHandler,
