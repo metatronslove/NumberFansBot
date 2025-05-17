@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 class I18n:
 	def __init__(self):
-		self.locale_path = Path(__file__).parent.parent / "Locales"
+		self.locale_path = Path(__file__).parent.parent.parent / "Locales"
 		self.translations = {}
 		self.available_languages = self._load_available_languages()
 
