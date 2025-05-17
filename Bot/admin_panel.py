@@ -362,7 +362,7 @@ def login(lang="en"):
 			return render_template("login.html", lang=lang, i18n=i18n)
 
 		db = Database()
-		query = "SELECT * FROM users WHERE username = %s"
+		query = "SELECT password FROM users WHERE username = %s"
 		db.cursor.execute(query, (username,))
 		user = db.cursor.fetchone()
 
@@ -375,7 +375,7 @@ def login(lang="en"):
 			return render_template("login.html", lang=lang, i18n=i18n)
 
 		try:
-			if bcrypt.checkpw(password.encode("utf-8"), user["password_hash"].encode("utf-8")):
+			if user and bcrypt.checkpw(password.encode("utf-8"), user["password_hash"].encode("utf-8")):
 				session["username"] = username
 				session["user_id"] = user["user_id"]
 
