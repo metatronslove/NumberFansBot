@@ -85,9 +85,9 @@ async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_T
 
 		if alt_format == "invert":
 			result = converter.invert(str(text))
-		elif alt_format == "arabic"
+		elif alt_format == "arabic":
 			result = converter.arabic(str(text))
-		elif alt_format == "indian"
+		elif alt_format == "indian":
 			result = converter.indian(str(text))
 		response = i18n.t("CONVERTNUMBERS_RESULT", language, result=result)
 
