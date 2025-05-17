@@ -1,6 +1,6 @@
 import logging
 from telegram import InlineQueryResultArticle, InputTextMessageContent
-from Bot.Helpers.UnifiedNumerology import UnifiedNumerology
+from Bot.Helpers.Numerology import UnifiedNumerology
 from Bot.database import Database
 from Bot.Helpers.i18n import I18n
 from Bot.utils import get_warning_description, get_ai_commentary
