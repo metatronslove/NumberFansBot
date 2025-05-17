@@ -1,7 +1,7 @@
 from telegram import InlineQueryResultArticle, InputTextMessageContent
 from Bot.database import Database
 from Bot.Helpers.i18n import I18n
-from BotHelpers.Helpers.MagicSquare import MagicSquareGenerator
+from Bot.Helpers.MagicSquare import MagicSquareGenerator
 import logging
 
 logger = logging.getLogger(__name__)
