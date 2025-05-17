@@ -14,7 +14,7 @@ from telegram.ext import (
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
-from Bot.NumberConverter import NumberConverter
+from Bot.Helpers.NumberConverter import NumberConverter
 from Bot.utils import (
 	register_user_if_not_exists, get_warning_description, get_ai_commentary,
 	timeout, handle_credits, send_long_message, uptodate_query
