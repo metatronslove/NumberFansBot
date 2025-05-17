@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from typing import Dict, List, Optional
 import mysql.connector
-from .Helpers.i18n import I18n
+from .i18n import I18n
 from Bot.config import Config
 from .database import Database
 from .Numerology import UnifiedNumerology
