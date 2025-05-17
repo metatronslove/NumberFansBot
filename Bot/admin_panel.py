@@ -92,8 +92,7 @@ except Exception as e:
 	raise
 
 # Register handlers
-def register_handlers():
-	from .Commands.UserCommands.abjad import get_abjad_conversation_handler
+def register_handlers():from .Commands.UserCommands.abjad import get_abjad_conversation_handler
 	from .Commands.UserCommands.bastet import get_bastet_conversation_handler
 	from .Commands.UserCommands.huddam import get_huddam_conversation_handler
 	from .Commands.UserCommands.unsur import get_unsur_conversation_handler
@@ -111,245 +110,76 @@ def register_handlers():
 		abjad, bastet, huddam, unsur, nutket, transliterate, numerology,
 		magic_square, convert_numbers
 	)
-
-	# Import ShopCommands
 	from .Commands.ShopCommands.buy import BuyCommand
 	from .Commands.ShopCommands.address import AddressCommand
 	from .Commands.ShopCommands.password import PasswordCommand
 	from .Commands.ShopCommands.orders import OrdersCommand
 	from .Commands.ShopCommands.papara import PaparaCommand
-
-	# Import InlineShopCommands
 	from .Commands.InlineShopCommands.shop import ShopInlineCommand
 	from .Commands.InlineShopCommands.product import ProductInlineCommand
 	from .Commands.InlineShopCommands.update import UpdateInlineCommand
 
 	try:
+		# Reset database connection
+		db = Database()
+		db.reset_connection()
+
+		# Register conversation and command handlers
 		telegram_app.add_handler(get_abjad_conversation_handler())
-		logger.info("Registered ConversationHandler for /abjad")
-	except Exception as e:
-		logger.error(f"Failed to register /abjad conversation handler: {str(e)}")
-
-	try:
 		telegram_app.add_handler(get_bastet_conversation_handler())
-		logger.info("Registered ConversationHandler for /bastet")
-	except Exception as e:
-		logger.error(f"Failed to register /bastet conversation handler: {str(e)}")
-
-	try:
 		telegram_app.add_handler(get_huddam_conversation_handler())
-		logger.info("Registered ConversationHandler for /huddam")
-	except Exception as e:
-		logger.error(f"Failed to register /huddam conversation handler: {str(e)}")
-
-	try:
 		telegram_app.add_handler(get_unsur_conversation_handler())
-		logger.info("Registered ConversationHandler for /unsur")
-	except Exception as e:
-		logger.error(f"Failed to register /unsur conversation handler: {str(e)}")
-
-	try:
 		telegram_app.add_handler(get_transliterate_conversation_handler())
-		logger.info("Registered CommandHandler for /transliterate")
-	except Exception as e:
-		logger.error(f"Failed to register /transliterate: {str(e)}")
-
-	try:
 		telegram_app.add_handler(PreCheckoutQueryHandler(handle_pre_checkout))
-		logger.info("Registered PreCheckoutQueryHandler")
-	except Exception as e:
-		logger.error(f"Failed to register PreCheckoutQueryHandler: {str(e)}")
-
-	try:
 		telegram_app.add_handler(CommandHandler("numerology", numerology.numerology_handle))
-		logger.info("Registered CommandHandler for /numerology")
-	except Exception as e:
-		logger.error(f"Failed to register /numerology: {str(e)}")
-
-	try:
 		telegram_app.add_handler(CommandHandler("convertnumbers", convert_numbers.convert_numbers_handle))
-		logger.info("Registered CommandHandler for /convertnumbers")
-	except Exception as e:
-		logger.error(f"Failed to register /convertnumbers: {str(e)}")
-
-	try:
 		telegram_app.add_handler(CommandHandler("magicsquare", magic_square.magic_square_handle))
-		logger.info("Registered CommandHandler for /magicsquare")
-	except Exception as e:
-		logger.error(f"Failed to register /magicsquare: {str(e)}")
-
-	try:
 		telegram_app.add_handler(CommandHandler("cancel", cancel.cancel_handle))
-		logger.info("Registered CommandHandler for /cancel")
-	except Exception as e:
-		logger.error(f"Failed to register /cancel: {str(e)}")
-
-	try:
 		telegram_app.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, handle_successful_payment))
-		logger.info("Registered MessageHandler for successful payment")
-	except Exception as e:
-		logger.error(f"Failed to register successful payment handler: {str(e)}")
-
-	try:
 		telegram_app.add_handler(CallbackQueryHandler(callback_query.set_language_handle, pattern=r"lang\|.+"))
-		logger.info("Registered CallbackQueryHandler for set_language_handle")
-	except Exception as e:
-		logger.error(f"Failed to register set_language_handle: {str(e)}")
-
-	try:
 		telegram_app.add_handler(CallbackQueryHandler(callback_query.handle_callback_query))
-		logger.info("Registered CallbackQueryHandler for handle_callback_query")
-	except Exception as e:
-		logger.error(f"Failed to register handle_callback_query: {str(e)}")
-
-	try:
 		telegram_app.add_handler(CommandHandler("start", start.start_handle))
-		logger.info("Registered CommandHandler for /start")
-	except Exception as e:
-		logger.error(f"Failed to register /start: {str(e)}")
-
-	try:
 		telegram_app.add_handler(CommandHandler("help", help.help_handle))
-		logger.info("Registered CommandHandler for /help")
-	except Exception as e:
-		logger.error(f"Failed to register /help: {str(e)}")
-
-	try:
-		telegram_app.add_handler(CommandHandler("language", language.language_handle))
-		logger.info("Registered CommandHandler for /language")
-	except Exception as e:
-		logger.error(f"Failed to register /language: {str(e)}")
-
-	try:
+		telegram_app.add_handler(CommandHandler("language", language.language_handle�്�
 		telegram_app.add_handler(CommandHandler("settings", settings.settings_handle))
-		logger.info("Registered CommandHandler for /settings")
-	except Exception as e:
-		logger.error(f"Failed to register /settings: {str(e)}")
-
-	try:
 		telegram_app.add_handler(CommandHandler("credits", credits.credits_handle))
-		logger.info("Registered CommandHandler for /credits")
-	except Exception as e:
-		logger.error(f"Failed to register /credits: {str(e)}")
-
-	try:
 		telegram_app.add_handler(CommandHandler("payment", payment_handle))
-		logger.info("Registered CommandHandler for /payment")
-	except Exception as e:
-		logger.error(f"Failed to register /payment: {str(e)}")
 
-	try:
-		telegram_app.add_handler(InlineQueryHandler(abjad.handle, pattern=r"^/abjad"))
-		logger.info("Registered CommandHandler for inline /abjad")
-	except Exception as e:
-		logger.error(f"Failed to register inline /abjad: {str(e)}")
+		# Register inline query handlers (assuming they are functions)
+		telegram_app.add_handler(InlineQueryHandler(abjad, pattern=r"^/abjad"))
+		telegram_app.add_handler(InlineQueryHandler(bastet, pattern=r"^/bastet"))
+		telegram_app.add_handler(InlineQueryHandler(huddam, pattern=r"^/huddam"))
+		telegram_app.add_handler(InlineQueryHandler(unsur, pattern=r"^/unsur"))
+		telegram_app.add_handler(InlineQueryHandler(nutket, pattern=r"^/nutket"))
+		telegram_app.add_handler(InlineQueryHandler(transliterate, pattern=r"^/transliterate"))
+		telegram_app.add_handler(InlineQueryHandler(numerology, pattern=r"^/numerology"))
+		telegram_app.add_handler(InlineQueryHandler(magic_square, pattern=r"^/magicsquare"))
+		telegram_app.add_handler(InlineQueryHandler(convert_numbers, pattern=r"^/convertnumbers"))
 
-	try:
-		telegram_app.add_handler(InlineQueryHandler(bastet.handle, pattern=r"^/bastet"))
-		logger.info("Registered CommandHandler for inline /bastet")
-	except Exception as e:
-		logger.error(f"Failed to register inline /bastet: {str(e)}")
-
-	try:
-		telegram_app.add_handler(InlineQueryHandler(huddam.handle, pattern=r"^/huddam"))
-		logger.info("Registered CommandHandler for inline /huddam")
-	except Exception as e:
-		logger.error(f"Failed to register inline /huddam: {str(e)}")
-
-	try:
-		telegram_app.add_handler(InlineQueryHandler(unsur.handle, pattern=r"^/unsur"))
-		logger.info("Registered CommandHandler for inline /unsur")
-	except Exception as e:
-		logger.error(f"Failed to register inline /unsur: {str(e)}")
-
-	try:
-		telegram_app.add_handler(InlineQueryHandler(nutket.handle, pattern=r"^/nutker"))
-		logger.info("Registered CommandHandler for inline /nutket")
-	except Exception as e:
-		logger.error(f"Failed to register inline /nutket: {str(e)}")
-
-	try:
-		telegram_app.add_handler(InlineQueryHandler(transliterate.handle, pattern=r"^/transliterate"))
-		logger.info("Registered CommandHandler for inline /transliterate")
-	except Exception as e:
-		logger.error(f"Failed to register inline /transliterate: {str(e)}")
-
-	try:
-		telegram_app.add_handler(InlineQueryHandler(numerology.handle, pattern=r"^/numerology"))
-		logger.info("Registered CommandHandler for inline /numerology")
-	except Exception as e:
-		logger.error(f"Failed to register inline /numerology: {str(e)}")
-
-	try:
-		telegram_app.add_handler(InlineQueryHandler(magic_square.handle, pattern=r"^/magicsquare"))
-		logger.info("Registered CommandHandler for inline /magicsquare")
-	except Exception as e:
-		logger.error(f"Failed to register inline /magicsquare: {str(e)}")
-
-	try:
-		telegram_app.add_handler(InlineQueryHandler(convert_numbers.handle, pattern=r"^/convertnumbers"))
-		logger.info("Registered CommandHandler for inline /convertnumbers")
-	except Exception as e:
-		logger.error(f"Failed to register inline /convertnumbers: {str(e)}")
-
-	# Register ShopCommands
-	try:
+		# Register shop command handlers
 		buy_command = BuyCommand()
 		buy_command.register_handlers(telegram_app)
-		logger.info("Registered BuyCommand handlers")
-	except Exception as e:
-		logger.error(f"Failed to register BuyCommand handlers: {str(e)}")
-
-	try:
 		address_command = AddressCommand()
 		address_command.register_handlers(telegram_app)
-		logger.info("Registered AddressCommand handlers")
-	except Exception as e:
-		logger.error(f"Failed to register AddressCommand handlers: {str(e)}")
-
-	try:
 		password_command = PasswordCommand()
 		password_command.register_handlers(telegram_app)
-		logger.info("Registered PasswordCommand handlers")
-	except Exception as e:
-		logger.error(f"Failed to register PasswordCommand handlers: {str(e)}")
-
-	try:
 		orders_command = OrdersCommand()
 		orders_command.register_handlers(telegram_app)
-		logger.info("Registered OrdersCommand handlers")
-	except Exception as e:
-		logger.error(f"Failed to register OrdersCommand handlers: {str(e)}")
-
-	try:
 		papara_command = PaparaCommand()
 		papara_command.register_handlers(telegram_app)
-		logger.info("Registered PaparaCommand handlers")
-	except Exception as e:
-		logger.error(f"Failed to register PaparaCommand handlers: {str(e)}")
 
-	# Register InlineShopCommands
-	try:
+		# Register inline shop command handlers
 		shop_inline_command = ShopInlineCommand()
 		shop_inline_command.register_handlers(telegram_app)
-		logger.info("Registered ShopInlineCommand handlers")
-	except Exception as e:
-		logger.error(f"Failed to register ShopInlineCommand handlers: {str(e)}")
-
-	try:
 		product_inline_command = ProductInlineCommand()
 		product_inline_command.register_handlers(telegram_app)
-		logger.info("Registered ProductInlineCommand handlers")
-	except Exception as e:
-		logger.error(f"Failed to register ProductInlineCommand handlers: {str(e)}")
-
-	try:
 		update_inline_command = UpdateInlineCommand()
 		update_inline_command.register_handlers(telegram_app)
-		logger.info("Registered UpdateInlineCommand handlers")
-	except Exception as e:
-		logger.error(f"Failed to register UpdateInlineCommand handlers: {str(e)}")
 
+		logger.info("All handlers registered successfully")
+	except Exception as e:
+		logger.error(f"Critical error in register_handlers: {str(e)}")
+		raise
 try:
 	register_handlers()
 	logger.info("All handlers registered successfully")
@@ -1770,4 +1600,4 @@ def toggle_product(lang="en", product_id=None):
 	return redirect(url_for("user_dashboard", lang=lang))
 
 # Create ASGI application
-asgi_app = WsgiToAsgi(flask_app)
+app = WsgiToAsgi(flask_app)
