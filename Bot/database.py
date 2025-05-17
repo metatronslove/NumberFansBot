@@ -456,19 +456,19 @@ class Database:
 			self.cursor.close()
 			self.cursor = self.conn.cursor(dictionary=True)
 
-	def increment_command_usage(self, command: str, user_id: int, chat_id: int = None):
+	def increment_command_usage(self, command, user_id):
+		query = """
+		INSERT INTO command_usage (user_id, timestamp, last_user_id, command, count)
+		VALUES (%s, %s, %s, %s, %s)
+		ON DUPLICATE KEY UPDATE count = count + 1, last_user_id = %s
+		"""
 		try:
-			query = """
-			INSERT INTO `command_usage` (user_id, last_used, last_user_id, command, count)
-			VALUES (%s, %s, %s, %s, 1)
-			ON DUPLICATE KEY UPDATE count = count + 1, last_user_id = %s, last_used = %s
-			"""
-			now = datetime.now()
-			self.cursor.execute(query, (user_id, now, user_id, command, 1))
-			self.conn.commit()
-		finally:
-			self.cursor.close()
-			self.cursor = self.conn.cursor(dictionary=True)
+			self.cursor.execute(query, (user_id, datetime.now(), command, 1, user_id))
+			self.connection.commit()
+		except mysql.connector.Error as err:
+			logging.error(f"Database error in increment_command_usage: {err}")
+			self.connection.rollback()
+			raise
 
 	def get_command_usage(self):
 		try:
