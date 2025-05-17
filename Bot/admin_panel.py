@@ -229,6 +229,7 @@ except Exception as e:
 	raise
 
 def get_fields():
+	config = Config()
 	return [
 		{"key": "telegram_token", "label": "Telegram Token", "value": config.telegram_token or "", "use_env": config._config.get("telegram_token_use_env", False)},
 		{"key": "bot_username", "label": "Bot Username", "value": config.bot_username or "", "use_env": config._config.get("bot_username_use_env", False)},
