@@ -16,7 +16,7 @@ from Bot.Helpers.i18n import I18n
 from Bot.Helpers.Transliteration import Transliteration
 from Bot.utils import register_user_if_not_exists, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
 from Bot.cache import Cache
-from Bot.abjad import abjad_start
+from Bot.Commands.UserCommands.abjad import abjad_start
 
 logger = logging.getLogger(__name__)
 
