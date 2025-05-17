@@ -26,9 +26,10 @@ from .Commands.UserCommands.bastet import get_bastet_conversation_handler
 from .Commands.UserCommands.huddam import get_huddam_conversation_handler
 from .Commands.UserCommands.unsur import get_unsur_conversation_handler
 from .Commands.UserCommands.transliterate import get_transliterate_conversation_handler
-from .Commands.UserCommands import (
-	numerology, convert_numbers, magic_square, nutket
-)
+from .Commands.UserCommands import numerology as user_numerology
+from .Commands.UserCommands import convert_numbers as user_convert_numbers
+from .Commands.UserCommands import magic_square as user_magic_square
+from .Commands.UserCommands import nutket as user_nutket
 from .Commands.SystemCommands.payment import (
 	payment_handle, handle_pre_checkout, handle_successful_payment
 )
