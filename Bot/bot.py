@@ -35,9 +35,24 @@ from .Commands.SystemCommands.payment import (
 from .Commands.SystemCommands import (
 	start, help, language, cancel, settings, credits, callback_query
 )
+from .Commands.InlineCommands import (
+	abjad, bastet, huddam, unsur, nutket, transliterate, numerology,
+	magic_square, convert_numbers
+)
+# Import ShopCommands
+from .Commands.ShopCommands.buy import BuyCommand
+from .Commands.ShopCommands.address import AddressCommand
+from .Commands.ShopCommands.password import PasswordCommand
+from .Commands.ShopCommands.orders import OrdersCommand
+from .Commands.ShopCommands.papara import PaparaCommand
+
+# Import InlineShopCommands
+from .Commands.InlineShopCommands.shop import ShopInlineCommand
+from .Commands.InlineShopCommands.product import ProductInlineCommand
+from .Commands.InlineShopCommands.update import UpdateInlineCommand
 
 logger = logging.getLogger(__name__)
 config = Config()
 
-def run_bot():
+def run_bot(): # bot.py is not essential but looks good in scheme
 	raise NotImplementedError("Bot now runs via webhooks in admin_panel.py")

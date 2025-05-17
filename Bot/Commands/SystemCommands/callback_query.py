@@ -12,7 +12,7 @@ from telegram.ext import (
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
-from ...database import Database
+from Bot.database import Database
 from ...i18n import I18n
 from ...transliteration import Transliteration
 from ...Abjad import Abjad

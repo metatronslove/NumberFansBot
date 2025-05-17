@@ -1,3 +1,4 @@
+/* Main theme styles for admin and user dashboards */
 body {
 	background-color: #0A0D0F;
 	color: rgba(200,200,200,0.66);
@@ -106,20 +107,20 @@ center img {
 	}
 	label {
 		min-width: 16rem;
-    text-align: right;
+	text-align: right;
 	}
 	label:nth-last-child(2) {
 		text-align: left;
   }
 	.text-muted {
-    display: none;
+	display: none;
 	}
 	input{
 		background: rgba(40,40,56,.75);
 	}
 	input[type=text] {
 		max-width: calc(68vw - 16rem);
-    min-width: 60vw;
+	min-width: 60vw;
 	}
 	input[type=checkbox]{
 		width: 1rem;
@@ -201,26 +202,26 @@ center img {
 }
 
 nav a.active {
-    font-weight: bold;
-    text-decoration: underline;
+	font-weight: bold;
+	text-decoration: underline;
 }
 section.tab-content {
-    display: none;
+	display: none;
 }
 .pagination {
-    margin-top: 10px;
+	margin-top: 10px;
 }
 .pagination a {
-    margin: 0 5px;
-    text-decoration: none;
-    color: #007bff;
+	margin: 0 5px;
+	text-decoration: none;
+	color: #007bff;
 }
 .pagination a.active {
-    font-weight: bold;
-    color: #000;
+	font-weight: bold;
+	color: #000;
 }
 .pagination a:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 
 .readme-modal-overlay {
@@ -375,6 +376,85 @@ section.tab-content {
 	vertical-align: middle;
 }
 
+/* User dashboard specific styles */
+.user-dashboard-header {
+	background: rgba(30, 30, 30, 0.5);
+	padding: 15px;
+	border-radius: 8px;
+	margin-bottom: 20px;
+	border-left: 3px solid #48ff00;
+}
+
+.user-dashboard-stats {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: 20px;
+	margin-bottom: 30px;
+}
+
+.stat-card {
+	background: rgba(36, 36, 36, 0.4);
+	padding: 15px;
+	border-radius: 8px;
+	border-bottom: 2px solid #48ff00;
+	transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 5px 15px rgba(72, 255, 0, 0.1);
+}
+
+.stat-card h3 {
+	color: rgba(200, 200, 200, 0.8);
+	margin-top: 0;
+}
+
+.stat-card .value {
+	font-size: 1.8rem;
+	color: #48ff00;
+	font-weight: bold;
+}
+
+/* Payment modal styles */
+.payment-modal {
+	background: rgba(20, 20, 20, 0.95);
+	border: 1px solid #48ff00;
+	border-radius: 8px;
+	padding: 20px;
+	max-width: 500px;
+	margin: 0 auto;
+}
+
+.payment-modal h2 {
+	color: #48ff00;
+	border-bottom: 1px solid rgba(72, 255, 0, 0.3);
+	padding-bottom: 10px;
+}
+
+.payment-form label {
+	display: block;
+	margin-bottom: 5px;
+	color: rgba(200, 200, 200, 0.8);
+}
+
+.payment-form input {
+	width: 100%;
+	padding: 10px;
+	margin-bottom: 15px;
+	background: rgba(40, 40, 56, 0.75);
+	border: 1px solid rgba(72, 255, 0, 0.25);
+	color: rgba(200, 200, 200, 0.9);
+	border-radius: 4px;
+}
+
+.payment-actions {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 20px;
+}
+
+/* Responsive design improvements */
 @media (max-width: 768px) {
 	.files-tab-content {
 		flex-direction: column;
@@ -386,5 +466,18 @@ section.tab-content {
 
 	.editor-container {
 		max-width: 100%;
+	}
+
+	.user-dashboard-stats {
+		grid-template-columns: 1fr;
+	}
+
+	.tab {
+		padding: 8px 12px;
+		font-size: 0.9rem;
+	}
+
+	.status-container {
+		padding: 15px 10px;
 	}
 }

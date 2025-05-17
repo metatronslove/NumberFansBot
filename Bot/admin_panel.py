@@ -19,8 +19,8 @@ from pathlib import Path
 from datetime import datetime
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
-    Application, CommandHandler, MessageHandler, CallbackQueryHandler, PreCheckoutQueryHandler,
-    ConversationHandler, filters, ContextTypes
+	Application, CommandHandler, MessageHandler, CallbackQueryHandler, PreCheckoutQueryHandler,
+	ConversationHandler, filters, ContextTypes, InlineQueryHandler
 )
 from telegram.constants import ParseMode
 from telegram.error import BadRequest
@@ -42,895 +42,1732 @@ telegram_app = Application.builder().token(config.telegram_token).build()
 _initialized = False
 
 async def initialize_telegram_app():
-    """Initialize the Telegram application asynchronously."""
-    global _initialized
-    if not _initialized:
-        try:
-            logger.info("Starting Telegram application initialization")
-            await telegram_app.initialize()
-            logger.info("Telegram application initialized successfully")
-            _initialized = True
-        except Exception as e:
-            logger.error(f"Failed to initialize Telegram application: {str(e)}")
-            raise
-    else:
-        logger.info("Telegram application already initialized")
+	"""Initialize the Telegram application asynchronously."""
+	global _initialized
+	if not _initialized:
+		try:
+			logger.info("Starting Telegram application initialization")
+			await telegram_app.initialize()
+			logger.info("Telegram application initialized successfully")
+			_initialized = True
+		except Exception as e:
+			logger.error(f"Failed to initialize Telegram application: {str(e)}")
+			raise
+	else:
+		logger.info("Telegram application already initialized")
 
 async def set_webhook_on_startup():
-    """Set the Telegram webhook after initialization."""
-    if not config.telegram_token:
-        logger.error("TELEGRAM_TOKEN is not set, cannot set webhook")
-        return
-    webhook_url = f"https://{os.getenv('RENDER_EXTERNAL_HOSTNAME', 'localhost')}/bot{config.telegram_token}"
-    try:
-        await telegram_app.bot.set_webhook(url=webhook_url)
-        logger.info(f"Webhook set successfully to {webhook_url}")
-    except Exception as e:
-        logger.error(f"Failed to set webhook: {str(e)}")
+	"""Set the Telegram webhook after initialization."""
+	if not config.telegram_token:
+		logger.error("TELEGRAM_TOKEN is not set, cannot set webhook")
+		return
+	webhook_url = f"https://{os.getenv('RENDER_EXTERNAL_HOSTNAME', 'localhost')}/bot{config.telegram_token}"
+	try:
+		await telegram_app.bot.set_webhook(url=webhook_url)
+		logger.info(f"Webhook set successfully to {webhook_url}")
+	except Exception as e:
+		logger.error(f"Failed to set webhook: {str(e)}")
 
 async def setup_telegram_app():
-    """Schedule or run Telegram initialization and webhook setup."""
-    try:
-        logger.info("Scheduling Telegram initialization and webhook setup")
-        await initialize_telegram_app()
-        await set_webhook_on_startup()
-    except Exception as e:
-        logger.error(f"Initialization or webhook setup error: {str(e)}")
-        raise
+	"""Schedule or run Telegram initialization and webhook setup."""
+	try:
+		logger.info("Scheduling Telegram initialization and webhook setup")
+		await initialize_telegram_app()
+		await set_webhook_on_startup()
+	except Exception as e:
+		logger.error(f"Initialization or webhook setup error: {str(e)}")
+		raise
 
 # Schedule initialization and webhook setup
 try:
-    loop = asyncio.get_event_loop()
-    if loop.is_running():
-        logger.info("Event loop is running, scheduling Telegram initialization as a task")
-        asyncio.create_task(setup_telegram_app())
-    else:
-        logger.info("Event loop is not running, running Telegram initialization directly")
-        asyncio.run(setup_telegram_app())
+	loop = asyncio.get_event_loop()
+	if loop.is_running():
+		logger.info("Event loop is running, scheduling Telegram initialization as a task")
+		asyncio.create_task(setup_telegram_app())
+	else:
+		logger.info("Event loop is not running, running Telegram initialization directly")
+		asyncio.run(setup_telegram_app())
 except Exception as e:
-    logger.error(f"Failed to schedule Telegram initialization: {str(e)}")
-    raise
+	logger.error(f"Failed to schedule Telegram initialization: {str(e)}")
+	raise
 
 # Register handlers
 def register_handlers():
-    from .Commands.UserCommands.abjad import get_abjad_conversation_handler
-    from .Commands.UserCommands.bastet import get_bastet_conversation_handler
-    from .Commands.UserCommands.huddam import get_huddam_conversation_handler
-    from .Commands.UserCommands.unsur import get_unsur_conversation_handler
-    from .Commands.UserCommands.transliterate import get_transliterate_conversation_handler
-    from .Commands.UserCommands import (
-        numerology, convert_numbers, magic_square, nutket
-    )
-    from .Commands.SystemCommands.payment import (
-        payment_handle, handle_pre_checkout, handle_successful_payment
-    )
-    from .Commands.SystemCommands import (
-        start, help, language, cancel, settings, credits, callback_query
-    )
-    from Bot.Commands.InlineCommands.magic_square import inline_magic_square
+	from .Commands.UserCommands.abjad import get_abjad_conversation_handler
+	from .Commands.UserCommands.bastet import get_bastet_conversation_handler
+	from .Commands.UserCommands.huddam import get_huddam_conversation_handler
+	from .Commands.UserCommands.unsur import get_unsur_conversation_handler
+	from .Commands.UserCommands.transliterate import get_transliterate_conversation_handler
+	from .Commands.UserCommands import (
+		numerology, convert_numbers, magic_square, nutket
+	)
+	from .Commands.SystemCommands.payment import (
+		payment_handle, handle_pre_checkout, handle_successful_payment
+	)
+	from .Commands.SystemCommands import (
+		start, help, language, cancel, settings, credits, callback_query
+	)
+	from .Commands.InlineCommands import (
+		abjad, bastet, huddam, unsur, nutket, transliterate, numerology,
+		magic_square, convert_numbers
+	)
 
-    try:
-        telegram_app.add_handler(get_abjad_conversation_handler())
-        logger.info("Registered ConversationHandler for /abjad")
-    except Exception as e:
-        logger.error(f"Failed to register /abjad conversation handler: {str(e)}")
+	# Import ShopCommands
+	from .Commands.ShopCommands.buy import BuyCommand
+	from .Commands.ShopCommands.address import AddressCommand
+	from .Commands.ShopCommands.password import PasswordCommand
+	from .Commands.ShopCommands.orders import OrdersCommand
+	from .Commands.ShopCommands.papara import PaparaCommand
 
-    try:
-        telegram_app.add_handler(get_bastet_conversation_handler())
-        logger.info("Registered ConversationHandler for /bastet")
-    except Exception as e:
-        logger.error(f"Failed to register /bastet conversation handler: {str(e)}")
+	# Import InlineShopCommands
+	from .Commands.InlineShopCommands.shop import ShopInlineCommand
+	from .Commands.InlineShopCommands.product import ProductInlineCommand
+	from .Commands.InlineShopCommands.update import UpdateInlineCommand
 
-    try:
-        telegram_app.add_handler(get_huddam_conversation_handler())
-        logger.info("Registered ConversationHandler for /huddam")
-    except Exception as e:
-        logger.error(f"Failed to register /huddam conversation handler: {str(e)}")
+	try:
+		telegram_app.add_handler(get_abjad_conversation_handler())
+		logger.info("Registered ConversationHandler for /abjad")
+	except Exception as e:
+		logger.error(f"Failed to register /abjad conversation handler: {str(e)}")
 
-    try:
-        telegram_app.add_handler(get_unsur_conversation_handler())
-        logger.info("Registered ConversationHandler for /unsur")
-    except Exception as e:
-        logger.error(f"Failed to register /unsur conversation handler: {str(e)}")
+	try:
+		telegram_app.add_handler(get_bastet_conversation_handler())
+		logger.info("Registered ConversationHandler for /bastet")
+	except Exception as e:
+		logger.error(f"Failed to register /bastet conversation handler: {str(e)}")
 
-    try:
-        telegram_app.add_handler(get_transliterate_conversation_handler())
-        logger.info("Registered CommandHandler for /transliterate")
-    except Exception as e:
-        logger.error(f"Failed to register /transliterate: {str(e)}")
+	try:
+		telegram_app.add_handler(get_huddam_conversation_handler())
+		logger.info("Registered ConversationHandler for /huddam")
+	except Exception as e:
+		logger.error(f"Failed to register /huddam conversation handler: {str(e)}")
 
-    try:
-        telegram_app.add_handler(PreCheckoutQueryHandler(handle_pre_checkout))
-        logger.info("Registered PreCheckoutQueryHandler")
-    except Exception as e:
-        logger.error(f"Failed to register PreCheckoutQueryHandler: {str(e)}")
+	try:
+		telegram_app.add_handler(get_unsur_conversation_handler())
+		logger.info("Registered ConversationHandler for /unsur")
+	except Exception as e:
+		logger.error(f"Failed to register /unsur conversation handler: {str(e)}")
 
-    try:
-        telegram_app.add_handler(CommandHandler("numerology", numerology.numerology_handle))
-        logger.info("Registered CommandHandler for /numerology")
-    except Exception as e:
-        logger.error(f"Failed to register /numerology: {str(e)}")
+	try:
+		telegram_app.add_handler(get_transliterate_conversation_handler())
+		logger.info("Registered CommandHandler for /transliterate")
+	except Exception as e:
+		logger.error(f"Failed to register /transliterate: {str(e)}")
 
-    try:
-        telegram_app.add_handler(CommandHandler("convertnumbers", convert_numbers.convert_numbers_handle))
-        logger.info("Registered CommandHandler for /convertnumbers")
-    except Exception as e:
-        logger.error(f"Failed to register /convertnumbers: {str(e)}")
+	try:
+		telegram_app.add_handler(PreCheckoutQueryHandler(handle_pre_checkout))
+		logger.info("Registered PreCheckoutQueryHandler")
+	except Exception as e:
+		logger.error(f"Failed to register PreCheckoutQueryHandler: {str(e)}")
 
-    try:
-        telegram_app.add_handler(CommandHandler("magicsquare", magic_square.magic_square_handle))
-        logger.info("Registered CommandHandler for /magicsquare")
-    except Exception as e:
-        logger.error(f"Failed to register /magicsquare: {str(e)}")
+	try:
+		telegram_app.add_handler(CommandHandler("numerology", numerology.numerology_handle))
+		logger.info("Registered CommandHandler for /numerology")
+	except Exception as e:
+		logger.error(f"Failed to register /numerology: {str(e)}")
 
-    try:
-        telegram_app.add_handler(CommandHandler("cancel", cancel.cancel_handle))
-        logger.info("Registered CommandHandler for /cancel")
-    except Exception as e:
-        logger.error(f"Failed to register /cancel: {str(e)}")
+	try:
+		telegram_app.add_handler(CommandHandler("convertnumbers", convert_numbers.convert_numbers_handle))
+		logger.info("Registered CommandHandler for /convertnumbers")
+	except Exception as e:
+		logger.error(f"Failed to register /convertnumbers: {str(e)}")
 
-    try:
-        telegram_app.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, handle_successful_payment))
-        logger.info("Registered MessageHandler for successful payment")
-    except Exception as e:
-        logger.error(f"Failed to register successful payment handler: {str(e)}")
+	try:
+		telegram_app.add_handler(CommandHandler("magicsquare", magic_square.magic_square_handle))
+		logger.info("Registered CommandHandler for /magicsquare")
+	except Exception as e:
+		logger.error(f"Failed to register /magicsquare: {str(e)}")
 
-    try:
-        telegram_app.add_handler(CallbackQueryHandler(callback_query.set_language_handle, pattern=r"lang\|.+"))
-        logger.info("Registered CallbackQueryHandler for set_language_handle")
-    except Exception as e:
-        logger.error(f"Failed to register set_language_handle: {str(e)}")
+	try:
+		telegram_app.add_handler(CommandHandler("cancel", cancel.cancel_handle))
+		logger.info("Registered CommandHandler for /cancel")
+	except Exception as e:
+		logger.error(f"Failed to register /cancel: {str(e)}")
 
-    try:
-        telegram_app.add_handler(CallbackQueryHandler(callback_query.handle_callback_query))
-        logger.info("Registered CallbackQueryHandler for handle_callback_query")
-    except Exception as e:
-        logger.error(f"Failed to register handle_callback_query: {str(e)}")
+	try:
+		telegram_app.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, handle_successful_payment))
+		logger.info("Registered MessageHandler for successful payment")
+	except Exception as e:
+		logger.error(f"Failed to register successful payment handler: {str(e)}")
 
-    try:
-        telegram_app.add_handler(CommandHandler("start", start.start_handle))
-        logger.info("Registered CommandHandler for /start")
-    except Exception as e:
-        logger.error(f"Failed to register /start: {str(e)}")
+	try:
+		telegram_app.add_handler(CallbackQueryHandler(callback_query.set_language_handle, pattern=r"lang\|.+"))
+		logger.info("Registered CallbackQueryHandler for set_language_handle")
+	except Exception as e:
+		logger.error(f"Failed to register set_language_handle: {str(e)}")
 
-    try:
-        telegram_app.add_handler(CommandHandler("help", help.help_handle))
-        logger.info("Registered CommandHandler for /help")
-    except Exception as e:
-        logger.error(f"Failed to register /help: {str(e)}")
+	try:
+		telegram_app.add_handler(CallbackQueryHandler(callback_query.handle_callback_query))
+		logger.info("Registered CallbackQueryHandler for handle_callback_query")
+	except Exception as e:
+		logger.error(f"Failed to register handle_callback_query: {str(e)}")
 
-    try:
-        telegram_app.add_handler(CommandHandler("language", language.language_handle))
-        logger.info("Registered CommandHandler for /language")
-    except Exception as e:
-        logger.error(f"Failed to register /language: {str(e)}")
+	try:
+		telegram_app.add_handler(CommandHandler("start", start.start_handle))
+		logger.info("Registered CommandHandler for /start")
+	except Exception as e:
+		logger.error(f"Failed to register /start: {str(e)}")
 
-    try:
-        telegram_app.add_handler(CommandHandler("settings", settings.settings_handle))
-        logger.info("Registered CommandHandler for /settings")
-    except Exception as e:
-        logger.error(f"Failed to register /settings: {str(e)}")
+	try:
+		telegram_app.add_handler(CommandHandler("help", help.help_handle))
+		logger.info("Registered CommandHandler for /help")
+	except Exception as e:
+		logger.error(f"Failed to register /help: {str(e)}")
 
-    try:
-        telegram_app.add_handler(CommandHandler("credits", credits.credits_handle))
-        logger.info("Registered CommandHandler for /credits")
-    except Exception as e:
-        logger.error(f"Failed to register /credits: {str(e)}")
+	try:
+		telegram_app.add_handler(CommandHandler("language", language.language_handle))
+		logger.info("Registered CommandHandler for /language")
+	except Exception as e:
+		logger.error(f"Failed to register /language: {str(e)}")
 
-    try:
-        telegram_app.add_handler(CommandHandler("payment", payment_handle))
-        logger.info("Registered CommandHandler for /payment")
-    except Exception as e:
-        logger.error(f"Failed to register /payment: {str(e)}")
+	try:
+		telegram_app.add_handler(CommandHandler("settings", settings.settings_handle))
+		logger.info("Registered CommandHandler for /settings")
+	except Exception as e:
+		logger.error(f"Failed to register /settings: {str(e)}")
 
-    try:
-        telegram_app.add_handler(InlineQueryHandler(inline_magic_square, pattern=r"^/magicsquare"))
-        logger.info("Registered CommandHandler for inline /magicsquare")
-    except Exception as e:
-        logger.error(f"Failed to register inline /magicsquare: {str(e)}")
+	try:
+		telegram_app.add_handler(CommandHandler("credits", credits.credits_handle))
+		logger.info("Registered CommandHandler for /credits")
+	except Exception as e:
+		logger.error(f"Failed to register /credits: {str(e)}")
+
+	try:
+		telegram_app.add_handler(CommandHandler("payment", payment_handle))
+		logger.info("Registered CommandHandler for /payment")
+	except Exception as e:
+		logger.error(f"Failed to register /payment: {str(e)}")
+
+	try:
+		telegram_app.add_handler(InlineQueryHandler(abjad.handle, pattern=r"^/abjad"))
+		logger.info("Registered CommandHandler for inline /abjad")
+	except Exception as e:
+		logger.error(f"Failed to register inline /abjad: {str(e)}")
+
+	try:
+		telegram_app.add_handler(InlineQueryHandler(bastet.handle, pattern=r"^/bastet"))
+		logger.info("Registered CommandHandler for inline /bastet")
+	except Exception as e:
+		logger.error(f"Failed to register inline /bastet: {str(e)}")
+
+	try:
+		telegram_app.add_handler(InlineQueryHandler(huddam.handle, pattern=r"^/huddam"))
+		logger.info("Registered CommandHandler for inline /huddam")
+	except Exception as e:
+		logger.error(f"Failed to register inline /huddam: {str(e)}")
+
+	try:
+		telegram_app.add_handler(InlineQueryHandler(unsur.handle, pattern=r"^/unsur"))
+		logger.info("Registered CommandHandler for inline /unsur")
+	except Exception as e:
+		logger.error(f"Failed to register inline /unsur: {str(e)}")
+
+	try:
+		telegram_app.add_handler(InlineQueryHandler(nutket.handle, pattern=r"^/nutker"))
+		logger.info("Registered CommandHandler for inline /nutket")
+	except Exception as e:
+		logger.error(f"Failed to register inline /nutket: {str(e)}")
+
+	try:
+		telegram_app.add_handler(InlineQueryHandler(transliterate.handle, pattern=r"^/transliterate"))
+		logger.info("Registered CommandHandler for inline /transliterate")
+	except Exception as e:
+		logger.error(f"Failed to register inline /transliterate: {str(e)}")
+
+	try:
+		telegram_app.add_handler(InlineQueryHandler(numerology.handle, pattern=r"^/numerology"))
+		logger.info("Registered CommandHandler for inline /numerology")
+	except Exception as e:
+		logger.error(f"Failed to register inline /numerology: {str(e)}")
+
+	try:
+		telegram_app.add_handler(InlineQueryHandler(magic_square.handle, pattern=r"^/magicsquare"))
+		logger.info("Registered CommandHandler for inline /magicsquare")
+	except Exception as e:
+		logger.error(f"Failed to register inline /magicsquare: {str(e)}")
+
+	try:
+		telegram_app.add_handler(InlineQueryHandler(convert_numbers.handle, pattern=r"^/convertnumbers"))
+		logger.info("Registered CommandHandler for inline /convertnumbers")
+	except Exception as e:
+		logger.error(f"Failed to register inline /convertnumbers: {str(e)}")
+
+	# Register ShopCommands
+	try:
+		buy_command = BuyCommand()
+		buy_command.register_handlers(telegram_app)
+		logger.info("Registered BuyCommand handlers")
+	except Exception as e:
+		logger.error(f"Failed to register BuyCommand handlers: {str(e)}")
+
+	try:
+		address_command = AddressCommand()
+		address_command.register_handlers(telegram_app)
+		logger.info("Registered AddressCommand handlers")
+	except Exception as e:
+		logger.error(f"Failed to register AddressCommand handlers: {str(e)}")
+
+	try:
+		password_command = PasswordCommand()
+		password_command.register_handlers(telegram_app)
+		logger.info("Registered PasswordCommand handlers")
+	except Exception as e:
+		logger.error(f"Failed to register PasswordCommand handlers: {str(e)}")
+
+	try:
+		orders_command = OrdersCommand()
+		orders_command.register_handlers(telegram_app)
+		logger.info("Registered OrdersCommand handlers")
+	except Exception as e:
+		logger.error(f"Failed to register OrdersCommand handlers: {str(e)}")
+
+	try:
+		papara_command = PaparaCommand()
+		papara_command.register_handlers(telegram_app)
+		logger.info("Registered PaparaCommand handlers")
+	except Exception as e:
+		logger.error(f"Failed to register PaparaCommand handlers: {str(e)}")
+
+	# Register InlineShopCommands
+	try:
+		shop_inline_command = ShopInlineCommand()
+		shop_inline_command.register_handlers(telegram_app)
+		logger.info("Registered ShopInlineCommand handlers")
+	except Exception as e:
+		logger.error(f"Failed to register ShopInlineCommand handlers: {str(e)}")
+
+	try:
+		product_inline_command = ProductInlineCommand()
+		product_inline_command.register_handlers(telegram_app)
+		logger.info("Registered ProductInlineCommand handlers")
+	except Exception as e:
+		logger.error(f"Failed to register ProductInlineCommand handlers: {str(e)}")
+
+	try:
+		update_inline_command = UpdateInlineCommand()
+		update_inline_command.register_handlers(telegram_app)
+		logger.info("Registered UpdateInlineCommand handlers")
+	except Exception as e:
+		logger.error(f"Failed to register UpdateInlineCommand handlers: {str(e)}")
 
 try:
-    register_handlers()
-    logger.info("All handlers registered successfully")
+	register_handlers()
+	logger.info("All handlers registered successfully")
 except Exception as e:
-    logger.error(f"Error in register_handlers: {str(e)}")
-    raise
+	logger.error(f"Error in register_handlers: {str(e)}")
+	raise
 
 def get_fields():
-    return [
-        {"key": "telegram_token", "label": "Telegram Token", "value": config.telegram_token or "", "use_env": config._config.get("telegram_token_use_env", False)},
-        {"key": "bot_username", "label": "Bot Username", "value": config.bot_username or "", "use_env": config._config.get("bot_username_use_env", False)},
-        {"key": "webhook_url", "label": "Webhook URL", "value": config.webhook_url or "", "use_env": config._config.get("webhook_url_use_env", False)},
-        {"key": "mysql_host", "label": "MySQL Host", "value": config.mysql_host or "", "use_env": config._config.get("mysql_host_use_env", False)},
-        {"key": "mysql_user", "label": "MySQL User", "value": config.mysql_user or "", "use_env": config._config.get("mysql_user_use_env", False)},
-        {"key": "mysql_password", "label": "MySQL Password", "value": config.mysql_password or "", "use_env": config._config.get("mysql_password_use_env", False)},
-        {"key": "mysql_database", "label": "MySQL Database", "value": config.mysql_database or "", "use_env": config._config.get("mysql_database_use_env", False)},
-        {"key": "github_username", "label": "GitHub Username", "value": config.github_username or "", "use_env": config._config.get("github_username_use_env", False)},
-        {"key": "github_token", "label": "GitHub Token", "value": config.github_token or "", "use_env": config._config.get("github_token_use_env", False)},
-        {"key": "github_repo", "label": "GitHub Repository", "value": config.github_repo or "", "use_env": config._config.get("github_repo_use_env", False)},
-        {"key": "github_pages_url", "label": "GitHub Pages URL", "value": config.github_pages_url or "", "use_env": config._config.get("github_pages_url_use_env", False)},
-        {"key": "payment_provider_token", "label": "Payment Provider Token", "value": config.payment_provider_token or "", "use_env": config._config.get("payment_provider_token_use_env", False)},
-        {"key": "currency_exchange_token", "label": "Currency Exchange Token", "value": config.currency_exchange_token or "", "use_env": config._config.get("currency_exchange_token_use_env", False)},
-        {"key": "huggingface_access_token", "label": "Hugging Face Access Token", "value": config.huggingface_access_token or "", "use_env": config._config.get("huggingface_access_token_use_env", False)},
-        {"key": "flask_secret_key", "label": "Flask Secret Key", "value": config.flask_secret_key or "", "use_env": config._config.get("flask_secret_key_use_env", False)},
-        {"key": "ai_settings.model_url", "label": "AI Model URL", "value": config.ai_model_url or "", "use_env": config._config.get("ai_settings", {}).get("model_url_use_env", False)},
-        {"key": "ai_settings.access_token", "label": "AI Access Token", "value": config.ai_access_token or "", "use_env": config._config.get("ai_settings", {}).get("access_token_use_env", False)}
-    ]
+	return [
+		{"key": "telegram_token", "label": "Telegram Token", "value": config.telegram_token or "", "use_env": config._config.get("telegram_token_use_env", False)},
+		{"key": "bot_username", "label": "Bot Username", "value": config.bot_username or "", "use_env": config._config.get("bot_username_use_env", False)},
+		{"key": "webhook_url", "label": "Webhook URL", "value": config.webhook_url or "", "use_env": config._config.get("webhook_url_use_env", False)},
+		{"key": "mysql_host", "label": "MySQL Host", "value": config.mysql_host or "", "use_env": config._config.get("mysql_host_use_env", False)},
+		{"key": "mysql_user", "label": "MySQL User", "value": config.mysql_user or "", "use_env": config._config.get("mysql_user_use_env", False)},
+		{"key": "mysql_password", "label": "MySQL Password", "value": config.mysql_password or "", "use_env": config._config.get("mysql_password_use_env", False)},
+		{"key": "mysql_database", "label": "MySQL Database", "value": config.mysql_database or "", "use_env": config._config.get("mysql_database_use_env", False)},
+		{"key": "github_username", "label": "GitHub Username", "value": config.github_username or "", "use_env": config._config.get("github_username_use_env", False)},
+		{"key": "github_token", "label": "GitHub Token", "value": config.github_token or "", "use_env": config._config.get("github_token_use_env", False)},
+		{"key": "github_repo", "label": "GitHub Repository", "value": config.github_repo or "", "use_env": config._config.get("github_repo_use_env", False)},
+		{"key": "github_pages_url", "label": "GitHub Pages URL", "value": config.github_pages_url or "", "use_env": config._config.get("github_pages_url_use_env", False)},
+		{"key": "payment_provider_token", "label": "Payment Provider Token", "value": config.payment_provider_token or "", "use_env": config._config.get("payment_provider_token_use_env", False)},
+		{"key": "currency_exchange_token", "label": "Currency Exchange Token", "value": config.currency_exchange_token or "", "use_env": config._config.get("currency_exchange_token_use_env", False)},
+		{"key": "huggingface_access_token", "label": "Hugging Face Access Token", "value": config.huggingface_access_token or "", "use_env": config._config.get("huggingface_access_token_use_env", False)},
+		{"key": "flask_secret_key", "label": "Flask Secret Key", "value": config.flask_secret_key or "", "use_env": config._config.get("flask_secret_key_use_env", False)},
+		{"key": "ai_settings.model_url", "label": "AI Model URL", "value": config.ai_model_url or "", "use_env": config._config.get("ai_settings", {}).get("model_url_use_env", False)},
+		{"key": "ai_settings.access_token", "label": "AI Access Token", "value": config.ai_access_token or "", "use_env": config._config.get("ai_settings", {}).get("access_token_use_env", False)}
+	]
 
 @flask_app.route("/<lang>")
 @flask_app.route("/")
 def index(lang="en"):
-    if "username" not in session:
-        return redirect(url_for("login", lang=lang))
-    config = Config()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    critical_fields = ['telegram_token', 'mysql_host', 'mysql_user', 'mysql_password', 'mysql_database', 'flask_secret_key']
-    if not all(getattr(config, field) for field in critical_fields):
-        return redirect(url_for("install", lang=lang))
-    db = Database()
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
 
-    # Handle Users tab pagination and search
-    users_page = int(request.args.get("users_page", 1))
-    users_search = request.args.get("users_search", "")
-    users, users_total_pages = db.get_users_paginated(users_page, 50, users_search)
-    for user in users:
-        badges = []
-        if user['is_admin']:
-            badges.append('🛡️')
-        if user['is_beta_tester']:
-            badges.append('🧪')
-        if user['is_teskilat']:
-            badges.append('🇹🇷')
-        if user['credits'] == 0:
-            badges.append('⚠️')
-        if user['is_blacklisted']:
-            badges.append('🚫')
-        user['badges'] = ' '.join(badges)
+	config = Config()
+	i18n = I18n()
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+	critical_fields = ['telegram_token', 'mysql_host', 'mysql_user', 'mysql_password', 'mysql_database', 'flask_secret_key']
+	if not all(getattr(config, field) for field in critical_fields):
+		return redirect(url_for("install", lang=lang))
 
-    # Handle Groups tab pagination and search
-    groups_page = int(request.args.get("groups_page", 1))
-    groups_search = request.args.get("groups_search", "")
-    groups, groups_total_pages = db.get_groups_paginated(groups_page, 50, groups_search)
+	db = Database()
 
-    # Validate and parse github_pages_url
-    github_info = {
-        "url": config.github_pages_url,
-        "username": "",
-        "repo": ""
-    }
+	# Check if user is admin and redirect to appropriate dashboard
+	user_id = session.get("user_id")
+	if user_id:
+		query = "SELECT is_admin FROM users WHERE user_id = %s"
+		db.cursor.execute(query, (user_id,))
+		user = db.cursor.fetchone()
+		if user and not user['is_admin']:
+			return redirect(url_for("user_dashboard", lang=lang))
 
-    if not config.github_pages_url:
-        flash(i18n.t("CONFIGURE_GITHUB_URL", lang), "warning")
-    else:
-        try:
-            parsed_url = urllib.parse.urlparse(config.github_pages_url)
-            if not parsed_url.hostname or not parsed_url.hostname.endswith(".github.io"):
-                flash(i18n.t("ERROR_GENERAL", lang, error="URL must be a GitHub Pages URL (e.g., username.github.io)"), "error")
-            else:
-                path_match = re.match(r"/?([^/]*\.github\.io)?/?([^/]*)/?", parsed_url.path)
-                if path_match:
-                    username = parsed_url.hostname.split(".github.io")[0]
-                    repo = path_match.group(2).rstrip("/") if path_match.group(2) else None
-                    if not repo:
-                        flash(i18n.t("ERROR_GENERAL", lang, error="Invalid GitHub Pages URL format: missing repository"), "error")
-                    else:
-                        github_info["username"] = username
-                        github_info["repo"] = repo
-                else:
-                    flash(i18n.t("ERROR_GENERAL", lang, error="Invalid GitHub Pages URL format"), "error")
-        except Exception as e:
-            logger.error(f"Error parsing github_pages_url: {str(e)}")
-            flash(i18n.t("ERROR_GENERAL", lang, error="Failed to parse GitHub Pages URL"), "error")
+	# Handle Users tab pagination and search
+	users_page = int(request.args.get("users_page", 1))
+	users_search = request.args.get("users_search", "")
+	users, users_total_pages = db.get_users_paginated(users_page, 50, users_search)
+	for user in users:
+		badges = []
+		if user['is_admin']:
+			badges.append('🛡️')
+		if user['is_beta_tester']:
+			badges.append('🧪')
+		if user['is_teskilat']:
+			badges.append('🇹🇷')
+		if user['credits'] == 0:
+			badges.append('⚠️')
+		if user['is_blacklisted']:
+			badges.append('🚫')
+		user['badges'] = ' '.join(badges)
 
-    command_usage = db.get_command_usage()
-    if command_usage:
-        max_count = max(usage['count'] for usage in command_usage)
-        for usage in command_usage:
-            usage['percentage'] = (usage['count'] / max_count * 100) if max_count > 0 else 0
+	# Handle Groups tab pagination and search
+	groups_page = int(request.args.get("groups_page", 1))
+	groups_search = request.args.get("groups_search", "")
+	groups, groups_total_pages = db.get_groups_paginated(groups_page, 50, groups_search)
 
-    return render_template(
-        "dashboard.html",
-        i18n=i18n,
-        lang=lang,
-        users=users,
-        users_total_pages=users_total_pages,
-        users_current_page=users_page,
-        users_search=users_search,
-        groups=groups,
-        groups_total_pages=groups_total_pages,
-        groups_current_page=groups_page,
-        groups_search=groups_search,
-        command_usage=command_usage,
-        github_info=github_info,
-        fields=get_fields(),
-        config=config
-    )
+	# Validate and parse github_pages_url
+	github_info = {
+		"url": config.github_pages_url,
+		"username": "",
+		"repo": ""
+	}
 
-# File Management Routes
-PROJECT_ROOT = Path(__file__).parent.parent  # Root directory of the project
+	if not config.github_pages_url:
+		flash(i18n.t("CONFIGURE_GITHUB_URL", lang), "warning")
+	else:
+		try:
+			parsed_url = urllib.parse.urlparse(config.github_pages_url)
+			if not parsed_url.hostname or not parsed_url.hostname.endswith(".github.io"):
+				flash(i18n.t("ERROR_GENERAL", lang, error="URL must be a GitHub Pages URL (e.g., username.github.io)"), "error")
+			else:
+				path_match = re.match(r"/?([^/]*\.github\.io)?/?([^/]*)/?", parsed_url.path)
+				if path_match:
+					username = parsed_url.hostname.split(".github.io")[0]
+					repo = path_match.group(2) or username + ".github.io"
+					github_info["username"] = username
+					github_info["repo"] = repo
+				else:
+					flash(i18n.t("ERROR_GENERAL", lang, error="Invalid GitHub Pages URL format"), "error")
+		except Exception as e:
+			flash(i18n.t("ERROR_GENERAL", lang, error=str(e)), "error")
 
-def is_safe_path(path):
-    """Ensure the path is within the project root to prevent directory traversal."""
-    try:
-        resolved_path = (PROJECT_ROOT / path).resolve()
-        return PROJECT_ROOT in resolved_path.parents or resolved_path == PROJECT_ROOT
-    except Exception:
-        return False
+	# Get command usage statistics
+	command_usage = db.get_command_usage()
 
-@flask_app.route("/<lang>/files/list", methods=["GET"])
-def list_files(lang="en"):
-    if "username" not in session:
-        return jsonify({"error": "Unauthorized access"}), 401
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    try:
-        def build_file_tree(path, prefix=""):
-            tree = []
-            for item in sorted(path.iterdir()):
-                if item.name.startswith(".") or item.name == "__pycache__":
-                    continue
-                relative_path = str(item.relative_to(PROJECT_ROOT))
-                if item.is_dir():
-                    tree.append({
-                        "name": item.name,
-                        "path": relative_path,
-                        "type": "directory",
-                        "children": build_file_tree(item, prefix + "  ")
-                    })
-                else:
-                    tree.append({
-                        "name": item.name,
-                        "path": relative_path,
-                        "type": "file"
-                    })
-            return tree
-        file_tree = build_file_tree(PROJECT_ROOT)
-        return jsonify({"files": file_tree})
-    except Exception as e:
-        logger.error(f"Error listing files: {str(e)}")
-        return jsonify({"error": f"Failed to list files: {str(e)}"}), 500
+	# Get fields for config tab
+	fields = get_fields()
 
-@flask_app.route("/<lang>/files/read", methods=["POST"])
-def read_file(lang="en"):
-    if "username" not in session:
-        return jsonify({"error": "Unauthorized access"}), 401
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    data = request.get_json()
-    file_path = data.get("path")
-    if not file_path or not is_safe_path(file_path):
-        return jsonify({"error": "Invalid or unsafe file path"}), 400
-    try:
-        file = PROJECT_ROOT / file_path
-        if not file.exists() or not file.is_file():
-            return jsonify({"error": "File does not exist or is not a file"}), 404
-        with open(file, "r", encoding="utf-8") as f:
-            content = f.read()
-        extension = file.suffix.lower()
-        mime_types = {
-            ".py": "python",
-            ".html": "htmlmixed",
-            ".js": "javascript",
-            ".json": "javascript",
-            ".css": "css",
-            ".yml": "yaml",
-            ".md": "markdown",
-            ".sql": "sql",
-            ".txt": "text"
-        }
-        mode = mime_types.get(extension, "text")
-        return jsonify({"content": content, "mode": mode})
-    except Exception as e:
-        logger.error(f"Error reading file {file_path}: {str(e)}")
-        return jsonify({"error": f"Failed to read file: {str(e)}"}), 500
-
-@flask_app.route("/<lang>/files/save", methods=["POST"])
-def save_file(lang="en"):
-    if "username" not in session:
-        return jsonify({"error": "Unauthorized access"}), 401
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    data = request.get_json()
-    file_path = data.get("path")
-    content = data.get("content")
-    if not file_path or not is_safe_path(file_path):
-        return jsonify({"error": "Invalid or unsafe file path"}), 400
-
-    full_path = os.path.join(PROJECT_ROOT, file_path)
-
-    try:
-        os.makedirs(os.path.dirname(full_path), exist_ok=True)
-        with open(full_path, "w", encoding="utf-8") as f:
-            f.write(content)
-        logger.info(f"File saved successfully: {file_path}")
-        return jsonify({"message": "File saved successfully"})
-    except PermissionError:
-        logger.error(f"Permission denied when writing file {file_path}")
-        return jsonify({"error": "Permission denied when writing file"}), 403
-    except Exception as e:
-        logger.error(f"Failed to save file {file_path}: {str(e)}")
-        return jsonify({"error": f"Failed to save file: {str(e)}"}), 500
-
-@flask_app.route("/<lang>/files/create", methods=["POST"])
-def create_file(lang="en"):
-    if "username" not in session:
-        return jsonify({"error": "Unauthorized access"}), 401
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    data = request.get_json()
-    file_path = data.get("path")
-    if not file_path or not is_safe_path(file_path):
-        return jsonify({"error": "Invalid or unsafe file path"}), 400
-    try:
-        file = PROJECT_ROOT / file_path
-        if file.exists():
-            return jsonify({"error": "File already exists"}), 400
-        file.parent.mkdir(parents=True, exist_ok=True)
-        with open(file, "w", encoding="utf-8") as f:
-            f.write("")
-        logger.info(f"File created successfully: {file_path}")
-        return jsonify({"message": "File created successfully"})
-    except Exception as e:
-        logger.error(f"Error creating file {file_path}: {str(e)}")
-        return jsonify({"error": f"Failed to create file: {str(e)}"}), 500
-
-@flask_app.route("/<lang>/files/delete", methods=["POST"])
-def delete_file(lang="en"):
-    if "username" not in session:
-        return jsonify({"error": "Unauthorized access"}), 401
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    data = request.get_json()
-    file_path = data.get("path")
-    if not file_path or not is_safe_path(file_path):
-        return jsonify({"error": "Invalid or unsafe file path"}), 400
-    try:
-        path = PROJECT_ROOT / file_path
-        if not path.exists():
-            return jsonify({"error": "File or directory does not exist"}), 404
-        if path.is_file():
-            path.unlink()
-            logger.info(f"File deleted successfully: {file_path}")
-            return jsonify({"message": "File deleted successfully"})
-        else:
-            path.rmdir()
-            logger.info(f"Directory deleted successfully: {file_path}")
-            return jsonify({"message": "Directory deleted successfully"})
-    except Exception as e:
-        logger.error(f"Error deleting {file_path}: {str(e)}")
-        return jsonify({"error": f"Failed to delete: {str(e)}"}), 500
-
-@flask_app.route("/<lang>/files/reload", methods=["POST"])
-def reload_file(lang="en"):
-    """Reload a file to apply changes without restarting the server."""
-    if "username" not in session:
-        return jsonify({"error": "Unauthorized access"}), 401
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    data = request.get_json()
-    file_path = data.get("path")
-    if not file_path or not is_safe_path(file_path):
-        return jsonify({"error": "Invalid or unsafe file path"}), 400
-    try:
-        path = PROJECT_ROOT / file_path
-        # Prevent reloading sensitive files
-        restricted_files = ["admin_panel.py", "config.py", ".env"]
-        if path.name in restricted_files:
-            return jsonify({"error": "Reloading this file is restricted"}), 403
-        if not path.exists() or not path.is_file():
-            return jsonify({"error": "File does not exist or is not a file"}), 404
-
-        # Initialize I18n for translations
-        i18n = I18n()
-
-        # Handle Python files
-        if path.suffix.lower() == ".py":
-            module_name = str(path.relative_to(PROJECT_ROOT).with_suffix("")).replace(os.sep, ".")
-            if module_name.startswith("."):
-                return jsonify({"error": "Invalid module path"}), 400
-            try:
-                if module_name in sys.modules:
-                    module = sys.modules[module_name]
-                    importlib.reload(module)
-                else:
-                    module = importlib.import_module(module_name)
-                # Reinitialize Telegram handlers if the module affects bot logic
-                if module_name.startswith("Bot.") or module_name.startswith("Commands."):
-                    register_handlers()
-                logger.info(f"Reloaded Python module: {module_name}")
-                return jsonify({"message": i18n.t("FILE_RELOADED", lang)})
-            except ImportError as e:
-                logger.error(f"Error reloading module {module_name}: {str(e)}")
-                return jsonify({"error": f"Failed to reload module: {str(e)}"}), 500
-
-        # Handle HTML templates
-        elif path.suffix.lower() == ".html":
-            if flask_app.jinja_env.cache:
-                flask_app.jinja_env.cache.clear()
-            try:
-                # Get absolute path to templates folder
-                templates_path = Path(flask_app.template_folder).resolve()
-                # Get absolute path to the file
-                file_abs_path = path.resolve()
-
-                # Check if file is within templates folder
-                if templates_path in file_abs_path.parents or file_abs_path.parent == templates_path:
-                    # Get relative path from templates folder
-                    template_name = str(file_abs_path.relative_to(templates_path))
-                    flask_app.jinja_env.get_template(template_name)  # Trigger reload
-                    logger.info(f"Reloaded template: {file_path}")
-                    return jsonify({"message": i18n.t("TEMPLATE_RELOADED", lang)})
-                else:
-                    return jsonify({"error": "Template not in template folder"}), 400
-            except Exception as e:
-                logger.error(f"Error reloading template {file_path}: {str(e)}")
-                return jsonify({"error": f"Failed to reload template: {str(e)}"}), 500
-
-        # Handle Assets templates
-        elif path.suffix.lower() in [".css", ".webmanifest", ".txt", ".js"]:
-            if flask_app.jinja_env.cache:
-                flask_app.jinja_env.cache.clear()
-            try:
-                # Get absolute path to assets folder
-                assets_path = Path(flask_app.static_folder).resolve()
-                # Get absolute path to the file
-                file_abs_path = path.resolve()
-
-                # Check if file is within templates folder
-                if assets_path in file_abs_path.parents or file_abs_path.parent == assets_path:
-                    logger.info(f"Reloaded template: {file_path}")
-                    return jsonify({"message": i18n.t("TEMPLATE_RELOADED", lang)})
-                else:
-                    return jsonify({"error": "Template not in assets folder"}), 400
-            except Exception as e:
-                logger.error(f"Error reloading template {file_path}: {str(e)}")
-                return jsonify({"error": f"Failed to reload template: {str(e)}"}), 500
-
-        # Handle JSON locale files
-        elif path.suffix.lower() == ".json" and str(path).startswith(str(PROJECT_ROOT / "Locales")):
-            try:
-                # Clear I18n translations cache and reload
-                i18n.translations.clear()
-                i18n._load_translations(lang)
-                logger.info(f"Reloaded locale file: {file_path}")
-                return jsonify({"message": i18n.t("LOCALE_RELOADED", lang)})
-            except Exception as e:
-                logger.error(f"Error reloading locale {file_path}: {str(e)}")
-                return jsonify({"error": f"Failed to reload locale: {str(e)}"}), 500
-
-        # Handle other file types
-        else:
-            logger.info(f"Reload requested for unsupported file type: {file_path}")
-            return jsonify({"message": i18n.t("FILE_RELOAD_UNSUPPORTED", lang)})
-
-    except Exception as e:
-        logger.error(f"Error reloading file {file_path}: {str(e)}")
-        return jsonify({"error": f"Failed to reload file: {str(e)}"}), 500
-
-@flask_app.route("/<lang>/toggle_blacklist", methods=["POST"])
-def toggle_blacklist(lang="en"):
-    if "username" not in session:
-        return redirect(url_for("login", lang=lang))
-    config = Config()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    user_id = request.form.get("user_id")
-    try:
-        db = Database()
-        if db.toggle_blacklist(user_id):
-            query = "SELECT is_blacklisted FROM users WHERE user_id = %s"
-            db.cursor.execute(query, (user_id,))
-            user = db.cursor.fetchone()
-            status = "blacklisted" if user['is_blacklisted'] else "unblacklisted"
-            flash(i18n.t("BLACKLIST_TOGGLED", lang, user_id=user_id, status=status), "success")
-        else:
-            flash(i18n.t("BLACKLIST_TOGGLE_ERROR", lang), "error")
-    except Exception as e:
-        logger.error(f"Error toggling blacklist: {str(e)}")
-        flash(i18n.t("BLACKLIST_TOGGLE_ERROR", lang), "error")
-    return redirect(url_for("index", lang=lang))
-
-@flask_app.route("/<lang>/toggle_group_blacklist", methods=["POST"])
-def toggle_group_blacklist(lang="en"):
-    if "username" not in session:
-        return redirect(url_for("login", lang=lang))
-    config = Config()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    group_id = request.form.get("group_id")
-    try:
-        db = Database()
-        if db.toggle_group_blacklist(group_id):
-            query = "SELECT is_blacklisted FROM groups WHERE group_id = %s"
-            db.cursor.execute(query, (group_id,))
-            group = db.cursor.fetchone()
-            status = "blacklisted" if group['is_blacklisted'] else "unblacklisted"
-            flash(i18n.t("GROUP_BLACKLIST_TOGGLED", lang, group_id=group_id, status=status), "success")
-        else:
-            flash(i18n.t("GROUP_BLACKLIST_TOGGLE_ERROR", lang), "error")
-    except Exception as e:
-        logger.error(f"Error toggling group blacklist: {str(e)}")
-        flash(i18n.t("GROUP_BLACKLIST_TOGGLE_ERROR", lang), "error")
-    return redirect(url_for("index", lang=lang))
-
-@flask_app.route("/<lang>/promote_credits", methods=["POST"])
-def promote_credits(lang="en"):
-    if "username" not in session:
-        return redirect(url_for("login", lang=lang))
-    config = Config()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    user_id = request.form.get("user_id")
-    credits = request.form.get("credits")
-    try:
-        credits = int(credits)
-        if credits <= 0:
-            flash(i18n.t("INVALID_CREDITS", lang, error="Credits must be positive"), "error")
-            return redirect(url_for("index", lang=lang))
-        db = Database()
-        if db.promote_credits(user_id, credits):
-            flash(i18n.t("CREDITS_PROMOTED", lang, credits=credits, user_id=user_id), "success")
-        else:
-            flash(i18n.t("CREDITS_PROMOTE_ERROR", lang), "error")
-    except ValueError:
-        flash(i18n.t("INVALID_CREDITS", lang, error="Invalid credits value"), "error")
-    return redirect(url_for("index", lang=lang))
-
-@flask_app.route("/<lang>/install", methods=["GET", "POST"])
-def install(lang="en"):
-    if "username" not in session:
-        return redirect(url_for("login", lang=lang))
-    config = Config()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    messages = []
-    if request.method == "POST":
-        config_data = {
-            'mysql': {},
-            'ai_settings': {}
-        }
-        fields = [
-            'telegram_token', 'bot_username', 'webhook_url', 'mysql_host', 'mysql_user', 'mysql_password',
-            'mysql_database', 'github_username', 'github_token', 'github_repo', 'github_pages_url',
-            'payment_provider_token', 'currency_exchange_token', 'huggingface_access_token', 'flask_secret_key'
-        ]
-        for field in fields:
-            value = request.form.get(field)
-            config_data[field] = value or ""
-            config_data[f"{field}_use_env"] = False
-        try:
-            config.save_config(config_data)
-            os.environ['ADMIN_USER'] = request.form.get("admin_username", "admin")
-            os.environ['ADMIN_PASS'] = request.form.get("admin_password", "password123")
-            seed_admin()
-            flash(i18n.t("INSTALL_SUCCESS", lang), "success")
-            return redirect(url_for("index", lang=lang))
-        except Exception as e:
-            logger.error(f"Install error: {str(e)}")
-            messages.append(f"Failed to save configuration or seed admin: {str(e)}")
-    return render_template("install.html", i18n=i18n, lang=lang, messages=messages)
+	return render_template(
+		"dashboard.html",
+		lang=lang,
+		i18n=i18n,
+		config=config,
+		fields=fields,
+		users=users,
+		users_total_pages=users_total_pages,
+		current_page=users_page,
+		groups=groups,
+		groups_total_pages=groups_total_pages,
+		command_usage=command_usage,
+		github_info=github_info
+	)
 
 @flask_app.route("/<lang>/login", methods=["GET", "POST"])
+@flask_app.route("/login", methods=["GET", "POST"])
 def login(lang="en"):
-    config = Config()
-    db = Database()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-        if not username or not password:
-            flash(i18n.t("ERROR_INVALID_INPUT", lang, error="Username and password are required"), "error")
-            return render_template("login.html", i18n=i18n, lang=lang)
-        query = "SELECT * FROM users WHERE username = %s AND is_admin = TRUE"
-        db.cursor.execute(query, (username,))
-        user = db.cursor.fetchone()
-        if user and bcrypt.checkpw(password.encode("utf-8"), user['password'].encode("utf-8")):
-            session["username"] = username
-            session["user_id"] = str(user["user_id"])
-            flash(i18n.t("LOGIN_SUCCESS", lang), "success")
-            return redirect(url_for("index", lang=lang))
-        else:
-            flash(i18n.t("LOGIN_ERROR", lang), "error")
-    return render_template("login.html", i18n=i18n, lang=lang)
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+
+	if request.method == "POST":
+		username = request.form.get("username")
+		password = request.form.get("password")
+
+		if not username or not password:
+			flash(i18n.t("LOGIN_EMPTY_FIELDS", lang), "error")
+			return render_template("login.html", lang=lang, i18n=i18n)
+
+		db = Database()
+		query = "SELECT * FROM users WHERE username = %s"
+		db.cursor.execute(query, (username,))
+		user = db.cursor.fetchone()
+
+		if not user:
+			flash(i18n.t("LOGIN_INVALID_CREDENTIALS", lang), "error")
+			return render_template("login.html", lang=lang, i18n=i18n)
+
+		if not user.get("password_hash"):
+			flash(i18n.t("LOGIN_NO_PASSWORD", lang), "error")
+			return render_template("login.html", lang=lang, i18n=i18n)
+
+		try:
+			if bcrypt.checkpw(password.encode("utf-8"), user["password_hash"].encode("utf-8")):
+				session["username"] = username
+				session["user_id"] = user["user_id"]
+
+				# Redirect based on user role
+				if user["is_admin"]:
+					return redirect(url_for("index", lang=lang))
+				else:
+					return redirect(url_for("user_dashboard", lang=lang))
+			else:
+				flash(i18n.t("LOGIN_INVALID_CREDENTIALS", lang), "error")
+		except Exception as e:
+			flash(i18n.t("ERROR_GENERAL", lang, error=str(e)), "error")
+
+	return render_template("login.html", lang=lang, i18n=i18n)
+
+@flask_app.route("/<lang>/user-dashboard")
+@flask_app.route("/user-dashboard")
+def user_dashboard(lang="en"):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = session.get("user_id")
+	if not user_id:
+		return redirect(url_for("login", lang=lang))
+
+	# Get user information
+	user = db.get_user_by_id(user_id)
+	if not user:
+		session.clear()
+		return redirect(url_for("login", lang=lang))
+
+	# Check if user is admin and redirect if necessary
+	if user.get("is_admin"):
+		return redirect(url_for("index", lang=lang))
+
+	# Get user's orders
+	orders = db.get_user_orders(user_id)
+	orders_count = len(orders)
+
+	# Get available products
+	products = db.get_available_products(user_id=user_id)
+	products_count = len(products)
+
+	# Get user's payment history
+	payments = db.get_user_payments(user_id)
+
+	# Get user's addresses
+	addresses = db.get_user_addresses(user_id)
+
+	return render_template(
+		"user-dashboard.html",
+		lang=lang,
+		i18n=i18n,
+		user=user,
+		orders=orders,
+		orders_count=orders_count,
+		products=products,
+		products_count=products_count,
+		payments=payments,
+		addresses=addresses
+	)
 
 @flask_app.route("/<lang>/logout")
+@flask_app.route("/logout")
 def logout(lang="en"):
-    config = Config()
-    session.pop("username", None)
-    session.pop("user_id", None)
-    db = Database()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    flash(i18n.t("LOGOUT_SUCCESS", lang), "success")
-    return redirect(url_for("login", lang=lang))
+	session.clear()
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+	i18n = I18n()
+	flash(i18n.t("LOGOUT_SUCCESS", lang), "success")
+	return redirect(url_for("login", lang=lang))
+
+@flask_app.route("/<lang>/install", methods=["GET", "POST"])
+@flask_app.route("/install", methods=["GET", "POST"])
+def install(lang="en"):
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	config = Config()
+
+	if request.method == "POST":
+		# Update configuration
+		telegram_token = request.form.get("telegram_token")
+		mysql_host = request.form.get("mysql_host")
+		mysql_user = request.form.get("mysql_user")
+		mysql_password = request.form.get("mysql_password")
+		mysql_database = request.form.get("mysql_database")
+		admin_username = request.form.get("admin_username")
+		admin_password = request.form.get("admin_password")
+
+		# Validate required fields
+		if not all([telegram_token, mysql_host, mysql_user, mysql_database, admin_username, admin_password]):
+			flash(i18n.t("INSTALL_MISSING_FIELDS", lang), "error")
+			return render_template("install.html", lang=lang, i18n=i18n)
+
+		# Update config.yaml
+		config_data = {
+			"telegram_token": telegram_token,
+			"mysql_host": mysql_host,
+			"mysql_user": mysql_user,
+			"mysql_password": mysql_password,
+			"mysql_database": mysql_database,
+			"flask_secret_key": os.urandom(24).hex()
+		}
+
+		try:
+			config_path = os.path.join(os.path.dirname(__file__), "config.yaml")
+			with open(config_path, "w") as f:
+				yaml.dump(config_data, f)
+
+			# Reload configuration
+			config = Config()
+
+			# Initialize database
+			db = Database()
+
+			# Create admin user
+			success = seed_admin(db, admin_username, admin_password)
+			if success:
+				flash(i18n.t("INSTALL_SUCCESS", lang), "success")
+				return redirect(url_for("login", lang=lang))
+			else:
+				flash(i18n.t("INSTALL_ADMIN_ERROR", lang), "error")
+		except Exception as e:
+			flash(i18n.t("ERROR_GENERAL", lang, error=str(e)), "error")
+
+	return render_template("install.html", lang=lang, i18n=i18n)
 
 @flask_app.route("/<lang>/save_config", methods=["POST"])
 def save_config_route(lang="en"):
-    if "username" not in session:
-        return redirect(url_for("login", lang=lang))
-    config = Config()
-    db = Database()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    config_data = {
-        'mysql': {},
-        'ai_settings': {}
-    }
-    for field in get_fields():
-        key = field["key"]
-        value = request.form.get(key)
-        use_env = request.form.get(f"{key}_use_env") == "on"
-        if key.startswith("ai_settings."):
-            subkey = key.split(".")[1]
-            config_data["ai_settings"][f"{subkey}_use_env"] = use_env
-            config_data["ai_settings"][subkey] = value if not use_env else ""
-        elif key.startswith("mysql."):
-            subkey = key.split(".")[1]
-            config_data["mysql"][f"{subkey}_use_env"] = use_env
-            config_data["mysql"][subkey] = value if not use_env else ""
-        else:
-            config_data[key] = value if not use_env else ""
-            config_data[f"{key}_use_env"] = use_env
-    try:
-        config.save_config(config_data)
-        flash(i18n.t("CONFIG_SAVED", lang), "success")
-    except Exception as e:
-        logger.error(f"Config save error: {str(e)}")
-        flash(i18n.t("ERROR_GENERAL", lang, error="Failed to save config"), "error")
-    return redirect(url_for("index", lang=lang))
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+
+	try:
+		config_data = {}
+		ai_settings = {}
+
+		for field in get_fields():
+			key = field["key"]
+			if key.startswith("ai_settings."):
+				ai_key = key.split(".", 1)[1]
+				value = request.form.get(key, "")
+				use_env = request.form.get(f"{key}_use_env") == "on"
+				ai_settings[ai_key] = value
+				ai_settings[f"{ai_key}_use_env"] = use_env
+			else:
+				value = request.form.get(key, "")
+				use_env = request.form.get(f"{key}_use_env") == "on"
+				config_data[key] = value
+				config_data[f"{key}_use_env"] = use_env
+
+		config_data["ai_settings"] = ai_settings
+
+		config_path = os.path.join(os.path.dirname(__file__), "config.yaml")
+		with open(config_path, "w") as f:
+			yaml.dump(config_data, f)
+
+		flash(i18n.t("CONFIG_SAVED", lang), "success")
+	except Exception as e:
+		flash(i18n.t("ERROR_GENERAL", lang, error=str(e)), "error")
+
+	return redirect(url_for("index", lang=lang))
 
 @flask_app.route("/<lang>/add_model", methods=["POST"])
 def add_model(lang="en"):
-    config = Config()
-    if "username" not in session:
-        flash(i18n.t("LOGIN_ERROR", lang), "error")
-        return redirect(url_for("login", lang=lang))
-    db = Database()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    model_name = request.form.get("model_name")
-    model_url = request.form.get("model_url")
-    access_token_env = request.form.get("access_token_env")
-    if not all([model_name, model_url, access_token_env]):
-        flash(i18n.t("ERROR_INVALID_INPUT", lang, error="All model fields are required"), "error")
-    else:
-        try:
-            models_file = Path("Config/models.yml")
-            models_data = {"models": []}
-            if models_file.exists():
-                with open(models_file, "r") as f:
-                    models_data = yaml.safe_load(f) or {"models": []}
-            models_data["models"].append({
-                "name": model_name,
-                "url": model_url,
-                "access_token_env": access_token_env
-            })
-            with open(models_file, "w") as f:
-                yaml.dump(models_data, f)
-            config.models = load_models()
-            flash(i18n.t("MODEL_ADDED", lang), "success")
-        except Exception as e:
-            logger.error(f"Add model error: {str(e)}")
-            flash(i18n.t("ERROR_GENERAL", lang, error="Failed to add model"), "error")
-    return redirect(url_for("index", lang=lang))
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+
+	try:
+		model_name = request.form.get("model_name")
+		model_url = request.form.get("model_url")
+		access_token_env = request.form.get("access_token_env")
+
+		if not all([model_name, model_url, access_token_env]):
+			flash(i18n.t("MODEL_MISSING_FIELDS", lang), "error")
+			return redirect(url_for("index", lang=lang))
+
+		config = Config()
+
+		if not hasattr(config, "_config"):
+			config._config = {}
+
+		if "models" not in config._config:
+			config._config["models"] = {}
+
+		config._config["models"][model_name] = {
+			"name": model_name,
+			"url": model_url,
+			"access_token_env": access_token_env
+		}
+
+		config_path = os.path.join(os.path.dirname(__file__), "config.yaml")
+		with open(config_path, "w") as f:
+			yaml.dump(config._config, f)
+
+		flash(i18n.t("MODEL_ADDED", lang), "success")
+	except Exception as e:
+		flash(i18n.t("ERROR_GENERAL", lang, error=str(e)), "error")
+
+	return redirect(url_for("index", lang=lang))
 
 @flask_app.route("/<lang>/delete_model", methods=["POST"])
 def delete_model(lang="en"):
-    config = Config()
-    if "username" not in session:
-        flash(i18n.t("LOGIN_ERROR", lang), "error")
-        return redirect(url_for("login", lang=lang))
-    db = Database()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    model_name = request.form.get("model_name")
-    try:
-        models_file = Path("Config/models.yml")
-        models_data = {"models": []}
-        if models_file.exists():
-            with open(models_file, "r") as f:
-                models_data = yaml.safe_load(f) or {"models": []}
-        models_data["models"] = [m for m in models_data["models"] if m["name"] != model_name]
-        with open(models_file, "w") as f:
-            yaml.dump(models_data, f)
-        config.models = load_models()
-        flash(i18n.t("MODEL_DELETED", lang), "success")
-    except Exception as e:
-        logger.error(f"Delete model error: {str(e)}")
-        flash(i18n.t("ERROR_GENERAL", lang, error="Failed to delete model"), "error")
-    return redirect(url_for("index", lang=lang))
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+
+	try:
+		model_name = request.form.get("model_name")
+
+		if not model_name:
+			flash(i18n.t("MODEL_NAME_REQUIRED", lang), "error")
+			return redirect(url_for("index", lang=lang))
+
+		config = Config()
+
+		if not hasattr(config, "_config") or "models" not in config._config:
+			flash(i18n.t("NO_MODELS_FOUND", lang), "error")
+			return redirect(url_for("index", lang=lang))
+
+		if model_name in config._config["models"]:
+			del config._config["models"][model_name]
+
+			config_path = os.path.join(os.path.dirname(__file__), "config.yaml")
+			with open(config_path, "w") as f:
+				yaml.dump(config._config, f)
+
+			flash(i18n.t("MODEL_DELETED", lang), "success")
+		else:
+			flash(i18n.t("MODEL_NOT_FOUND", lang), "error")
+	except Exception as e:
+		flash(i18n.t("ERROR_GENERAL", lang, error=str(e)), "error")
+
+	return redirect(url_for("index", lang=lang))
+
+@flask_app.route("/<lang>/users")
+def get_users(lang="en"):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	page = int(request.args.get("page", 1))
+	search = request.args.get("search", "")
+
+	users, total_pages = db.get_users_paginated(page, 50, search)
+
+	for user in users:
+		badges = []
+		if user['is_admin']:
+			badges.append('🛡️')
+		if user['is_beta_tester']:
+			badges.append('🧪')
+		if user['is_teskilat']:
+			badges.append('🇹🇷')
+		if user['credits'] == 0:
+			badges.append('⚠️')
+		if user['is_blacklisted']:
+			badges.append('🚫')
+		user['badges'] = ' '.join(badges)
+
+	return render_template(
+		"users_partial.html",
+		lang=lang,
+		i18n=i18n,
+		users=users,
+		users_total_pages=total_pages,
+		current_page=page
+	)
+
+@flask_app.route("/<lang>/groups")
+def get_groups(lang="en"):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	page = int(request.args.get("page", 1))
+	search = request.args.get("search", "")
+
+	groups, total_pages = db.get_groups_paginated(page, 50, search)
+
+	return render_template(
+		"groups_partial.html",
+		lang=lang,
+		i18n=i18n,
+		groups=groups,
+		groups_total_pages=total_pages,
+		current_page=page
+	)
+
+@flask_app.route("/<lang>/promote_credits", methods=["POST"])
+def promote_credits(lang="en"):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = request.form.get("user_id")
+	credits = request.form.get("credits")
+
+	if not user_id or not credits:
+		flash(i18n.t("MISSING_FIELDS", lang), "error")
+		return redirect(url_for("index", lang=lang))
+
+	try:
+		user_id = int(user_id)
+		credits = int(credits)
+
+		if credits <= 0:
+			flash(i18n.t("INVALID_CREDITS", lang), "error")
+			return redirect(url_for("index", lang=lang))
+
+		success = db.add_credits(user_id, credits)
+
+		if success:
+			flash(i18n.t("CREDITS_ADDED", lang), "success")
+		else:
+			flash(i18n.t("USER_NOT_FOUND", lang), "error")
+	except ValueError:
+		flash(i18n.t("INVALID_INPUT", lang), "error")
+	except Exception as e:
+		flash(i18n.t("ERROR_GENERAL", lang, error=str(e)), "error")
+
+	return redirect(url_for("index", lang=lang))
+
+@flask_app.route("/<lang>/toggle_blacklist", methods=["POST"])
+def toggle_blacklist(lang="en"):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = request.form.get("user_id")
+
+	if not user_id:
+		flash(i18n.t("MISSING_FIELDS", lang), "error")
+		return redirect(url_for("index", lang=lang))
+
+	try:
+		user_id = int(user_id)
+
+		success, is_blacklisted = db.toggle_blacklist(user_id)
+
+		if success:
+			if is_blacklisted:
+				flash(i18n.t("USER_BLACKLISTED", lang), "success")
+			else:
+				flash(i18n.t("USER_UNBLACKLISTED", lang), "success")
+		else:
+			flash(i18n.t("USER_NOT_FOUND", lang), "error")
+	except ValueError:
+		flash(i18n.t("INVALID_INPUT", lang), "error")
+	except Exception as e:
+		flash(i18n.t("ERROR_GENERAL", lang, error=str(e)), "error")
+
+	return redirect(url_for("index", lang=lang))
 
 @flask_app.route("/<lang>/toggle_beta_tester", methods=["POST"])
 def toggle_beta_tester(lang="en"):
-    if "username" not in session:
-        return redirect(url_for("login", lang=lang))
-    config = Config()
-    i18n = I18n()
-    if lang not in AVAILABLE_LANGUAGES:
-        lang = "en"
-    user_id = request.form.get("user_id")
-    try:
-        db = Database()
-        if db.toggle_beta_tester(user_id):
-            query = "SELECT is_beta_tester FROM users WHERE user_id = %s"
-            db.cursor.execute(query, (user_id,))
-            user = db.cursor.fetchone()
-            status = "beta_tester" if user['is_beta_tester'] else "not_beta_tester"
-            if status == "beta_tester":
-                flash(i18n.t("BETA_TESTER_GRANTED", lang, telegram_id=user_id), "success")
-            else:
-                flash(i18n.t("BETA_TESTER_REVOKED", lang, telegram_id=user_id), "success")
-        else:
-            flash(i18n.t("ERROR_INVALID_INPUT", lang, error="Invalid action"), "error")
-    except Exception as e:
-        logger.error(f"Error toggling beta tester: {str(e)}")
-        flash(i18n.t("ERROR_INVALID_INPUT", lang, error="Invalid action"), "error")
-    return redirect(url_for("index", lang=lang))
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
 
-@flask_app.route("/bot<token>", methods=["POST"])
-async def webhook(token):
-    config = Config()
-    decoded_token = urllib.parse.unquote(token)
-    logger.info(f"Received webhook token: {token}, decoded: {decoded_token}")
-    if decoded_token != config.telegram_token:
-        logger.error(f"Invalid webhook token: {decoded_token}")
-        return "", 403
-    try:
-        update = Update.de_json(request.get_json(), telegram_app.bot)
-        if update:
-            await telegram_app.process_update(update)
-            logger.info("Webhook update processed successfully")
-            return "", 200
-        else:
-            logger.warning("No update found in webhook request")
-            return "", 400
-    except Exception as e:
-        logger.error(f"Webhook error: {str(e)}")
-        return "", 500
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
 
-@flask_app.route("/set_webhook", methods=["GET"])
-async def set_webhook():
-    if "username" not in session:
-        return redirect(url_for("login", lang="en"))
-    config = Config()
-    if not config.telegram_token:
-        logger.error("TELEGRAM_TOKEN is not set")
-        return "Failed to set webhook: TELEGRAM_TOKEN is not set", 500
+	i18n = I18n()
+	db = Database()
 
-    webhook_url = request.args.get("webhook_url")
-    if not webhook_url:
-        webhook_url = f"https://{request.host}/bot{config.telegram_token}"
+	user_id = request.form.get("user_id")
 
-    try:
-        await telegram_app.bot.set_webhook(url=webhook_url)
-        logger.info(f"Webhook set successfully to {webhook_url}")
-        return f"Webhook set to {webhook_url}", 200
-    except Exception as e:
-        logger.error(f"Set webhook error: {str(e)}")
-        return f"Failed to set webhook: {str(e)}", 500
+	if not user_id:
+		flash(i18n.t("MISSING_FIELDS", lang), "error")
+		return redirect(url_for("index", lang=lang))
 
-# Wrap Flask app with WsgiToAsgi for ASGI compatibility
-app = WsgiToAsgi(flask_app)
+	try:
+		user_id = int(user_id)
 
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.getenv("PORT", 8000))
-    logger.info(f"Starting Uvicorn on port {port}")
-    uvicorn.run(
-        app,
-        host="0.0.0.0",
-        port=port,
-        lifespan="off"  # Disable lifespan to suppress ASGI warning
-    )
+		success, is_beta_tester = db.toggle_beta_tester(user_id)
+
+		if success:
+			if is_beta_tester:
+				flash(i18n.t("BETA_ACCESS_GRANTED", lang), "success")
+			else:
+				flash(i18n.t("BETA_ACCESS_REVOKED", lang), "success")
+		else:
+			flash(i18n.t("USER_NOT_FOUND", lang), "error")
+	except ValueError:
+		flash(i18n.t("INVALID_INPUT", lang), "error")
+	except Exception as e:
+		flash(i18n.t("ERROR_GENERAL", lang, error=str(e)), "error")
+
+	return redirect(url_for("index", lang=lang))
+
+@flask_app.route("/<lang>/toggle_group_blacklist", methods=["POST"])
+def toggle_group_blacklist(lang="en"):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	group_id = request.form.get("group_id")
+
+	if not group_id:
+		flash(i18n.t("MISSING_FIELDS", lang), "error")
+		return redirect(url_for("index", lang=lang))
+
+	try:
+		group_id = int(group_id)
+
+		success, is_blacklisted = db.toggle_group_blacklist(group_id)
+
+		if success:
+			if is_blacklisted:
+				flash(i18n.t("GROUP_BLACKLISTED", lang), "success")
+			else:
+				flash(i18n.t("GROUP_UNBLACKLISTED", lang), "success")
+		else:
+			flash(i18n.t("GROUP_NOT_FOUND", lang), "error")
+	except ValueError:
+		flash(i18n.t("INVALID_INPUT", lang), "error")
+	except Exception as e:
+		flash(i18n.t("ERROR_GENERAL", lang, error=str(e)), "error")
+
+	return redirect(url_for("index", lang=lang))
+
+@flask_app.route("/<lang>/github_traffic", methods=["GET"])
+def github_traffic(lang="en"):
+	if "username" not in session:
+		return jsonify({"error": "Unauthorized"})
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	config = Config()
+
+	if not config.github_token or not config.github_username or not config.github_repo:
+		return jsonify({"error": "GitHub configuration incomplete"})
+
+	time_range = request.args.get("time_range", "30d")
+	per_page = int(request.args.get("per_page", 25))
+	page = int(request.args.get("page", 1))
+
+	days = {
+		"1d": 1,
+		"7d": 7,
+		"30d": 30,
+		"90d": 90,
+		"180d": 180,
+		"365d": 365,
+		"all": 0
+	}.get(time_range, 30)
+
+	try:
+		headers = {
+			"Authorization": f"token {config.github_token}",
+			"Accept": "application/vnd.github.v3+json"
+		}
+
+		# Get repository info
+		repo_url = f"https://api.github.com/repos/{config.github_username}/{config.github_repo}"
+		repo_response = requests.get(repo_url, headers=headers)
+		repo_data = repo_response.json()
+
+		# Get traffic data
+		traffic_url = f"{repo_url}/traffic/views"
+		traffic_response = requests.get(traffic_url, headers=headers)
+		traffic_data = traffic_response.json()
+
+		# Get clones data
+		clones_url = f"{repo_url}/traffic/clones"
+		clones_response = requests.get(clones_url, headers=headers)
+		clones_data = clones_response.json()
+
+		# Get referrers data
+		referrers_url = f"{repo_url}/traffic/popular/referrers"
+		referrers_response = requests.get(referrers_url, headers=headers)
+		referrers_data = referrers_response.json()
+
+		# Get popular content
+		content_url = f"{repo_url}/traffic/popular/paths"
+		content_response = requests.get(content_url, headers=headers)
+		content_data = content_response.json()
+
+		# Get commits
+		commits_url = f"{repo_url}/commits"
+		commits_params = {"per_page": per_page, "page": page}
+		commits_response = requests.get(commits_url, headers=headers, params=commits_params)
+		commits_data = commits_response.json()
+
+		# Get total commits count for pagination
+		commits_count_response = requests.get(f"{repo_url}/contributors", headers=headers)
+		commits_count_data = commits_count_response.json()
+		total_commits = sum(contributor.get("contributions", 0) for contributor in commits_count_data if isinstance(contributor, dict))
+
+		return jsonify({
+			"repo": repo_data,
+			"traffic": traffic_data,
+			"clones": clones_data,
+			"referrers": referrers_data,
+			"popular_content": content_data,
+			"commits": commits_data,
+			"total_commits": total_commits,
+			"total_pages": (total_commits + per_page - 1) // per_page
+		})
+	except Exception as e:
+		return jsonify({"error": str(e)})
+
+@flask_app.route("/<lang>/file_tree", methods=["GET"])
+def file_tree(lang="en"):
+	if "username" not in session:
+		return jsonify({"error": "Unauthorized"})
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	try:
+		root_dir = os.path.dirname(os.path.dirname(__file__))
+		tree = []
+
+		for root, dirs, files in os.walk(root_dir):
+			rel_path = os.path.relpath(root, root_dir)
+			if rel_path == ".":
+				rel_path = ""
+
+			# Skip hidden directories and files
+			dirs[:] = [d for d in dirs if not d.startswith(".")]
+			files = [f for f in files if not f.startswith(".")]
+
+			# Skip virtual environment directories
+			if "venv" in dirs:
+				dirs.remove("venv")
+			if "__pycache__" in dirs:
+				dirs.remove("__pycache__")
+
+			for file in files:
+				file_path = os.path.join(rel_path, file)
+				tree.append(file_path)
+
+		return jsonify({"files": tree})
+	except Exception as e:
+		return jsonify({"error": str(e)})
+
+@flask_app.route("/<lang>/file_content", methods=["GET"])
+def file_content(lang="en"):
+	if "username" not in session:
+		return jsonify({"error": "Unauthorized"})
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	file_path = request.args.get("path")
+
+	if not file_path:
+		return jsonify({"error": "No file path provided"})
+
+	try:
+		root_dir = os.path.dirname(os.path.dirname(__file__))
+		full_path = os.path.join(root_dir, file_path)
+
+		# Ensure the path is within the project directory
+		if not os.path.abspath(full_path).startswith(os.path.abspath(root_dir)):
+			return jsonify({"error": "Invalid file path"})
+
+		if not os.path.isfile(full_path):
+			return jsonify({"error": "File not found"})
+
+		with open(full_path, "r", encoding="utf-8") as f:
+			content = f.read()
+
+		return jsonify({"content": content})
+	except Exception as e:
+		return jsonify({"error": str(e)})
+
+@flask_app.route("/<lang>/save_file", methods=["POST"])
+def save_file(lang="en"):
+	if "username" not in session:
+		return jsonify({"error": "Unauthorized"})
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	file_path = request.form.get("path")
+	content = request.form.get("content")
+
+	if not file_path or content is None:
+		return jsonify({"error": "Missing file path or content"})
+
+	try:
+		root_dir = os.path.dirname(os.path.dirname(__file__))
+		full_path = os.path.join(root_dir, file_path)
+
+		# Ensure the path is within the project directory
+		if not os.path.abspath(full_path).startswith(os.path.abspath(root_dir)):
+			return jsonify({"error": "Invalid file path"})
+
+		# Create directory if it doesn't exist
+		os.makedirs(os.path.dirname(full_path), exist_ok=True)
+
+		with open(full_path, "w", encoding="utf-8") as f:
+			f.write(content)
+
+		return jsonify({"success": True})
+	except Exception as e:
+		return jsonify({"error": str(e)})
+
+@flask_app.route("/<lang>/create_file", methods=["POST"])
+def create_file(lang="en"):
+	if "username" not in session:
+		return jsonify({"error": "Unauthorized"})
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	file_path = request.form.get("path")
+
+	if not file_path:
+		return jsonify({"error": "Missing file path"})
+
+	try:
+		root_dir = os.path.dirname(os.path.dirname(__file__))
+		full_path = os.path.join(root_dir, file_path)
+
+		# Ensure the path is within the project directory
+		if not os.path.abspath(full_path).startswith(os.path.abspath(root_dir)):
+			return jsonify({"error": "Invalid file path"})
+
+		if os.path.exists(full_path):
+			return jsonify({"error": "File already exists"})
+
+		# Create directory if it doesn't exist
+		os.makedirs(os.path.dirname(full_path), exist_ok=True)
+
+		with open(full_path, "w", encoding="utf-8") as f:
+			f.write("")
+
+		return jsonify({"success": True})
+	except Exception as e:
+		return jsonify({"error": str(e)})
+
+@flask_app.route("/<lang>/delete_file", methods=["POST"])
+def delete_file(lang="en"):
+	if "username" not in session:
+		return jsonify({"error": "Unauthorized"})
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	file_path = request.form.get("path")
+
+	if not file_path:
+		return jsonify({"error": "Missing file path"})
+
+	try:
+		root_dir = os.path.dirname(os.path.dirname(__file__))
+		full_path = os.path.join(root_dir, file_path)
+
+		# Ensure the path is within the project directory
+		if not os.path.abspath(full_path).startswith(os.path.abspath(root_dir)):
+			return jsonify({"error": "Invalid file path"})
+
+		if not os.path.isfile(full_path):
+			return jsonify({"error": "File not found"})
+
+		os.remove(full_path)
+
+		return jsonify({"success": True})
+	except Exception as e:
+		return jsonify({"error": str(e)})
+
+@flask_app.route("/bot<path:path>", methods=["POST"])
+async def telegram_webhook(path):
+	if not path.startswith(config.telegram_token):
+		return "Invalid token", 403
+
+	try:
+		update_data = request.get_json()
+		update = Update.de_json(update_data, telegram_app.bot)
+		await telegram_app.process_update(update)
+		return "OK", 200
+	except Exception as e:
+		logger.error(f"Error processing update: {str(e)}")
+		return "Error", 500
+
+# User dashboard routes for payment and order management
+@flask_app.route("/<lang>/create_payment", methods=["POST"])
+def create_payment(lang="en"):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = session.get("user_id")
+	if not user_id:
+		return redirect(url_for("login", lang=lang))
+
+	amount = request.form.get("amount")
+	description = request.form.get("description", "")
+
+	try:
+		amount = float(amount)
+		if amount <= 0:
+			flash(i18n.t("INVALID_AMOUNT", lang), "error")
+			return redirect(url_for("user_dashboard", lang=lang))
+
+		payment_details = db.create_papara_payment(user_id, amount, description)
+
+		if payment_details:
+			flash(i18n.t("PAYMENT_CREATED", lang), "success")
+		else:
+			flash(i18n.t("PAYMENT_ERROR", lang), "error")
+	except ValueError:
+		flash(i18n.t("INVALID_AMOUNT", lang), "error")
+	except Exception as e:
+		flash(i18n.t("ERROR_GENERAL", lang, error=str(e)), "error")
+
+	return redirect(url_for("user_dashboard", lang=lang))
+
+@flask_app.route("/<lang>/view_payment/<int:payment_id>")
+def view_payment(lang="en", payment_id=None):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = session.get("user_id")
+	if not user_id:
+		return redirect(url_for("login", lang=lang))
+
+	payment = db.get_payment_by_id(user_id, payment_id)
+
+	if not payment:
+		flash(i18n.t("PAYMENT_NOT_FOUND", lang), "error")
+		return redirect(url_for("user_dashboard", lang=lang))
+
+	return render_template(
+		"payment_details.html",
+		lang=lang,
+		i18n=i18n,
+		payment=payment
+	)
+
+@flask_app.route("/<lang>/check_payment/<int:payment_id>")
+def check_payment(lang="en", payment_id=None):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = session.get("user_id")
+	if not user_id:
+		return redirect(url_for("login", lang=lang))
+
+	payment = db.get_payment_by_id(user_id, payment_id)
+
+	if not payment:
+		flash(i18n.t("PAYMENT_NOT_FOUND", lang), "error")
+		return redirect(url_for("user_dashboard", lang=lang))
+
+	if payment["status"] == "completed":
+		flash(i18n.t("PAYMENT_ALREADY_COMPLETED", lang), "info")
+		return redirect(url_for("user_dashboard", lang=lang))
+
+	# Verify payment status
+	if db.verify_papara_payment(payment["reference"]):
+		flash(i18n.t("PAYMENT_VERIFIED", lang), "success")
+	else:
+		flash(i18n.t("PAYMENT_PENDING", lang), "info")
+
+	return redirect(url_for("user_dashboard", lang=lang))
+
+@flask_app.route("/<lang>/view_order/<int:order_id>")
+def view_order(lang="en", order_id=None):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = session.get("user_id")
+	if not user_id:
+		return redirect(url_for("login", lang=lang))
+
+	order = db.get_order_by_id(user_id, order_id)
+
+	if not order:
+		flash(i18n.t("ORDER_NOT_FOUND", lang), "error")
+		return redirect(url_for("user_dashboard", lang=lang))
+
+	return render_template(
+		"order_details.html",
+		lang=lang,
+		i18n=i18n,
+		order=order
+	)
+
+@flask_app.route("/<lang>/pay_order/<int:order_id>")
+def pay_order(lang="en", order_id=None):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = session.get("user_id")
+	if not user_id:
+		return redirect(url_for("login", lang=lang))
+
+	order = db.get_order_by_id(user_id, order_id)
+
+	if not order:
+		flash(i18n.t("ORDER_NOT_FOUND", lang), "error")
+		return redirect(url_for("user_dashboard", lang=lang))
+
+	if order["status"] != "pending_payment":
+		flash(i18n.t("ORDER_NOT_PENDING_PAYMENT", lang), "error")
+		return redirect(url_for("user_dashboard", lang=lang))
+
+	# Check if user has enough credits
+	user = db.get_user_by_id(user_id)
+	if user["credits"] < order["total_price"]:
+		flash(i18n.t("INSUFFICIENT_CREDITS", lang), "error")
+		return redirect(url_for("user_dashboard", lang=lang))
+
+	# Process payment
+	if db.process_order_payment(user_id, order_id):
+		flash(i18n.t("ORDER_PAID", lang), "success")
+	else:
+		flash(i18n.t("PAYMENT_ERROR", lang), "error")
+
+	return redirect(url_for("user_dashboard", lang=lang))
+
+@flask_app.route("/<lang>/cancel_order/<int:order_id>")
+def cancel_order(lang="en", order_id=None):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = session.get("user_id")
+	if not user_id:
+		return redirect(url_for("login", lang=lang))
+
+	order = db.get_order_by_id(user_id, order_id)
+
+	if not order:
+		flash(i18n.t("ORDER_NOT_FOUND", lang), "error")
+		return redirect(url_for("user_dashboard", lang=lang))
+
+	if order["status"] not in ["pending", "pending_payment"]:
+		flash(i18n.t("ORDER_CANNOT_CANCEL", lang), "error")
+		return redirect(url_for("user_dashboard", lang=lang))
+
+	# Cancel order
+	if db.cancel_user_order(user_id, order_id):
+		flash(i18n.t("ORDER_CANCELLED", lang), "success")
+	else:
+		flash(i18n.t("CANCEL_ERROR", lang), "error")
+
+	return redirect(url_for("user_dashboard", lang=lang))
+
+@flask_app.route("/<lang>/update_profile", methods=["POST"])
+def update_profile(lang="en"):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = session.get("user_id")
+	if not user_id:
+		return redirect(url_for("login", lang=lang))
+
+	email = request.form.get("email", "")
+	papara_email = request.form.get("papara_email", "")
+	new_password = request.form.get("new_password", "")
+	confirm_password = request.form.get("confirm_password", "")
+
+	# Validate password if provided
+	if new_password:
+		if new_password != confirm_password:
+			flash(i18n.t("PASSWORDS_DONT_MATCH", lang), "error")
+			return redirect(url_for("user_dashboard", lang=lang))
+
+		if len(new_password) < 8:
+			flash(i18n.t("PASSWORD_TOO_SHORT", lang), "error")
+			return redirect(url_for("user_dashboard", lang=lang))
+
+	# Update profile
+	success = db.update_user_profile(user_id, email, papara_email, new_password)
+
+	if success:
+		flash(i18n.t("PROFILE_UPDATED", lang), "success")
+	else:
+		flash(i18n.t("UPDATE_ERROR", lang), "error")
+
+	return redirect(url_for("user_dashboard", lang=lang))
+
+@flask_app.route("/<lang>/manage_addresses")
+def manage_addresses(lang="en"):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = session.get("user_id")
+	if not user_id:
+		return redirect(url_for("login", lang=lang))
+
+	addresses = db.get_user_addresses(user_id)
+
+	return render_template(
+		"manage_addresses.html",
+		lang=lang,
+		i18n=i18n,
+		addresses=addresses
+	)
+
+@flask_app.route("/<lang>/add_address", methods=["POST"])
+def add_address(lang="en"):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = session.get("user_id")
+	if not user_id:
+		return redirect(url_for("login", lang=lang))
+
+	name = request.form.get("name", "")
+	address = request.form.get("address", "")
+	city = request.form.get("city", "")
+	is_default = request.form.get("is_default") == "on"
+
+	if not name or not address or not city:
+		flash(i18n.t("MISSING_FIELDS", lang), "error")
+		return redirect(url_for("manage_addresses", lang=lang))
+
+	# Add address
+	success = db.add_user_address(user_id, name, address, city, is_default)
+
+	if success:
+		flash(i18n.t("ADDRESS_ADDED", lang), "success")
+	else:
+		flash(i18n.t("ADD_ERROR", lang), "error")
+
+	return redirect(url_for("manage_addresses", lang=lang))
+
+@flask_app.route("/<lang>/edit_address/<int:address_id>", methods=["POST"])
+def edit_address(lang="en", address_id=None):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = session.get("user_id")
+	if not user_id:
+		return redirect(url_for("login", lang=lang))
+
+	name = request.form.get("name", "")
+	address = request.form.get("address", "")
+	city = request.form.get("city", "")
+	is_default = request.form.get("is_default") == "on"
+
+	if not name or not address or not city:
+		flash(i18n.t("MISSING_FIELDS", lang), "error")
+		return redirect(url_for("manage_addresses", lang=lang))
+
+	# Update address
+	success = db.update_user_address(user_id, address_id, name, address, city, is_default)
+
+	if success:
+		flash(i18n.t("ADDRESS_UPDATED", lang), "success")
+	else:
+		flash(i18n.t("UPDATE_ERROR", lang), "error")
+
+	return redirect(url_for("manage_addresses", lang=lang))
+
+@flask_app.route("/<lang>/delete_address/<int:address_id>")
+def delete_address(lang="en", address_id=None):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = session.get("user_id")
+	if not user_id:
+		return redirect(url_for("login", lang=lang))
+
+	# Delete address
+	success = db.delete_user_address(user_id, address_id)
+
+	if success:
+		flash(i18n.t("ADDRESS_DELETED", lang), "success")
+	else:
+		flash(i18n.t("DELETE_ERROR", lang), "error")
+
+	return redirect(url_for("manage_addresses", lang=lang))
+
+@flask_app.route("/<lang>/create_product", methods=["GET", "POST"])
+def create_product(lang="en"):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = session.get("user_id")
+	if not user_id:
+		return redirect(url_for("login", lang=lang))
+
+	if request.method == "POST":
+		name = request.form.get("name", "")
+		price = request.form.get("price", "")
+		type = request.form.get("type", "")
+		quantity = request.form.get("quantity", "")
+		description = request.form.get("description", "")
+		image_url = request.form.get("image_url", "")
+
+		if not name or not price or not type:
+			flash(i18n.t("MISSING_FIELDS", lang), "error")
+			return render_template(
+				"create_product.html",
+				lang=lang,
+				i18n=i18n
+			)
+
+		try:
+			price = float(price)
+			if price <= 0:
+				flash(i18n.t("INVALID_PRICE", lang), "error")
+				return render_template(
+					"create_product.html",
+					lang=lang,
+					i18n=i18n
+				)
+
+			if quantity:
+				quantity = int(quantity)
+				if quantity < 0:
+					flash(i18n.t("INVALID_QUANTITY", lang), "error")
+					return render_template(
+						"create_product.html",
+						lang=lang,
+						i18n=i18n
+					)
+			else:
+				quantity = None
+
+			# Create product
+			success = db.create_product(user_id, name, price, type, quantity, description, image_url)
+
+			if success:
+				flash(i18n.t("PRODUCT_CREATED", lang), "success")
+				return redirect(url_for("user_dashboard", lang=lang))
+			else:
+				flash(i18n.t("CREATE_ERROR", lang), "error")
+		except ValueError:
+			flash(i18n.t("INVALID_INPUT", lang), "error")
+
+	return render_template(
+		"create_product.html",
+		lang=lang,
+		i18n=i18n
+	)
+
+@flask_app.route("/<lang>/edit_product/<int:product_id>", methods=["GET", "POST"])
+def edit_product(lang="en", product_id=None):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = session.get("user_id")
+	if not user_id:
+		return redirect(url_for("login", lang=lang))
+
+	product = db.get_product_by_id(product_id, user_id)
+
+	if not product:
+		flash(i18n.t("PRODUCT_NOT_FOUND", lang), "error")
+		return redirect(url_for("user_dashboard", lang=lang))
+
+	if request.method == "POST":
+		name = request.form.get("name", "")
+		price = request.form.get("price", "")
+		type = request.form.get("type", "")
+		quantity = request.form.get("quantity", "")
+		description = request.form.get("description", "")
+		image_url = request.form.get("image_url", "")
+
+		if not name or not price or not type:
+			flash(i18n.t("MISSING_FIELDS", lang), "error")
+			return render_template(
+				"edit_product.html",
+				lang=lang,
+				i18n=i18n,
+				product=product
+			)
+
+		try:
+			price = float(price)
+			if price <= 0:
+				flash(i18n.t("INVALID_PRICE", lang), "error")
+				return render_template(
+					"edit_product.html",
+					lang=lang,
+					i18n=i18n,
+					product=product
+				)
+
+			if quantity:
+				quantity = int(quantity)
+				if quantity < 0:
+					flash(i18n.t("INVALID_QUANTITY", lang), "error")
+					return render_template(
+						"edit_product.html",
+						lang=lang,
+						i18n=i18n,
+						product=product
+					)
+			else:
+				quantity = None
+
+			# Update product
+			success = db.update_product(user_id, product_id, name, price, type, quantity, description, image_url)
+
+			if success:
+				flash(i18n.t("PRODUCT_UPDATED", lang), "success")
+				return redirect(url_for("user_dashboard", lang=lang))
+			else:
+				flash(i18n.t("UPDATE_ERROR", lang), "error")
+		except ValueError:
+			flash(i18n.t("INVALID_INPUT", lang), "error")
+
+	return render_template(
+		"edit_product.html",
+		lang=lang,
+		i18n=i18n,
+		product=product
+	)
+
+@flask_app.route("/<lang>/toggle_product/<int:product_id>")
+def toggle_product(lang="en", product_id=None):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	user_id = session.get("user_id")
+	if not user_id:
+		return redirect(url_for("login", lang=lang))
+
+	product = db.get_product_by_id(product_id, user_id)
+
+	if not product:
+		flash(i18n.t("PRODUCT_NOT_FOUND", lang), "error")
+		return redirect(url_for("user_dashboard", lang=lang))
+
+	# Toggle product active status
+	success, is_active = db.toggle_product_active(user_id, product_id)
+
+	if success:
+		if is_active:
+			flash(i18n.t("PRODUCT_ACTIVATED", lang), "success")
+		else:
+			flash(i18n.t("PRODUCT_DEACTIVATED", lang), "success")
+	else:
+		flash(i18n.t("UPDATE_ERROR", lang), "error")
+
+	return redirect(url_for("user_dashboard", lang=lang))
+
+# Create ASGI application
+asgi_app = WsgiToAsgi(flask_app)

@@ -72,7 +72,7 @@ async def send_long_message(
 	update: Update = None,
 	query_message: Message = None,
 	context: ContextTypes.DEFAULT_TYPE = None,
-    force_new_message: bool = False
+	force_new_message: bool = False
 ) -> None:
 	"""
 	Splits long messages into chunks of 4096 characters or less and sends them sequentially.
@@ -252,65 +252,65 @@ async def register_user_if_not_exists(update: Update, context: ContextTypes.DEFA
 		)
 
 async def chat_member_update(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.my_chat_member:
-        chat = update.my_chat_member.chat
-        new_status = update.my_chat_member.new_chat_member.status
-        if chat.type in ["group", "supergroup", "channel"]:
-            db = Database()  # Your database class
-            db.add_group(chat.id, chat.title, datetime.now())
+	if update.my_chat_member:
+		chat = update.my_chat_member.chat
+		new_status = update.my_chat_member.new_chat_member.status
+		if chat.type in ["group", "supergroup", "channel"]:
+			db = Database()  # Your database class
+			db.add_group(chat.id, chat.title, datetime.now())
 
-            # Fetch detailed chat info
-            full_chat = await context.bot.get_chat(chat.id)
-            is_public = bool(full_chat.username)
-            member_count = getattr(full_chat, 'member_count', None)
+			# Fetch detailed chat info
+			full_chat = await context.bot.get_chat(chat.id)
+			is_public = bool(full_chat.username)
+			member_count = getattr(full_chat, 'member_count', None)
 
-            creator_id = None
-            admins = []
-            if new_status in ["administrator", "creator"]:
-                admin_list = await context.bot.get_chat_administrators(chat.id)
-                for admin in admin_list:
-                    if admin.status == "creator":
-                        creator_id = admin.user.id
-                    admins.append(admin.user.id)
+			creator_id = None
+			admins = []
+			if new_status in ["administrator", "creator"]:
+				admin_list = await context.bot.get_chat_administrators(chat.id)
+				for admin in admin_list:
+					if admin.status == "creator":
+						creator_id = admin.user.id
+					admins.append(admin.user.id)
 
-            # Update database
-            db.update_group_details(chat.id, {
-                'type': chat.type,
-                'is_public': is_public,
-                'member_count': member_count,
-                'creator_id': creator_id,
-                'admins': json.dumps(admins) if admins else None
-            })
+			# Update database
+			db.update_group_details(chat.id, {
+				'type': chat.type,
+				'is_public': is_public,
+				'member_count': member_count,
+				'creator_id': creator_id,
+				'admins': json.dumps(admins) if admins else None
+			})
 
 async def chosen_inline_result(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    result = update.chosen_inline_result
-    if result.inline_message_id:  # Only store if sent to a chat
-        if 'inline_usages' not in context.bot_data:
-            context.bot_data['inline_usages'] = {}
-        context.bot_data['inline_usages'][result.inline_message_id] = {
-            'user_id': result.from_user.id,
-            'query': result.query
-        }
+	result = update.chosen_inline_result
+	if result.inline_message_id:  # Only store if sent to a chat
+		if 'inline_usages' not in context.bot_data:
+			context.bot_data['inline_usages'] = {}
+		context.bot_data['inline_usages'][result.inline_message_id] = {
+			'user_id': result.from_user.id,
+			'query': result.query
+		}
 
 async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    message = update.message
-    if message.inline_message_id:
-        inline_message_id = message.inline_message_id
-        chat_id = message.chat.id
-        db = Database()
-        if 'inline_usages' in context.bot_data and inline_message_id in context.bot_data['inline_usages']:
-            usage = context.bot_data['inline_usages'].pop(inline_message_id)
-            db.log_inline_usage(usage['user_id'], chat_id, usage['query'])
-            if db.is_group_blacklisted(chat_id):
-                await context.bot.edit_message_text(
-                    inline_message_id=inline_message_id,
-                    text="This bot is not allowed in this group."
-                )
+	message = update.message
+	if message.inline_message_id:
+		inline_message_id = message.inline_message_id
+		chat_id = message.chat.id
+		db = Database()
+		if 'inline_usages' in context.bot_data and inline_message_id in context.bot_data['inline_usages']:
+			usage = context.bot_data['inline_usages'].pop(inline_message_id)
+			db.log_inline_usage(usage['user_id'], chat_id, usage['query'])
+			if db.is_group_blacklisted(chat_id):
+				await context.bot.edit_message_text(
+					inline_message_id=inline_message_id,
+					text="This bot is not allowed in this group."
+				)
 
 def log_inline_usage(self, user_id: int, chat_id: int, query: str):
-    query = "INSERT INTO inline_usage (user_id, chat_id, query, timestamp) VALUES (%s, %s, %s, %s)"
-    self.cursor.execute(query, (user_id, chat_id, query, datetime.now()))
-    self.conn.commit()
+	query = "INSERT INTO inline_usage (user_id, chat_id, query, timestamp) VALUES (%s, %s, %s, %s)"
+	self.cursor.execute(query, (user_id, chat_id, query, datetime.now()))
+	self.conn.commit()
 
 async def get_warning_description(value, language):
 	"""

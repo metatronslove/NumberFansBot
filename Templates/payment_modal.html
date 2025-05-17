@@ -1,0 +1,316 @@
+<!-- Payment Modal Template -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="paymentModalLabel">{{ i18n.t("PAYMENT_TITLE", lang) }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="paymentForm">
+          <div class="mb-3">
+            <label for="paymentAmount" class="form-label">{{ i18n.t("PAYMENT_AMOUNT", lang) }}</label>
+            <div class="input-group">
+              <input type="number" class="form-control" id="paymentAmount" name="amount" min="1" required>
+              <span class="input-group-text">TL</span>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="paymentType" class="form-label">{{ i18n.t("PAYMENT_TYPE", lang) }}</label>
+            <select class="form-select" id="paymentType" name="paymentType">
+              <option value="balance">{{ i18n.t("PAYMENT_TYPE_BALANCE", lang) }}</option>
+              <option value="product">{{ i18n.t("PAYMENT_TYPE_PRODUCT", lang) }}</option>
+              <option value="order">{{ i18n.t("PAYMENT_TYPE_ORDER", lang) }}</option>
+            </select>
+          </div>
+          
+          <div class="mb-3 product-select-container" style="display: none;">
+            <label for="productSelect" class="form-label">{{ i18n.t("SELECT_PRODUCT", lang) }}</label>
+            <select class="form-select" id="productSelect" name="productId">
+              <option value="">{{ i18n.t("SELECT_PRODUCT_PLACEHOLDER", lang) }}</option>
+              {% for product in products %}
+              <option value="{{ product.id }}" data-price="{{ product.price }}">{{ product.name }} - {{ product.price }} TL</option>
+              {% endfor %}
+            </select>
+          </div>
+          
+          <div class="mb-3 order-select-container" style="display: none;">
+            <label for="orderSelect" class="form-label">{{ i18n.t("SELECT_ORDER", lang) }}</label>
+            <select class="form-select" id="orderSelect" name="orderId">
+              <option value="">{{ i18n.t("SELECT_ORDER_PLACEHOLDER", lang) }}</option>
+              {% for order in pending_approval_orders %}
+              <option value="{{ order.id }}" data-price="{{ order.amount }}">{{ i18n.t("ORDER_NUMBER", lang) }}: {{ order.id }} - {{ order.amount }} TL</option>
+              {% endfor %}
+            </select>
+          </div>
+          
+          <div class="alert alert-info payment-instructions" style="display: none;">
+            <p>{{ i18n.t("PAYMENT_INSTRUCTIONS_1", lang) }}</p>
+            <p><strong>{{ i18n.t("PAYMENT_DESCRIPTION", lang) }}: <span id="paymentDescription"></span></strong></p>
+            <p>{{ i18n.t("PAYMENT_INSTRUCTIONS_2", lang) }}</p>
+          </div>
+          
+          <div class="alert alert-success payment-success" style="display: none;">
+            {{ i18n.t("PAYMENT_SUCCESS", lang) }}
+          </div>
+          
+          <div class="alert alert-danger payment-error" style="display: none;">
+            {{ i18n.t("PAYMENT_ERROR", lang) }}
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ i18n.t("CLOSE", lang) }}</button>
+        <button type="button" class="btn btn-primary" id="createPaymentBtn">{{ i18n.t("CREATE_PAYMENT", lang) }}</button>
+        <button type="button" class="btn btn-success" id="confirmPaymentBtn" style="display: none;">{{ i18n.t("CONFIRM_PAYMENT", lang) }}</button>
+        <button type="button" class="btn btn-danger" id="cancelPaymentBtn" style="display: none;">{{ i18n.t("CANCEL_PAYMENT", lang) }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    let currentPaymentId = null;
+    let currentDescription = null;
+    
+    // Handle payment type change
+    document.getElementById('paymentType').addEventListener('change', function() {
+      const paymentType = this.value;
+      const productContainer = document.querySelector('.product-select-container');
+      const orderContainer = document.querySelector('.order-select-container');
+      const amountInput = document.getElementById('paymentAmount');
+      
+      // Reset UI
+      productContainer.style.display = 'none';
+      orderContainer.style.display = 'none';
+      amountInput.readOnly = false;
+      
+      // Show relevant fields based on payment type
+      if (paymentType === 'product') {
+        productContainer.style.display = 'block';
+      } else if (paymentType === 'order') {
+        orderContainer.style.display = 'block';
+      }
+    });
+    
+    // Handle product selection
+    document.getElementById('productSelect').addEventListener('change', function() {
+      const selectedOption = this.options[this.selectedIndex];
+      const price = selectedOption.getAttribute('data-price');
+      if (price) {
+        document.getElementById('paymentAmount').value = price;
+        document.getElementById('paymentAmount').readOnly = true;
+      }
+    });
+    
+    // Handle order selection
+    document.getElementById('orderSelect').addEventListener('change', function() {
+      const selectedOption = this.options[this.selectedIndex];
+      const price = selectedOption.getAttribute('data-price');
+      if (price) {
+        document.getElementById('paymentAmount').value = price;
+        document.getElementById('paymentAmount').readOnly = true;
+      }
+    });
+    
+    // Create payment request
+    document.getElementById('createPaymentBtn').addEventListener('click', function() {
+      const form = document.getElementById('paymentForm');
+      const amount = document.getElementById('paymentAmount').value;
+      const paymentType = document.getElementById('paymentType').value;
+      let productId = null;
+      let orderId = null;
+      
+      if (paymentType === 'product') {
+        productId = document.getElementById('productSelect').value;
+        if (!productId) {
+          alert('{{ i18n.t("SELECT_PRODUCT_ERROR", lang) }}');
+          return;
+        }
+      } else if (paymentType === 'order') {
+        orderId = document.getElementById('orderSelect').value;
+        if (!orderId) {
+          alert('{{ i18n.t("SELECT_ORDER_ERROR", lang) }}');
+          return;
+        }
+      }
+      
+      if (!amount || amount <= 0) {
+        alert('{{ i18n.t("INVALID_AMOUNT", lang) }}');
+        return;
+      }
+      
+      // Send payment request to server
+      fetch('/{{ lang }}/create_payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: parseFloat(amount),
+          product_id: productId,
+          order_id: orderId
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Show payment instructions
+          document.querySelector('.payment-instructions').style.display = 'block';
+          document.getElementById('paymentDescription').textContent = data.description;
+          
+          // Update UI for confirmation step
+          document.getElementById('createPaymentBtn').style.display = 'none';
+          document.getElementById('confirmPaymentBtn').style.display = 'inline-block';
+          document.getElementById('cancelPaymentBtn').style.display = 'inline-block';
+          
+          // Store payment info
+          currentPaymentId = data.payment_id;
+          currentDescription = data.description;
+          
+          // Disable form fields
+          const formElements = form.elements;
+          for (let i = 0; i < formElements.length; i++) {
+            formElements[i].disabled = true;
+          }
+        } else {
+          // Show error
+          const errorElement = document.querySelector('.payment-error');
+          errorElement.textContent = data.error || '{{ i18n.t("PAYMENT_ERROR", lang) }}';
+          errorElement.style.display = 'block';
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        const errorElement = document.querySelector('.payment-error');
+        errorElement.textContent = '{{ i18n.t("PAYMENT_ERROR", lang) }}';
+        errorElement.style.display = 'block';
+      });
+    });
+    
+    // Confirm payment
+    document.getElementById('confirmPaymentBtn').addEventListener('click', function() {
+      if (!currentDescription) {
+        return;
+      }
+      
+      // Show loading state
+      this.disabled = true;
+      this.textContent = '{{ i18n.t("CHECKING_PAYMENT", lang) }}';
+      
+      // Check payment status
+      fetch('/{{ lang }}/check_payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          description: currentDescription
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Show success message
+          document.querySelector('.payment-instructions').style.display = 'none';
+          document.querySelector('.payment-success').style.display = 'block';
+          
+          // Update UI
+          document.getElementById('confirmPaymentBtn').style.display = 'none';
+          document.getElementById('cancelPaymentBtn').style.display = 'none';
+          
+          // Reload page after delay
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        } else {
+          // Reset button
+          this.disabled = false;
+          this.textContent = '{{ i18n.t("CONFIRM_PAYMENT", lang) }}';
+          
+          // Show error
+          alert('{{ i18n.t("PAYMENT_NOT_FOUND", lang) }}');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Reset button
+        this.disabled = false;
+        this.textContent = '{{ i18n.t("CONFIRM_PAYMENT", lang) }}';
+        
+        // Show error
+        alert('{{ i18n.t("PAYMENT_CHECK_ERROR", lang) }}');
+      });
+    });
+    
+    // Cancel payment
+    document.getElementById('cancelPaymentBtn').addEventListener('click', function() {
+      if (!currentPaymentId) {
+        return;
+      }
+      
+      // Confirm cancellation
+      if (!confirm('{{ i18n.t("CANCEL_PAYMENT_CONFIRM", lang) }}')) {
+        return;
+      }
+      
+      // Cancel payment
+      fetch('/{{ lang }}/cancel_payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          payment_id: currentPaymentId
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Close modal and reload page
+          const modal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+          modal.hide();
+          window.location.reload();
+        } else {
+          // Show error
+          alert(data.error || '{{ i18n.t("CANCEL_PAYMENT_ERROR", lang) }}');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('{{ i18n.t("CANCEL_PAYMENT_ERROR", lang) }}');
+      });
+    });
+    
+    // Reset modal on close
+    document.getElementById('paymentModal').addEventListener('hidden.bs.modal', function () {
+      const form = document.getElementById('paymentForm');
+      form.reset();
+      
+      // Reset UI
+      document.querySelector('.product-select-container').style.display = 'none';
+      document.querySelector('.order-select-container').style.display = 'none';
+      document.querySelector('.payment-instructions').style.display = 'none';
+      document.querySelector('.payment-success').style.display = 'none';
+      document.querySelector('.payment-error').style.display = 'none';
+      
+      document.getElementById('createPaymentBtn').style.display = 'inline-block';
+      document.getElementById('confirmPaymentBtn').style.display = 'none';
+      document.getElementById('cancelPaymentBtn').style.display = 'none';
+      
+      document.getElementById('paymentAmount').readOnly = false;
+      
+      // Enable form fields
+      const formElements = form.elements;
+      for (let i = 0; i < formElements.length; i++) {
+        formElements[i].disabled = false;
+      }
+      
+      // Reset payment info
+      currentPaymentId = null;
+      currentDescription = null;
+    });
+  });
+</script>

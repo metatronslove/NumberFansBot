@@ -13,6 +13,7 @@ RUN useradd -m -u 1000 -s /bin/bash appuser
 
 # Create /code directory with correct permissions
 RUN mkdir /code && \
+	mkdir /code/Uploads && \
 	chown -R appuser:appuser /code
 
 # Upgrade pip and install dependencies

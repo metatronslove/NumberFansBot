@@ -19,15 +19,15 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS groups (
-    group_id BIGINT PRIMARY KEY,
-    group_name VARCHAR(255),
-    type VARCHAR(50),          -- e.g., "group", "supergroup", "channel"
-    is_public BOOLEAN,         -- True if public, False if private
-    member_count INT,          -- Number of members
-    creator_id BIGINT,         -- ID of the founder
-    admins JSON,               -- List of admin IDs as JSON
-    is_blacklisted BOOLEAN DEFAULT FALSE,
-    added_at DATETIME
+	group_id BIGINT PRIMARY KEY,
+	group_name VARCHAR(255),
+	type VARCHAR(50),		  -- e.g., "group", "supergroup", "channel"
+	is_public BOOLEAN,		 -- True if public, False if private
+	member_count INT,		  -- Number of members
+	creator_id BIGINT,		 -- ID of the founder
+	admins JSON,			   -- List of admin IDs as JSON
+	is_blacklisted BOOLEAN DEFAULT FALSE,
+	added_at DATETIME
 );
 
 CREATE TABLE IF NOT EXISTS transliterations (
@@ -65,11 +65,11 @@ CREATE TABLE IF NOT EXISTS command_usage (
 );
 
 CREATE TABLE IF NOT EXISTS inline_usage (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id BIGINT,
-    chat_id BIGINT,
-    query TEXT,
-    timestamp DATETIME
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	user_id BIGINT,
+	chat_id BIGINT,
+	query TEXT,
+	timestamp DATETIME
 );
 
 CREATE TABLE IF NOT EXISTS user_settings (
