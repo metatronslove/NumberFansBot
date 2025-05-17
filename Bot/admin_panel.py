@@ -348,8 +348,6 @@ def index(lang="en"):
 @flask_app.route("/<lang>/login", methods=["GET", "POST"])
 @flask_app.route("/login", methods=["GET", "POST"])
 def login(lang="en"):
-	if "username" not in session:						# Comment two lines
-		return redirect(url_for("login", lang=lang)) 	# To login with out
 	if lang not in AVAILABLE_LANGUAGES:
 		lang = "en"
 
@@ -459,6 +457,8 @@ def logout(lang="en"):
 @flask_app.route("/<lang>/install", methods=["GET", "POST"])
 @flask_app.route("/install", methods=["GET", "POST"])
 def install(lang="en"):
+	if "username" not in session:						# Comment two lines
+		return redirect(url_for("login", lang=lang)) 	# To login with out
 	if lang not in AVAILABLE_LANGUAGES:
 		lang = "en"
 
