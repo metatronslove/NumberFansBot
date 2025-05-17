@@ -79,7 +79,7 @@ async def transliterate_text(update: Update, context: ContextTypes.DEFAULT_TYPE)
 		i18n = I18n()
 		language = db.get_user_language(user_id) if user_id else "en"
 
-		text = query.text.strip()
+		text = query.Text.strip()
 		if not text:
 			await send_long_message(
 				message=i18n.t("ERROR_INVALID_INPUT", language, error="Text cannot be empty"),

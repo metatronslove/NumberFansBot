@@ -216,7 +216,7 @@ async def get_ai_commentary(response: str, lang: str) -> str:
 					logger.debug(f"Cleaned text: {cleaned_text}")
 					return cleaned_text
 				else:
-					logger.error(f"Hugging Face API error: Status code {api_response.status}, Response: {await api_response.text()}")
+					logger.error(f"Hugging Face API error: Status code {api_response.status}, Response: {await api_response.Text()}")
 					return ""
 	except KeyError as e:
 		logger.error(f"AI commentary error: Invalid response format, missing key {e}")
@@ -364,7 +364,7 @@ async def check_credits(update, context):
 		return True  # Allow callback queries or channel posts
 
 	user_id = user.id
-	command = query.text.split()[0].lower() if hasattr(query, 'text') and query.text else ""
+	command = query.Text.split()[0].lower() if hasattr(query, 'text') and query.Text else ""
 	db = Database()
 	i18n = I18n()
 	language = db.get_user_language(user_id)

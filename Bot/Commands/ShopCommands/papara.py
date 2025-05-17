@@ -27,7 +27,7 @@ class PaparaCommand:
 					CallbackQueryHandler(self.cancel_papara, pattern=r'^cancel$')
 				],
 				ENTERING_AMOUNT: [
-					MessageHandler(filters.text & ~filters.command, self.amount_received),
+					MessageHandler(filters.Text & ~filters.command, self.amount_received),
 					CallbackQueryHandler(self.cancel_papara, pattern=r'^cancel$')
 				],
 				CONFIRMING_PAYMENT: [
@@ -35,7 +35,7 @@ class PaparaCommand:
 					CallbackQueryHandler(self.cancel_papara, pattern=r'^cancel$')
 				],
 				CHECKING_PAYMENT: [
-					MessageHandler(filters.text & ~filters.command, self.payment_reference_received),
+					MessageHandler(filters.Text & ~filters.command, self.payment_reference_received),
 					CallbackQueryHandler(self.cancel_papara, pattern=r'^cancel$')
 				]
 			},
@@ -89,7 +89,7 @@ class PaparaCommand:
 	def amount_received(self, update: Update, context: CallbackContext) -> int:
 		"""Handle receiving the payment amount"""
 		try:
-			amount = float(update.message.text.strip())
+			amount = float(update.message.Text.strip())
 
 			# Validate amount
 			if amount < 10:
@@ -190,7 +190,7 @@ class PaparaCommand:
 	def payment_reference_received(self, update: Update, context: CallbackContext) -> int:
 		"""Handle receiving the payment reference"""
 		user_id = update.effective_user.id
-		payment_ref = update.message.text.strip()
+		payment_ref = update.message.Text.strip()
 
 		# Check payment status
 		payment_status = self.db.check_papara_payment_status(user_id, payment_ref)
