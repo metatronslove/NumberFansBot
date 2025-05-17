@@ -362,7 +362,7 @@ def login(lang="en"):
 			return render_template("login.html", lang=lang, i18n=i18n)
 
 		db = Database()
-		query = "SELECT password FROM users WHERE username = %s"
+		query = "SELECT * FROM users WHERE username = %s"
 		db.cursor.execute(query, (username,))
 		user = db.cursor.fetchone()
 
@@ -377,12 +377,12 @@ def login(lang="en"):
 		try:
 			if user and bcrypt.checkpw(password.encode("utf-8"), user["password"].encode("utf-8")):
 				session["username"] = username
+				session["user_id"] = user["user_id"]
 
 				# Redirect based on user role
 				if user["is_admin"]:
 					return redirect(url_for("index", lang=lang))
 				else:
-					# session["user_id"] = user["user_id"]
 					return redirect(url_for("user_dashboard", lang=lang))
 			else:
 				flash(i18n.t("LOGIN_INVALID_CREDENTIALS", lang), "error")
