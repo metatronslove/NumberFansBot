@@ -182,20 +182,15 @@ class Database:
 				details JSON,
 				timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
 			);""",
-			"""DELIMITER //
-			CREATE EVENT IF NOT EXISTS `clean_transliteration_cache`
+			"""CREATE EVENT IF NOT EXISTS `clean_transliteration_cache`
 			ON SCHEDULE EVERY 1 HOUR
 			DO
-			BEGIN
-				DELETE FROM `transliteration_cache` WHERE created_at < UNIX_TIMESTAMP() - 3600;
-			END //
-			DELIMITER ;"""
+			DELETE FROM `transliteration_cache` WHERE created_at < UNIX_TIMESTAMP() - 3600;"""
 		]
 		for query in queries:
 			try:
 				cursor = self.conn.cursor(dictionary=True)
 				cursor.execute(query)
-				# Consume any results to clear the connection state
 				cursor.fetchall()
 				self.conn.commit()
 				cursor.close()
