@@ -65,3 +65,5 @@ def seed_admin():
 			cursor.close()
 		if 'conn' in locals() and conn.is_connected():
 			conn.close()
+
+seed_admin()
