@@ -1,12 +1,12 @@
 from flask import request, render_template, redirect, url_for, session, flash, jsonify
 from datetime import datetime
-from Bot.Helpers.papara_integration import PaparaPaymentManager
+from Bot.Helpers.papara_integration import PaparaPaymentHandler
 
 def register_payment_routes(flask_app, db, i18n, AVAILABLE_LANGUAGES):
 	"""Register payment-related routes with the Flask application."""
 
 	# Initialize payment manager
-	payment_manager = PaparaPaymentManager(db)
+	payment_manager = PaparaPaymentHandler(db)
 
 	@flask_app.route("/<lang>/create_payment", methods=["POST"])
 	def create_payment(lang="en"):
