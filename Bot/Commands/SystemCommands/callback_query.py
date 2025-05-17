@@ -14,7 +14,7 @@ from telegram.constants import ParseMode
 from telegram.error import BadRequest
 from Bot.database import Database
 from ...i18n import I18n
-from ...transliteration import Transliteration
+from ...Transliteration import Transliteration
 from ...Abjad import Abjad
 from ...Numerology import UnifiedNumerology
 from ...MagicSquare import MagicSquareGenerator
@@ -284,7 +284,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				await send_long_message(response, parse_mode=ParseMode.HTML, reply_markup=reply_markup, update=update, query_message=query_message, context=context)
 		elif data.startswith("transliterate_history_"):
 			user_id = int(data[len("transliterate_history_"):])
-			history = db.transliteration_collection.find({"user_id": user_id})
+			history = db.Transliteration_collection.find({"user_id": user_id})
 			history = list(history)
 			if not history:
 				await send_long_message(

@@ -45,11 +45,11 @@ class Database:
 			CREATE TABLE IF NOT EXISTS groups (
 				group_id BIGINT PRIMARY KEY,
 				group_name VARCHAR(255),
-				type VARCHAR(50),		  -- e.g., "group", "supergroup", "channel"
-				is_public BOOLEAN,		 -- True if public, False if private
-				member_count INT,		  -- Number of members
-				creator_id BIGINT,		 -- ID of the founder
-				admins JSON,			   -- List of admin IDs as JSON
+				type VARCHAR(50),
+				is_public BOOLEAN,
+				member_count INT,
+				creator_id BIGINT,
+				admins JSON,
 				is_blacklisted BOOLEAN DEFAULT FALSE,
 				added_at DATETIME
 			);
@@ -158,7 +158,6 @@ class Database:
 				details JSON,
 				timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
 			);
-			-- TTL-like behavior for transliteration_cache
 			DELIMITER //
 			CREATE EVENT IF NOT EXISTS clean_transliteration_cache
 			ON SCHEDULE EVERY 1 HOUR

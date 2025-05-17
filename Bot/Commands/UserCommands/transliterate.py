@@ -13,7 +13,7 @@ from telegram.error import BadRequest
 from Bot.config import Config
 from Bot.database import Database
 from Bot.Helpers.i18n import I18n
-from Bot.transliteration import Transliteration
+from Bot.Transliteration import Transliteration
 from Bot.utils import register_user_if_not_exists, get_ai_commentary, timeout, handle_credits, send_long_message, uptodate_query
 from Bot.cache import Cache
 from Bot.abjad import abjad_start
