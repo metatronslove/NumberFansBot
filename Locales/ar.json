@@ -364,8 +364,8 @@
   "GROUP_BLACKLIST_TOGGLED": "تم {{status}} المجموعة {{group_id}}",
   "GROUP_BLACKLIST_TOGGLE_ERROR": "فشل في تبديل حالة القائمة السوداء للمجموعة",
   "INLINE_HELP_TITLE": "مساعدة الأوامر المضمنة",
-  "INLINE_HELP_DESC": "اكتب أمرًا مثل '@egrigore /abjad <نص> [--خيارات]'",
-  "INLINE_HELP_MESSAGE": "استخدم الأوامر المضمنة مثل `@egrigore /abjad <نص> [--alphabet=<قيمة>] [--type=<قيمة>] [--shadda=<قيمة>] [--detail=<قيمة>]`. الأوامر المدعومة: abjad, bastet, nutket, unsur, huddam, magic_square, transliterate, convert_numbers, numerology.",
+  "INLINE_HELP_DESC": "اكتب أمرًا مثل '@EgrigoreBot /abjad <نص> [--خيارات]'",
+  "INLINE_HELP_MESSAGE": "استخدم الأوامر المضمنة مثل `@EgrigoreBot /abjad <نص> [--alphabet=<قيمة>] [--type=<قيمة>] [--shadda=<قيمة>] [--detail=<قيمة>]`. الأوامر المدعومة: abjad, bastet, nutket, unsur, huddam, magic_square, transliterate, convert_numbers, numerology.",
   "UNKNOWN_COMMAND_TITLE": "أمر غير معروف",
   "UNKNOWN_COMMAND_DESC": "الأمر '{command}' غير معترف به",
   "UNKNOWN_COMMAND_MESSAGE": "عذرًا، '{command}' ليس أمرًا مضمنًا صالحًا. جرب أوامر مثل abjad أو bastet أو nutket.",
@@ -373,10 +373,10 @@
   "ERROR_DESC": "حدث خطأ: {error}",
   "ABJAD_INLINE_HELP_TITLE": "حاسبة الأبجدية",
   "ABJAD_INLINE_HELP_DESC": "حساب قيمة الأبجدية للنص",
-  "ABJAD_INLINE_HELP_MESSAGE": "اكتب `@egrigore /abjad <نص> [--alphabet=<arabic_abjadi|arabic_maghribi|...>] [--type=<asghar|saghir|...>] [--shadda=<once|twice>] [--detail=<summary|full>]`. مثال: `@egrigore /abjad Hello --alphabet=english --type=saghir`",
+  "ABJAD_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /abjad <نص> [--alphabet=<arabic_abjadi|arabic_maghribi|...>] [--type=<asghar|saghir|...>] [--shadda=<once|twice>] [--detail=<summary|full>]`. مثال: `@EgrigoreBot /abjad Hello --alphabet=english --type=saghir`",
   "ABJAD_NO_TEXT_TITLE": "لم يتم تقديم نص",
   "ABJAD_NO_TEXT_DESC": "الرجاء إدخال نص للحساب",
-  "ABJAD_NO_TEXT_MESSAGE": "الرجاء تقديم نص، على سبيل المثال، `@egrigore /abjad Hello`",
+  "ABJAD_NO_TEXT_MESSAGE": "الرجاء تقديم نص، على سبيل المثال، `@EgrigoreBot /abjad Hello`",
   "ABJAD_INVALID_ALPHABET_TITLE": "أبجدية غير صالحة",
   "ABJAD_INVALID_ALPHABET_DESC": "الأبجدية '{alphabet}' غير معترف بها",
   "ABJAD_INVALID_ALPHABET_MESSAGE": "الأبجدية '{alphabet}' غير صالحة. الخيارات الصالحة: arabic_abjadi, arabic_maghribi, arabic_quranic, arabic_hija, arabic_maghribi_hija, arabic_ikleels, arabic_shamse_abjadi, hebrew, turkish, english, latin",
@@ -399,10 +399,10 @@
   "ABJAD_CALC_TOTAL": "القيمة الإجمالية: {total}",
   "BASTET_INLINE_HELP_TITLE": "مولد باستيت",
   "BASTET_INLINE_HELP_DESC": "إنشاء نص من رقم",
-  "BASTET_INLINE_HELP_MESSAGE": "اكتب `@egrigore /bastet <رقم> [--repetition=<قيمة>] [--alphabet=<arabic_abjadi|arabic_maghribi|...>] [--type=<asghar|saghir|...>]`. مثال: `@egrigore /bastet 123 --repetition=5`",
+  "BASTET_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /bastet <رقم> [--repetition=<قيمة>] [--alphabet=<arabic_abjadi|arabic_maghribi|...>] [--type=<asghar|saghir|...>]`. مثال: `@EgrigoreBot /bastet 123 --repetition=5`",
   "BASTET_NO_NUMBER_TITLE": "لم يتم تقديم رقم",
   "BASTET_NO_NUMBER_DESC": "الرجاء إدخال رقم للمعالجة",
-  "BASTET_NO_NUMBER_MESSAGE": "الرجاء تقديم رقم، على سبيل المثال، `@egrigore /bastet 123`",
+  "BASTET_NO_NUMBER_MESSAGE": "الرجاء تقديم رقم، على سبيل المثال، `@EgrigoreBot /bastet 123`",
   "BASTET_INVALID_REPETITION_TITLE": "تكرار غير صالح",
   "BASTET_INVALID_REPETITION_DESC": "التكرار '{repetition}' غير صالح",
   "BASTET_INVALID_REPETITION_MESSAGE": "يجب أن يكون التكرار رقمًا بين 1 و 1000، تم الحصول على '{repetition}'",
@@ -418,10 +418,10 @@
   "BASTET_CALC_RESULT": "النص الذي تم إنشاؤه: {result}",
   "NUTKET_INLINE_HELP_TITLE": "تهجئة نوتكت",
   "NUTKET_INLINE_HELP_DESC": "تهجئة رقم بالحروف",
-  "NUTKET_INLINE_HELP_MESSAGE": "اكتب `@egrigore /nutket <رقم> [--language=<arabic|hebrew|turkish|english|latin>]`. مثال: `@egrigore /nutket 123 --language=arabic`",
+  "NUTKET_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /nutket <رقم> [--language=<arabic|hebrew|turkish|english|latin>]`. مثال: `@EgrigoreBot /nutket 123 --language=arabic`",
   "NUTKET_NO_NUMBER_TITLE": "لم يتم تقديم رقم",
   "NUTKET_NO_NUMBER_DESC": "الرجاء إدخال رقم للتهجئة",
-  "NUTKET_NO_NUMBER_MESSAGE": "الرجاء تقديم رقم، على سبيل المثال، `@egrigore /nutket 123`",
+  "NUTKET_NO_NUMBER_MESSAGE": "الرجاء تقديم رقم، على سبيل المثال، `@EgrigoreBot /nutket 123`",
   "NUTKET_INVALID_LANGUAGE_TITLE": "لغة غير صالحة",
   "NUTKET_INVALID_LANGUAGE_DESC": "اللغة '{language}' غير معترف بها",
   "NUTKET_INVALID_LANGUAGE_MESSAGE": "اللغة '{language}' غير صالحة. الخيارات الصالحة: arabic, hebrew, turkish, english, latin",
@@ -429,10 +429,10 @@
   "NUTKET_INLINE_DESC": "الرقم {number} مكتوب بـ {language}",
   "UNSUR_INLINE_HELP_TITLE": "مصنف أونسور",
   "UNSUR_INLINE_HELP_DESC": "تصنيف النص إلى عناصر",
-  "UNSUR_INLINE_HELP_MESSAGE": "اكتب `@egrigore /unsur <نص> [--language=<turkish|arabic|buni|huseyni|hebrew|english|latin|default>] [--table=<fire|water|air|earth|default>] [--shadda=<once|twice>]`. مثال: `@egrigore /unsur Hello --language=turkish`",
+  "UNSUR_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /unsur <نص> [--language=<turkish|arabic|buni|huseyni|hebrew|english|latin|default>] [--table=<fire|water|air|earth|default>] [--shadda=<once|twice>]`. مثال: `@EgrigoreBot /unsur Hello --language=turkish`",
   "UNSUR_NO_TEXT_TITLE": "لم يتم تقديم نص",
   "UNSUR_NO_TEXT_DESC": "الرجاء إدخال نص للتصنيف",
-  "UNSUR_NO_TEXT_MESSAGE": "الرجاء تقديم نص، على سبيل المثال، `@egrigore /unsur Hello`",
+  "UNSUR_NO_TEXT_MESSAGE": "الرجاء تقديم نص، على سبيل المثال، `@EgrigoreBot /unsur Hello`",
   "UNSUR_INVALID_LANGUAGE_TITLE": "لغة غير صالحة",
   "UNSUR_INVALID_LANGUAGE_DESC": "اللغة '{language}' غير معترف بها",
   "UNSUR_INVALID_LANGUAGE_MESSAGE": "اللغة '{language}' غير صالحة. الخيارات الصالحة: turkish, arabic, buni, huseyni, hebrew, english, latin, default",
@@ -449,10 +449,10 @@
   "UNSUR_INLINE_DESC": "تم تصنيف '{input}' كـ {element}",
   "HUDDAM_INLINE_HELP_TITLE": "مولد هددام",
   "HUDDAM_INLINE_HELP_DESC": "إنشاء اسم كيان من رقم",
-  "HUDDAM_INLINE_HELP_MESSAGE": "اكتب `@egrigore /huddam <رقم> [--entity=<ulvi|sufli|ser>] [--alphabet=<arabic_abjadi|...>] [--multiplier=<regular|eacher>]`. مثال: `@egrigore /huddam 123 --entity=ulvi`",
+  "HUDDAM_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /huddam <رقم> [--entity=<ulvi|sufli|ser>] [--alphabet=<arabic_abjadi|...>] [--multiplier=<regular|eacher>]`. مثال: `@EgrigoreBot /huddam 123 --entity=ulvi`",
   "HUDDAM_NO_NUMBER_TITLE": "لم يتم تقديم رقم",
   "HUDDAM_NO_NUMBER_DESC": "الرجاء إدخال رقم للمعالجة",
-  "HUDDAM_NO_NUMBER_MESSAGE": "يرجى تقديم رقم، على سبيل المثال، `@egrigore /huddam 123`",
+  "HUDDAM_NO_NUMBER_MESSAGE": "يرجى تقديم رقم، على سبيل المثال، `@EgrigoreBot /huddam 123`",
   "HUDDAM_INVALID_ENTITY_TITLE": "نوع الكيان غير صالح",
   "HUDDAM_INVALID_ENTITY_DESC": "نوع الكيان '{entity}' غير معترف به",
   "HUDDAM_INVALID_ENTITY_MESSAGE": "نوع الكيان '{entity}' غير صالح. الخيارات المتاحة: علوي، سفلي، سر",
@@ -466,10 +466,10 @@
   "HUDDAM_INLINE_DESC": "تم إنشاؤه للرقم {number}، النوع {type}",
   "MAGICSQUARE_INLINE_HELP_TITLE": "مولد المربع السحري",
   "MAGICSQUARE_INLINE_HELP_DESC": "إنشاء مربع سحري",
-  "MAGICSQUARE_INLINE_HELP_MESSAGE": "اكتب `@egrigore /magic_square <number>`. مثال: `@egrigore /magic_square 15`",
+  "MAGICSQUARE_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /magic_square <number>`. مثال: `@EgrigoreBot /magic_square 15`",
   "MAGICSQUARE_NO_NUMBER_TITLE": "لم يتم تقديم رقم",
   "MAGICSQUARE_NO_NUMBER_DESC": "يرجى إدخال مجموع الصف",
-  "MAGICSQUARE_NO_NUMBER_MESSAGE": "يرجى تقديم مجموع الصف، على سبيل المثال، `@egrigore /magic_square 15`",
+  "MAGICSQUARE_NO_NUMBER_MESSAGE": "يرجى تقديم مجموع الصف، على سبيل المثال، `@EgrigoreBot /magic_square 15`",
   "MAGICSQUARE_INVALID_NUMBER_TITLE": "مجموع صف غير صالح",
   "MAGICSQUARE_INVALID_NUMBER_DESC": "يجب أن يكون مجموع الصف 15 على الأقل",
   "MAGICSQUARE_INVALID_NUMBER_MESSAGE": "يجب أن يكون مجموع الصف 15 على الأقل، تم الحصول على '{number}'",
@@ -477,10 +477,10 @@
   "MAGICSQUARE_INLINE_DESC": "مربع تم إنشاؤه بمجموع صف {number}",
   "TRANSLITERATE_INLINE_HELP_TITLE": "نقل الحروف",
   "TRANSLITERATE_INLINE_HELP_DESC": "نقل الحروف بين النصوص",
-  "TRANSLITERATE_INLINE_HELP_MESSAGE": "اكتب `@egrigore /transliterate <text> [--source=<arabic|english|turkish|hebrew|latin>] [--target=<arabic|english|turkish|hebrew|latin>]`. مثال: `@egrigore /transliterate Hello --source=english --target=arabic`",
+  "TRANSLITERATE_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /transliterate <text> [--source=<arabic|english|turkish|hebrew|latin>] [--target=<arabic|english|turkish|hebrew|latin>]`. مثال: `@EgrigoreBot /transliterate Hello --source=english --target=arabic`",
   "TRANSLITERATE_NO_TEXT_TITLE": "لم يتم تقديم نص",
   "TRANSLITERATE_NO_TEXT_DESC": "يرجى إدخال نص لنقل حروفه",
-  "TRANSLITERATE_NO_TEXT_MESSAGE": "يرجى تقديم نص، على سبيل المثال، `@egrigore /transliterate Hello`",
+  "TRANSLITERATE_NO_TEXT_MESSAGE": "يرجى تقديم نص، على سبيل المثال، `@EgrigoreBot /transliterate Hello`",
   "TRANSLITERATE_INVALID_SOURCE_TITLE": "لغة مصدر غير صالحة",
   "TRANSLITERATE_INVALID_SOURCE_DESC": "لغة المصدر '{source}' غير معترف بها",
   "TRANSLITERATE_INVALID_SOURCE_MESSAGE": "لغة المصدر '{source}' غير صالحة. الخيارات المتاحة: عربي، إنجليزي، تركي، عبري، لاتيني",
@@ -492,10 +492,10 @@
   "TRANSLITERATION_RESULT": "نقل حروف \"{text}\" من {source_lang} إلى {target_lang}: **{result}**",
   "CONVERTNUMBERS_INLINE_HELP_TITLE": "محول الأرقام",
   "CONVERTNUMBERS_INLINE_HELP_DESC": "تحويل الأرقام إلى تنسيقات مختلفة",
-  "CONVERTNUMBERS_INLINE_HELP_MESSAGE": "اكتب `@egrigore /convert_numbers <number> [--format=<arabic|indian|invert>]`. مثال: `@egrigore /convert_numbers 1234 --format=arabic`",
+  "CONVERTNUMBERS_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /convert_numbers <number> [--format=<arabic|indian|invert>]`. مثال: `@EgrigoreBot /convert_numbers 1234 --format=arabic`",
   "CONVERTNUMBERS_NO_TEXT_TITLE": "لم يتم تقديم رقم",
   "CONVERTNUMBERS_NO_TEXT_DESC": "يرجى إدخال رقم للتحويل",
-  "CONVERTNUMBERS_NO_TEXT_MESSAGE": "يرجى تقديم رقم، على سبيل المثال، `@egrigore /convert_numbers 1234`",
+  "CONVERTNUMBERS_NO_TEXT_MESSAGE": "يرجى تقديم رقم، على سبيل المثال، `@EgrigoreBot /convert_numbers 1234`",
   "CONVERTNUMBERS_INVALID_FORMAT_TITLE": "تنسيق غير صالح",
   "CONVERTNUMBERS_INVALID_FORMAT_DESC": "التنسيق '{format}' غير معترف به",
   "CONVERTNUMBERS_INVALID_FORMAT_MESSAGE": "التنسيق '{format}' غير صالح. الخيارات المتاحة: عربي، هندي، معكوس",
@@ -503,10 +503,10 @@
   "CONVERTNUMBERS_INLINE_DESC": "تم تحويل '{text}' إلى تنسيق {format}",
   "NUMEROLOGY_INLINE_HELP_TITLE": "حاسبة علم الأعداد",
   "NUMEROLOGY_INLINE_HELP_DESC": "حساب قيمة علم الأعداد للنص",
-  "NUMEROLOGY_INLINE_HELP_MESSAGE": "اكتب `@egrigore /numerology <text> [--alphabet=<arabic_abjadi|...>] [--method=<normal|inverse|base36|...>]`. مثال: `@egrigore /numerology Hello --alphabet=english --method=normal`",
+  "NUMEROLOGY_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /numerology <text> [--alphabet=<arabic_abjadi|...>] [--method=<normal|inverse|base36|...>]`. مثال: `@EgrigoreBot /numerology Hello --alphabet=english --method=normal`",
   "NUMEROLOGY_NO_TEXT_TITLE": "لم يتم تقديم نص",
   "NUMEROLOGY_NO_TEXT_DESC": "يرجى إدخال نص للحساب",
-  "NUMEROLOGY_NO_TEXT_MESSAGE": "يرجى تقديم نص، على سبيل المثال، `@egrigore /numerology Hello`",
+  "NUMEROLOGY_NO_TEXT_MESSAGE": "يرجى تقديم نص، على سبيل المثال، `@EgrigoreBot /numerology Hello`",
   "NUMEROLOGY_INVALID_ALPHABET_TITLE": "أبجدية غير صالحة",
   "NUMEROLOGY_INVALID_ALPHABET_DESC": "الأبجدية '{alphabet}' غير معترف بها",
   "NUMEROLOGY_INVALID_ALPHABET_MESSAGE": "الأبجدية '{alphabet}' غير صالحة. الخيارات المتاحة: أبجدي عربي، مغربي عربي، قرآني عربي، هجاء عربي، هجاء مغربي عربي، إكليل عربي، شمسي أبجدي عربي، عبري، تركي، إنجليزي، لاتيني",
@@ -556,35 +556,35 @@
   "CONVERT_FORMAT_INDIAN": "هندي",
   "CONVERT_FORMAT_INVERT": "معكوس",
   "COMMAND_ALIASES": {
-    "abjad": [
-      "abjad"
-    ],
-    "huddam": [
-      "huddâm"
-    ],
-    "unsur": [
-      "unsur"
-    ],
-    "nutket": [
-      "nutket"
-    ],
-    "name": [
-      "name"
-    ],
-    "magicsquare": [
-      "magicsq"
-    ],
-    "transliterate": [
-      "translit"
-    ],
-    "payment": [
-      "pay"
-    ],
-    "numerology": [
-      "numerology"
-    ],
-    "convertnumbers": [
-      "convert"
-    ]
+	"abjad": [
+	  "abjad"
+	],
+	"huddam": [
+	  "huddâm"
+	],
+	"unsur": [
+	  "unsur"
+	],
+	"nutket": [
+	  "nutket"
+	],
+	"name": [
+	  "name"
+	],
+	"magicsquare": [
+	  "magicsq"
+	],
+	"transliterate": [
+	  "translit"
+	],
+	"payment": [
+	  "pay"
+	],
+	"numerology": [
+	  "numerology"
+	],
+	"convertnumbers": [
+	  "convert"
+	]
   }
 }

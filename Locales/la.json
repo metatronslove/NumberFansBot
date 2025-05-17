@@ -364,8 +364,8 @@
   "GROUP_BLACKLIST_TOGGLED": "Coetus {{group_id}} {{status}} est",
   "GROUP_BLACKLIST_TOGGLE_ERROR": "Statum albi nigri pro coetu commutare defecit",
   "INLINE_HELP_TITLE": "Auxilium Mandati In Linea",
-  "INLINE_HELP_DESC": "Scribe mandatum simile '@egrigore /abjad <text> [--options]'",
-  "INLINE_HELP_MESSAGE": "Utere mandatis in linea similibus `@egrigore /abjad <text> [--alphabet=<value>] [--type=<value>] [--shadda=<value>] [--detail=<value>]`. Mandata sustentata: abjad, bastet, nutket, unsur, huddam, magic_square, transliterate, convert_numbers, numerology.",
+  "INLINE_HELP_DESC": "Scribe mandatum simile '@EgrigoreBot /abjad <text> [--options]'",
+  "INLINE_HELP_MESSAGE": "Utere mandatis in linea similibus `@EgrigoreBot /abjad <text> [--alphabet=<value>] [--type=<value>] [--shadda=<value>] [--detail=<value>]`. Mandata sustentata: abjad, bastet, nutket, unsur, huddam, magic_square, transliterate, convert_numbers, numerology.",
   "UNKNOWN_COMMAND_TITLE": "Mandatum Ignotum",
   "UNKNOWN_COMMAND_DESC": "Mandatum '{command}' non agnoscitur",
   "UNKNOWN_COMMAND_MESSAGE": "Ignosce, '{command}' mandatum in linea validum non est. Conare mandata similia abjad, bastet, vel nutket.",
@@ -373,10 +373,10 @@
   "ERROR_DESC": "Error accidit: {error}",
   "ABJAD_INLINE_HELP_TITLE": "Calculator Abjad",
   "ABJAD_INLINE_HELP_DESC": "Calculare valorem Abjad pro textu",
-  "ABJAD_INLINE_HELP_MESSAGE": "Scribe `@egrigore /abjad <text> [--alphabet=<arabic_abjadi|arabic_maghribi|...>] [--type=<asghar|saghir|...>] [--shadda=<once|twice>] [--detail=<summary|full>]`. Exemplum: `@egrigore /abjad Hello --alphabet=english --type=saghir`",
+  "ABJAD_INLINE_HELP_MESSAGE": "Scribe `@EgrigoreBot /abjad <text> [--alphabet=<arabic_abjadi|arabic_maghribi|...>] [--type=<asghar|saghir|...>] [--shadda=<once|twice>] [--detail=<summary|full>]`. Exemplum: `@EgrigoreBot /abjad Hello --alphabet=english --type=saghir`",
   "ABJAD_NO_TEXT_TITLE": "Nullus Textus Providetur",
   "ABJAD_NO_TEXT_DESC": "Quaeso intra textum ad calculandum",
-  "ABJAD_NO_TEXT_MESSAGE": "Quaeso textum provide, e.g., `@egrigore /abjad Hello`",
+  "ABJAD_NO_TEXT_MESSAGE": "Quaeso textum provide, e.g., `@EgrigoreBot /abjad Hello`",
   "ABJAD_INVALID_ALPHABET_TITLE": "Alphabetum Invalidum",
   "ABJAD_INVALID_ALPHABET_DESC": "Alphabetum '{alphabet}' non agnoscitur",
   "ABJAD_INVALID_ALPHABET_MESSAGE": "Alphabetum '{alphabet}' invalidum. Optiones validae: arabic_abjadi, arabic_maghribi, arabic_quranic, arabic_hija, arabic_maghribi_hija, arabic_ikleels, arabic_shamse_abjadi, hebrew, turkish, english, latin",
@@ -399,10 +399,10 @@
   "ABJAD_CALC_TOTAL": "Valor Totalis: {total}",
   "BASTET_INLINE_HELP_TITLE": "Generator Bastet",
   "BASTET_INLINE_HELP_DESC": "Generare textum ex numero",
-  "BASTET_INLINE_HELP_MESSAGE": "Scribe `@egrigore /bastet <number> [--repetition=<value>] [--alphabet=<arabic_abjadi|arabic_maghribi|...>] [--type=<asghar|saghir|...>]`. Exemplum: `@egrigore /bastet 123 --repetition=5`",
+  "BASTET_INLINE_HELP_MESSAGE": "Scribe `@EgrigoreBot /bastet <number> [--repetition=<value>] [--alphabet=<arabic_abjadi|arabic_maghribi|...>] [--type=<asghar|saghir|...>]`. Exemplum: `@EgrigoreBot /bastet 123 --repetition=5`",
   "BASTET_NO_NUMBER_TITLE": "Nullus Numerus Providetur",
   "BASTET_NO_NUMBER_DESC": "Quaeso intra numerum ad processandum",
-  "BASTET_NO_NUMBER_MESSAGE": "Quaeso numerum provide, e.g., `@egrigore /bastet 123`",
+  "BASTET_NO_NUMBER_MESSAGE": "Quaeso numerum provide, e.g., `@EgrigoreBot /bastet 123`",
   "BASTET_INVALID_REPETITION_TITLE": "Repetitio Invalida",
   "BASTET_INVALID_REPETITION_DESC": "Repetitio '{repetition}' invalida est",
   "BASTET_INVALID_REPETITION_MESSAGE": "Repetitio numerus inter 1 et 1000 esse debet, accepit '{repetition}'",
@@ -418,10 +418,10 @@
   "BASTET_CALC_RESULT": "Textus Generatus: {result}",
   "NUTKET_INLINE_HELP_TITLE": "Scriptor Nutket",
   "NUTKET_INLINE_HELP_DESC": "Scribere numerum in litteris",
-  "NUTKET_INLINE_HELP_MESSAGE": "Scribe `@egrigore /nutket <number> [--language=<arabic|hebrew|turkish|english|latin>]`. Exemplum: `@egrigore /nutket 123 --language=arabic`",
+  "NUTKET_INLINE_HELP_MESSAGE": "Scribe `@EgrigoreBot /nutket <number> [--language=<arabic|hebrew|turkish|english|latin>]`. Exemplum: `@EgrigoreBot /nutket 123 --language=arabic`",
   "NUTKET_NO_NUMBER_TITLE": "Nullus Numerus Providetur",
   "NUTKET_NO_NUMBER_DESC": "Quaeso intra numerum ad scribendum",
-  "NUTKET_NO_NUMBER_MESSAGE": "Quaeso numerum provide, e.g., `@egrigore /nutket 123`",
+  "NUTKET_NO_NUMBER_MESSAGE": "Quaeso numerum provide, e.g., `@EgrigoreBot /nutket 123`",
   "NUTKET_INVALID_LANGUAGE_TITLE": "Lingua Invalida",
   "NUTKET_INVALID_LANGUAGE_DESC": "Lingua '{language}' non agnoscitur",
   "NUTKET_INVALID_LANGUAGE_MESSAGE": "Lingua '{language}' invalida. Optiones validae: arabic, hebrew, turkish, english, latin",
@@ -429,10 +429,10 @@
   "NUTKET_INLINE_DESC": "Numerus {number} scriptus in {language}",
   "UNSUR_INLINE_HELP_TITLE": "Classifier Unsur",
   "UNSUR_INLINE_HELP_DESC": "Classificare textum in elementa",
-  "UNSUR_INLINE_HELP_MESSAGE": "Scribe `@egrigore /unsur <text> [--language=<turkish|arabic|buni|huseyni|hebrew|english|latin|default>] [--table=<fire|water|air|earth|default>] [--shadda=<once|twice>]`. Exemplum: `@egrigore /unsur Hello --language=turkish`",
+  "UNSUR_INLINE_HELP_MESSAGE": "Scribe `@EgrigoreBot /unsur <text> [--language=<turkish|arabic|buni|huseyni|hebrew|english|latin|default>] [--table=<fire|water|air|earth|default>] [--shadda=<once|twice>]`. Exemplum: `@EgrigoreBot /unsur Hello --language=turkish`",
   "UNSUR_NO_TEXT_TITLE": "Nullus Textus Providetur",
   "UNSUR_NO_TEXT_DESC": "Quaeso intra textum ad classificandum",
-  "UNSUR_NO_TEXT_MESSAGE": "Quaeso textum provide, e.g., `@egrigore /unsur Hello`",
+  "UNSUR_NO_TEXT_MESSAGE": "Quaeso textum provide, e.g., `@EgrigoreBot /unsur Hello`",
   "UNSUR_INVALID_LANGUAGE_TITLE": "Lingua Invalida",
   "UNSUR_INVALID_LANGUAGE_DESC": "Lingua '{language}' non agnoscitur",
   "UNSUR_INVALID_LANGUAGE_MESSAGE": "Lingua '{language}' invalida. Optiones validae: turkish, arabic, buni, huseyni, hebrew, english, latin, default",
@@ -449,10 +449,10 @@
   "UNSUR_INLINE_DESC": "'{input}' classificatum ut {element}",
   "HUDDAM_INLINE_HELP_TITLE": "Generator Huddam",
   "HUDDAM_INLINE_HELP_DESC": "Generare nomen entitatis ex numero",
-  "HUDDAM_INLINE_HELP_MESSAGE": "Scribe `@egrigore /huddam <number> [--entity=<ulvi|sufli|ser>] [--alphabet=<arabic_abjadi|...>] [--multiplier=<regular|eacher>]`. Exemplum: `@egrigore /huddam 123 --entity=ulvi`",
+  "HUDDAM_INLINE_HELP_MESSAGE": "Scribe `@EgrigoreBot /huddam <number> [--entity=<ulvi|sufli|ser>] [--alphabet=<arabic_abjadi|...>] [--multiplier=<regular|eacher>]`. Exemplum: `@EgrigoreBot /huddam 123 --entity=ulvi`",
   "HUDDAM_NO_NUMBER_TITLE": "Nullus Numerus Providetur",
   "HUDDAM_NO_NUMBER_DESC": "Quaeso intra numerum ad processandum",
-  "HUDDAM_NO_NUMBER_MESSAGE": "Quaeso numerum provide, e.g., `@egrigore //huddam 123`",
+  "HUDDAM_NO_NUMBER_MESSAGE": "Quaeso numerum provide, e.g., `@EgrigoreBot //huddam 123`",
   "HUDDAM_INVALID_ENTITY_TITLE": "Typus Entitatis Invalidus",
   "HUDDAM_INVALID_ENTITY_DESC": "Typus entitatis '{entity}' non agnoscitur",
   "HUDDAM_INVALID_ENTITY_MESSAGE": "Typus entitatis '{entity}' invalidus. Optiones validae: ulvi, sufli, ser",
@@ -465,10 +465,10 @@
   "HUDDAM_INLINE_TITLE": "Resultatum Huddam: {name}",
   "HUDDAM_INLINE_DESC": "Generatum pro numero {number}, typo {type}",
   "MAGICSQUARE_INLINE_HELP_TITLE": "Generator Quadrati Magici",
-  "MAGICSQUARE_INLINE_HELP_MESSAGE": "Scribere `@egrigore /magic_square <numerus>`. Exemplum: `@egrigore /magic_square 15`",
+  "MAGICSQUARE_INLINE_HELP_MESSAGE": "Scribere `@EgrigoreBot /magic_square <numerus>`. Exemplum: `@EgrigoreBot /magic_square 15`",
   "MAGICSQUARE_NO_NUMBER_TITLE": "Numerus Non Providetur",
   "MAGICSQUARE_NO_NUMBER_DESC": "Quaeso, inscribe summam seriei",
-  "MAGICSQUARE_NO_NUMBER_MESSAGE": "Quaeso, praebe summam seriei, e.g., `@egrigore /magic_square 15`",
+  "MAGICSQUARE_NO_NUMBER_MESSAGE": "Quaeso, praebe summam seriei, e.g., `@EgrigoreBot /magic_square 15`",
   "MAGICSQUARE_INVALID_NUMBER_TITLE": "Summa Seriei Invalida",
   "MAGICSQUARE_INVALID_NUMBER_DESC": "Summa seriei debet esse ad minimum 15",
   "MAGICSQUARE_INVALID_NUMBER_MESSAGE": "Summa seriei debet esse ad minimum 15, accepisti '{number}'",
@@ -476,10 +476,10 @@
   "MAGICSQUARE_INLINE_DESC": "Quadratum generatum cum summa seriei {number}",
   "TRANSLITERATE_INLINE_HELP_TITLE": "Transliteratio",
   "TRANSLITERATE_INLINE_HELP_DESC": "Translittera textum inter scripturas",
-  "TRANSLITERATE_INLINE_HELP_MESSAGE": "Scribere `@egrigore /transliterate <textus> [--source=<arabica|anglica|turcica|hebraica|latina>] [--target=<arabica|anglica|turcica|hebraica|latina>]`. Exemplum: `@egrigore /transliterate Hello --source=english --target=arabic`",
+  "TRANSLITERATE_INLINE_HELP_MESSAGE": "Scribere `@EgrigoreBot /transliterate <textus> [--source=<arabica|anglica|turcica|hebraica|latina>] [--target=<arabica|anglica|turcica|hebraica|latina>]`. Exemplum: `@EgrigoreBot /transliterate Hello --source=english --target=arabic`",
   "TRANSLITERATE_NO_TEXT_TITLE": "Textus Non Providetur",
   "TRANSLITERATE_NO_TEXT_DESC": "Quaeso, inscribe textum ad translitterandum",
-  "TRANSLITERATE_NO_TEXT_MESSAGE": "Quaeso, praebe textum, e.g., `@egrigore /transliterate Hello`",
+  "TRANSLITERATE_NO_TEXT_MESSAGE": "Quaeso, praebe textum, e.g., `@EgrigoreBot /transliterate Hello`",
   "TRANSLITERATE_INVALID_SOURCE_TITLE": "Lingua Fontis Invalida",
   "TRANSLITERATE_INVALID_SOURCE_DESC": "Lingua fontis '{source}' non agnoscitur",
   "TRANSLITERATE_INVALID_SOURCE_MESSAGE": "Lingua fontis '{source}' invalida. Optimae optiones: arabic, english, turkish, hebrew, latin",
@@ -491,10 +491,10 @@
   "TRANSLITERATION_RESULT": "Transliteratio \"{text}\" ex {source_lang} ad {target_lang}: **{result}**",
   "CONVERTNUMBERS_INLINE_HELP_TITLE": "Converter Numerorum",
   "CONVERTNUMBERS_INLINE_HELP_DESC": "Convertere numeros ad diversos formatos",
-  "CONVERTNUMBERS_INLINE_HELP_MESSAGE": "Scribere `@egrigore /convert_numbers <numerus> [--format=<arabicus|indicus|inversus>]`. Exemplum: `@egrigore /convert_numbers 1234 --format=arabic`",
+  "CONVERTNUMBERS_INLINE_HELP_MESSAGE": "Scribere `@EgrigoreBot /convert_numbers <numerus> [--format=<arabicus|indicus|inversus>]`. Exemplum: `@EgrigoreBot /convert_numbers 1234 --format=arabic`",
   "CONVERTNUMBERS_NO_TEXT_TITLE": "Numerus Non Providetur",
   "CONVERTNUMBERS_NO_TEXT_DESC": "Quaeso, inscribe numerum ad convertendum",
-  "CONVERTNUMBERS_NO_TEXT_MESSAGE": "Quaeso, praebe numerum, e.g., `@egrigore /convert_numbers 1234`",
+  "CONVERTNUMBERS_NO_TEXT_MESSAGE": "Quaeso, praebe numerum, e.g., `@EgrigoreBot /convert_numbers 1234`",
   "CONVERTNUMBERS_INVALID_FORMAT_TITLE": "Formatus Invalidus",
   "CONVERTNUMBERS_INVALID_FORMAT_DESC": "Formatus '{format}' non agnoscitur",
   "CONVERTNUMBERS_INVALID_FORMAT_MESSAGE": "Formatus '{format}' invalidus. Optimae optiones: arabic, indian, invert",
@@ -502,10 +502,10 @@
   "CONVERTNUMBERS_INLINE_DESC": "Conversus '{text}' ad formatum {format}",
   "NUMEROLOGY_INLINE_HELP_TITLE": "Calculator Numerologiae",
   "NUMEROLOGY_INLINE_HELP_DESC": "Calculare valorem numerologiae pro textu",
-  "NUMEROLOGY_INLINE_HELP_MESSAGE": "Scribere `@egrigore /numerology <textus> [--alphabet=<arabicum_abjadi|...>] [--method=<normalis|inversus|basis36|...>]`. Exemplum: `@egrigore /numerology Hello --alphabet=english --method=normal`",
+  "NUMEROLOGY_INLINE_HELP_MESSAGE": "Scribere `@EgrigoreBot /numerology <textus> [--alphabet=<arabicum_abjadi|...>] [--method=<normalis|inversus|basis36|...>]`. Exemplum: `@EgrigoreBot /numerology Hello --alphabet=english --method=normal`",
   "NUMEROLOGY_NO_TEXT_TITLE": "Textus Non Providetur",
   "NUMEROLOGY_NO_TEXT_DESC": "Quaeso, inscribe textum ad calculandum",
-  "NUMEROLOGY_NO_TEXT_MESSAGE": "Quaeso, praebe textum, e.g., `@egrigore /numerology Hello`",
+  "NUMEROLOGY_NO_TEXT_MESSAGE": "Quaeso, praebe textum, e.g., `@EgrigoreBot /numerology Hello`",
   "NUMEROLOGY_INVALID_ALPHABET_TITLE": "Alphabetum Invalidum",
   "NUMEROLOGY_INVALID_ALPHABET_DESC": "Alphabetum '{alphabet}' non agnoscitur",
   "NUMEROLOGY_INVALID_ALPHABET_MESSAGE": "Alphabetum '{alphabet}' invalidum. Optimae optiones: arabic_abjadi, arabic_maghribi, arabic_quranic, arabic_hija, arabic_maghribi_hija, arabic_ikleels, arabic_shamse_abjadi, hebrew, turkish, english, latin",
@@ -555,35 +555,35 @@
   "CONVERT_FORMAT_INDIAN": "Indicus",
   "CONVERT_FORMAT_INVERT": "Inversus",
   "COMMAND_ALIASES": {
-    "abjad": [
-      "abjad"
-    ],
-    "huddam": [
-      "huddâm"
-    ],
-    "unsur": [
-      "unsur"
-    ],
-    "nutket": [
-      "nutket"
-    ],
-    "name": [
-      "name"
-    ],
-    "magicsquare": [
-      "magicsq"
-    ],
-    "transliterate": [
-      "translit"
-    ],
-    "payment": [
-      "pay"
-    ],
-    "numerology": [
-      "numerology"
-    ],
-    "convertnumbers": [
-      "convert"
-    ]
+	"abjad": [
+	  "abjad"
+	],
+	"huddam": [
+	  "huddâm"
+	],
+	"unsur": [
+	  "unsur"
+	],
+	"nutket": [
+	  "nutket"
+	],
+	"name": [
+	  "name"
+	],
+	"magicsquare": [
+	  "magicsq"
+	],
+	"transliterate": [
+	  "translit"
+	],
+	"payment": [
+	  "pay"
+	],
+	"numerology": [
+	  "numerology"
+	],
+	"convertnumbers": [
+	  "convert"
+	]
   }
 }

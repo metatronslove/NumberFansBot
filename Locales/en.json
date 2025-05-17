@@ -364,8 +364,8 @@
   "GROUP_BLACKLIST_TOGGLED": "Group {{group_id}} has been {{status}}",
   "GROUP_BLACKLIST_TOGGLE_ERROR": "Failed to toggle blacklist status for group",
   "INLINE_HELP_TITLE": "Inline Command Help",
-  "INLINE_HELP_DESC": "Type a command like '@egrigore /abjad <text> [--options]'",
-  "INLINE_HELP_MESSAGE": "Use inline commands like `@egrigore /abjad <text> [--alphabet=<value>] [--type=<value>] [--shadda=<value>] [--detail=<value>]`. Supported commands: abjad, bastet, nutket, unsur, huddam, magic_square, transliterate, convert_numbers, numerology.",
+  "INLINE_HELP_DESC": "Type a command like '@EgrigoreBot /abjad <text> [--options]'",
+  "INLINE_HELP_MESSAGE": "Use inline commands like `@EgrigoreBot /abjad <text> [--alphabet=<value>] [--type=<value>] [--shadda=<value>] [--detail=<value>]`. Supported commands: abjad, bastet, nutket, unsur, huddam, magic_square, transliterate, convert_numbers, numerology.",
   "UNKNOWN_COMMAND_TITLE": "Unknown Command",
   "UNKNOWN_COMMAND_DESC": "Command '{command}' not recognized",
   "UNKNOWN_COMMAND_MESSAGE": "Sorry, '{command}' is not a valid inline command. Try commands like abjad, bastet, or nutket.",
@@ -373,10 +373,10 @@
   "ERROR_DESC": "An error occurred: {error}",
   "ABJAD_INLINE_HELP_TITLE": "Abjad Calculator",
   "ABJAD_INLINE_HELP_DESC": "Calculate Abjad value for text",
-  "ABJAD_INLINE_HELP_MESSAGE": "Type `@egrigore /abjad <text> [--alphabet=<arabic_abjadi|arabic_maghribi|...>] [--type=<asghar|saghir|...>] [--shadda=<once|twice>] [--detail=<summary|full>]`. Example: `@egrigore /abjad Hello --alphabet=english --type=saghir`",
+  "ABJAD_INLINE_HELP_MESSAGE": "Type `@EgrigoreBot /abjad <text> [--alphabet=<arabic_abjadi|arabic_maghribi|...>] [--type=<asghar|saghir|...>] [--shadda=<once|twice>] [--detail=<summary|full>]`. Example: `@EgrigoreBot /abjad Hello --alphabet=english --type=saghir`",
   "ABJAD_NO_TEXT_TITLE": "No Text Provided",
   "ABJAD_NO_TEXT_DESC": "Please enter text to calculate",
-  "ABJAD_NO_TEXT_MESSAGE": "Please provide text, e.g., `@egrigore /abjad Hello`",
+  "ABJAD_NO_TEXT_MESSAGE": "Please provide text, e.g., `@EgrigoreBot /abjad Hello`",
   "ABJAD_INVALID_ALPHABET_TITLE": "Invalid Alphabet",
   "ABJAD_INVALID_ALPHABET_DESC": "Alphabet '{alphabet}' not recognized",
   "ABJAD_INVALID_ALPHABET_MESSAGE": "Invalid alphabet '{alphabet}'. Valid options: arabic_abjadi, arabic_maghribi, arabic_quranic, arabic_hija, arabic_maghribi_hija, arabic_ikleels, arabic_shamse_abjadi, hebrew, turkish, english, latin",
@@ -399,10 +399,10 @@
   "ABJAD_CALC_TOTAL": "Total Value: {total}",
   "BASTET_INLINE_HELP_TITLE": "Bastet Generator",
   "BASTET_INLINE_HELP_DESC": "Generate text from a number",
-  "BASTET_INLINE_HELP_MESSAGE": "Type `@egrigore /bastet <number> [--repetition=<value>] [--alphabet=<arabic_abjadi|arabic_maghribi|...>] [--type=<asghar|saghir|...>]`. Example: `@egrigore /bastet 123 --repetition=5`",
+  "BASTET_INLINE_HELP_MESSAGE": "Type `@EgrigoreBot /bastet <number> [--repetition=<value>] [--alphabet=<arabic_abjadi|arabic_maghribi|...>] [--type=<asghar|saghir|...>]`. Example: `@EgrigoreBot /bastet 123 --repetition=5`",
   "BASTET_NO_NUMBER_TITLE": "No Number Provided",
   "BASTET_NO_NUMBER_DESC": "Please enter a number to process",
-  "BASTET_NO_NUMBER_MESSAGE": "Please provide a number, e.g., `@egrigore /bastet 123`",
+  "BASTET_NO_NUMBER_MESSAGE": "Please provide a number, e.g., `@EgrigoreBot /bastet 123`",
   "BASTET_INVALID_REPETITION_TITLE": "Invalid Repetition",
   "BASTET_INVALID_REPETITION_DESC": "Repetition '{repetition}' is invalid",
   "BASTET_INVALID_REPETITION_MESSAGE": "Repetition must be a number between 1 and 1000, got '{repetition}'",
@@ -418,10 +418,10 @@
   "BASTET_CALC_RESULT": "Generated Text: {result}",
   "NUTKET_INLINE_HELP_TITLE": "Nutket Speller",
   "NUTKET_INLINE_HELP_DESC": "Spell a number in letters",
-  "NUTKET_INLINE_HELP_MESSAGE": "Type `@egrigore /nutket <number> [--language=<arabic|hebrew|turkish|english|latin>]`. Example: `@egrigore /nutket 123 --language=arabic`",
+  "NUTKET_INLINE_HELP_MESSAGE": "Type `@EgrigoreBot /nutket <number> [--language=<arabic|hebrew|turkish|english|latin>]`. Example: `@EgrigoreBot /nutket 123 --language=arabic`",
   "NUTKET_NO_NUMBER_TITLE": "No Number Provided",
   "NUTKET_NO_NUMBER_DESC": "Please enter a number to spell",
-  "NUTKET_NO_NUMBER_MESSAGE": "Please provide a number, e.g., `@egrigore /nutket 123`",
+  "NUTKET_NO_NUMBER_MESSAGE": "Please provide a number, e.g., `@EgrigoreBot /nutket 123`",
   "NUTKET_INVALID_LANGUAGE_TITLE": "Invalid Language",
   "NUTKET_INVALID_LANGUAGE_DESC": "Language '{language}' not recognized",
   "NUTKET_INVALID_LANGUAGE_MESSAGE": "Invalid language '{language}'. Valid options: arabic, hebrew, turkish, english, latin",
@@ -429,10 +429,10 @@
   "NUTKET_INLINE_DESC": "Spelled number {number} in {language}",
   "UNSUR_INLINE_HELP_TITLE": "Unsur Classifier",
   "UNSUR_INLINE_HELP_DESC": "Classify text into elements",
-  "UNSUR_INLINE_HELP_MESSAGE": "Type `@egrigore /unsur <text> [--language=<turkish|arabic|buni|huseyni|hebrew|english|latin|default>] [--table=<fire|water|air|earth|default>] [--shadda=<once|twice>]`. Example: `@egrigore /unsur Hello --language=turkish`",
+  "UNSUR_INLINE_HELP_MESSAGE": "Type `@EgrigoreBot /unsur <text> [--language=<turkish|arabic|buni|huseyni|hebrew|english|latin|default>] [--table=<fire|water|air|earth|default>] [--shadda=<once|twice>]`. Example: `@EgrigoreBot /unsur Hello --language=turkish`",
   "UNSUR_NO_TEXT_TITLE": "No Text Provided",
   "UNSUR_NO_TEXT_DESC": "Please enter text to classify",
-  "UNSUR_NO_TEXT_MESSAGE": "Please provide text, e.g., `@egrigore /unsur Hello`",
+  "UNSUR_NO_TEXT_MESSAGE": "Please provide text, e.g., `@EgrigoreBot /unsur Hello`",
   "UNSUR_INVALID_LANGUAGE_TITLE": "Invalid Language",
   "UNSUR_INVALID_LANGUAGE_DESC": "Language '{language}' not recognized",
   "UNSUR_INVALID_LANGUAGE_MESSAGE": "Invalid language '{language}'. Valid options: turkish, arabic, buni, huseyni, hebrew, english, latin, default",
@@ -449,10 +449,10 @@
   "UNSUR_INLINE_DESC": "Classified '{input}' as {element}",
   "HUDDAM_INLINE_HELP_TITLE": "Huddam Generator",
   "HUDDAM_INLINE_HELP_DESC": "Generate entity name from a number",
-  "HUDDAM_INLINE_HELP_MESSAGE": "Type `@egrigore /huddam <number> [--entity=<ulvi|sufli|ser>] [--alphabet=<arabic_abjadi|...>] [--multiplier=<regular|eacher>]`. Example: `@egrigore /huddam 123 --entity=ulvi`",
+  "HUDDAM_INLINE_HELP_MESSAGE": "Type `@EgrigoreBot /huddam <number> [--entity=<ulvi|sufli|ser>] [--alphabet=<arabic_abjadi|...>] [--multiplier=<regular|eacher>]`. Example: `@EgrigoreBot /huddam 123 --entity=ulvi`",
   "HUDDAM_NO_NUMBER_TITLE": "No Number Provided",
   "HUDDAM_NO_NUMBER_DESC": "Please enter a number to process",
-  "HUDDAM_NO_NUMBER_MESSAGE": "Please provide a number, e.g., `@egrigore /huddam 123`",
+  "HUDDAM_NO_NUMBER_MESSAGE": "Please provide a number, e.g., `@EgrigoreBot /huddam 123`",
   "HUDDAM_INVALID_ENTITY_TITLE": "Invalid Entity Type",
   "HUDDAM_INVALID_ENTITY_DESC": "Entity type '{entity}' not recognized",
   "HUDDAM_INVALID_ENTITY_MESSAGE": "Invalid entity type '{entity}'. Valid options: ulvi, sufli, ser",
@@ -466,10 +466,10 @@
   "HUDDAM_INLINE_DESC": "Generated for number {number}, type {type}",
   "MAGICSQUARE_INLINE_HELP_TITLE": "Magic Square Generator",
   "MAGICSQUARE_INLINE_HELP_DESC": "Generate a magic square",
-  "MAGICSQUARE_INLINE_HELP_MESSAGE": "Type `@egrigore /magic_square <number>`. Example: `@egrigore /magic_square 15`",
+  "MAGICSQUARE_INLINE_HELP_MESSAGE": "Type `@EgrigoreBot /magic_square <number>`. Example: `@EgrigoreBot /magic_square 15`",
   "MAGICSQUARE_NO_NUMBER_TITLE": "No Number Provided",
   "MAGICSQUARE_NO_NUMBER_DESC": "Please enter a row sum",
-  "MAGICSQUARE_NO_NUMBER_MESSAGE": "Please provide a row sum, e.g., `@egrigore /magic_square 15`",
+  "MAGICSQUARE_NO_NUMBER_MESSAGE": "Please provide a row sum, e.g., `@EgrigoreBot /magic_square 15`",
   "MAGICSQUARE_INVALID_NUMBER_TITLE": "Invalid Row Sum",
   "MAGICSQUARE_INVALID_NUMBER_DESC": "Row sum must be at least 15",
   "MAGICSQUARE_INVALID_NUMBER_MESSAGE": "Row sum must be at least 15, got '{number}'",
@@ -477,10 +477,10 @@
   "MAGICSQUARE_INLINE_DESC": "Generated square with row sum {number}",
   "TRANSLITERATE_INLINE_HELP_TITLE": "Transliteration",
   "TRANSLITERATE_INLINE_HELP_DESC": "Transliterate text between scripts",
-  "TRANSLITERATE_INLINE_HELP_MESSAGE": "Type `@egrigore /transliterate <text> [--source=<arabic|english|turkish|hebrew|latin>] [--target=<arabic|english|turkish|hebrew|latin>]`. Example: `@egrigore /transliterate Hello --source=english --target=arabic`",
+  "TRANSLITERATE_INLINE_HELP_MESSAGE": "Type `@EgrigoreBot /transliterate <text> [--source=<arabic|english|turkish|hebrew|latin>] [--target=<arabic|english|turkish|hebrew|latin>]`. Example: `@EgrigoreBot /transliterate Hello --source=english --target=arabic`",
   "TRANSLITERATE_NO_TEXT_TITLE": "No Text Provided",
   "TRANSLITERATE_NO_TEXT_DESC": "Please enter text to transliterate",
-  "TRANSLITERATE_NO_TEXT_MESSAGE": "Please provide text, e.g., `@egrigore /transliterate Hello`",
+  "TRANSLITERATE_NO_TEXT_MESSAGE": "Please provide text, e.g., `@EgrigoreBot /transliterate Hello`",
   "TRANSLITERATE_INVALID_SOURCE_TITLE": "Invalid Source Language",
   "TRANSLITERATE_INVALID_SOURCE_DESC": "Source language '{source}' not recognized",
   "TRANSLITERATE_INVALID_SOURCE_MESSAGE": "Invalid source language '{source}'. Valid options: arabic, english, turkish, hebrew, latin",
@@ -492,10 +492,10 @@
   "TRANSLITERATION_RESULT": "Transliteration of \"{text}\" from {source_lang} to {target_lang}: **{result}**",
   "CONVERTNUMBERS_INLINE_HELP_TITLE": "Number Converter",
   "CONVERTNUMBERS_INLINE_HELP_DESC": "Convert numbers to different formats",
-  "CONVERTNUMBERS_INLINE_HELP_MESSAGE": "Type `@egrigore /convert_numbers <number> [--format=<arabic|indian|invert>]`. Example: `@egrigore /convert_numbers 1234 --format=arabic`",
+  "CONVERTNUMBERS_INLINE_HELP_MESSAGE": "Type `@EgrigoreBot /convert_numbers <number> [--format=<arabic|indian|invert>]`. Example: `@EgrigoreBot /convert_numbers 1234 --format=arabic`",
   "CONVERTNUMBERS_NO_TEXT_TITLE": "No Number Provided",
   "CONVERTNUMBERS_NO_TEXT_DESC": "Please enter a number to convert",
-  "CONVERTNUMBERS_NO_TEXT_MESSAGE": "Please provide a number, e.g., `@egrigore /convert_numbers 1234`",
+  "CONVERTNUMBERS_NO_TEXT_MESSAGE": "Please provide a number, e.g., `@EgrigoreBot /convert_numbers 1234`",
   "CONVERTNUMBERS_INVALID_FORMAT_TITLE": "Invalid Format",
   "CONVERTNUMBERS_INVALID_FORMAT_DESC": "Format '{format}' not recognized",
   "CONVERTNUMBERS_INVALID_FORMAT_MESSAGE": "Invalid format '{format}'. Valid options: arabic, indian, invert",
@@ -503,10 +503,10 @@
   "CONVERTNUMBERS_INLINE_DESC": "Converted '{text}' to {format} format",
   "NUMEROLOGY_INLINE_HELP_TITLE": "Numerology Calculator",
   "NUMEROLOGY_INLINE_HELP_DESC": "Calculate numerology value for text",
-  "NUMEROLOGY_INLINE_HELP_MESSAGE": "Type `@egrigore /numerology <text> [--alphabet=<arabic_abjadi|...>] [--method=<normal|inverse|base36|...>]`. Example: `@egrigore /numerology Hello --alphabet=english --method=normal`",
+  "NUMEROLOGY_INLINE_HELP_MESSAGE": "Type `@EgrigoreBot /numerology <text> [--alphabet=<arabic_abjadi|...>] [--method=<normal|inverse|base36|...>]`. Example: `@EgrigoreBot /numerology Hello --alphabet=english --method=normal`",
   "NUMEROLOGY_NO_TEXT_TITLE": "No Text Provided",
   "NUMEROLOGY_NO_TEXT_DESC": "Please enter text to calculate",
-  "NUMEROLOGY_NO_TEXT_MESSAGE": "Please provide text, e.g., `@egrigore /numerology Hello`",
+  "NUMEROLOGY_NO_TEXT_MESSAGE": "Please provide text, e.g., `@EgrigoreBot /numerology Hello`",
   "NUMEROLOGY_INVALID_ALPHABET_TITLE": "Invalid Alphabet",
   "NUMEROLOGY_INVALID_ALPHABET_DESC": "Alphabet '{alphabet}' not recognized",
   "NUMEROLOGY_INVALID_ALPHABET_MESSAGE": "Invalid alphabet '{alphabet}'. Valid options: arabic_abjadi, arabic_maghribi, arabic_quranic, arabic_hija, arabic_maghribi_hija, arabic_ikleels, arabic_shamse_abjadi, hebrew, turkish, english, latin",
@@ -556,35 +556,35 @@
   "CONVERT_FORMAT_INDIAN": "Indian",
   "CONVERT_FORMAT_INVERT": "Invert",
   "COMMAND_ALIASES": {
-    "abjad": [
-      "abjad"
-    ],
-    "huddam": [
-      "huddâm"
-    ],
-    "unsur": [
-      "unsur"
-    ],
-    "nutket": [
-      "nutket"
-    ],
-    "name": [
-      "name"
-    ],
-    "magicsquare": [
-      "magicsq"
-    ],
-    "transliterate": [
-      "translit"
-    ],
-    "payment": [
-      "pay"
-    ],
-    "numerology": [
-      "numerology"
-    ],
-    "convertnumbers": [
-      "convert"
-    ]
+	"abjad": [
+	  "abjad"
+	],
+	"huddam": [
+	  "huddâm"
+	],
+	"unsur": [
+	  "unsur"
+	],
+	"nutket": [
+	  "nutket"
+	],
+	"name": [
+	  "name"
+	],
+	"magicsquare": [
+	  "magicsq"
+	],
+	"transliterate": [
+	  "translit"
+	],
+	"payment": [
+	  "pay"
+	],
+	"numerology": [
+	  "numerology"
+	],
+	"convertnumbers": [
+	  "convert"
+	]
   }
 }

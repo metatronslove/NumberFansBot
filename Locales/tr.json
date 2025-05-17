@@ -364,8 +364,8 @@
   "GROUP_BLACKLIST_TOGGLED": "Grup {{group_id}} {{status}} olarak ayarlandı",
   "GROUP_BLACKLIST_TOGGLE_ERROR": "Grup için kara liste durumu değiştirilemedi",
   "INLINE_HELP_TITLE": "Satır İçi Komut Yardımı",
-  "INLINE_HELP_DESC": "'@egrigore /abjad <metin> [--seçenekler]' gibi bir komut yazın",
-  "INLINE_HELP_MESSAGE": "`@egrigore /abjad <metin> [--alfabe=<değer>] [--tür=<değer>] [--şedde=<değer>] [--detay=<değer>]` gibi satır içi komutları kullanın. Desteklenen komutlar: abjad, bastet, nutket, unsur, huddam, magic_square, transliterate, convert_numbers, numerology.",
+  "INLINE_HELP_DESC": "'@EgrigoreBot /abjad <metin> [--seçenekler]' gibi bir komut yazın",
+  "INLINE_HELP_MESSAGE": "`@EgrigoreBot /abjad <metin> [--alfabe=<değer>] [--tür=<değer>] [--şedde=<değer>] [--detay=<değer>]` gibi satır içi komutları kullanın. Desteklenen komutlar: abjad, bastet, nutket, unsur, huddam, magic_square, transliterate, convert_numbers, numerology.",
   "UNKNOWN_COMMAND_TITLE": "Bilinmeyen Komut",
   "UNKNOWN_COMMAND_DESC": "'{command}' komutu tanınmadı",
   "UNKNOWN_COMMAND_MESSAGE": "Üzgünüm, '{command}' geçerli bir satır içi komut değil. abjad, bastet veya nutket gibi komutları deneyin.",
@@ -373,10 +373,10 @@
   "ERROR_DESC": "Bir hata oluştu: {error}",
   "ABJAD_INLINE_HELP_TITLE": "Ebced Hesaplayıcı",
   "ABJAD_INLINE_HELP_DESC": "Metin için Ebced değerini hesapla",
-  "ABJAD_INLINE_HELP_MESSAGE": "`@egrigore /abjad <metin> [--alfabe=<arapça_ebcedi|arapça_mağribi|...>] [--tür=<asgar|sağir|...>] [--şedde=<birkez|ikikez>] [--detay=<özet|tam>]` yazın. Örnek: `@egrigore /abjad Merhaba --alfabe=ingilizce --tür=sağir`",
+  "ABJAD_INLINE_HELP_MESSAGE": "`@EgrigoreBot /abjad <metin> [--alfabe=<arapça_ebcedi|arapça_mağribi|...>] [--tür=<asgar|sağir|...>] [--şedde=<birkez|ikikez>] [--detay=<özet|tam>]` yazın. Örnek: `@EgrigoreBot /abjad Merhaba --alfabe=ingilizce --tür=sağir`",
   "ABJAD_NO_TEXT_TITLE": "Metin Girilmedi",
   "ABJAD_NO_TEXT_DESC": "Lütfen hesaplamak için metin girin",
-  "ABJAD_NO_TEXT_MESSAGE": "Lütfen metin sağlayın, örneğin: `@egrigore /abjad Merhaba`",
+  "ABJAD_NO_TEXT_MESSAGE": "Lütfen metin sağlayın, örneğin: `@EgrigoreBot /abjad Merhaba`",
   "ABJAD_INVALID_ALPHABET_TITLE": "Geçersiz Alfabe",
   "ABJAD_INVALID_ALPHABET_DESC": "'{alphabet}' alfabesi tanınmadı",
   "ABJAD_INVALID_ALPHABET_MESSAGE": "Geçersiz alfabe '{alphabet}'. Geçerli seçenekler: arabic_abjadi, arabic_maghribi, arabic_quranic, arabic_hija, arabic_maghribi_hija, arabic_ikleels, arabic_shamse_abjadi, hebrew, turkish, english, latin",
@@ -399,10 +399,10 @@
   "ABJAD_CALC_TOTAL": "Toplam Değer: {total}",
   "BASTET_INLINE_HELP_TITLE": "Bastet Üretici",
   "BASTET_INLINE_HELP_DESC": "Bir sayıdan metin üret",
-  "BASTET_INLINE_HELP_MESSAGE": "`@egrigore /bastet <sayı> [--tekrar=<değer>] [--alfabe=<arapça_ebcedi|arapça_mağribi|...>] [--tür=<asgar|sağir|...>]` yazın. Örnek: `@egrigore /bastet 123 --tekrar=5`",
+  "BASTET_INLINE_HELP_MESSAGE": "`@EgrigoreBot /bastet <sayı> [--tekrar=<değer>] [--alfabe=<arapça_ebcedi|arapça_mağribi|...>] [--tür=<asgar|sağir|...>]` yazın. Örnek: `@EgrigoreBot /bastet 123 --tekrar=5`",
   "BASTET_NO_NUMBER_TITLE": "Sayı Girilmedi",
   "BASTET_NO_NUMBER_DESC": "Lütfen işlemek için bir sayı girin",
-  "BASTET_NO_NUMBER_MESSAGE": "Lütfen bir sayı sağlayın, örneğin: `@egrigore /bastet 123`",
+  "BASTET_NO_NUMBER_MESSAGE": "Lütfen bir sayı sağlayın, örneğin: `@EgrigoreBot /bastet 123`",
   "BASTET_INVALID_REPETITION_TITLE": "Geçersiz Tekrar",
   "BASTET_INVALID_REPETITION_DESC": "'{repetition}' tekrarı geçersiz",
   "BASTET_INVALID_REPETITION_MESSAGE": "Tekrar 1 ile 1000 arasında bir sayı olmalıdır, girilen: '{repetition}'",
@@ -418,10 +418,10 @@
   "BASTET_CALC_RESULT": "Oluşturulan Metin: {result}",
   "NUTKET_INLINE_HELP_TITLE": "Nutket Yazıcı",
   "NUTKET_INLINE_HELP_DESC": "Bir sayıyı harflerle yaz",
-  "NUTKET_INLINE_HELP_MESSAGE": "`@egrigore /nutket <sayı> [--dil=<arapça|ibranice|türkçe|ingilizce|latince>]` yazın. Örnek: `@egrigore /nutket 123 --dil=arapça`",
+  "NUTKET_INLINE_HELP_MESSAGE": "`@EgrigoreBot /nutket <sayı> [--dil=<arapça|ibranice|türkçe|ingilizce|latince>]` yazın. Örnek: `@EgrigoreBot /nutket 123 --dil=arapça`",
   "NUTKET_NO_NUMBER_TITLE": "Sayı Girilmedi",
   "NUTKET_NO_NUMBER_DESC": "Lütfen yazmak için bir sayı girin",
-  "NUTKET_NO_NUMBER_MESSAGE": "Lütfen bir sayı sağlayın, örneğin: `@egrigore /nutket 123`",
+  "NUTKET_NO_NUMBER_MESSAGE": "Lütfen bir sayı sağlayın, örneğin: `@EgrigoreBot /nutket 123`",
   "NUTKET_INVALID_LANGUAGE_TITLE": "Geçersiz Dil",
   "NUTKET_INVALID_LANGUAGE_DESC": "'{language}' dili tanınmadı",
   "NUTKET_INVALID_LANGUAGE_MESSAGE": "Geçersiz dil '{language}'. Geçerli seçenekler: arabic, hebrew, turkish, english, latin",
@@ -429,10 +429,10 @@
   "NUTKET_INLINE_DESC": "{number} sayısı {language} dilinde yazıldı",
   "UNSUR_INLINE_HELP_TITLE": "Unsur Sınıflandırıcı",
   "UNSUR_INLINE_HELP_DESC": "Metni elementlere sınıflandır",
-  "UNSUR_INLINE_HELP_MESSAGE": "`@egrigore /unsur <metin> [--dil=<türkçe|arapça|buni|hüseyni|ibranice|ingilizce|latince|varsayılan>] [--tablo=<ateş|su|hava|toprak|varsayılan>] [--şedde=<birkez|ikikez>]` yazın. Örnek: `@egrigore /unsur Merhaba --dil=türkçe`",
+  "UNSUR_INLINE_HELP_MESSAGE": "`@EgrigoreBot /unsur <metin> [--dil=<türkçe|arapça|buni|hüseyni|ibranice|ingilizce|latince|varsayılan>] [--tablo=<ateş|su|hava|toprak|varsayılan>] [--şedde=<birkez|ikikez>]` yazın. Örnek: `@EgrigoreBot /unsur Merhaba --dil=türkçe`",
   "UNSUR_NO_TEXT_TITLE": "Metin Girilmedi",
   "UNSUR_NO_TEXT_DESC": "Lütfen sınıflandırmak için metin girin",
-  "UNSUR_NO_TEXT_MESSAGE": "Lütfen metin sağlayın, örneğin: `@egrigore /unsur Merhaba`",
+  "UNSUR_NO_TEXT_MESSAGE": "Lütfen metin sağlayın, örneğin: `@EgrigoreBot /unsur Merhaba`",
   "UNSUR_INVALID_LANGUAGE_TITLE": "Geçersiz Dil",
   "UNSUR_INVALID_LANGUAGE_DESC": "'{language}' dili tanınmadı",
   "UNSUR_INVALID_LANGUAGE_MESSAGE": "Geçersiz dil '{language}'. Geçerli seçenekler: turkish, arabic, buni, huseyni, hebrew, english, latin, default",
@@ -449,10 +449,10 @@
   "UNSUR_INLINE_DESC": "'{input}' {element} olarak sınıflandırıldı",
   "HUDDAM_INLINE_HELP_TITLE": "Huddam Üretici",
   "HUDDAM_INLINE_HELP_DESC": "Bir sayıdan varlık adı üret",
-  "HUDDAM_INLINE_HELP_MESSAGE": "`@egrigore /huddam <sayı> [--varlık=<ulvi|sufli|ser>] [--alfabe=<arapça_ebcedi|...>] [--çarpan=<düzenli|herbir>]` yazın. Örnek: `@egrigore /huddam 123 --varlık=ulvi`",
+  "HUDDAM_INLINE_HELP_MESSAGE": "`@EgrigoreBot /huddam <sayı> [--varlık=<ulvi|sufli|ser>] [--alfabe=<arapça_ebcedi|...>] [--çarpan=<düzenli|herbir>]` yazın. Örnek: `@EgrigoreBot /huddam 123 --varlık=ulvi`",
   "HUDDAM_NO_NUMBER_TITLE": "Sayı Girilmedi",
   "HUDDAM_NO_NUMBER_DESC": "Lütfen işlemek için bir sayı girin",
-  "HUDDAM_NO_NUMBER_MESSAGE": "Lütfen bir sayı sağlayın, örneğin: `@egrigore /huddam 123`",
+  "HUDDAM_NO_NUMBER_MESSAGE": "Lütfen bir sayı sağlayın, örneğin: `@EgrigoreBot /huddam 123`",
   "HUDDAM_INVALID_ENTITY_TITLE": "Geçersiz Varlık Türü",
   "HUDDAM_INVALID_ENTITY_DESC": "'{entity}' varlık türü tanınmadı",
   "HUDDAM_INVALID_ENTITY_MESSAGE": "Geçersiz varlık türü '{entity}'. Geçerli seçenekler: ulvi, sufli, ser",
@@ -466,10 +466,10 @@
   "HUDDAM_INLINE_DESC": "{number} sayısı için {type} türünde oluşturuldu",
   "MAGICSQUARE_INLINE_HELP_TITLE": "Sihirli Kare Üretici",
   "MAGICSQUARE_INLINE_HELP_DESC": "Bir sihirli kare oluştur",
-  "MAGICSQUARE_INLINE_HELP_MESSAGE": "`@egrigore /magic_square <sayı>` yazın. Örnek: `@egrigore /magic_square 15`",
+  "MAGICSQUARE_INLINE_HELP_MESSAGE": "`@EgrigoreBot /magic_square <sayı>` yazın. Örnek: `@EgrigoreBot /magic_square 15`",
   "MAGICSQUARE_NO_NUMBER_TITLE": "Sayı Girilmedi",
   "MAGICSQUARE_NO_NUMBER_DESC": "Lütfen bir satır toplamı girin",
-  "MAGICSQUARE_NO_NUMBER_MESSAGE": "Lütfen bir satır toplamı sağlayın, örneğin: `@egrigore /magic_square 15`",
+  "MAGICSQUARE_NO_NUMBER_MESSAGE": "Lütfen bir satır toplamı sağlayın, örneğin: `@EgrigoreBot /magic_square 15`",
   "MAGICSQUARE_INVALID_NUMBER_TITLE": "Geçersiz Satır Toplamı",
   "MAGICSQUARE_INVALID_NUMBER_DESC": "Satır toplamı en az 15 olmalıdır",
   "MAGICSQUARE_INVALID_NUMBER_MESSAGE": "Satır toplamı en az 15 olmalıdır, girilen: '{number}'",
@@ -477,10 +477,10 @@
   "MAGICSQUARE_INLINE_DESC": "{number} satır toplamı ile kare oluşturuldu",
   "TRANSLITERATE_INLINE_HELP_TITLE": "Çeviriyazım",
   "TRANSLITERATE_INLINE_HELP_DESC": "Metni yazı tipleri arasında çeviriyazım yap",
-  "TRANSLITERATE_INLINE_HELP_MESSAGE": "`@egrigore /transliterate <metin> [--kaynak=<arapça|ingilizce|türkçe|ibranice|latince>] [--hedef=<arapça|ingilizce|türkçe|ibranice|latince>]` yazın. Örnek: `@egrigore /transliterate Merhaba --kaynak=ingilizce --hedef=arapça`",
+  "TRANSLITERATE_INLINE_HELP_MESSAGE": "`@EgrigoreBot /transliterate <metin> [--kaynak=<arapça|ingilizce|türkçe|ibranice|latince>] [--hedef=<arapça|ingilizce|türkçe|ibranice|latince>]` yazın. Örnek: `@EgrigoreBot /transliterate Merhaba --kaynak=ingilizce --hedef=arapça`",
   "TRANSLITERATE_NO_TEXT_TITLE": "Metin Girilmedi",
   "TRANSLITERATE_NO_TEXT_DESC": "Lütfen çeviriyazım yapmak için metin girin",
-  "TRANSLITERATE_NO_TEXT_MESSAGE": "Lütfen metin sağlayın, örneğin: `@egrigore /transliterate Merhaba`",
+  "TRANSLITERATE_NO_TEXT_MESSAGE": "Lütfen metin sağlayın, örneğin: `@EgrigoreBot /transliterate Merhaba`",
   "TRANSLITERATE_INVALID_SOURCE_TITLE": "Geçersiz Kaynak Dil",
   "TRANSLITERATE_INVALID_SOURCE_DESC": "'{source}' kaynak dili tanınmadı",
   "TRANSLITERATE_INVALID_SOURCE_MESSAGE": "Geçersiz kaynak dili '{source}'. Geçerli seçenekler: arabic, english, turkish, hebrew, latin",
@@ -492,10 +492,10 @@
   "TRANSLITERATION_RESULT": "\"{text}\" metninin {source_lang} dilinden {target_lang} diline çevirisi: **{result}**",
   "CONVERTNUMBERS_INLINE_HELP_TITLE": "Sayı Dönüştürücü",
   "CONVERTNUMBERS_INLINE_HELP_DESC": "Sayıları farklı formatlara dönüştür",
-  "CONVERTNUMBERS_INLINE_HELP_MESSAGE": "`@egrigore /convert_numbers <sayı> [--format=<arapça|hint|ters>]` yazın. Örnek: `@egrigore /convert_numbers 1234 --format=arapça`",
+  "CONVERTNUMBERS_INLINE_HELP_MESSAGE": "`@EgrigoreBot /convert_numbers <sayı> [--format=<arapça|hint|ters>]` yazın. Örnek: `@EgrigoreBot /convert_numbers 1234 --format=arapça`",
   "CONVERTNUMBERS_NO_TEXT_TITLE": "Sayı Girilmedi",
   "CONVERTNUMBERS_NO_TEXT_DESC": "Lütfen dönüştürmek için bir sayı girin",
-  "CONVERTNUMBERS_NO_TEXT_MESSAGE": "Lütfen bir sayı sağlayın, örneğin: `@egrigore /convert_numbers 1234`",
+  "CONVERTNUMBERS_NO_TEXT_MESSAGE": "Lütfen bir sayı sağlayın, örneğin: `@EgrigoreBot /convert_numbers 1234`",
   "CONVERTNUMBERS_INVALID_FORMAT_TITLE": "Geçersiz Format",
   "CONVERTNUMBERS_INVALID_FORMAT_DESC": "'{format}' formatı tanınmadı",
   "CONVERTNUMBERS_INVALID_FORMAT_MESSAGE": "Geçersiz format '{format}'. Geçerli seçenekler: arabic, indian, invert",
@@ -503,10 +503,10 @@
   "CONVERTNUMBERS_INLINE_DESC": "'{text}' metni {format} formatına dönüştürüldü",
   "NUMEROLOGY_INLINE_HELP_TITLE": "Numeroloji Hesaplayıcı",
   "NUMEROLOGY_INLINE_HELP_DESC": "Metin için numeroloji değerini hesapla",
-  "NUMEROLOGY_INLINE_HELP_MESSAGE": "`@egrigore /numerology <metin> [--alfabe=<arapça_ebcedi|...>] [--yöntem=<normal|ters|taban36|...>]` yazın. Örnek: `@egrigore /numerology Merhaba --alfabe=ingilizce --yöntem=normal`",
+  "NUMEROLOGY_INLINE_HELP_MESSAGE": "`@EgrigoreBot /numerology <metin> [--alfabe=<arapça_ebcedi|...>] [--yöntem=<normal|ters|taban36|...>]` yazın. Örnek: `@EgrigoreBot /numerology Merhaba --alfabe=ingilizce --yöntem=normal`",
   "NUMEROLOGY_NO_TEXT_TITLE": "Metin Girilmedi",
   "NUMEROLOGY_NO_TEXT_DESC": "Lütfen hesaplamak için metin girin",
-  "NUMEROLOGY_NO_TEXT_MESSAGE": "Lütfen metin sağlayın, örneğin: `@egrigore /numerology Merhaba`",
+  "NUMEROLOGY_NO_TEXT_MESSAGE": "Lütfen metin sağlayın, örneğin: `@EgrigoreBot /numerology Merhaba`",
   "NUMEROLOGY_INVALID_ALPHABET_TITLE": "Geçersiz Alfabe",
   "NUMEROLOGY_INVALID_ALPHABET_DESC": "'{alphabet}' alfabesi tanınmadı",
   "NUMEROLOGY_INVALID_ALPHABET_MESSAGE": "Geçersiz alfabe '{alphabet}'. Geçerli seçenekler: arabic_abjadi, arabic_maghribi, arabic_quranic, arabic_hija, arabic_maghribi_hija, arabic_ikleels, arabic_shamse_abjadi, hebrew, turkish, english, latin",
@@ -556,35 +556,35 @@
   "CONVERT_FORMAT_INDIAN": "Hint",
   "CONVERT_FORMAT_INVERT": "Ters",
   "COMMAND_ALIASES": {
-    "abjad": [
-      "abjad"
-    ],
-    "huddam": [
-      "huddâm"
-    ],
-    "unsur": [
-      "unsur"
-    ],
-    "nutket": [
-      "nutket"
-    ],
-    "name": [
-      "name"
-    ],
-    "magicsquare": [
-      "magicsq"
-    ],
-    "transliterate": [
-      "translit"
-    ],
-    "payment": [
-      "pay"
-    ],
-    "numerology": [
-      "numerology"
-    ],
-    "convertnumbers": [
-      "convert"
-    ]
+	"abjad": [
+	  "abjad"
+	],
+	"huddam": [
+	  "huddâm"
+	],
+	"unsur": [
+	  "unsur"
+	],
+	"nutket": [
+	  "nutket"
+	],
+	"name": [
+	  "name"
+	],
+	"magicsquare": [
+	  "magicsq"
+	],
+	"transliterate": [
+	  "translit"
+	],
+	"payment": [
+	  "pay"
+	],
+	"numerology": [
+	  "numerology"
+	],
+	"convertnumbers": [
+	  "convert"
+	]
   }
 }
