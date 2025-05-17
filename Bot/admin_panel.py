@@ -137,23 +137,7 @@ def register_handlers():
 		telegram_app.add_handler(get_huddam_conversation_handler())
 		telegram_app.add_handler(get_unsur_conversation_handler())
 		telegram_app.add_handler(get_transliterate_conversation_handler())
-		telegram_app.add_handler(PreCheckoutQueryHandler(handle_pre_checkout))
-		telegram_app.add_handler(CommandHandler("numerology", user_numerology.numerology_handle))
-		telegram_app.add_handler(CommandHandler("convertnumbers", user_convert_numbers.convert_numbers_handle))
-		telegram_app.add_handler(CommandHandler("magicsquare", user_magic_square.magic_square_handle))
-		telegram_app.add_handler(CommandHandler("nutket", user_nutket.nutket_handle))
-		telegram_app.add_handler(CommandHandler("cancel", cancel.cancel_handle))
-		telegram_app.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, handle_successful_payment))
-		telegram_app.add_handler(CallbackQueryHandler(callback_query.set_language_handle, pattern=r"lang\|.+"))
-		telegram_app.add_handler(CallbackQueryHandler(callback_query.handle_callback_query))
-		telegram_app.add_handler(CommandHandler("start", start.start_handle))
-		telegram_app.add_handler(CommandHandler("help", help.help_handle))
-		telegram_app.add_handler(CommandHandler("language", language.language_handle))
-		telegram_app.add_handler(CommandHandler("settings", settings.settings_handle))
-		telegram_app.add_handler(CommandHandler("credits", credits.credits_handle))
-		telegram_app.add_handler(CommandHandler("payment", payment_handle))
-
-		# Register inline query handlers
+		telegram_app.add_handler(PreCheckoutQueryHandler(handle_pre_checkout))		# Register inline query handlers
 		telegram_app.add_handler(InlineQueryHandler(abjad, pattern=r"^/abjad"))
 		telegram_app.add_handler(InlineQueryHandler(bastet, pattern=r"^/bastet"))
 		telegram_app.add_handler(InlineQueryHandler(huddam, pattern=r"^/huddam"))
@@ -163,6 +147,26 @@ def register_handlers():
 		telegram_app.add_handler(InlineQueryHandler(numerology, pattern=r"^/numerology"))
 		telegram_app.add_handler(InlineQueryHandler(magic_square, pattern=r"^/magicsquare"))
 		telegram_app.add_handler(InlineQueryHandler(convert_numbers, pattern=r"^/convertnumbers"))
+
+		# Register inline shop command handlers
+		try:
+			shop_inline_command = ShopInlineCommand()
+			shop_inline_command.register_handlers(telegram_app)
+		except Exception as e:
+			logger.error(f"Failed to register ShopInlineCommand handlers: {str(e)}")
+			raise
+		try:
+			product_inline_command = ProductInlineCommand()
+			product_inline_command.register_handlers(telegram_app)
+		except Exception as e:
+			logger.error(f"Failed to register ProductInlineCommand handlers: {str(e)}")
+			raise
+		try:
+			update_inline_command = UpdateInlineCommand()
+			update_inline_command.register_handlers(telegram_app)
+		except Exception as e:
+			logger.error(f"Failed to register UpdateInlineCommand handlers: {str(e)}")
+			raise
 
 		# Register shop command handlers
 		try:
@@ -196,26 +200,20 @@ def register_handlers():
 			logger.error(f"Failed to register PaparaCommand handlers: {str(e)}")
 			raise
 
-		# Register inline shop command handlers
-		try:
-			shop_inline_command = ShopInlineCommand()
-			shop_inline_command.register_handlers(telegram_app)
-		except Exception as e:
-			logger.error(f"Failed to register ShopInlineCommand handlers: {str(e)}")
-			raise
-		try:
-			product_inline_command = ProductInlineCommand()
-			product_inline_command.register_handlers(telegram_app)
-		except Exception as e:
-			logger.error(f"Failed to register ProductInlineCommand handlers: {str(e)}")
-			raise
-		try:
-			update_inline_command = UpdateInlineCommand()
-			update_inline_command.register_handlers(telegram_app)
-		except Exception as e:
-			logger.error(f"Failed to register UpdateInlineCommand handlers: {str(e)}")
-			raise
-
+		telegram_app.add_handler(CommandHandler("numerology", user_numerology.numerology_handle))
+		telegram_app.add_handler(CommandHandler("convertnumbers", user_convert_numbers.convert_numbers_handle))
+		telegram_app.add_handler(CommandHandler("magicsquare", user_magic_square.magic_square_handle))
+		telegram_app.add_handler(CommandHandler("nutket", user_nutket.nutket_handle))
+		telegram_app.add_handler(CommandHandler("cancel", cancel.cancel_handle))
+		telegram_app.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, handle_successful_payment))
+		telegram_app.add_handler(CallbackQueryHandler(callback_query.set_language_handle, pattern=r"lang\|.+"))
+		telegram_app.add_handler(CallbackQueryHandler(callback_query.handle_callback_query))
+		telegram_app.add_handler(CommandHandler("start", start.start_handle))
+		telegram_app.add_handler(CommandHandler("help", help.help_handle))
+		telegram_app.add_handler(CommandHandler("language", language.language_handle))
+		telegram_app.add_handler(CommandHandler("settings", settings.settings_handle))
+		telegram_app.add_handler(CommandHandler("credits", credits.credits_handle))
+		telegram_app.add_handler(CommandHandler("payment", payment_handle))
 		logger.info("All handlers registered successfully")
 	except Exception as e:
 		logger.error(f"Critical error in register_handlers: {str(e)}")
