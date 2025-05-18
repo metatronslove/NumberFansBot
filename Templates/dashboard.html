@@ -490,6 +490,31 @@ particlesJS('particles-js', {
 	"retina_detect": true
 });
 
+// Tab and form styling
+document
+	.querySelectorAll('.tab')
+	.forEach(tab => {
+		tab.addEventListener('click', () => {
+			const hash = window.location.hash || '#commands';
+			const tabs = document.querySelectorAll('.tab');
+			const divs = document.querySelectorAll('.tab-content');
+			tabs.forEach(tab => {
+				if (tab.getAttribute('href') === hash) {
+					tab.classList.add('active');
+				} else {
+					tab.classList.remove('active');
+				}
+			});
+			divs.forEach(div => {
+				if ('#' + div.id === hash) {
+					div.style.display = 'block';
+				} else {
+					div.style.display = 'none';
+				}
+			});
+		});
+	});
+
 document
 	.querySelectorAll('.promote-credits-form')
 	.forEach(form => {
@@ -1451,27 +1476,6 @@ async function main() {
 	loadFileTree();
 }
 
-		// Update URL hash and toggle tab visibility on click
-		function setActiveTab(tabId) {
-			window.location.hash = tabId;
-			const tabs = document.querySelectorAll('.tab');
-			const divs = document.querySelectorAll('div.tab-content');
-			tabs.forEach(tab => {
-				if (tab.getAttribute('href') === '#' + tabId) {
-					tab.classList.add('active');
-				} else {
-					tab.classList.remove('active');
-				}
-			});
-			divs.forEach(div => {
-				if (div.id === tabId) {
-					div.style.display = 'block';
-				} else {
-					div.style.display = 'none';
-				}
-			});
-		}
-
 // Hex'i RGB'ye çeviren yardımcı fonksiyon
 function hexToRgb(hex) {
 	const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -1488,25 +1492,6 @@ function hexToRgb(hex) {
 
 document
 	.addEventListener('DOMContentLoaded', function () {
-
-			const hash = window.location.hash || '#commands';
-			const tabs = document.querySelectorAll('.tab');
-			const divs = document.querySelectorAll('div.tab-content');
-			tabs.forEach(tab => {
-				if (tab.getAttribute('href') === hash) {
-					tab.classList.add('active');
-				} else {
-					tab.classList.remove('active');
-				}
-			});
-			divs.forEach(div => {
-				if ('#' + div.id === hash) {
-					div.style.display = 'block';
-				} else {
-					div.style.display = 'none';
-				}
-			});
-
 		// Initialize CodeMirror editor
 		const editorElement = document.getElementById('editor');
 		if (editorElement) {
