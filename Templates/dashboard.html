@@ -164,8 +164,8 @@
 		<!-- Users Tab -->
 		<div id="users" class="tab-content" hx-target="this" hx-swap="innerHTML">
 			<h3>{{ i18n.t('USERS_TAB', lang) }}</h3>
-			<input type="text" name="search" id="search-users" hx-get="/{{ lang }}/users" hx-trigger="keyup changed delay:500ms" placeholder="{{ i18n.t('SEARCH_USERS', lang) }}">
-			<table class="table table-bordered table-striped">
+			<input type="text" class="form-control" name="search" id="search-users" hx-get="/{{ lang }}/users" hx-trigger="keyup changed delay:500ms" placeholder="{{ i18n.t('SEARCH_USERS', lang) }}">
+			<table class="table table-dark">
 				<thead>
 					<tr>
 						<th style="text-align: left;">{{ i18n.t('USER_ID', lang) }}</th>
@@ -229,8 +229,8 @@
 		<!-- Groups Tab -->
 		<div id="groups" class="tab-content" hx-target="this" hx-swap="innerHTML">
 			<h3>{{ i18n.t('GROUPS_TAB', lang) }}</h3>
-			<input type="text" name="search" id="search-groups" hx-get="/{{ lang }}/groups" hx-trigger="keyup changed delay:500ms" placeholder="{{ i18n.t('SEARCH_GROUPS', lang) }}">
-			<table class="table table-bordered table-striped">
+			<input type="text" class="form-control" name="search" id="search-groups" hx-get="/{{ lang }}/groups" hx-trigger="keyup changed delay:500ms" placeholder="{{ i18n.t('SEARCH_GROUPS', lang) }}">
+			<table class="table table-dark">
 				<thead>
 					<tr>
 						<th style="text-align: left;">{{ i18n.t('GROUP_ID', lang) }}</th>
