@@ -932,72 +932,51 @@ def promote_credits(lang="en"):
 def toggle_blacklist(lang="en"):
 	if "username" not in session:
 		return redirect(url_for("login", lang=lang))
-
+	config = Config()
+	i18n = I18n()
 	if lang not in AVAILABLE_LANGUAGES:
 		lang = "en"
-
-	i18n = I18n()
-	db = Database()
-
 	user_id = request.form.get("user_id")
-
-	if not user_id:
-		flash(i18n.t("MISSING_FIELDS", lang), "error")
-		return redirect(url_for("index", lang=lang))
-
 	try:
-		user_id = int(user_id)
-
-		success, is_blacklisted = db.toggle_blacklist(user_id)
-
-		if success:
-			if is_blacklisted:
-				flash(i18n.t("USER_BLACKLISTED", lang), "success")
-			else:
-				flash(i18n.t("USER_UNBLACKLISTED", lang), "success")
+		db = Database()
+		if db.toggle_blacklist(user_id):
+			query = "SELECT is_blacklisted FROM users WHERE user_id = %s"
+			db.cursor.execute(query, (user_id,))
+			user = db.cursor.fetchone()
+			status = "blacklisted" if user['is_blacklisted'] else "unblacklisted"
+			flash(i18n.t("BLACKLIST_TOGGLED", lang, user_id=user_id, status=status), "success")
 		else:
-			flash(i18n.t("USER_NOT_FOUND", lang), "error")
-	except ValueError:
-		flash(i18n.t("INVALID_INPUT", lang), "error")
+			flash(i18n.t("BLACKLIST_TOGGLE_ERROR", lang), "error")
 	except Exception as e:
-		flash(i18n.t("ERROR_GENERAL", lang, error=str(e)), "error")
-
+		logger.error(f"Error toggling blacklist: {str(e)}")
+		flash(i18n.t("BLACKLIST_TOGGLE_ERROR", lang), "error")
 	return redirect(url_for("index", lang=lang))
 
 @flask_app.route("/<lang>/toggle_beta_tester", methods=["POST"])
 def toggle_beta_tester(lang="en"):
 	if "username" not in session:
 		return redirect(url_for("login", lang=lang))
-
+	config = Config()
+	i18n = I18n()
 	if lang not in AVAILABLE_LANGUAGES:
 		lang = "en"
-
-	i18n = I18n()
-	db = Database()
-
 	user_id = request.form.get("user_id")
-
-	if not user_id:
-		flash(i18n.t("MISSING_FIELDS", lang), "error")
-		return redirect(url_for("index", lang=lang))
-
 	try:
-		user_id = int(user_id)
-
-		success, is_beta_tester = db.toggle_beta_tester(user_id)
-
-		if success:
-			if is_beta_tester:
-				flash(i18n.t("BETA_ACCESS_GRANTED", lang), "success")
+		db = Database()
+		if db.toggle_beta_tester(user_id):
+			query = "SELECT is_beta_tester FROM users WHERE user_id = %s"
+			db.cursor.execute(query, (user_id,))
+			user = db.cursor.fetchone()
+			status = "beta_tester" if user['is_beta_tester'] else "not_beta_tester"
+			if status == "beta_tester":
+				flash(i18n.t("BETA_TESTER_GRANTED", lang, telegram_id=user_id), "success")
 			else:
-				flash(i18n.t("BETA_ACCESS_REVOKED", lang), "success")
+				flash(i18n.t("BETA_TESTER_REVOKED", lang, telegram_id=user_id), "success")
 		else:
-			flash(i18n.t("USER_NOT_FOUND", lang), "error")
-	except ValueError:
-		flash(i18n.t("INVALID_INPUT", lang), "error")
+			flash(i18n.t("ERROR_INVALID_INPUT", lang, error="Invalid action"), "error")
 	except Exception as e:
-		flash(i18n.t("ERROR_GENERAL", lang, error=str(e)), "error")
-
+		logger.error(f"Error toggling beta tester: {str(e)}")
+		flash(i18n.t("ERROR_INVALID_INPUT", lang, error="Invalid action"), "error")
 	return redirect(url_for("index", lang=lang))
 
 @flask_app.route("/<lang>/toggle_group_blacklist", methods=["POST"])
