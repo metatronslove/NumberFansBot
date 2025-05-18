@@ -1509,25 +1509,6 @@ document
 
 document
 	.addEventListener('DOMContentLoaded', function () {
-
-			const hash = window.location.hash || '#commands';
-			const tabs = document.querySelectorAll('nav a');
-			const divs = document.querySelectorAll('div.tab-content');
-			tabs.forEach(tab => {
-				if (tab.getAttribute('href') === hash) {
-					tab.classList.add('active');
-				} else {
-					tab.classList.remove('active');
-				}
-			});
-			divs.forEach(div => {
-				if ('#' + div.id === hash) {
-					div.style.display = 'block';
-				} else {
-					div.style.display = 'none';
-				}
-			});
-
 		// Initialize CodeMirror editor
 		const editorElement = document.getElementById('editor');
 		if (editorElement) {
