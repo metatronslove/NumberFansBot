@@ -404,6 +404,8 @@ def user_dashboard(lang="en"):
 	if "username" not in session:
 		return redirect(url_for("login", lang=lang))
 
+
+	config = Config()
 	if lang not in AVAILABLE_LANGUAGES:
 		lang = "en"
 
@@ -413,9 +415,11 @@ def user_dashboard(lang="en"):
 	user_id = session.get("user_id")
 	if not user_id:
 		return redirect(url_for("login", lang=lang))
+	else:
+		query = "SELECT * FROM users WHERE user_id = %s"
+		db.cursor.execute(query, (user_id,))
+		user = db.cursor.fetchone()
 
-	# Get user information
-	user = db.get_user_by_id(user_id)
 	if not user:
 		session.clear()
 		return redirect(url_for("login", lang=lang))
