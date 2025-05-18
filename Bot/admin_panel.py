@@ -457,11 +457,153 @@ def logout(lang="en"):
 	flash(i18n.t("LOGOUT_SUCCESS", lang), "success")
 	return redirect(url_for("login", lang=lang))
 
+# Dosya İçeriği Görüntüleme
+@flask_app.route("/<lang>/files/view", methods=["GET"])
+def view_file(lang="en"):
+	if "username" not in session:
+		return jsonify({"error": "Unauthorized access"}), 401
+
+	file_path = request.args.get("path")
+	if not file_path or not is_safe_path(file_path):
+		return jsonify({"error": "Invalid file path"}), 400
+
+	try:
+		full_path = PROJECT_ROOT / file_path
+		if not full_path.is_file():
+			return jsonify({"error": "Not a file"}), 400
+
+		with open(full_path, "r", encoding="utf-8") as f:
+			content = f.read()
+
+		return jsonify({
+			"content": content,
+			"path": file_path,
+			"name": full_path.name
+		})
+	except Exception as e:
+		logger.error(f"Error reading file: {str(e)}")
+		return jsonify({"error": f"Failed to read file: {str(e)}"}), 500
+
+# Dosya Düzenleme
+@flask_app.route("/<lang>/files/edit", methods=["POST"])
+def edit_file(lang="en"):
+	if "username" not in session:
+		return jsonify({"error": "Unauthorized access"}), 401
+
+	file_path = request.form.get("path")
+	content = request.form.get("content")
+
+	if not file_path or not is_safe_path(file_path) or content is None:
+		return jsonify({"error": "Invalid parameters"}), 400
+
+	try:
+		full_path = PROJECT_ROOT / file_path
+		if not full_path.is_file():
+			return jsonify({"error": "Not a file"}), 400
+
+		with open(full_path, "w", encoding="utf-8") as f:
+			f.write(content)
+
+		return jsonify({"success": True, "message": "File saved successfully"})
+	except Exception as e:
+		logger.error(f"Error saving file: {str(e)}")
+		return jsonify({"error": f"Failed to save file: {str(e)}"}), 500
+
+# Yeni Dosya Oluşturma
+@flask_app.route("/<lang>/files/create", methods=["POST"])
+def create_file(lang="en"):
+	if "username" not in session:
+		return jsonify({"error": "Unauthorized access"}), 401
+
+	file_path = request.form.get("path")
+	content = request.form.get("content", "")
+
+	if not file_path or not is_safe_path(file_path):
+		return jsonify({"error": "Invalid file path"}), 400
+
+	try:
+		full_path = PROJECT_ROOT / file_path
+		if full_path.exists():
+			return jsonify({"error": "File already exists"}), 400
+
+		# Create parent directories if they don't exist
+		full_path.parent.mkdir(parents=True, exist_ok=True)
+
+		with open(full_path, "w", encoding="utf-8") as f:
+			f.write(content)
+
+		return jsonify({
+			"success": True,
+			"message": "File created successfully",
+			"path": file_path,
+			"name": full_path.name
+		})
+	except Exception as e:
+		logger.error(f"Error creating file: {str(e)}")
+		return jsonify({"error": f"Failed to create file: {str(e)}"}), 500
+
+# Dosya Silme
+@flask_app.route("/<lang>/files/delete", methods=["POST"])
+def delete_file(lang="en"):
+	if "username" not in session:
+		return jsonify({"error": "Unauthorized access"}), 401
+
+	file_path = request.form.get("path")
+
+	if not file_path or not is_safe_path(file_path):
+		return jsonify({"error": "Invalid file path"}), 400
+
+	try:
+		full_path = PROJECT_ROOT / file_path
+		if not full_path.exists():
+			return jsonify({"error": "File does not exist"}), 404
+
+		if full_path.is_file():
+			full_path.unlink()
+		elif full_path.is_dir():
+			import shutil
+			shutil.rmtree(full_path)
+
+		return jsonify({
+			"success": True,
+			"message": "File deleted successfully"
+		})
+	except Exception as e:
+		logger.error(f"Error deleting file: {str(e)}")
+		return jsonify({"error": f"Failed to delete file: {str(e)}"}), 500
+
+# Dizin Oluşturma
+@flask_app.route("/<lang>/files/create_directory", methods=["POST"])
+def create_directory(lang="en"):
+	if "username" not in session:
+		return jsonify({"error": "Unauthorized access"}), 401
+
+	dir_path = request.form.get("path")
+
+	if not dir_path or not is_safe_path(dir_path):
+		return jsonify({"error": "Invalid directory path"}), 400
+
+	try:
+		full_path = PROJECT_ROOT / dir_path
+		if full_path.exists():
+			return jsonify({"error": "Directory already exists"}), 400
+
+		full_path.mkdir(parents=True, exist_ok=True)
+
+		return jsonify({
+			"success": True,
+			"message": "Directory created successfully",
+			"path": dir_path,
+			"name": full_path.name
+		})
+	except Exception as e:
+		logger.error(f"Error creating directory: {str(e)}")
+		return jsonify({"error": f"Failed to create directory: {str(e)}"}), 500
+
+# Düzeltilmiş Install Fonksiyonu
 @flask_app.route("/<lang>/install", methods=["GET", "POST"])
 @flask_app.route("/install", methods=["GET", "POST"])
 def install(lang="en"):
-	if "username" not in session:						# Comment two lines
-		return redirect(url_for("login", lang=lang)) 	# To login with out
 	if lang not in AVAILABLE_LANGUAGES:
 		lang = "en"
 
@@ -473,9 +615,18 @@ def install(lang="en"):
 		telegram_token = config.telegram_token or request.form.get("telegram_token")
 		mysql_host = config.mysql_host or request.form.get("mysql_host")
 		mysql_user = config.mysql_user or request.form.get("mysql_user")
-		mysql_port = config.mysql_port or request.form.get("mysql_port")
+		mysql_port = config.mysql_port or request.form.get("mysql_port", "3306")  # Default port
 		mysql_password = config.mysql_password or request.form.get("mysql_password")
 		mysql_database = config.mysql_database or request.form.get("mysql_database")
+		bot_username = request.form.get("bot_username")
+		webhook_url = request.form.get("webhook_url")
+		github_username = request.form.get("github_username")
+		github_token = request.form.get("github_token")
+		github_repo = request.form.get("github_repo")
+		github_pages_url = request.form.get("github_pages_url")
+		payment_provider_token = request.form.get("payment_provider_token")
+		currency_exchange_token = request.form.get("currency_exchange_token")
+		huggingface_access_token = request.form.get("huggingface_access_token")
 		admin_username = request.form.get("admin_username")
 		admin_password = request.form.get("admin_password")
 
@@ -487,11 +638,20 @@ def install(lang="en"):
 		# Update config.yaml
 		config_data = {
 			"telegram_token": telegram_token,
+			"bot_username": bot_username,
+			"webhook_url": webhook_url,
 			"mysql_host": mysql_host,
 			"mysql_user": mysql_user,
 			"mysql_port": mysql_port,
 			"mysql_password": mysql_password,
 			"mysql_database": mysql_database,
+			"github_username": github_username,
+			"github_token": github_token,
+			"github_repo": github_repo,
+			"github_pages_url": github_pages_url,
+			"payment_provider_token": payment_provider_token,
+			"currency_exchange_token": currency_exchange_token,
+			"huggingface_access_token": huggingface_access_token,
 			"flask_secret_key": os.urandom(24).hex()
 		}
 
@@ -517,6 +677,40 @@ def install(lang="en"):
 			flash(i18n.t("ERROR_GENERAL", lang, error=str(e)), "error")
 
 	return render_template("install.html", lang=lang, i18n=i18n)
+
+# Tamamlanmamış file_tree fonksiyonunun düzeltilmiş versiyonu
+@flask_app.route("/<lang>/file_tree", methods=["GET"])
+def file_tree(lang="en"):
+	if "username" not in session:
+		return jsonify({"error": "Unauthorized access"}), 401
+
+	try:
+		def build_file_tree(path, prefix=""):
+			tree = []
+			for item in sorted(path.iterdir()):
+				if item.name.startswith(".") or item.name == "__pycache__":
+					continue
+				relative_path = str(item.relative_to(PROJECT_ROOT))
+				if item.is_dir():
+					tree.append({
+						"name": item.name,
+						"path": relative_path,
+						"type": "directory",
+						"children": build_file_tree(item, prefix + "  ")
+					})
+				else:
+					tree.append({
+						"name": item.name,
+						"path": relative_path,
+						"type": "file"
+					})
+			return tree
+
+		file_tree = build_file_tree(PROJECT_ROOT)
+		return jsonify({"files": file_tree})
+	except Exception as e:
+		logger.error(f"Error building file tree: {str(e)}")
+		return jsonify({"error": f"Failed to build file tree: {str(e)}"}), 500
 
 @flask_app.route("/<lang>/save_config", methods=["POST"])
 def save_config_route(lang="en"):
@@ -973,41 +1167,6 @@ def list_files(lang="en"):
 		logger.error(f"Error listing files: {str(e)}")
 		return jsonify({"error": f"Failed to list files: {str(e)}"}), 500
 
-@flask_app.route("/<lang>/file_tree", methods=["GET"])
-def file_tree(lang="en"):
-	if "username" not in session:
-		return jsonify({"error": "Unauthorized"})
-
-	if lang not in AVAILABLE_LANGUAGES:
-		lang = "en"
-
-	try:
-		root_dir = os.path.dirname(os.path.dirname(__file__))
-		tree = []
-
-		for root, dirs, files in os.walk(root_dir):
-			rel_path = os.path.relpath(root, root_dir)
-			if rel_path == ".":
-				rel_path = ""
-
-			# Skip hidden directories and files
-			dirs[:] = [d for d in dirs if not d.startswith(".")]
-			files = [f for f in files if not f.startswith(".")]
-
-			# Skip virtual environment directories
-			if "venv" in dirs:
-				dirs.remove("venv")
-			if "__pycache__" in dirs:
-				dirs.remove("__pycache__")
-
-			for file in files:
-				file_path = os.path.join(rel_path, file)
-				tree.append(file_path)
-
-		return jsonify({"files": tree})
-	except Exception as e:
-		return jsonify({"error": str(e)})
-
 @flask_app.route("/<lang>/files/reload", methods=["POST"])
 def reload_file(lang="en"):
 	"""Reload a file to apply changes without restarting the server."""
@@ -1208,70 +1367,6 @@ def save_file(lang="en"):
 
 		with open(full_path, "w", encoding="utf-8") as f:
 			f.write(content)
-
-		return jsonify({"success": True})
-	except Exception as e:
-		return jsonify({"error": str(e)})
-
-@flask_app.route("/<lang>/create_file", methods=["POST"])
-def create_file(lang="en"):
-	if "username" not in session:
-		return jsonify({"error": "Unauthorized"})
-
-	if lang not in AVAILABLE_LANGUAGES:
-		lang = "en"
-
-	file_path = request.form.get("path")
-
-	if not file_path:
-		return jsonify({"error": "Missing file path"})
-
-	try:
-		root_dir = os.path.dirname(os.path.dirname(__file__))
-		full_path = os.path.join(root_dir, file_path)
-
-		# Ensure the path is within the project directory
-		if not os.path.abspath(full_path).startswith(os.path.abspath(root_dir)):
-			return jsonify({"error": "Invalid file path"})
-
-		if os.path.exists(full_path):
-			return jsonify({"error": "File already exists"})
-
-		# Create directory if it doesn't exist
-		os.makedirs(os.path.dirname(full_path), exist_ok=True)
-
-		with open(full_path, "w", encoding="utf-8") as f:
-			f.write("")
-
-		return jsonify({"success": True})
-	except Exception as e:
-		return jsonify({"error": str(e)})
-
-@flask_app.route("/<lang>/delete_file", methods=["POST"])
-def delete_file(lang="en"):
-	if "username" not in session:
-		return jsonify({"error": "Unauthorized"})
-
-	if lang not in AVAILABLE_LANGUAGES:
-		lang = "en"
-
-	file_path = request.form.get("path")
-
-	if not file_path:
-		return jsonify({"error": "Missing file path"})
-
-	try:
-		root_dir = os.path.dirname(os.path.dirname(__file__))
-		full_path = os.path.join(root_dir, file_path)
-
-		# Ensure the path is within the project directory
-		if not os.path.abspath(full_path).startswith(os.path.abspath(root_dir)):
-			return jsonify({"error": "Invalid file path"})
-
-		if not os.path.isfile(full_path):
-			return jsonify({"error": "File not found"})
-
-		os.remove(full_path)
 
 		return jsonify({"success": True})
 	except Exception as e:

@@ -41,8 +41,24 @@
 					<input type="text" id="webhook_url" name="webhook_url" class="form-control">
 				</div>
 				<div class="form-group">
-					<label for="mongodb_uri">{{ i18n.t('MONGODB_URI', lang) }}</label>
-					<input type="text" id="mongodb_uri" name="mongodb_uri" class="form-control">
+					<label for="mysql_host">{{ i18n.t('MYSQL_HOST', lang) }}</label>
+					<input type="text" id="mysql_host" name="mysql_host" class="form-control" value="localhost">
+				</div>
+				<div class="form-group">
+					<label for="mysql_port">{{ i18n.t('MYSQL_PORT', lang) }}</label>
+					<input type="text" id="mysql_port" name="mysql_port" class="form-control" value="3306">
+				</div>
+				<div class="form-group">
+					<label for="mysql_user">{{ i18n.t('MYSQL_USER', lang) }}</label>
+					<input type="text" id="mysql_user" name="mysql_user" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="mysql_password">{{ i18n.t('MYSQL_PASSWORD', lang) }}</label>
+					<input type="password" id="mysql_password" name="mysql_password" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="mysql_database">{{ i18n.t('MYSQL_DATABASE', lang) }}</label>
+					<input type="text" id="mysql_database" name="mysql_database" class="form-control">
 				</div>
 				<div class="form-group">
 					<label for="github_username">{{ i18n.t('GITHUB_USERNAME', lang) }}</label>

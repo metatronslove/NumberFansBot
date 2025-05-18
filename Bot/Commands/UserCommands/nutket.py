@@ -34,7 +34,7 @@ async def nutket_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, numb
 	language = db.get_user_language(user_id)
 	await handle_credits(update, context)
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
-	db.increment_command_usage("nutket", user_id)
+	db.increment_command_usage("nutket", user_id, query.chat_id)
 
 	try:
 		if update.message:

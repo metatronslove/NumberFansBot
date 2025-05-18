@@ -34,7 +34,7 @@ async def settings_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	language = db.get_user_language(user_id)
 	# await handle_credits(update, context) because settings MUST NOT decrement credits
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
-	db.increment_command_usage("settings", user_id)
+	db.increment_command_usage("settings", user_id, query.chat_id)
 
 	transliteration = Transliteration(db, i18n)
 	valid_languages = transliteration.valid_languages

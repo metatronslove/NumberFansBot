@@ -40,7 +40,7 @@ async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE, text: 
 		await handle_credits(update, context)
 		if user_id:
 			db.set_user_attribute(user_id, "last_interaction", datetime.now())
-			db.increment_command_usage("abjad", user_id)
+			db.increment_command_usage("abjad", user_id, query.chat_id)
 
 		args = context.args
 		if not args and text is None:

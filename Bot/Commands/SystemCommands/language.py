@@ -39,7 +39,7 @@ async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, la
 
 	# await handle_credits(update, context) because language MUST NOT decrement credits
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
-	db.increment_command_usage("language", user_id)
+	db.increment_command_usage("language", user_id, query.chat_id)
 
 	try:
 		args = context.args

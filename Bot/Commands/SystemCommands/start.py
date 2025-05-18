@@ -45,7 +45,7 @@ async def start_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			db.set_user_language(user_id, language)
 
 		db.set_user_attribute(user_id, "last_interaction", datetime.now())
-		db.increment_command_usage("start", user_id)
+		db.increment_command_usage("start", user_id, query.chat_id)
 		remaining_credits = db.get_user_credits(user_id)
 
 		reply_text = i18n.t("START_MESSAGE", language, remaining_credits=remaining_credits)

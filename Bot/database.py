@@ -103,6 +103,7 @@ class Database:
 			"""CREATE TABLE IF NOT EXISTS `command_usage` (
 				id BIGINT AUTO_INCREMENT PRIMARY KEY,
 				user_id BIGINT NOT NULL,
+				chat_id BIGINT NOT NULL,
 				last_used DATETIME,
 				last_user_id BIGINT,
 				command VARCHAR(255) NOT NULL,
@@ -457,14 +458,15 @@ class Database:
 			self.cursor.close()
 			self.cursor = self.conn.cursor(dictionary=True)
 
-	def increment_command_usage(self, command, user_id):
+	def increment_command_usage(self, command, user_id, chat_id):
 		query = """
-		INSERT INTO command_usage (user_id, timestamp, last_user_id, command, count)
-		VALUES (%s, %s, %s, %s, %s)
-		ON DUPLICATE KEY UPDATE count = count + 1, last_user_id = %s
+		INSERT INTO command_usage (user_id, chat_id, last_used, last_user_id, command, count)
+		VALUES (%s, %s, %s, %s, %s, %s)
+		ON DUPLICATE KEY UPDATE count = count + 1, last_used = %s, last_user_id = %s
 		"""
 		try:
-			self.cursor.execute(query, (user_id, datetime.now(), command, 1, user_id))
+			now = datetime.now()
+			self.cursor.execute(query, (user_id, chat_id, now, user_id, command, 1, now, user_id))
 			self.conn.commit()
 		except mysql.connector.Error as err:
 			logging.error(f"Database error in increment_command_usage: {err}")
@@ -478,12 +480,14 @@ class Database:
 				cu.command,
 				SUM(cu.count) as total_count,
 				latest.last_user_id,
+				latest.chat_id,
 				latest.last_used
 			FROM `command_usage` cu
 			INNER JOIN (
 				SELECT
 					command,
 					last_user_id,
+					chat_id,
 					last_used,
 					ROW_NUMBER() OVER (PARTITION BY command ORDER BY last_used DESC) as rn
 				FROM `command_usage`

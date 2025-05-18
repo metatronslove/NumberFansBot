@@ -39,7 +39,7 @@ async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		language = db.get_user_language(user_id)
 		await handle_credits(update, context)
 		db.set_user_attribute(user_id, "last_interaction", datetime.now())
-		db.increment_command_usage("bastet", user_id)
+		db.increment_command_usage("bastet", user_id, query.chat_id)
 
 		args = context.args
 		if len(args) == 1:

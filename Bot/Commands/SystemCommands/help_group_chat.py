@@ -34,7 +34,7 @@ async def help_group_chat_handle(update: Update, context: ContextTypes.DEFAULT_T
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
 
 	# Increment command usage
-	db.increment_command_usage("help_group_chat", user_id)
+	db.increment_command_usage("help_group_chat", user_id, query.chat_id)
 
 	try:
 		await update.message.reply_video(

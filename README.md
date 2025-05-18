@@ -12,25 +12,25 @@ NumberFansBot, Telegram üzerinden numeroloji, ebced (abjad), sihirli kare ve el
 - **Kredi Sistemi**: Premium özellikler için esnek ödeme entegrasyonu
 
 ## 🛠️ Teknik Yapı
-| Bileşen          | Teknoloji               |
+| Bileşen		  | Teknoloji			   |
 |------------------|-------------------------|
-| Backend          | Python 3.10+            |
-| Framework        | python-telegram-bot v20 |
-| Veritabanı       | MySQL                   |
-| Web Arayüzü      | Flask + Bootstrap       |
-| Hosting          | Render.com              |
-| Ödeme Sistemi    | Papara API              |
+| Backend		  | Python 3.10+			|
+| Framework		| python-telegram-bot v20 |
+| Veritabanı	   | MySQL				   |
+| Web Arayüzü	  | Flask + Bootstrap	   |
+| Hosting		  | Render.com			  |
+| Ödeme Sistemi	| Papara API			  |
 
 ## 📋 Komut Listesi
-| Komut           | Açıklama                          | Örnek Kullanım            |
+| Komut		   | Açıklama						  | Örnek Kullanım			|
 |-----------------|-----------------------------------|---------------------------|
-| `/abjad`        | Metnin ebced değerini hesaplar    | `/abjad selam`            |
-| `/bastet`       | Sayısal tekrarlı hesaplama        | `/bastet 19`              |
-| `/huddam`       | Varlık ismi üretir                | `/huddam 36`              |
-| `/unsur`        | Element analizi yapar             | `/unsur ateş`             |
-| `/magicsquare`  | Sihirli kare oluşturur            | `/magicsquare 15`         |
-| `/nutket`       | Sayıyı harflere çevirir           | `/nutket 100`             |
-| `/payment`      | Kredi satın alma paneli           | `/payment`                |
+| `/abjad`		| Metnin ebced değerini hesaplar	| `/abjad selam`			|
+| `/bastet`	   | Sayısal tekrarlı hesaplama		| `/bastet 19`			  |
+| `/huddam`	   | Varlık ismi üretir				| `/huddam 36`			  |
+| `/unsur`		| Element analizi yapar			 | `/unsur ateş`			 |
+| `/magicsquare`  | Sihirli kare oluşturur			| `/magicsquare 15`		 |
+| `/nutket`	   | Sayıyı harflere çevirir		   | `/nutket 100`			 |
+| `/payment`	  | Kredi satın alma paneli		   | `/payment`				|
 
 ## 🚀 Kurulum Rehberi
 
@@ -84,11 +84,11 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS `groups` (
 	group_id BIGINT PRIMARY KEY,
 	group_name VARCHAR(255),
-	type VARCHAR(50),		  -- e.g., "group", "supergroup", "channel"
-	is_public BOOLEAN,		 -- True if public, False if private
-	member_count INT,		  -- Number of members
-	creator_id BIGINT,		 -- ID of the founder
-	admins JSON,			   -- List of admin IDs as JSON
+	type VARCHAR(50),
+	is_public BOOLEAN,
+	member_count INT,
+	creator_id BIGINT,
+	admins JSON,
 	is_blacklisted BOOLEAN DEFAULT FALSE,
 	added_at DATETIME
 );
@@ -117,9 +117,10 @@ CREATE TABLE IF NOT EXISTS transliteration_cache (
 	INDEX idx_created_at (created_at)
 );
 
-CREATE TABLE IF NOT EXISTS command_usage (
+CREATE TABLE IF NOT EXISTS `command_usage` (
 	id BIGINT AUTO_INCREMENT PRIMARY KEY,
 	user_id BIGINT NOT NULL,
+	chat_id BIGINT NOT NULL,
 	last_used DATETIME,
 	last_user_id BIGINT,
 	command VARCHAR(255) NOT NULL,
@@ -207,15 +208,10 @@ CREATE TABLE IF NOT EXISTS user_activity (
 	timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- TTL-like behavior for transliteration_cache
-DELIMITER //
-CREATE EVENT IF NOT EXISTS clean_transliteration_cache
-ON SCHEDULE EVERY 1 HOUR
-DO
-BEGIN
-	DELETE FROM transliteration_cache WHERE created_at < UNIX_TIMESTAMP() - 3600;
-END //
-DELIMITER ;
+CREATE EVENT IF NOT EXISTS `clean_transliteration_cache`
+	ON SCHEDULE EVERY 1 HOUR
+	DO
+	DELETE FROM `transliteration_cache` WHERE created_at < UNIX_TIMESTAMP() - 3600;
 ```
 
 ### 3. Render.com Dağıtımı
@@ -247,6 +243,3 @@ MIT Lisansı - Detaylar için `LICENSE` dosyasına bakınız.
 1. Forklayın ve `develop` branch'inde değişiklik yapın
 2. Pull Request açın
 3. Yeni dil eklemek için `Bot/Locales/` dizinine JSON dosyası ekleyin
-
-## 📞 İletişim
-Sorularınız için GitHub Issues kullanın veya Telegram'dan @MetatronsLove hesabına ulaşın.

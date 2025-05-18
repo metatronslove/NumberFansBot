@@ -28,7 +28,7 @@ async def inline_query(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 		if user_id:
 			db.set_user_attribute(user_id, "last_interaction", datetime.now())
-			db.increment_command_usage("inline", user_id)
+			db.increment_command_usage("inline", user_id, query.chat_id)
 
 		results = []
 
