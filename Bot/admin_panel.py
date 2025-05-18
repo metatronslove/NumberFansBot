@@ -329,6 +329,10 @@ def index(lang="en"):
 
 	# Get command usage statistics
 	command_usage = db.get_command_usage()
+	if command_usage:
+		max_count = max(usage['count'] for usage in command_usage)
+		for usage in command_usage:
+			usage['percentage'] = (usage['count'] / max_count * 100) if max_count > 0 else 0
 
 	# Get fields for config tab
 	fields = get_fields()
