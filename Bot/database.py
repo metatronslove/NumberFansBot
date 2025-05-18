@@ -480,7 +480,6 @@ class Database:
 				cu.command,
 				SUM(cu.count) as total_count,
 				latest.last_user_id,
-				latest.chat_id,
 				latest.last_used
 			FROM `command_usage` cu
 			INNER JOIN (
