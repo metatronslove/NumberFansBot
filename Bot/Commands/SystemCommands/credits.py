@@ -15,7 +15,8 @@ from datetime import datetime
 logger = logging.getLogger(__name__)
 
 async def credits_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
-	user_id = update.effective_user.id
+	update, context, query, user, query_message = await uptodate_query(update, context)
+	user_id = user.id
 	db = Database()
 	i18n = I18n()
 	language = db.get_user_language(user_id)  # Use database-stored language
@@ -24,8 +25,8 @@ async def credits_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	db.increment_command_usage("credits", user_id, query.chat_id)
 
 	try:
-		query = "SELECT credits FROM users WHERE user_id = %s"
-		db.cursor.execute(query, (user_id,))
+		sql = "SELECT credits FROM users WHERE user_id = %s"
+		db.cursor.execute(sql, (user_id,))
 		user = db.cursor.fetchone()
 		remaining_credits = user['credits'] if user else 0
 		reply_text = i18n.t("CREDITS_REMAINS", language, remaining_credits=remaining_credits)

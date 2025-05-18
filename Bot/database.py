@@ -205,18 +205,21 @@ class Database:
 	def get_users_paginated(self, page: int, per_page: int, search: str = "") -> tuple:
 		try:
 			offset = (page - 1) * per_page
-			query = """
-			SELECT user_id, username, is_admin, is_beta_tester, is_blacklisted, is_teskilat, credits, created_at, last_interaction, chat_id
-			FROM `users`
-			WHERE username LIKE %s
-			ORDER BY user_id
-			LIMIT %s OFFSET %s
-			"""
-			self.cursor.execute(query, (f"%{search}%", per_page, offset))
-			users = self.cursor.fetchall()
-			count_query = "SELECT COUNT(*) as total FROM `users` WHERE username LIKE %s"
-			self.cursor.execute(count_query, (f"%{search}%",))
-			total = self.cursor.fetchone()['total']
+			if search == "":
+				users, total = self.get_users()
+			else:
+				query = """
+				SELECT user_id, username, is_admin, is_beta_tester, is_blacklisted, is_teskilat, credits, created_at, last_interaction, chat_id
+				FROM `users`
+				WHERE username LIKE %s
+				ORDER BY user_id
+				LIMIT %s OFFSET %s
+				"""
+				self.cursor.execute(query, (f"%{search}%", per_page, offset))
+				users = self.cursor.fetchall()
+				count_query = "SELECT COUNT(*) as total FROM `users` WHERE username LIKE %s"
+				self.cursor.execute(count_query, (f"%{search}%",))
+				total = self.cursor.fetchone()['total']
 			total_pages = (total + per_page - 1) // per_page
 			return users, total_pages
 		finally:
@@ -226,25 +229,28 @@ class Database:
 	def get_groups_paginated(self, page: int, per_page: int, search: str = "") -> tuple:
 		try:
 			offset = (page - 1) * per_page
-			query = """
-			SELECT g.*, u.username as last_inline_username, iu.query as last_inline_query, iu.timestamp as last_inline_timestamp
-			FROM `groups` g
-			LEFT JOIN (
-				SELECT chat_id, MAX(timestamp) as max_timestamp
-				FROM `inline_usage`
-				GROUP BY chat_id
-			) latest ON g.group_id = latest.chat_id
-			LEFT JOIN `inline_usage` iu ON latest.chat_id = iu.chat_id AND latest.max_timestamp = iu.timestamp
-			LEFT JOIN `users` u ON iu.user_id = u.user_id
-			WHERE g.group_name LIKE %s
-			ORDER BY g.group_id
-			LIMIT %s OFFSET %s
-			"""
-			self.cursor.execute(query, (f"%{search}%", per_page, offset))
-			groups = self.cursor.fetchall()
-			count_query = "SELECT COUNT(*) as total FROM `groups` WHERE group_name LIKE %s"
-			self.cursor.execute(count_query, (f"%{search}%",))
-			total = self.cursor.fetchone()['total']
+			if search == "":
+				groups, total = self.get_groups()
+			else:
+				query = """
+				SELECT g.*, u.username as last_inline_username, iu.query as last_inline_query, iu.timestamp as last_inline_timestamp
+				FROM `groups` g
+				LEFT JOIN (
+					SELECT chat_id, MAX(timestamp) as max_timestamp
+					FROM `inline_usage`
+					GROUP BY chat_id
+				) latest ON g.group_id = latest.chat_id
+				LEFT JOIN `inline_usage` iu ON latest.chat_id = iu.chat_id AND latest.max_timestamp = iu.timestamp
+				LEFT JOIN `users` u ON iu.user_id = u.user_id
+				WHERE g.group_name LIKE %s
+				ORDER BY g.group_id
+				LIMIT %s OFFSET %s
+				"""
+				self.cursor.execute(query, (f"%{search}%", per_page, offset))
+				groups = self.cursor.fetchall()
+				count_query = "SELECT COUNT(*) as total FROM `groups` WHERE group_name LIKE %s"
+				self.cursor.execute(count_query, (f"%{search}%",))
+				total = self.cursor.fetchone()['total']
 			total_pages = (total + per_page - 1) // per_page
 			return groups, total_pages
 		finally:
@@ -282,7 +288,11 @@ class Database:
 			FROM `users`
 			"""
 			self.cursor.execute(query)
-			return self.cursor.fetchall()
+			users = self.cursor.fetchall()
+			count_query = "SELECT COUNT(*) as total FROM `users`"
+			self.cursor.execute(count_query)
+			total = self.cursor.fetchall()['total']
+			return users, total
 		finally:
 			self.cursor.close()
 			self.cursor = self.conn.cursor(dictionary=True)
@@ -588,7 +598,11 @@ class Database:
 			LEFT JOIN `users` u ON iu.user_id = u.user_id
 			"""
 			self.cursor.execute(query)
-			return self.cursor.fetchall()
+			groups = self.cursor.fetchall()
+			count_query = "SELECT COUNT(*) as total FROM `groups`"
+			self.cursor.execute(count_query)
+			total = self.cursor.fetchall()['total']
+			return groups, total
 		finally:
 			self.cursor.close()
 			self.cursor = self.conn.cursor(dictionary=True)

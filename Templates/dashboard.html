@@ -162,7 +162,7 @@
 			}
 		</style>
 		<!-- Users Tab -->
-		<section id="users" class="tab-content" hx-target="this" hx-swap="innerHTML">
+		<div id="users" class="tab-content" hx-target="this" hx-swap="innerHTML">
 			<h3>{{ i18n.t('USERS_TAB', lang) }}</h3>
 			<input type="text" name="search" id="search-users" hx-get="/{{ lang }}/users" hx-trigger="keyup changed delay:500ms" placeholder="{{ i18n.t('SEARCH_USERS', lang) }}">
 			<table class="table table-bordered table-striped">
@@ -224,10 +224,10 @@
 					{% endif %}
 				{% endif %}
 			</div>
-		</section>
+		</div>
 
 		<!-- Groups Tab -->
-		<section id="groups" class="tab-content" hx-target="this" hx-swap="innerHTML">
+		<div id="groups" class="tab-content" hx-target="this" hx-swap="innerHTML">
 			<h3>{{ i18n.t('GROUPS_TAB', lang) }}</h3>
 			<input type="text" name="search" id="search-groups" hx-get="/{{ lang }}/groups" hx-trigger="keyup changed delay:500ms" placeholder="{{ i18n.t('SEARCH_GROUPS', lang) }}">
 			<table class="table table-bordered table-striped">
@@ -286,7 +286,7 @@
 					{% endif %}
 				{% endif %}
 			</div>
-		</section>
+		</div>
 		<div class="tab-content" id="github">
 			{% if not github_info.url %}
 				<div class="alert alert-warning">{{ i18n.t('CONFIGURE_GITHUB_URL', lang) }}</div>
@@ -489,27 +489,6 @@ particlesJS('particles-js', {
 	},
 	"retina_detect": true
 });
-
-// Tab and form styling
-document
-	.querySelectorAll('.tab')
-	.forEach(tab => {
-		tab.addEventListener('click', () => {
-			document
-				.querySelectorAll('.tab')
-				.forEach(t => t.classList.remove('active'));
-			document
-				.querySelectorAll('.tab-content')
-				.forEach(c => c.classList.remove('active'));
-			tab
-				.classList
-				.add('active');
-			document
-				.getElementById(tab.dataset.tab)
-				.classList
-				.add('active');
-		});
-	});
 
 document
 	.querySelectorAll('.promote-credits-form')
@@ -1475,8 +1454,8 @@ async function main() {
 		// Update URL hash and toggle tab visibility on click
 		function setActiveTab(tabId) {
 			window.location.hash = tabId;
-			const tabs = document.querySelectorAll('nav a');
-			const sections = document.querySelectorAll('section.tab-content');
+			const tabs = document.querySelectorAll('.tab');
+			const divs = document.querySelectorAll('div.tab-content');
 			tabs.forEach(tab => {
 				if (tab.getAttribute('href') === '#' + tabId) {
 					tab.classList.add('active');
@@ -1484,11 +1463,11 @@ async function main() {
 					tab.classList.remove('active');
 				}
 			});
-			sections.forEach(section => {
-				if (section.id === tabId) {
-					section.style.display = 'block';
+			divs.forEach(div => {
+				if (div.id === tabId) {
+					div.style.display = 'block';
 				} else {
-					section.style.display = 'none';
+					div.style.display = 'none';
 				}
 			});
 		}
@@ -1511,8 +1490,8 @@ document
 	.addEventListener('DOMContentLoaded', function () {
 
 			const hash = window.location.hash || '#commands';
-			const tabs = document.querySelectorAll('nav a');
-			const sections = document.querySelectorAll('section.tab-content');
+			const tabs = document.querySelectorAll('.tab');
+			const divs = document.querySelectorAll('div.tab-content');
 			tabs.forEach(tab => {
 				if (tab.getAttribute('href') === hash) {
 					tab.classList.add('active');
@@ -1520,11 +1499,11 @@ document
 					tab.classList.remove('active');
 				}
 			});
-			sections.forEach(section => {
-				if ('#' + section.id === hash) {
-					section.style.display = 'block';
+			divs.forEach(div => {
+				if ('#' + div.id === hash) {
+					div.style.display = 'block';
 				} else {
-					section.style.display = 'none';
+					div.style.display = 'none';
 				}
 			});
 
