@@ -480,15 +480,16 @@ class Database:
 				cu.command,
 				SUM(cu.count) as total_count,
 				latest.last_user_id,
-				latest.last_used
+				latest.last_used,
+				chat_id
 			FROM `command_usage` cu
 			INNER JOIN (
 				SELECT
 					command,
 					last_user_id,
-					chat_id,
 					last_used,
-					ROW_NUMBER() OVER (PARTITION BY command ORDER BY last_used DESC) as rn
+					ROW_NUMBER() OVER (PARTITION BY command ORDER BY last_used DESC) as rn,
+					chat_id
 				FROM `command_usage`
 			) latest ON cu.command = latest.command AND latest.rn = 1
 			GROUP BY cu.command, latest.last_user_id, latest.last_used
