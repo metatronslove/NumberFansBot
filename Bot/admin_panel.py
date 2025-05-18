@@ -518,32 +518,23 @@ def edit_file(lang="en"):
 def create_file(lang="en"):
 	if "username" not in session:
 		return jsonify({"error": "Unauthorized access"}), 401
-
-	file_path = request.form.get("path")
-	content = request.form.get("content", "")
-
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+	data = request.get_json()
+	file_path = data.get("path")
 	if not file_path or not is_safe_path(file_path):
-		return jsonify({"error": "Invalid file path"}), 400
-
+		return jsonify({"error": "Invalid or unsafe file path"}), 400
 	try:
-		full_path = PROJECT_ROOT / file_path
-		if full_path.exists():
+		file = PROJECT_ROOT / file_path
+		if file.exists():
 			return jsonify({"error": "File already exists"}), 400
-
-		# Create parent directories if they don't exist
-		full_path.parent.mkdir(parents=True, exist_ok=True)
-
-		with open(full_path, "w", encoding="utf-8") as f:
-			f.write(content)
-
-		return jsonify({
-			"success": True,
-			"message": "File created successfully",
-			"path": file_path,
-			"name": full_path.name
-		})
+		file.parent.mkdir(parents=True, exist_ok=True)
+		with open(file, "w", encoding="utf-8") as f:
+			f.write("")
+		logger.info(f"File created successfully: {file_path}")
+		return jsonify({"message": "File created successfully"})
 	except Exception as e:
-		logger.error(f"Error creating file: {str(e)}")
+		logger.error(f"Error creating file {file_path}: {str(e)}")
 		return jsonify({"error": f"Failed to create file: {str(e)}"}), 500
 
 # Dosya Silme
@@ -551,30 +542,27 @@ def create_file(lang="en"):
 def delete_file(lang="en"):
 	if "username" not in session:
 		return jsonify({"error": "Unauthorized access"}), 401
-
-	file_path = request.form.get("path")
-
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+	data = request.get_json()
+	file_path = data.get("path")
 	if not file_path or not is_safe_path(file_path):
-		return jsonify({"error": "Invalid file path"}), 400
-
+		return jsonify({"error": "Invalid or unsafe file path"}), 400
 	try:
-		full_path = PROJECT_ROOT / file_path
-		if not full_path.exists():
-			return jsonify({"error": "File does not exist"}), 404
-
-		if full_path.is_file():
-			full_path.unlink()
-		elif full_path.is_dir():
-			import shutil
-			shutil.rmtree(full_path)
-
-		return jsonify({
-			"success": True,
-			"message": "File deleted successfully"
-		})
+		path = PROJECT_ROOT / file_path
+		if not path.exists():
+			return jsonify({"error": "File or directory does not exist"}), 404
+		if path.is_file():
+			path.unlink()
+			logger.info(f"File deleted successfully: {file_path}")
+			return jsonify({"message": "File deleted successfully"})
+		else:
+			path.rmdir()
+			logger.info(f"Directory deleted successfully: {file_path}")
+			return jsonify({"message": "Directory deleted successfully"})
 	except Exception as e:
-		logger.error(f"Error deleting file: {str(e)}")
-		return jsonify({"error": f"Failed to delete file: {str(e)}"}), 500
+		logger.error(f"Error deleting {file_path}: {str(e)}")
+		return jsonify({"error": f"Failed to delete: {str(e)}"}), 500
 
 # Dizin Oluşturma
 @flask_app.route("/<lang>/files/create_directory", methods=["POST"])
@@ -1344,37 +1332,32 @@ def file_content(lang="en"):
 	except Exception as e:
 		return jsonify({"error": str(e)})
 
-@flask_app.route("/<lang>/save_file", methods=["POST"])
+@flask_app.route("/<lang>/files/save", methods=["POST"])
 def save_file(lang="en"):
 	if "username" not in session:
-		return jsonify({"error": "Unauthorized"})
-
+		return jsonify({"error": "Unauthorized access"}), 401
 	if lang not in AVAILABLE_LANGUAGES:
 		lang = "en"
+	data = request.get_json()
+	file_path = data.get("path")
+	content = data.get("content")
+	if not file_path or not is_safe_path(file_path):
+		return jsonify({"error": "Invalid or unsafe file path"}), 400
 
-	file_path = request.form.get("path")
-	content = request.form.get("content")
-
-	if not file_path or content is None:
-		return jsonify({"error": "Missing file path or content"})
+	full_path = os.path.join(PROJECT_ROOT, file_path)
 
 	try:
-		root_dir = os.path.dirname(os.path.dirname(__file__))
-		full_path = os.path.join(root_dir, file_path)
-
-		# Ensure the path is within the project directory
-		if not os.path.abspath(full_path).startswith(os.path.abspath(root_dir)):
-			return jsonify({"error": "Invalid file path"})
-
-		# Create directory if it doesn't exist
 		os.makedirs(os.path.dirname(full_path), exist_ok=True)
-
 		with open(full_path, "w", encoding="utf-8") as f:
 			f.write(content)
-
-		return jsonify({"success": True})
+		logger.info(f"File saved successfully: {file_path}")
+		return jsonify({"message": "File saved successfully"})
+	except PermissionError:
+		logger.error(f"Permission denied when writing file {file_path}")
+		return jsonify({"error": "Permission denied when writing file"}), 403
 	except Exception as e:
-		return jsonify({"error": str(e)})
+		logger.error(f"Failed to save file {file_path}: {str(e)}")
+		return jsonify({"error": f"Failed to save file: {str(e)}"}), 500
 
 @flask_app.route("/bot<path:path>", methods=["POST"])
 async def telegram_webhook(path):
