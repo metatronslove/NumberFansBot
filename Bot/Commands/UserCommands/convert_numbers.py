@@ -124,7 +124,7 @@ async def convert_numbers_handle(update: Update, context: ContextTypes.DEFAULT_T
 				update=update,
 				query_message=query_message,
 				context=context,
-				force_new_message=force_new
+				force_new_message=True
 			)
 
 	except ValueError:

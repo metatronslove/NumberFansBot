@@ -21,6 +21,8 @@ from urllib.parse import urlparse
 from pathlib import Path
 from datetime import datetime
 
+logger = logging.getLogger(__name__)
+
 async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, lang_code: str = None):
 	update, context, query, user, query_message = await uptodate_query(update, context)
 	if not query_message:
@@ -55,7 +57,7 @@ async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, la
 				update=update,
 				query_message=query_message,
 				context=context,
-				force_new_message=force_new
+				force_new_message=True
 			)
 			return
 
@@ -68,7 +70,7 @@ async def language_handle(update: Update, context: ContextTypes.DEFAULT_TYPE, la
 			update=update,
 			query_message=query_message,
 			context=context,
-			force_new_message=force_new
+			force_new_message=True
 		)
 
 	except Exception as e:

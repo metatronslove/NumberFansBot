@@ -79,7 +79,7 @@ async def unsur_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			update=update,
 			query_message=query_message,
 			context=context,
-			force_new_message=force_new
+			force_new_message=True
 		)
 		return LANGUAGE
 	except Exception as e:

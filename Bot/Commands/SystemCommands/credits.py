@@ -29,7 +29,7 @@ async def credits_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		user = db.cursor.fetchone()
 		remaining_credits = user['credits'] if user else 0
 		reply_text = i18n.t("CREDITS_REMAINS", language, remaining_credits=remaining_credits)
-		await send_long_message(reply_text, parse_mode=ParseMode.HTML, update=update, query_message=query_message,	context=context, force_new_message=force_new)
+		await send_long_message(reply_text, parse_mode=ParseMode.HTML, update=update, query_message=query_message,	context=context, force_new_message=True)
 	except Exception as e:
 		logger.error(f"CreditsCommand error: {str(e)}")
 		await send_long_message(

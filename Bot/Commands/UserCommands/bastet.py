@@ -58,7 +58,7 @@ async def bastet_start(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 
 			await send_long_message(
 				i18n.t("BASTET_PROMPT_REPETITION", language),
-				force_new_message=force_new
+				force_new_message=True
 			)
 			return REPETITION
 		elif len(args) == 2:

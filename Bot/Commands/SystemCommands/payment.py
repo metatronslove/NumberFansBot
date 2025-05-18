@@ -47,7 +47,7 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			update=update,
 			query_message=query_message,
 			context=context,
-			force_new_message=force_new
+			force_new_message=True
 		)
 		return
 
@@ -77,7 +77,7 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			update=update,
 			query_message=query_message,
 			context=context,
-			force_new_message=force_new
+			force_new_message=True
 		)
 		return
 
@@ -89,7 +89,7 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 			update=update,
 			query_message=query_message,
 			context=context,
-			force_new_message=force_new
+			force_new_message=True
 		)
 		return
 
@@ -107,7 +107,7 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		update=update,
 		query_message=query_message,
 		context=context,
-		force_new_message=force_new
+		force_new_message=True
 	)
 
 async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
@@ -130,7 +130,7 @@ async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_
 				update=update,
 				query_message=query_message,
 				context=context,
-				force_new_message=force_new
+				force_new_message=True
 			)
 			return
 
@@ -141,7 +141,7 @@ async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_
 				update=update,
 				query_message=query_message,
 				context=context,
-				force_new_message=force_new
+				force_new_message=True
 			)
 			return
 
@@ -152,7 +152,7 @@ async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_
 				update=update,
 				query_message=query_message,
 				context=context,
-				force_new_message=force_new
+				force_new_message=True
 			)
 
 			await context.bot.send_invoice(
@@ -211,7 +211,7 @@ async def handle_successful_payment(update: Update, context: ContextTypes.DEFAUL
 			update=update,
 			query_message=query_message,
 			context=context,
-			force_new_message=force_new
+			force_new_message=True
 		)
 	else:
 		await send_long_message(
@@ -220,7 +220,7 @@ async def handle_successful_payment(update: Update, context: ContextTypes.DEFAUL
 			update=update,
 			query_message=query_message,
 			context=context,
-			force_new_message=force_new
+			force_new_message=True
 		)
 
 def get_payment_handlers():

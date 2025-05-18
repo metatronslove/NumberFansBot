@@ -81,7 +81,7 @@ async def abjad_start(update: Update, context: ContextTypes.DEFAULT_TYPE, text: 
 			update=update,
 			query_message=query_message,
 			context=context,
-			force_new_message=force_new
+			force_new_message=True
 		)
 		return ALPHABET_ORDER
 	except Exception as e:

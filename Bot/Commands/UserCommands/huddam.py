@@ -68,7 +68,7 @@ async def huddam_start(update: Update, context: ContextTypes.DEFAULT_TYPE, numbe
 			update=update,
 			query_message=query_message,
 			context=context,
-			force_new_message=force_new
+			force_new_message=True
 		)
 		return ENTITY_TYPE
 	except Exception as e:
