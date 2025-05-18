@@ -939,7 +939,7 @@ def toggle_blacklist(lang="en"):
 	user_id = request.form.get("user_id")
 	try:
 		db = Database()
-		if db.toggle_blacklist(user_id):
+		if db.toggle_blacklist(int(user_id)):
 			query = "SELECT is_blacklisted FROM users WHERE user_id = %s"
 			db.cursor.execute(query, (user_id,))
 			user = db.cursor.fetchone()
@@ -963,7 +963,7 @@ def toggle_beta_tester(lang="en"):
 	user_id = request.form.get("user_id")
 	try:
 		db = Database()
-		if db.toggle_beta_tester(user_id):
+		if db.toggle_beta_tester(int(user_id)):
 			query = "SELECT is_beta_tester FROM users WHERE user_id = %s"
 			db.cursor.execute(query, (user_id,))
 			user = db.cursor.fetchone()
@@ -997,9 +997,7 @@ def toggle_group_blacklist(lang="en"):
 		return redirect(url_for("index", lang=lang))
 
 	try:
-		group_id = int(group_id)
-
-		success, is_blacklisted = db.toggle_group_blacklist(group_id)
+		success, is_blacklisted = db.toggle_group_blacklist(int(group_id))
 
 		if success:
 			if is_blacklisted:
