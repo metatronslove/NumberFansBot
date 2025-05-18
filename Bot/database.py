@@ -500,6 +500,7 @@ class Database:
 				{
 					'command': row['command'],
 					'count': row['total_count'],
+					'chat_id': row['chat_id'],
 					'last_user_id': row['last_user_id'],
 					'last_used': row['last_used']
 				}
