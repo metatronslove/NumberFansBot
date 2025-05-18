@@ -291,7 +291,7 @@ class Database:
 			users = self.cursor.fetchall()
 			count_query = "SELECT COUNT(*) as total FROM `users`"
 			self.cursor.execute(count_query)
-			total = self.cursor.fetchall()['total']
+			total = self.cursor.fetchone()['total']
 			return users, total
 		finally:
 			self.cursor.close()
@@ -601,7 +601,7 @@ class Database:
 			groups = self.cursor.fetchall()
 			count_query = "SELECT COUNT(*) as total FROM `groups`"
 			self.cursor.execute(count_query)
-			total = self.cursor.fetchall()['total']
+			total = self.cursor.fetchone()['total']
 			return groups, total
 		finally:
 			self.cursor.close()
