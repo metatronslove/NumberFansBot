@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS users (
 	is_blacklisted BOOLEAN DEFAULT FALSE,
 	is_teskilat BOOLEAN DEFAULT FALSE,
 	credits INT DEFAULT 0,
+	balance DECIMAL(10, 2) DEFAULT 0.00,
 	is_admin BOOLEAN DEFAULT FALSE,
 	password VARCHAR(255),
 	addresses JSON,
