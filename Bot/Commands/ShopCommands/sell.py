@@ -9,7 +9,7 @@ from telegram.ext import (
 )
 from Bot.config import Config
 from Bot.database import Database
-from Bot.i18n import I18n
+from Bot.Helpers.i18n import I18n()
 import base64
 import os
 import uuid
@@ -26,12 +26,13 @@ async def start_sell(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
 	# Check if user has Papara merchant account and email
 	db = Database()
+	i18n = I18n()
 	user = db.execute_query("SELECT payment_info, email FROM users WHERE user_id = %s", (user_id,))
 	if not user or not user[0].get('payment_info') or not user[0].get('email'):
-		await update.message.reply_text(I18n.t("SELL_SETUP_PAPARA", language))
+		await update.message.reply_text(i18n.t("SELL_SETUP_PAPARA", language))
 		return ConversationHandler.END
 
-	await update.message.reply_text(I18n.t("SELL_SELECT_TYPE", language))
+	await update.message.reply_text(i18n.t("SELL_SELECT_TYPE", language))
 	return SELECT_TYPE
 
 async def select_type(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -40,25 +41,25 @@ async def select_type(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
 	product_type = update.message.text.lower()
 
 	if product_type not in ['shipped', 'download', 'membership']:
-		await update.message.reply_text(I18n.t("SELL_INVALID_TYPE", language))
+		await update.message.reply_text(i18n.t("SELL_INVALID_TYPE", language))
 		return SELECT_TYPE
 
 	context.user_data['product_type'] = product_type
-	await update.message.reply_text(I18n.t("SELL_ENTER_PRODUCT_NAME", language))
+	await update.message.reply_text(i18n.t("SELL_ENTER_PRODUCT_NAME", language))
 	return PRODUCT_NAME
 
 async def get_product_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 	context.user_data["product_name"] = update.message.text
 	user_id = update.effective_user.id
 	language = Database().get_user_language(user_id)
-	await update.message.reply_text(I18n.t("SELL_ENTER_PRODUCT_DESCRIPTION", language))
+	await update.message.reply_text(i18n.t("SELL_ENTER_PRODUCT_DESCRIPTION", language))
 	return PRODUCT_DESCRIPTION
 
 async def get_product_description(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 	context.user_data["product_description"] = update.message.text
 	user_id = update.effective_user.id
 	language = Database().get_user_language(user_id)
-	await update.message.reply_text(I18n.t("SELL_ENTER_PRODUCT_PRICE", language))
+	await update.message.reply_text(i18n.t("SELL_ENTER_PRODUCT_PRICE", language))
 	return PRODUCT_PRICE
 
 async def get_product_price(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -67,21 +68,21 @@ async def get_product_price(update: Update, context: ContextTypes.DEFAULT_TYPE) 
 	try:
 		price = float(update.message.text)
 		if price <= 0:
-			await update.message.reply_text(I18n.t("SELL_INVALID_PRICE", language))
+			await update.message.reply_text(i18n.t("SELL_INVALID_PRICE", language))
 			return PRODUCT_PRICE
 		context.user_data["product_price"] = price
 	except ValueError:
-		await update.message.reply_text(I18n.t("SELL_INVALID_PRICE", language))
+		await update.message.reply_text(i18n.t("SELL_INVALID_PRICE", language))
 		return PRODUCT_PRICE
 
 	if context.user_data['product_type'] == 'shipped':
-		await update.message.reply_text(I18n.t("SELL_ENTER_QUANTITY", language))
+		await update.message.reply_text(i18n.t("SELL_ENTER_QUANTITY", language))
 		return PRODUCT_QUANTITY
 	elif context.user_data['product_type'] == 'membership':
-		await update.message.reply_text(I18n.t("SELL_ENTER_MEMBERSHIP_DETAILS", language))
+		await update.message.reply_text(i18n.t("SELL_ENTER_MEMBERSHIP_DETAILS", language))
 		return MEMBERSHIP_DETAILS
 	else:
-		await update.message.reply_text(I18n.t("SELL_UPLOAD_FILE", language))
+		await update.message.reply_text(i18n.t("SELL_UPLOAD_FILE", language))
 		return UPLOAD_FILE
 
 async def get_product_quantity(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -90,14 +91,14 @@ async def get_product_quantity(update: Update, context: ContextTypes.DEFAULT_TYP
 	try:
 		quantity = int(update.message.text)
 		if quantity <= 0:
-			await update.message.reply_text(I18n.t("SELL_INVALID_QUANTITY", language))
+			await update.message.reply_text(i18n.t("SELL_INVALID_QUANTITY", language))
 			return PRODUCT_QUANTITY
 		context.user_data["product_quantity"] = quantity
 	except ValueError:
-		await update.message.reply_text(I18n.t("SELL_INVALID_QUANTITY", language))
+		await update.message.reply_text(i18n.t("SELL_INVALID_QUANTITY", language))
 		return PRODUCT_QUANTITY
 
-	await update.message.reply_text(I18n.t("SELL_ENTER_TAX_RATES", language))
+	await update.message.reply_text(i18n.t("SELL_ENTER_TAX_RATES", language))
 	return TAX_RATES
 
 async def get_tax_rates(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -112,10 +113,10 @@ async def get_tax_rates(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 				tax_rates.append({"type": name.strip(), "percentage": float(percentage.strip())})
 		context.user_data["tax_rates"] = tax_rates
 	except ValueError:
-		await update.message.reply_text(I18n.t("SELL_INVALID_TAX_RATES", language))
+		await update.message.reply_text(i18n.t("SELL_INVALID_TAX_RATES", language))
 		return TAX_RATES
 
-	await update.message.reply_text(I18n.t("SELL_ENTER_SHIPPING_FEE", language))
+	await update.message.reply_text(i18n.t("SELL_ENTER_SHIPPING_FEE", language))
 	return SHIPPING_FEE
 
 async def get_shipping_fee(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -124,14 +125,14 @@ async def get_shipping_fee(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 	try:
 		shipping_fee = float(update.message.text)
 		if shipping_fee < 0:
-			await update.message.reply_text(I18n.t("SELL_INVALID_SHIPPING_FEE", language))
+			await update.message.reply_text(i18n.t("SELL_INVALID_SHIPPING_FEE", language))
 			return SHIPPING_FEE
 		context.user_data["shipping_fee"] = shipping_fee
 	except ValueError:
-		await update.message.reply_text(I18n.t("SELL_INVALID_SHIPPING_FEE", language))
+		await update.message.reply_text(i18n.t("SELL_INVALID_SHIPPING_FEE", language))
 		return SHIPPING_FEE
 
-	await update.message.reply_text(I18n.t("SELL_UPLOAD_IMAGES", language))
+	await update.message.reply_text(i18n.t("SELL_UPLOAD_IMAGES", language))
 	return UPLOAD_IMAGES
 
 async def upload_images(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -139,12 +140,12 @@ async def upload_images(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 	language = Database().get_user_language(user_id)
 
 	if not update.message.photo:
-		await update.message.reply_text(I18n.t("SELL_INVALID_IMAGE", language))
+		await update.message.reply_text(i18n.t("SELL_INVALID_IMAGE", language))
 		return UPLOAD_IMAGES
 
 	images = context.user_data.get("images", [])
 	if len(images) >= 3:
-		await update.message.reply_text(I18n.t("SELL_MAX_IMAGES", language))
+		await update.message.reply_text(i18n.t("SELL_MAX_IMAGES", language))
 		return await save_product(update, context)
 
 	photo = update.message.photo[-1]
@@ -155,7 +156,7 @@ async def upload_images(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 	context.user_data["images"] = images
 
 	if len(images) < 3:
-		await update.message.reply_text(I18n.t("SELL_UPLOAD_MORE_IMAGES", language, remaining=3-len(images)))
+		await update.message.reply_text(i18n.t("SELL_UPLOAD_MORE_IMAGES", language, remaining=3-len(images)))
 		return UPLOAD_IMAGES
 	return await save_product(update, context)
 
@@ -171,7 +172,7 @@ async def get_membership_details(update: Update, context: ContextTypes.DEFAULT_T
 		context.user_data["membership_details"] = {"group_id": group_id, "duration": duration}
 		return await save_product(update, context)
 	except (ValueError, IndexError):
-		await update.message.reply_text(I18n.t("SELL_INVALID_MEMBERSHIP_DETAILS", language))
+		await update.message.reply_text(i18n.t("SELL_INVALID_MEMBERSHIP_DETAILS", language))
 		return MEMBERSHIP_DETAILS
 
 async def upload_file(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -179,14 +180,14 @@ async def upload_file(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
 	language = Database().get_user_language(user_id)
 
 	if not update.message.document:
-		await update.message.reply_text(I18n.t("SELL_INVALID_FILE", language))
+		await update.message.reply_text(i18n.t("SELL_INVALID_FILE", language))
 		return UPLOAD_FILE
 
 	document = update.message.document
 	allowed_extensions = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.jpg', '.png', '.gif', '.mp4', '.zip', '.apk', '.stl', '.xcf']
 	file_ext = os.path.splitext(document.file_name)[1].lower()
 	if file_ext not in allowed_extensions:
-		await update.message.reply_text(I18n.t("SELL_INVALID_FILE_TYPE", language))
+		await update.message.reply_text(i18n.t("SELL_INVALID_FILE_TYPE", language))
 		return UPLOAD_FILE
 
 	file = await document.get_file()
@@ -204,6 +205,7 @@ async def save_product(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
 	user_id = update.effective_user.id
 	language = Database().get_user_language(user_id)
 	db = Database()
+	i18n = I18n()
 
 	try:
 		features = {
@@ -231,10 +233,10 @@ async def save_product(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
 				details={"product_id": product_id, "file_path": context.user_data.get("file_path")}
 			)
 
-		await update.message.reply_text(I18n.t("SELL_PRODUCT_ADDED", language))
+		await update.message.reply_text(i18n.t("SELL_PRODUCT_ADDED", language))
 	except Exception as err:
 		logger.error(f"Error saving product: {str(err)}")
-		await update.message.reply_text(I18n.t("SELL_ERROR", language, error=str(err)))
+		await update.message.reply_text(i18n.t("SELL_ERROR", language, error=str(err)))
 		return ConversationHandler.END
 
 	context.user_data.clear()
@@ -243,7 +245,7 @@ async def save_product(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
 async def cancel_sell(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 	user_id = update.effective_user.id
 	language = Database().get_user_language(user_id)
-	await update.message.reply_text(I18n.t("SELL_CANCELLED", language))
+	await update.message.reply_text(i18n.t("SELL_CANCELLED", language))
 	context.user_data.clear()
 	return ConversationHandler.END
 
