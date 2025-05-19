@@ -27,8 +27,8 @@ async def start_sell(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 	# Check if user has Papara merchant account and email
 	db = Database()
 	i18n = I18n()
-	user = db.execute_query("SELECT payment_info, email FROM users WHERE user_id = %s", (user_id,))
-	if not user or not user[0].get('payment_info') or not user[0].get('email'):
+	user = db.execute_query("SELECT payment_info FROM users WHERE user_id = %s", (user_id,))
+	if not user or not user[0].get('payment_info')['email']:
 		await update.message.reply_text(i18n.t("SELL_SETUP_PAPARA", language))
 		return ConversationHandler.END
 
