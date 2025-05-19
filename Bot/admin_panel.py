@@ -11,7 +11,7 @@ import sys
 import json
 import base64
 import uuid
-from flask import Flask, request, render_template, redirect, url_for, session, flash, jsonify
+from flask import Flask, request, render_template, redirect, url_for, session, flash, jsonify, Blueprint
 from asgiref.wsgi import WsgiToAsgi
 from Bot.config import Config
 from Bot.database import Database
