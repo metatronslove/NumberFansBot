@@ -9,7 +9,7 @@ from telegram.ext import (
 )
 from Bot.config import Config
 from Bot.database import Database
-from Bot.Helpers.i18n import I18n()
+from Bot.Helpers.i18n import I18n
 import base64
 import os
 import uuid
