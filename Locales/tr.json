@@ -665,7 +665,7 @@
   "PAPARA_PAYMENT_PENDING": "⏳ Ödeme hala bekleniyor\n\nÖdeme ID: #{payment_id}\nTutar: {amount} TL\n\nLütfen Papara uygulaması veya web sitesini kullanarak ödemeyi tamamlayın, ardından tekrar kontrol edin.",
   "PAPARA_PAYMENT_CANCELLED": "❌ Ödeme iptal edildi\n\nÖdeme ID: #{payment_id}\nTutar: {amount} TL\n\nBu ödeme isteği iptal edildi. Gerekirse lütfen yeni bir ödeme oluşturun.",
   "PAPARA_PAYMENT_UNKNOWN": "❓ Bilinmeyen ödeme durumu\n\nÖdeme ID: #{payment_id}\nDurum: {status}\n\nYardım için lütfen destek ile iletişime geçin.",
-  "PAPARA_BALANCE": "Mevcut Bakiyeniz\n\nBakiye: {credits} TL\n\nBu bakiyeyi ürün veya hizmet satın almak için kullanabilirsiniz.",
+  "PAPARA_BALANCE": "Mevcut Bakiyeniz\n\nBakiye: {balance} TL\n\nBu bakiyeyi ürün veya hizmet satın almak için kullanabilirsiniz.",
   "PAPARA_CANCELLED": "Ödeme işlemi iptal edildi.",
   "ADDRESS_BLACKLISTED": "Bu komutu kullanmanıza izin verilmiyor.",
   "ADDRESS_SELECT_ACTION": "Adres Yönetimi\n\nNe yapmak istersiniz?",

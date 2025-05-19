@@ -665,7 +665,7 @@
   "PAPARA_PAYMENT_PENDING": "⏳ Payment is still pending\n\nPayment ID: #{payment_id}\nAmount: {amount} TL\n\nPlease complete the payment using the Papara app or website, then check again.",
   "PAPARA_PAYMENT_CANCELLED": "❌ Payment was cancelled\n\nPayment ID: #{payment_id}\nAmount: {amount} TL\n\nThis payment request has been cancelled. Please create a new payment if needed.",
   "PAPARA_PAYMENT_UNKNOWN": "❓ Unknown payment status\n\nPayment ID: #{payment_id}\nStatus: {status}\n\nPlease contact support for assistance.",
-  "PAPARA_BALANCE": "Your Current Balance\n\nCredits: {credits} TL\n\nYou can use these credits to purchase products or services.",
+  "PAPARA_BALANCE": "Your Current Balance\n\nCredits: {balance} TL\n\nYou can use these credits to purchase products or services.",
   "PAPARA_CANCELLED": "Payment operation cancelled.",
   "ADDRESS_BLACKLISTED": "You are not allowed to use this command.",
   "ADDRESS_SELECT_ACTION": "Address Management\n\nWhat would you like to do?",

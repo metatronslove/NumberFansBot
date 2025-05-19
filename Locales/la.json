@@ -665,7 +665,7 @@
   "PAPARA_PAYMENT_PENDING": "⏳ Solutio adhuc pendet\n\nID Solutionis: #{payment_id}\nSumma: {amount} TL\n\nQuaeso, solutionem per applicationem vel situm interretialem Papara perfice, deinde iterum inspice.",
   "PAPARA_PAYMENT_CANCELLED": "❌ Solutio cancellata est\n\nID Solutionis: #{payment_id}\nSumma: {amount} TL\nHaec petitio solutionis cancellata est. Quaeso, novam solutionem crea si opus est.",
   "PAPARA_PAYMENT_UNKNOWN": "❓ Status solutionis ignotus\n\nID Solutionis: #{payment_id}\nStatus: {status}\n\nQuaeso, auxilium pete.",
-  "PAPARA_BALANCE": "Libra Tua Praesens\n\nPecunia: {credits} TL\n\nHanc pecuniam uti potes ad producta vel servitia emenda.",
+  "PAPARA_BALANCE": "Libra Tua Praesens\n\nPecunia: {balance} TL\n\nHanc pecuniam uti potes ad producta vel servitia emenda.",
   "PAPARA_CANCELLED": "Operatio solutionis cancellata.",
   "ADDRESS_BLACKLISTED": "Hoc mandatum uti non licet tibi.",
   "ADDRESS_SELECT_ACTION": "Administratio Inscriptionum\n\nQuid facere velles?",
