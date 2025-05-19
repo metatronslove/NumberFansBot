@@ -1451,26 +1451,26 @@ async function main() {
 	loadFileTree();
 }
 
-		// Update URL hash and toggle tab visibility on click
-		function setActiveTab(tabId) {
-			window.location.hash = tabId;
-			const tabs = document.querySelectorAll('nav a');
-			const divs = document.querySelectorAll('div.tab-content');
-			tabs.forEach(tab => {
-				if (tab.getAttribute('href') === '#' + tabId) {
-					tab.classList.add('active');
-				} else {
-					tab.classList.remove('active');
-				}
-			});
-			divs.forEach(div => {
-				if (div.id === tabId) {
-					div.style.display = 'block';
-				} else {
-					div.style.display = 'none';
-				}
-			});
-		}
+// Update URL hash and toggle tab visibility on click
+function setActiveTab(tabId) {
+	// Tüm tab'ları ve içerikleri devre dışı bırak
+	document.querySelectorAll('.tab').forEach(tab => {
+		tab.classList.remove('active');
+	});
+	document.querySelectorAll('.tab-content').forEach(content => {
+		content.classList.remove('active');
+	});
+
+	// Seçili tab'ı ve içeriği aktif yap
+	const activeTab = document.querySelector(`.tab[data-tab="${tabId}"]`);
+	const activeContent = document.getElementById(tabId);
+
+	if (activeTab) activeTab.classList.add('active');
+	if (activeContent) activeContent.classList.add('active');
+
+	// URL hash'ini güncelle
+	window.location.hash = tabId;
+}
 
 // Hex'i RGB'ye çeviren yardımcı fonksiyon
 function hexToRgb(hex) {
@@ -1507,8 +1507,28 @@ document
 		});
 	});
 
+document.body.addEventListener('htmx:afterSwap', function(evt) {
+	// HTMX isteği tamamlandığında hangi tab'ta olduğumuzu kontrol et
+	const activeTab = document.querySelector('.tab.active');
+	if (activeTab) {
+		const tabId = activeTab.dataset.tab;
+		setActiveTab(tabId);
+	}
+});
+
 document
 	.addEventListener('DOMContentLoaded', function () {
+		// URL'de hash varsa onu kullan, yoksa varsayılan tab'ı seç
+		const hash = window.location.hash.substring(1);
+		const defaultTab = document.querySelector('.tab.active')?.dataset.tab || 'config';
+		setActiveTab(hash || defaultTab);
+
+		// Tab click event'lerini ayarla
+		document.querySelectorAll('.tab').forEach(tab => {
+			tab.addEventListener('click', function() {
+				setActiveTab(this.dataset.tab);
+			});
+		});
 		// Initialize CodeMirror editor
 		const editorElement = document.getElementById('editor');
 		if (editorElement) {
