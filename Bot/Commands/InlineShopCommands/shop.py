@@ -3,13 +3,15 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InlineQ
 from telegram.ext import Application, CallbackContext, InlineQueryHandler
 from uuid import uuid4
 from Bot.database import Database
+from Bot.Helpers.i18n import I18n
 
 logger = logging.getLogger(__name__)
 
 class ShopInlineCommand:
 	def __init__(self):
 		self.db = Database()
-		self.bot_username = "@YourBot"  # Replace with actual bot username or config
+		self.i18n = I18n()
+		self.bot_username = "@EgrigoreBot"  # Replace with actual bot username or config
 
 	def register_handlers(self, application: Application):
 		application.add_handler(InlineQueryHandler(self.inline_shop, pattern=r'^shop'))
@@ -18,6 +20,7 @@ class ShopInlineCommand:
 		"""Handle inline queries for shop listings"""
 		query = update.inline_query.query
 		user_id = update.effective_user.id
+		language = self.db.get_user_language(user_id) or 'en'
 
 		# Check if user is blacklisted
 		if self.db.is_blacklisted(user_id):
@@ -35,10 +38,10 @@ class ShopInlineCommand:
 			results = [
 				InlineQueryResultArticle(
 					id=str(uuid4()),
-					title="No products found",
-					description="Try a different search term or browse all products",
+					title=self.i18n.t('SHOP_NO_PRODUCTS_TITLE', language),
+					description=self.i18n.t('SHOP_NO_PRODUCTS_DESC', language),
 					input_message_content=InputTextMessageContent(
-						"No products match your search criteria. Try a different search term or use /buy to browse all products."
+						self.i18n.t('SHOP_NO_PRODUCTS_MESSAGE', language)
 					)
 				)
 			]
@@ -48,8 +51,8 @@ class ShopInlineCommand:
 			for product in products:
 				# Create keyboard for the product
 				keyboard = [
-					[InlineKeyboardButton("Buy Now", url=f"https://t.me/{self.bot_username}?start=buy_{product['id']}")],
-					[InlineKeyboardButton("View Details", url=f"https://t.me/{self.bot_username}?start=product_{product['id']}")]
+					[InlineKeyboardButton(self.i18n.t('BUY_NOW_BUTTON', language), url=f"https://t.me/{self.bot_username}?start=buy_{product['id']}")],
+					[InlineKeyboardButton(self.i18n.t('VIEW_DETAILS_BUTTON', language), url=f"https://t.me/{self.bot_username}?start=product_{product['id']}")]
 				]
 				reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -64,13 +67,14 @@ class ShopInlineCommand:
 					InlineQueryResultArticle(
 						id=str(uuid4()),
 						title=product['name'],
-						description=f"{price_text} - {availability}",
+						description=self.i18n.t('PRODUCT_PRICE_AVAILABILITY', language, price_text=price_text, availability=availability),
 						input_message_content=InputTextMessageContent(
-							f"*{product['name']}*\n"
-							f"Price: {price_text}\n"
-							f"Type: {product['type'].capitalize()}\n"
-							f"{availability}\n\n"
-							f"{product.get('description', 'No description available.')}"
+							self.i18n.t('SHOP_PRODUCT_DETAILS', language,
+										product_name=product['name'],
+										price_text=price_text,
+										product_type=product['type'].capitalize(),
+										availability=availability,
+										description=product.get('description', 'No description available.'))
 						),
 						reply_markup=reply_markup,
 						thumb_url=product.get('image_url')

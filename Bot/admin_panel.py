@@ -9,6 +9,8 @@ import urllib
 import importlib
 import sys
 import json
+import base64
+import uuid
 from flask import Flask, request, render_template, redirect, url_for, session, flash, jsonify
 from asgiref.wsgi import WsgiToAsgi
 from Bot.config import Config
@@ -27,6 +29,7 @@ from telegram.error import BadRequest
 
 # Initialize Flask app
 flask_app = Flask(__name__, template_folder="/code/Templates/", static_folder="/code/Assets", static_url_path="/Assets")
+dashboard = Blueprint('dashboard', __name__)
 config = Config()
 flask_app.secret_key = config.flask_secret_key
 logging.basicConfig(level=logging.INFO)
@@ -113,6 +116,7 @@ def register_handlers():
 		magic_square, convert_numbers
 	)
 	from .Commands.ShopCommands.buy import BuyCommand
+	from .Commands.ShopCommands.sell import setup_sell_handler
 	from .Commands.ShopCommands.address import AddressCommand
 	from .Commands.ShopCommands.password import PasswordCommand
 	from .Commands.ShopCommands.orders import OrdersCommand
@@ -137,6 +141,7 @@ def register_handlers():
 		telegram_app.add_handler(get_huddam_conversation_handler())
 		telegram_app.add_handler(get_unsur_conversation_handler())
 		telegram_app.add_handler(get_transliterate_conversation_handler())
+		setup_sell_handler(telegram_app)
 		telegram_app.add_handler(PreCheckoutQueryHandler(handle_pre_checkout))		# Register inline query handlers
 		telegram_app.add_handler(InlineQueryHandler(abjad, pattern=r"^/abjad"))
 		telegram_app.add_handler(InlineQueryHandler(bastet, pattern=r"^/bastet"))
@@ -860,7 +865,7 @@ def get_users(lang="en"):
 		user['badges'] = ' '.join(badges)
 
 	return render_template(
-		"users_partial.html",
+		"dashboard.html",
 		lang=lang,
 		i18n=i18n,
 		users=users,
@@ -885,7 +890,7 @@ def get_groups(lang="en"):
 	groups, total_pages = db.get_groups_paginated(page, 50, search)
 
 	return render_template(
-		"groups_partial.html",
+		"dashboard.html",
 		lang=lang,
 		i18n=i18n,
 		groups=groups,
@@ -1893,6 +1898,91 @@ def toggle_product(lang="en", product_id=None):
 		flash(i18n.t("UPDATE_ERROR", lang), "error")
 
 	return redirect(url_for("user_dashboard", lang=lang))
+
+@dashboard.route('/dashboard')
+def user_dashboard():
+	user_id = session.get('user_id')  # Telegram oturumundan al
+	db = Database()
+	products = db.get_available_products(created_by=user_id)
+	orders = db.get_user_orders(user_id)
+	stats = db.get_shop_stats()
+	user = db.execute_query("SELECT email, phone, main_group FROM users WHERE user_id = %s", (user_id,))[0]
+	return render_template('user-dashboard.html', products=products, orders=orders, stats=stats, user=user)
+
+@dashboard.route('/dashboard/add_product', methods=['POST'])
+def add_product():
+	user_id = session.get('user_id')
+	db = Database()
+	product_type = request.form['type']
+	name = request.form['name']
+	description = request.form['description']
+	price = float(request.form['price'])
+	features = {}
+
+	if product_type == 'shipped':
+		quantity = int(request.form.get('quantity', 0))
+		tax_rates = request.form.get('tax_rates', '')
+		shipping_fee = float(request.form.get('shipping_fee', 0.0))
+		tax_rates_list = []
+		if tax_rates:
+			for tax in tax_rates.split(','):
+				name, percentage = tax.split(':')
+				tax_rates_list.append({"type": name.strip(), "percentage": float(percentage.strip())})
+		features['tax_rates'] = tax_rates_list
+		features['shipping_fee'] = shipping_fee
+	elif product_type == 'membership':
+		group_id = int(request.form.get('group_id', 0))
+		duration = request.form.get('duration')
+		features['membership_details'] = {"group_id": group_id, "duration": duration}
+		quantity = None
+	elif product_type == 'download':
+		file = request.files.get('file')
+		if file:
+			upload_dir = os.path.join("Uploads", str(user_id))
+			os.makedirs(upload_dir, exist_ok=True)
+			file_ext = os.path.splitext(file.filename)[1]
+			file_path = os.path.join(upload_dir, f"{uuid.uuid4()}{file_ext}")
+			file.save(file_path)
+			features['file_path'] = file_path
+		quantity = None
+
+	images = []
+	for img in request.files.getlist('images'):
+		if len(images) < 3:
+			img_bytes = img.read()
+			images.append(base64.b64encode(img_bytes).decode('utf-8'))
+	features['images'] = images
+	features['is_top_sale'] = False
+
+	product_id = db.create_product(
+		name=name,
+		description=description,
+		price=price,
+		quantity=quantity,
+		product_type=product_type,
+		features=features,
+		created_by=user_id
+	)
+	flash('Product added successfully!')
+	return redirect(url_for('dashboard.user_dashboard'))
+
+@dashboard.route('/dashboard/update_config', methods=['POST'])
+def update_config():
+	user_id = session.get('user_id')
+	db = Database()
+	email = request.form['email']
+	email_password = request.form.get('email_password')
+	phone = request.form.get('phone')
+	main_group = request.form.get('main_group')
+
+	db.execute_query(
+		"UPDATE users SET email = %s, phone = %s, main_group = %s WHERE user_id = %s",
+		(email, phone, main_group, user_id)
+	)
+	if email_password:
+		db.update_user_password(user_id, email_password)
+	flash('Configuration updated successfully!')
+	return redirect(url_for('dashboard.user_dashboard'))
 
 # Create ASGI application
 app = WsgiToAsgi(flask_app)

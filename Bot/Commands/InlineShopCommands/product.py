@@ -3,13 +3,15 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InlineQ
 from telegram.ext import Application, CallbackContext, InlineQueryHandler
 from uuid import uuid4
 from Bot.database import Database
+from Bot.Helpers.i18n import I18n
 
 logger = logging.getLogger(__name__)
 
 class ProductInlineCommand:
 	def __init__(self):
 		self.db = Database()
-		self.bot_username = "@YourBot"  # Replace with actual bot username or config
+		self.i18n = I18n()
+		self.bot_username = "@EgrigoreBot"  # Replace with actual bot username or config
 
 	def register_handlers(self, application: Application):
 		application.add_handler(InlineQueryHandler(self.inline_product, pattern=r'^product'))
@@ -18,6 +20,7 @@ class ProductInlineCommand:
 		"""Handle inline queries for specific product details"""
 		query = update.inline_query.query
 		user_id = update.effective_user.id
+		language = self.db.get_user_language(user_id) or 'en'
 
 		# Check if user is blacklisted
 		if self.db.is_blacklisted(user_id):
@@ -41,18 +44,18 @@ class ProductInlineCommand:
 				results = [
 					InlineQueryResultArticle(
 						id=str(uuid4()),
-						title="Product not found",
-						description=f"No product found with ID {product_id}",
+						title=self.i18n.t('PRODUCT_NOT_FOUND_TITLE', language),
+						description=self.i18n.t('PRODUCT_NOT_FOUND_DESC', language, product_id=product_id),
 						input_message_content=InputTextMessageContent(
-							f"No product found with ID {product_id}. Try browsing all products with /buy."
+							self.i18n.t('PRODUCT_NOT_FOUND_MESSAGE', language, product_id=product_id)
 						)
 					)
 				]
 			else:
 				# Create keyboard for the product
 				keyboard = [
-					[InlineKeyboardButton("Buy Now", url=f"https://t.me/{self.bot_username}?start=buy_{product['id']}")],
-					[InlineKeyboardButton("View All Products", url=f"https://t.me/{self.bot_username}?start=shop")]
+					[InlineKeyboardButton(self.i18n.t('BUY_NOW_BUTTON', language), url=f"https://t.me/{self.bot_username}?start=buy_{product['id']}")],
+					[InlineKeyboardButton(self.i18n.t('VIEW_ALL_PRODUCTS_BUTTON', language), url=f"https://t.me/{self.bot_username}?start=shop")]
 				]
 				reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -68,24 +71,23 @@ class ProductInlineCommand:
 				features = product.get('features', [])
 				features_text = "\n".join([f"• {feature}" for feature in features]) if features else ""
 
-				message_content = (
-					f"*{product['name']}*\n\n"
-					f"Price: {price_text}\n"
-					f"Type: {product['type'].capitalize()}\n"
-					f"{availability}\n\n"
-					f"{description}\n\n"
-				)
+				message_content = self.i18n.t('PRODUCT_DETAILS', language,
+											  product_name=product['name'],
+											  price_text=price_text,
+											  product_type=product['type'].capitalize(),
+											  availability=availability,
+											  description=description)
 
 				if features_text:
-					message_content += f"Features:\n{features_text}\n\n"
+					message_content += self.i18n.t('PRODUCT_FEATURES', language, features_text=features_text)
 
-				message_content += "Use the buttons below to purchase this product."
+				message_content += self.i18n.t('PRODUCT_PURCHASE_PROMPT', language)
 
 				results = [
 					InlineQueryResultArticle(
 						id=str(uuid4()),
 						title=product['name'],
-						description=f"{price_text} - {availability}",
+						description=self.i18n.t('PRODUCT_PRICE_AVAILABILITY', language, price_text=price_text, availability=availability),
 						input_message_content=InputTextMessageContent(message_content),
 						reply_markup=reply_markup,
 						thumb_url=product.get('image_url')
@@ -96,12 +98,10 @@ class ProductInlineCommand:
 			results = [
 				InlineQueryResultArticle(
 					id=str(uuid4()),
-					title="Product Search",
-					description="Use 'product [ID]' to view details of a specific product",
+					title=self.i18n.t('PRODUCT_SEARCH_TITLE', language),
+					description=self.i18n.t('PRODUCT_SEARCH_DESC', language),
 					input_message_content=InputTextMessageContent(
-						f"To view product details, use the inline query format: {self.bot_username} product [ID]\n"
-						f"For example: {self.bot_username} product 1\n\n"
-						f"Or browse all products with: {self.bot_username} shop"
+						self.i18n.t('PRODUCT_SEARCH_HELP', language, bot_username=self.bot_username)
 					)
 				)
 			]

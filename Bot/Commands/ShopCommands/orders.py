@@ -1,5 +1,4 @@
 import logging
-import re
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
 	Application,
@@ -7,33 +6,35 @@ from telegram.ext import (
 	CommandHandler,
 	ConversationHandler,
 	CallbackQueryHandler,
-	MessageHandler,
-	filters,
+	filters
 )
 from Bot.database import Database
+from Bot.Helpers.i18n import I18n
 
 # States for the conversation handler
-VIEWING_ORDERS, SELECTING_ORDER, VIEWING_ORDER_DETAILS = range(3)
+VIEWING_ORDER, SELECTING_ORDER = range(2)
 
 logger = logging.getLogger(__name__)
 
 class OrdersCommand:
 	def __init__(self):
 		self.db = Database()
+		self.i18n = I18n()
 
 	def register_handlers(self, application: Application):
-		# Create a conversation handler for the orders command
 		conv_handler = ConversationHandler(
 			entry_points=[CommandHandler('orders', self.orders_command)],
 			states={
-				VIEWING_ORDERS: [
+				SELECTING_ORDER: [
 					CallbackQueryHandler(self.view_order, pattern=r'^order_\d+$'),
-					CallbackQueryHandler(self.cancel_orders, pattern=r'^cancel$')
-				],
-				VIEWING_ORDER_DETAILS: [
-					CallbackQueryHandler(self.back_to_orders, pattern=r'^back$'),
+					CallbackQueryHandler(self.cancel_orders, pattern=r'^cancel$'),
 					CallbackQueryHandler(self.cancel_order, pattern=r'^cancel_order_\d+$'),
-					CallbackQueryHandler(self.cancel_orders, pattern=r'^done$')
+					CallbackQueryHandler(self.back_to_orders, pattern=r'^back$')
+				],
+				VIEWING_ORDER: [
+					CallbackQueryHandler(self.cancel_order, pattern=r'^cancel_order_\d+$'),
+					CallbackQueryHandler(self.back_to_orders, pattern=r'^back$'),
+					CallbackQueryHandler(self.cancel_orders, pattern=r'^cancel$')
 				]
 			},
 			fallbacks=[CommandHandler('cancel', self.cancel_orders)]
@@ -41,209 +42,153 @@ class OrdersCommand:
 		application.add_handler(conv_handler)
 
 	async def orders_command(self, update: Update, context: CallbackContext) -> int:
-		"""Handle the /orders command to view user orders"""
 		user_id = update.effective_user.id
+		language = self.db.get_user_language(user_id) or 'en'
 
-		# Check if user is blacklisted
 		if self.db.is_blacklisted(user_id):
-			await update.message.reply_text("You are not allowed to use this command.")
-			logger.info(f"Blacklisted user {user_id} attempted /orders command")
+			await update.message.reply_text(self.i18n.t('ORDERS_BLACKLISTED', language))
 			return ConversationHandler.END
 
-		# Log command usage
 		self.db.increment_command_usage('orders', user_id, update.effective_chat.id)
-
-		# Get user's orders
 		orders = self.db.get_user_orders(user_id)
 
 		if not orders:
-			await update.message.reply_text(
-				"You don't have any orders yet.\n\n"
-				"Use the /buy command to make a purchase."
-			)
+			await update.message.reply_text(self.i18n.t('ORDERS_NO_ORDERS', language))
 			return ConversationHandler.END
 
-		# Create keyboard with order options
 		keyboard = []
 		for order in orders:
-			status_emoji = self.get_status_emoji(order['status'])
 			keyboard.append([InlineKeyboardButton(
-				f"{status_emoji} Order #{order['id']} - {order['product_name']} ({order['status']})",
+				f"Order #{order['id']} - {order['status']}",
 				callback_data=f"order_{order['id']}"
 			)])
-
-		# Add done button
-		keyboard.append([InlineKeyboardButton("Done", callback_data="cancel")])
-
+		keyboard.append([InlineKeyboardButton(self.i18n.t('CANCEL_BUTTON', language), callback_data="cancel")])
 		reply_markup = InlineKeyboardMarkup(keyboard)
 
 		await update.message.reply_text(
-			"Your Orders\n\n"
-			"Select an order to view details:",
+			self.i18n.t('ORDERS_SELECT_ORDER', language),
 			reply_markup=reply_markup
 		)
-
-		return VIEWING_ORDERS
+		return SELECTING_ORDER
 
 	async def view_order(self, update: Update, context: CallbackContext) -> int:
-		"""Handle order selection to view details"""
 		query = update.callback_query
 		await query.answer()
-
-		# Extract order ID from callback data
-		order_id = int(query.data.split('_')[1])
 		user_id = update.effective_user.id
+		language = self.db.get_user_language(user_id) or 'en'
 
-		# Get order details
+		order_id = int(query.data.split('_')[1])
 		order = self.db.get_order_by_id(user_id, order_id)
 
 		if not order:
-			await query.edit_message_text("Sorry, this order could not be found.")
-			logger.error(f"Order {order_id} not found for user {user_id}")
+			await query.edit_message_text(self.i18n.t('ORDERS_ORDER_NOT_FOUND', language))
 			return ConversationHandler.END
 
-		# Create keyboard with options
-		keyboard = []
+		status_emoji = {
+			'pending': '⏳',
+			'pending_payment': '⚠️',
+			'processing': '🔄',
+			'shipped': '🚚',
+			'delivered': '✅',
+			'cancelled': '❌'
+		}.get(order['status'], '❓')
 
-		# Add cancel order button if order is pending
-		if order['status'] in ['pending', 'pending_payment']:
-			keyboard.append([InlineKeyboardButton(
-				"Cancel Order",
-				callback_data=f"cancel_order_{order_id}"
-			)])
-
-		# Add navigation buttons
-		keyboard.append([
-			InlineKeyboardButton("Back to Orders", callback_data="back"),
-			InlineKeyboardButton("Done", callback_data="done")
-		])
-
-		reply_markup = InlineKeyboardMarkup(keyboard)
-
-		# Format order details message
-		status_emoji = self.get_status_emoji(order['status'])
-		message = (
-			f"{status_emoji} Order #{order['id']}\n\n"
-			f"Product: {order['product_name']}\n"
-			f"Quantity: {order['quantity']}\n"
-			f"Total Price: {order['total_price']} TL\n"
-			f"Status: {order['status']}\n"
-			f"Order Date: {order.get('created_at', 'N/A')}\n\n"
-			f"Shipping Address:\n"
-			f"{order['address_name']}\n"
-			f"{order['address']}\n"
-			f"{order['city']}\n\n"
-		)
+		message = self.i18n.t('ORDERS_DETAILS', language,
+							  status_emoji=status_emoji,
+							  order_id=order['id'],
+							  product_name=order['product_name'],
+							  quantity=order['quantity'],
+							  total_price=order['total_price'],
+							  status=order['status'],
+							  order_date=order['order_date'],
+							  address_name=order['address_name'],
+							  address=order['address'],
+							  city=order['city'])
 
 		if order['status'] == 'pending_payment':
-			message += "⚠️ This order requires payment. Use /papara to add credits to your account."
+			message += self.i18n.t('ORDERS_PENDING_PAYMENT', language)
 		elif order['status'] == 'processing':
-			message += "Your order is being processed and will be shipped soon."
+			message += self.i18n.t('ORDERS_PROCESSING', language)
 		elif order['status'] == 'shipped':
-			message += f"Your order has been shipped on {order.get('shipped_date', 'N/A')}."
+			message += self.i18n.t('ORDERS_SHIPPED', language, shipped_date=order['shipped_date'])
 		elif order['status'] == 'delivered':
-			message += f"Your order was delivered on {order.get('delivery_date', 'N/A')}."
+			message += self.i18n.t('ORDERS_DELIVERED', language, delivery_date=order['delivery_date'])
 		elif order['status'] == 'cancelled':
-			message += f"This order was cancelled on {order.get('cancelled_date', 'N/A')}."
+			message += self.i18n.t('ORDERS_CANCELLED_STATUS', language, cancelled_date=order['cancelled_date'])
+
+		keyboard = [
+			[InlineKeyboardButton(self.i18n.t('CANCEL', language), callback_data=f"cancel_order_{order['id']}")],
+			[InlineKeyboardButton(self.i18n.t('BACK', language), callback_data="back")],
+			[InlineKeyboardButton(self.i18n.t('CANCEL_BUTTON', language), callback_data="cancel")]
+		]
+		reply_markup = InlineKeyboardMarkup(keyboard)
 
 		await query.edit_message_text(
 			message,
 			reply_markup=reply_markup
 		)
-
-		return VIEWING_ORDER_DETAILS
+		return VIEWING_ORDER
 
 	async def back_to_orders(self, update: Update, context: CallbackContext) -> int:
-		"""Go back to orders list"""
 		query = update.callback_query
 		await query.answer()
-
 		user_id = update.effective_user.id
+		language = self.db.get_user_language(user_id) or 'en'
 
-		# Get user's orders
 		orders = self.db.get_user_orders(user_id)
 
-		# Create keyboard with order options
+		if not orders:
+			await query.edit_message_text(self.i18n.t('ORDERS_NO_ORDERS', language))
+			return ConversationHandler.END
+
 		keyboard = []
 		for order in orders:
-			status_emoji = self.get_status_emoji(order['status'])
 			keyboard.append([InlineKeyboardButton(
-				f"{status_emoji} Order #{order['id']} - {order['product_name']} ({order['status']})",
+				f"Order #{order['id']} - {order['status']}",
 				callback_data=f"order_{order['id']}"
 			)])
-
-		# Add done button
-		keyboard.append([InlineKeyboardButton("Done", callback_data="cancel")])
-
+		keyboard.append([InlineKeyboardButton(self.i18n.t('CANCEL_BUTTON', language), callback_data="cancel")])
 		reply_markup = InlineKeyboardMarkup(keyboard)
 
 		await query.edit_message_text(
-			"Your Orders\n\n"
-			"Select an order to view details:",
+			self.i18n.t('ORDERS_SELECT_ORDER', language),
 			reply_markup=reply_markup
 		)
-
-		return VIEWING_ORDERS
+		return SELECTING_ORDER
 
 	async def cancel_order(self, update: Update, context: CallbackContext) -> int:
-		"""Handle order cancellation"""
 		query = update.callback_query
 		await query.answer()
-
-		# Extract order ID from callback data
-		order_id = int(query.data.split('_')[2])
 		user_id = update.effective_user.id
+		language = self.db.get_user_language(user_id) or 'en'
 
-		# Get order details for refund
+		order_id = int(query.data.split('_')[2])
 		order = self.db.get_order_by_id(user_id, order_id)
+
 		if not order:
-			await query.edit_message_text("Sorry, this order could not be found.")
-			logger.error(f"Order {order_id} not found for cancellation by user {user_id}")
+			await query.edit_message_text(self.i18n.t('ORDERS_ORDER_NOT_FOUND', language))
 			return ConversationHandler.END
 
-		# Cancel the order in database
-		success = self.db.cancel_user_order(user_id, order_id)
+		success, refund_amount = self.db.cancel_order(user_id, order_id)
+
 		if not success:
-			await query.edit_message_text("Sorry, there was an error cancelling your order. Please try again later.")
-			logger.error(f"Failed to cancel order {order_id} for user {user_id}")
+			await query.edit_message_text(self.i18n.t('ORDERS_CANCEL_ERROR', language))
 			return ConversationHandler.END
-
-		# Refund credits
-		refund_amount = order['total_price']
-		self.db.add_credits(user_id, refund_amount)
-
-		# Log user activity
-		self.db.log_user_activity(
-			user_id=user_id,
-			action="cancel_order",
-			details={"order_id": order_id, "refund_amount": refund_amount}
-		)
 
 		await query.edit_message_text(
-			f"✅ Order #{order_id} has been cancelled successfully.\n\n"
-			f"Refunded {refund_amount} TL to your account."
+			self.i18n.t('ORDERS_CANCEL_SUCCESS', language, order_id=order_id, refund_amount=refund_amount)
 		)
-
 		return ConversationHandler.END
 
 	async def cancel_orders(self, update: Update, context: CallbackContext) -> int:
-		"""Exit the orders view"""
+		user_id = update.effective_user.id
+		language = self.db.get_user_language(user_id) or 'en'
+
 		if update.callback_query:
 			await update.callback_query.answer()
-			await update.callback_query.edit_message_text("Orders view closed.")
+			await update.callback_query.edit_message_text(self.i18n.t('ORDERS_CANCELLED', language))
 		else:
-			await update.message.reply_text("Orders view cancelled.")
+			await update.message.reply_text(self.i18n.t('ORDERS_CLOSED', language))
 
+		context.user_data.clear()
 		return ConversationHandler.END
-
-	def get_status_emoji(self, status):
-		"""Get emoji for order status"""
-		status_emojis = {
-			'pending': '⏳',
-			'pending_payment': '💰',
-			'processing': '🔄',
-			'shipped': '📦',
-			'delivered': '✅',
-			'cancelled': '❌'
-		}
-		return status_emojis.get(status, '❓')
