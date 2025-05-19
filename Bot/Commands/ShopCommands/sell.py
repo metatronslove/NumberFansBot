@@ -28,7 +28,7 @@ async def start_sell(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 	db = Database()
 	i18n = I18n()
 	user = db.execute_query("SELECT payment_info FROM users WHERE user_id = %s", (user_id,))
-	if not user or not user[0].get('payment_info')['email']:
+	if not user or not user[0].get('payment_info'):
 		await update.message.reply_text(i18n.t("SELL_SETUP_PAPARA", language))
 		return ConversationHandler.END
 
