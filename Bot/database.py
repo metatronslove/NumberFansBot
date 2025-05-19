@@ -706,43 +706,48 @@ class Database:
 
 	# ==================== PRODUCT MANAGEMENT ====================
 
-	def get_available_products(self, search_terms: str = "", product_type: str = None,
-							  active_only: bool = True, limit: int = 100, offset: int = 0) -> list:
-		"""Get list of available products matching search criteria"""
-		params = []
-		conditions = []
-		if active_only:
-			conditions.append("active = TRUE")
-		if search_terms:
-			conditions.append("(name LIKE %s OR description LIKE %s)")
-			search_pattern = f"%{search_terms}%"
-			params.extend([search_pattern, search_pattern])
-		if product_type:
-			conditions.append("type = %s")
-			params.append(product_type)
-		where_clause = " WHERE " + " AND ".join(conditions) if conditions else ""
-		query = f"""
-		SELECT id, name, description, price, quantity, type, image_url, features, active,
-			   created_at, updated_at, created_by
-		FROM `products`
-		{where_clause}
-		ORDER BY id DESC
-		LIMIT %s OFFSET %s
-		"""
-		params.extend([limit, offset])
-		try:
-			self.cursor.execute(query, params)
-			products = self.cursor.fetchall()
-			for product in products:
-				if product['features']:
-					try:
-						product['features'] = json.loads(product['features'])
-					except json.JSONDecodeError:
-						product['features'] = []
-			return products
-		finally:
-			self.cursor.close()
-			self.cursor = self.conn.cursor(dictionary=True)
+def get_available_products(self, search_terms: str = "", product_type: str = None,
+						 active_only: bool = True, limit: int = 100, offset: int = 0,
+						 user_id: int = None) -> list:
+	"""Get list of available products matching search criteria"""
+	params = []
+	conditions = []
+	if active_only:
+		conditions.append("active = TRUE")
+	if search_terms:
+		conditions.append("(name LIKE %s OR description LIKE %s)")
+		search_pattern = f"%{search_terms}%"
+		params.extend([search_pattern, search_pattern])
+	if product_type:
+		conditions.append("type = %s")
+		params.append(product_type)
+	if user_id:  # Add this condition
+		conditions.append("created_by = %s")
+		params.append(user_id)
+
+	where_clause = " WHERE " + " AND ".join(conditions) if conditions else ""
+	query = f"""
+	SELECT id, name, description, price, quantity, type, image_url, features, active,
+		   created_at, updated_at, created_by
+	FROM `products`
+	{where_clause}
+	ORDER BY id DESC
+	LIMIT %s OFFSET %s
+	"""
+	params.extend([limit, offset])
+	try:
+		self.cursor.execute(query, params)
+		products = self.cursor.fetchall()
+		for product in products:
+			if product['features']:
+				try:
+					product['features'] = json.loads(product['features'])
+				except json.JSONDecodeError:
+					product['features'] = []
+		return products
+	finally:
+		self.cursor.close()
+		self.cursor = self.conn.cursor(dictionary=True)
 
 	def get_product_by_id(self, product_id: int) -> dict:
 		"""Get product details by ID"""
