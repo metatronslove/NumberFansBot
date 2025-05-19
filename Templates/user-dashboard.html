@@ -1,219 +1,291 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}" {{ 'dir="rtl"' if lang in ['ar', 'he'] else '' }}>
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>{{ i18n.t('USER_DASHBOARD_TITLE', lang) }}</title>
-	<script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ i18n.t('USER_DASHBOARD_TITLE', lang) }}</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body class="bg-gray-100 font-sans">
-	<div class="container mx-auto p-6">
-		<h1 class="text-3xl font-bold mb-6">{{ i18n.t('USER_DASHBOARD_TITLE', lang) }}</h1>
+<body>
+    <div class="particles" id="particles-js"></div>
+    <div class="language-switcher">
+        <select onchange="window.location.href='/' + this.value">
+            {% for code in ['en', 'tr', 'ar', 'he', 'la'] %}
+                <option value="{{ code }}" {{ 'selected' if code == lang else '' }}>{{ i18n.t('LANGUAGE_NAME_' + code.upper(), lang) }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="logo-container">
+        <div class="logo">NumberFansBot</div>
+        <div class="tagline">{{ i18n.t('TAGLINE', lang) }}</div>
+    </div>
+    <div class="status-container">
+        <h2>{{ i18n.t('USER_DASHBOARD_TITLE', lang) }}</h2>
 
-		<!-- Tabs -->
-		<div class="border-b border-gray-200">
-			<nav class="-mb-px flex space-x-8" aria-label="Tabs">
-				<a href="#products" class="tab-link border-b-2 border-transparent px-1 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">{{ i18n.t('PRODUCTS_TAB', lang) }}</a>
-				<a href="#orders" class="tab-link border-b-2 border-transparent px-1 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">{{ i18n.t('ORDERS_TAB', lang) }}</a>TAB', lang) }}</a>
-				<a href="#configuration" class="tab-link border-b-2 border-transparent px-1 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">{{ i18n.t('DASHBOARD_CONFIGURATION_TAB', lang) }}</a>
-			</nav>
-		</div>
+        <div class="tabs">
+            <div class="tab active" data-tab="products">{{ i18n.t('PRODUCTS_TAB', lang) }}</div>
+            <div class="tab" data-tab="orders">{{ i18n.t('ORDERS_TAB', lang) }}</div>
+            <div class="tab" data-tab="configuration">{{ i18n.t('DASHBOARD_CONFIGURATION_TAB', lang) }}</div>
+        </div>
 
-		<!-- Products Tab -->
-		<div id="products" class="tab-content hidden mt-6">
-			<!-- Add Product Form -->
-			<div class="bg-white p-6 rounded-lg shadow-md mb-6">
-				<h2 class="text-2xl font-semibold mb-4">{{ i18n.t('PRODUCT_ADD', lang) }}</h2>
-				<form action="/dashboard/add_product" method="POST" enctype="multipart/form-data" class="space-y-4">
-					<div>
-						<label for="type" class="block text-sm font-medium text-gray-700">{{ i18n.t('TYPE', lang) }}</label>
-						<select id="type" name="type" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-							<option value="shipped">{{ i18n.t('PRODUCT_TYPE_SHIPPED', lang) }}</option>
-							<option value="download">{{ i18n.t('PRODUCT_TYPE_DOWNLOAD', lang) }}</option>
-							<option value="membership">{{ i18n.t('PRODUCT_TYPE_MEMBERSHIP', lang) }}</option>
-						</select>
-					</div>
-					<div>
-						<label for="name" class="block text-sm font-medium text-gray-700">{{ i18n.t('NAME', lang) }}</label>
-						<input type="text" id="name" name="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-					</div>
-					<div>
-						<label for="description" class="block text-sm font-medium text-gray-700">{{ i18n.t('DESCRIPTION', lang) }}</label>
-						<textarea id="description" name="description" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></textarea>
-					</div>
-					<div>
-						<label for="price" class="block text-sm font-medium text-gray-700">{{ i18n.t('PRICE', lang) }} (TL)</label>
-						<input type="number" id="price" name="price" step="0.01" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-					</div>
-					<div id="shipped-fields" class="hidden">
-						<div>
-							<label for="quantity" class="block text-sm font-medium text-gray-700">{{ i18n.t('QUANTITY', lang) }}</label>
-							<input type="number" id="quantity" name="quantity" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-						</div>
-						<div>
-							<label for="tax_rates" class="block text-sm font-medium text-gray-700">{{ i18n.t('SELL_ENTER_TAX_RATES', lang) }}</label>
-							<input type="text" id="tax_rates" name="tax_rates" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-						</div>
-						<div>
-							<label for="shipping_fee" class="block text-sm font-medium text-gray-700">{{ i18n.t('SELL_ENTER_SHIPPING_FEE', lang) }} (TL)</label>
-							<input type="number" id="shipping_fee" name="shipping_fee" step="0.01" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-						</div>
-					</div>
-					<div id="membership-fields" class="hidden">
-						<div>
-							<label for="group_id" class="block text-sm font-medium text-gray-700">{{ i18n.t('GROUP_ID', lang) }}</label>
-							<input type="number" id="group_id" name="group_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-						</div>
-						<div>
-							<label for="duration" class="block text-sm font-medium text-gray-700">{{ i18n.t('SELL_ENTER_MEMBERSHIP_DETAILS', lang) }}</label>
-							<select id="duration" name="duration" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-								<option value="lifetime">Lifetime</option>
-								<option value="yearly">Yearly</option>
-								<option value="monthly">Monthly</option>
-								<option value="weekly">Weekly</option>
-							</select>
-						</div>
-					</div>
-					<div id="download-fields" class="hidden">
-						<div>
-							<label for="file" class="block text-sm font-medium text-gray-700">{{ i18n.t('SELL_UPLOAD_FILE', lang) }}</label>
-							<input type="file" id="file" name="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.png,.gif,.mp4,.zip,.apk,.stl,.xcf" class="mt-1 block w-full">
-						</div>
-					</div>
-					<div>
-						<label for="images" class="block text-sm font-medium text-gray-700">{{ i18n.t('SELL_UPLOAD_IMAGES', lang) }}</label>
-						<input type="file" id="images" name="images[]" multiple accept="image/*" class="mt-1 block w-full">
-					</div>
-					<button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">{{ i18n.t('PRODUCT_ADD', lang) }}</button>
-				</form>
-			</div>
+        <div id="products" class="tab-content active">
+            <div class="white-transparent-bg p-4 rounded shadow-md">
+                <h3>{{ i18n.t('PRODUCT_ADD', lang) }}</h3>
+                <form action="/dashboard/add_product" method="POST" enctype="multipart/form-data" class="row g-3">
+                    <div class="col-md-6">
+                        <label for="type" class="form-label">{{ i18n.t('TYPE', lang) }}</label>
+                        <select id="type" name="type" required class="form-select">
+                            <option value="shipped">{{ i18n.t('PRODUCT_TYPE_SHIPPED', lang) }}</option>
+                            <option value="download">{{ i18n.t('PRODUCT_TYPE_DOWNLOAD', lang) }}</option>
+                            <option value="membership">{{ i18n.t('PRODUCT_TYPE_MEMBERSHIP', lang) }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="name" class="form-label">{{ i18n.t('NAME', lang) }}</label>
+                        <input type="text" id="name" name="name" required class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label for="description" class="form-label">{{ i18n.t('DESCRIPTION', lang) }}</label>
+                        <textarea id="description" name="description" required class="form-control"></textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="price" class="form-label">{{ i18n.t('PRICE', lang) }} (TL)</label>
+                        <div class="input-group">
+                            <input type="number" id="price" name="price" step="0.01" required class="form-control">
+                            <span class="input-group-text">TL</span>
+                        </div>
+                    </div>
+                    <div id="shipped-fields" class="col-md-4" style="display: none;">
+                        <label for="quantity" class="form-label">{{ i18n.t('QUANTITY', lang) }}</label>
+                        <input type="number" id="quantity" name="quantity" class="form-control">
+                    </div>
+                    <div id="shipped-fields" class="col-md-4" style="display: none;">
+                        <label for="tax_rates" class="form-label">{{ i18n.t('SELL_ENTER_TAX_RATES', lang) }}</label>
+                        <input type="text" id="tax_rates" name="tax_rates" class="form-control">
+                    </div>
+                    <div id="shipped-fields" class="col-md-4" style="display: none;">
+                        <label for="shipping_fee" class="form-label">{{ i18n.t('SELL_ENTER_SHIPPING_FEE', lang) }}</label>
+                        <input type="number" id="shipping_fee" name="shipping_fee" step="0.01" class="form-control">
+                    </div>
+                    <div id="download-fields" class="col-md-4" style="display: none;">
+                        <label for="download_link" class="form-label">{{ i18n.t('PRODUCT_DOWNLOAD_LINK', lang) }}</label>
+                        <input type="url" id="download_link" name="download_link" class="form-control">
+                    </div>
+                    <div id="membership-fields" class="col-md-4" style="display: none;">
+                        <label for="membership_duration" class="form-label">{{ i18n.t('PRODUCT_MEMBERSHIP_DURATION', lang) }}</label>
+                        <input type="text" id="membership_duration" name="membership_duration" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label for="image" class="form-label">{{ i18n.t('IMAGE', lang) }}</label>
+                        <input type="file" id="image" name="image" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">{{ i18n.t('PRODUCT_ADD', lang) }}</button>
+                    </div>
+                </form>
+            </div>
 
-			<!-- Product List -->
-			<div class="bg-white p-6 rounded-lg shadow-md">
-				<h2 class="text-2xl font-semibold mb-4">{{ i18n.t('PRODUCTS_TITLE', lang) }}</h2>
-				{% if products %}
-					<table class="w-full table-auto">
-						<thead>
-							<tr class="bg-gray-200">
-								<th class="px-4 py-2">{{ i18n.t('NAME', lang) }}</th>
-								<th class="px-4 py-2">{{ i18n.t('TYPE', lang) }}</th>
-								<th class="px-4 py-2">{{ i18n.t('PRICE', lang) }} (TL)</th>
-								<th class="px-4 py-2">{{ i18n.t('PRODUCT_TOP_SALE', lang) }}</th>
-								<th class="px-4 py-2">{{ i18n.t('ACTIONS', lang) }}</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for product in products %}
-								<tr>
-									<td class="border px-4 py-2">{{ product.name }}{% if product.features.is_top_sale %} 🔥{% endif %}</td>
-									<td class="border px-4 py-2">{{ i18n.t('PRODUCT_TYPE_' + product.type.upper()) }}</td>
-									<td class="border px-4 py-2">{{ product.price }}</td>
-									<td class="border px-4 py-2">{{ i18n.t('YES') if product.features.is_top_sale else i18n.t('NO', lang) }}</td>
-									<td class="border px-4 py-2">
-										<a href="/dashboard/edit_product/{{ product.id }}" class="text-blue-600 hover:underline">{{ i18n.t('PRODUCT_EDIT', lang) }}</a>
-										<a href="/dashboard/delete_product/{{ product.id }}" class="text-red-600 hover:underline ml-2" onclick="return confirm('{{ i18n.t('PRODUCT_DELETE_CONFIRM', lang) }}')">{{ i18n.t('PRODUCT_DELETE', lang) }}</a>
-									</td>
-								</tr>
-							{% endfor %}
-						</tbody>
-					</table>
-				{% else %}
-					<p class="text-gray-600">{{ i18n.t('NO_PRODUCTS', lang) }}</p>
-				{% endif %}
-			</div>
-		</div>
+            <div class="white-transparent-bg p-4 rounded shadow-md mt-4">
+                <h3>{{ i18n.t('PRODUCTS_TAB', lang) }}</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>{{ i18n.t('NAME', lang) }}</th>
+                            <th>{{ i18n.t('PRICE', lang) }}</th>
+                            <th>{{ i18n.t('TYPE', lang) }}</th>
+                            <th>{{ i18n.t('ACTIONS', lang) }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                            <tr>
+                                <td>{{ product.name }}</td>
+                                <td>{{ product.price }} TL</td>
+                                <td>{{ i18n.t('PRODUCT_TYPE_' + product.type.upper(), lang) }}</td>
+                                <td>
+                                    <a href="/dashboard/edit_product/{{ product.id }}" class="btn btn-sm btn-primary">{{ i18n.t('EDIT', lang) }}</a>
+                                    <form action="/dashboard/delete_product/{{ product.id }}" method="POST" style="display: inline-block;">
+                                        <button type="submit" class="btn btn-sm btn-danger">{{ i18n.t('DELETE', lang) }}</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-		<!-- Orders Tab -->
-		<div id="orders" class="tab-content hidden mt-6">
-			<div class="bg-white p-6 rounded-lg shadow-md">
-				<h2 class="text-2xl font-semibold mb-4">{{ i18n.t('ORDERS_TITLE', lang) }}</h2>
-				{% if orders %}
-					<table class="w-full table-auto">
-						<thead>
-							<tr class="bg-gray-200">
-								<th class="px-4 py-2">{{ i18n.t('ORDER_ID', lang) }}</th>
-								<th class="px-4 py-2">{{ i18n.t('PRODUCT_NAME', lang) }}</th>
-								<th class="px-4 py-2">{{ i18n.t('QUANTITY', lang) }}</th>
-								<th class="px-4 py-2">{{ i18n.t('TOTAL_PRICE', lang) }} (TL)</th>
-								<th class="px-4 py-2">{{ i18n.t('STATUS', lang) }}</th>
-								<th class="px-4 py-2">{{ i18n.t('ACTIONS', lang) }}</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for order in orders %}
-								<tr>
-									<td class="border px-4 py-2">{{ order.id }}</td>
-									<td class="border px-4 py-2">{{ order.product_name }}</td>
-									<td class="border px-4 py-2">{{ order.quantity }}</td>
-									<td class="border px-4 py-2">{{ order.total_price }}</td>
-									<td class="border px-4 py-2">{{ i18n.t('ORDER_STATUS_' + order.status.upper()) }}</td>
-									<td class="border px-4 py-2">
-										<a href="/dashboard/order/{{ order.id }}" class="text-blue-600 hover:underline">{{ i18n.t('ORDER_DETAILS', lang) }}</a>
-										{% if order.status in ['pending', 'pending_payment'] %}
-											<a href="/dashboard/cancel_order/{{ order.id }}" class="text-red-600 hover:underline ml-2" onclick="return confirm('{{ i18n.t('ORDER_CANCEL_CONFIRM', lang) }}')">{{ i18n.t('CANCEL', lang) }}</a>
-										{% endif %}
-									</td>
-								</tr>
-							{% endfor %}
-						</tbody>
-					</table>
-				{% else %}
-					<p class="text-gray-600">{{ i18n.t('NO_ORDERS', lang) }}</p>
-				{% endif %}
-			</div>
-		</div>
+        <div id="orders" class="tab-content">
+            <div class="white-transparent-bg p-4 rounded shadow-md">
+                <h3>{{ i18n.t('ORDERS_TAB', lang) }}</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>{{ i18n.t('ORDER_NUMBER', lang) }}</th>
+                            <th>{{ i18n.t('CUSTOMER', lang) }}</th>
+                            <th>{{ i18n.t('AMOUNT', lang) }}</th>
+                            <th>{{ i18n.t('STATUS', lang) }}</th>
+                            <th>{{ i18n.t('ACTIONS', lang) }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td>{{ order.id }}</td>
+                                <td>{{ order.customer_name }}</td>
+                                <td>{{ order.amount }} TL</td>
+                                <td>{{ i18n.t('ORDER_STATUS_' + order.status.upper(), lang) }}</td>
+                                <td>
+                                    <a href="/dashboard/view_order/{{ order.id }}" class="btn btn-sm btn-info">{{ i18n.t('VIEW', lang) }}</a>
+                                    {% if order.status == 'pending_approval' %}
+                                        <form action="/dashboard/approve_order/{{ order.id }}" method="POST" style="display: inline-block;">
+                                            <button type="submit" class="btn btn-sm btn-success">{{ i18n.t('APPROVE', lang) }}</button>
+                                        </form>
+                                        <form action="/dashboard/reject_order/{{ order.id }}" method="POST" style="display: inline-block;">
+                                            <button type="submit" class="btn btn-sm btn-warning">{{ i18n.t('REJECT', lang) }}</button>
+                                        </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-		<!-- Configuration Tab -->
-		<div id="configuration" class="tab-content hidden mt-6">
-			<div class="bg-white p-6 rounded-lg shadow-md">
-				<h2 class="text-2xl font-semibold mb-4">{{ i18n.t('CONFIGURATION_TITLE', lang) }}</h2>
-				<form action="/dashboard/update_config" method="POST" class="space-y-4">
-					<div>
-						<label for="email" class="block text-sm font-medium text-gray-700">{{ i18n.t('CONFIGURATION_PAPARA_EMAIL', lang) }}</label>
-						<input type="email" id="email" name="email" value="{{ user.email }}" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-					</div>
-					<div>
-						<label for="email_password" class="block text-sm font-medium text-gray-700">{{ i18n.t('CONFIGURATION_EMAIL_PASSWORD', lang) }}</label>
-						<input type="password" id="email_password" name="email_password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-					</div>
-					<div>
-						<label for="phone" class="block text-sm font-medium text-gray-700">{{ i18n.t('CONFIGURATION_PHONE', lang) }}</label>
-						<input type="tel" id="phone" name="phone" value="{{ user.phone }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-					</div>
-					<div>
-						<label for="main_group" class="block text-sm font-medium text-gray-700">{{ i18n.t('CONFIGURATION_MAIN_GROUP', lang) }}</label>
-						<input type="number" id="main_group" name="main_group" value="{{ user.main_group }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-					</div>
-					<button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">{{ i18n.t('CONFIGURATION_SAVE', lang) }}</button>
-				</form>
-			</div>
-		</div>
-	</div>
+        <div id="configuration" class="tab-content">
+            <div class="white-transparent-bg p-4 rounded shadow-md">
+                <h3>{{ i18n.t('DASHBOARD_CONFIGURATION_TAB', lang) }}</h3>
+                <p>{{ i18n.t('DASHBOARD_CONFIGURATION_DESCRIPTION', lang) }}</p>
+                </div>
+        </div>
+    </div>
 
-	<script>
-		document.querySelectorAll('.tab-link').forEach(link => {
-			link.addEventListener('click', (e) => {
-				e.preventDefault();
-				const target = e.target.getAttribute('href').substring(1);
-				document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
-				document.getElementById(target).classList.remove('hidden');
-				document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('border-indigo-500', 'text-indigo-600'));
-				e.target.classList.add('border-indigo-500', 'text-indigo-600');
-			});
-		});
-		document.getElementById('type').addEventListener('change', (e) => {
-			document.getElementById('shipped-fields').classList.add('hidden');
-			document.getElementById('membership-fields').classList.add('hidden');
-			document.getElementById('download-fields').classList.add('hidden');
-			if (e.target.value === 'shipped') {
-				document.getElementById('shipped-fields').classList.remove('hidden');
-			} else if (e.target.value === 'membership') {
-				document.getElementById('membership-fields').classList.remove('hidden');
-			} else if (e.target.value === 'download') {
-				document.getElementById('download-fields').classList.remove('hidden');
-			}
-		});
-		document.querySelector('.tab-link').click(); // Open first tab by default
-	</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ffffff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    },
+                    "image": {
+                        "src": "img/github.svg",
+                        "width": 100,
+                        "height": 100
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 140,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        document.getElementById('type').addEventListener('change', (e) => {
+            document.getElementById('shipped-fields').style.display = 'none';
+            document.getElementById('membership-fields').style.display = 'none';
+            document.getElementById('download-fields').style.display = 'none';
+            if (e.target.value === 'shipped') {
+                document.getElementById('shipped-fields').style.display = 'flex';
+            } else if (e.target.value === 'membership') {
+                document.getElementById('membership-fields').style.display = 'flex';
+            } else if (e.target.value === 'download') {
+                document.getElementById('download-fields').style.display = 'flex';
+            }
+        });
+    </script>
 </body>
 </html>

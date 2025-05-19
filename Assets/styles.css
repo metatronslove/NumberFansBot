@@ -8,6 +8,14 @@ body {
 	overflow-x: hidden;
 }
 
+input#name {
+	min-width: 100%;
+}
+
+.white-transparent-bg {
+	background-color: rgba(200,200,200, .4);
+}
+
 center img {
   opacity: 0.5;
 }
