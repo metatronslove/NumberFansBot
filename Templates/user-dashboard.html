@@ -3,20 +3,20 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>{{ t('USER_DASHBOARD_TITLE') }}</title>
+	<title>{{ i18n.t('	USER_DASHBOARD_TITLE') }}</title>
 	<script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 font-sans">
 	<div class="container mx-auto p-6">
-		<h1 class="text-3xl font-bold mb-6">{{ t('USER_DASHBOARD_TITLE') }}</h1>
+		<h1 class="text-3xl font-bold mb-6">{{ i18n.t('	USER_DASHBOARD_TITLE') }}</h1>
 
 		<!-- Tabs -->
 		<div class="border-b border-gray-200">
 			<nav class="-mb-px flex space-x-8" aria-label="Tabs">
-				<a href="#products" class="tab-link border-b-2 border-transparent px-1 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">{{ t('PRODUCTS_TAB') }}</a>
-				<a href="#orders" class="tab-link border-b-2 border-transparent px-1 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">{{ t('ORDERS_TAB') }}</a>
-				<a href="#statistics" class="tab-link border-b-2 border-transparent px-1 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">{{ t('DASHBOARD_STATISTICS_TAB') }}</a>
-				<a href="#configuration" class="tab-link border-b-2 border-transparent px-1 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">{{ t('DASHBOARD_CONFIGURATION_TAB') }}</a>
+				<a href="#products" class="tab-link border-b-2 border-transparent px-1 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">{{ i18n.t('	PRODUCTS_TAB') }}</a>
+				<a href="#orders" class="tab-link border-b-2 border-transparent px-1 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">{{ i18n.t('	ORDERS_TAB') }}</a>
+				<a href="#statistics" class="tab-link border-b-2 border-transparent px-1 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">{{ i18n.t('	DASHBOARD_STATISTICS_TAB') }}</a>
+				<a href="#configuration" class="tab-link border-b-2 border-transparent px-1 py-4 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">{{ i18n.t('	DASHBOARD_CONFIGURATION_TAB') }}</a>
 			</nav>
 		</div>
 
@@ -24,49 +24,49 @@
 		<div id="products" class="tab-content hidden mt-6">
 			<!-- Add Product Form -->
 			<div class="bg-white p-6 rounded-lg shadow-md mb-6">
-				<h2 class="text-2xl font-semibold mb-4">{{ t('PRODUCT_ADD') }}</h2>
+				<h2 class="text-2xl font-semibold mb-4">{{ i18n.t('	PRODUCT_ADD') }}</h2>
 				<form action="/dashboard/add_product" method="POST" enctype="multipart/form-data" class="space-y-4">
 					<div>
-						<label for="type" class="block text-sm font-medium text-gray-700">{{ t('TYPE') }}</label>
+						<label for="type" class="block text-sm font-medium text-gray-700">{{ i18n.t('	TYPE') }}</label>
 						<select id="type" name="type" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-							<option value="shipped">{{ t('PRODUCT_TYPE_SHIPPED') }}</option>
-							<option value="download">{{ t('PRODUCT_TYPE_DOWNLOAD') }}</option>
-							<option value="membership">{{ t('PRODUCT_TYPE_MEMBERSHIP') }}</option>
+							<option value="shipped">{{ i18n.t('	PRODUCT_TYPE_SHIPPED') }}</option>
+							<option value="download">{{ i18n.t('	PRODUCT_TYPE_DOWNLOAD') }}</option>
+							<option value="membership">{{ i18n.t('	PRODUCT_TYPE_MEMBERSHIP') }}</option>
 						</select>
 					</div>
 					<div>
-						<label for="name" class="block text-sm font-medium text-gray-700">{{ t('NAME') }}</label>
+						<label for="name" class="block text-sm font-medium text-gray-700">{{ i18n.t('	NAME') }}</label>
 						<input type="text" id="name" name="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
 					</div>
 					<div>
-						<label for="description" class="block text-sm font-medium text-gray-700">{{ t('DESCRIPTION') }}</label>
+						<label for="description" class="block text-sm font-medium text-gray-700">{{ i18n.t('	DESCRIPTION') }}</label>
 						<textarea id="description" name="description" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></textarea>
 					</div>
 					<div>
-						<label for="price" class="block text-sm font-medium text-gray-700">{{ t('PRICE') }} (TL)</label>
+						<label for="price" class="block text-sm font-medium text-gray-700">{{ i18n.t('	PRICE') }} (TL)</label>
 						<input type="number" id="price" name="price" step="0.01" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
 					</div>
 					<div id="shipped-fields" class="hidden">
 						<div>
-							<label for="quantity" class="block text-sm font-medium text-gray-700">{{ t('QUANTITY') }}</label>
+							<label for="quantity" class="block text-sm font-medium text-gray-700">{{ i18n.t('	QUANTITY') }}</label>
 							<input type="number" id="quantity" name="quantity" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
 						</div>
 						<div>
-							<label for="tax_rates" class="block text-sm font-medium text-gray-700">{{ t('SELL_ENTER_TAX_RATES') }}</label>
+							<label for="tax_rates" class="block text-sm font-medium text-gray-700">{{ i18n.t('	SELL_ENTER_TAX_RATES') }}</label>
 							<input type="text" id="tax_rates" name="tax_rates" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
 						</div>
 						<div>
-							<label for="shipping_fee" class="block text-sm font-medium text-gray-700">{{ t('SELL_ENTER_SHIPPING_FEE') }} (TL)</label>
+							<label for="shipping_fee" class="block text-sm font-medium text-gray-700">{{ i18n.t('	SELL_ENTER_SHIPPING_FEE') }} (TL)</label>
 							<input type="number" id="shipping_fee" name="shipping_fee" step="0.01" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
 						</div>
 					</div>
 					<div id="membership-fields" class="hidden">
 						<div>
-							<label for="group_id" class="block text-sm font-medium text-gray-700">{{ t('GROUP_ID') }}</label>
+							<label for="group_id" class="block text-sm font-medium text-gray-700">{{ i18n.t('	GROUP_ID') }}</label>
 							<input type="number" id="group_id" name="group_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
 						</div>
 						<div>
-							<label for="duration" class="block text-sm font-medium text-gray-700">{{ t('SELL_ENTER_MEMBERSHIP_DETAILS') }}</label>
+							<label for="duration" class="block text-sm font-medium text-gray-700">{{ i18n.t('	SELL_ENTER_MEMBERSHIP_DETAILS') }}</label>
 							<select id="duration" name="duration" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
 								<option value="lifetime">Lifetime</option>
 								<option value="yearly">Yearly</option>
@@ -77,49 +77,49 @@
 					</div>
 					<div id="download-fields" class="hidden">
 						<div>
-							<label for="file" class="block text-sm font-medium text-gray-700">{{ t('SELL_UPLOAD_FILE') }}</label>
+							<label for="file" class="block text-sm font-medium text-gray-700">{{ i18n.t('	SELL_UPLOAD_FILE') }}</label>
 							<input type="file" id="file" name="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.png,.gif,.mp4,.zip,.apk,.stl,.xcf" class="mt-1 block w-full">
 						</div>
 					</div>
 					<div>
-						<label for="images" class="block text-sm font-medium text-gray-700">{{ t('SELL_UPLOAD_IMAGES') }}</label>
+						<label for="images" class="block text-sm font-medium text-gray-700">{{ i18n.t('	SELL_UPLOAD_IMAGES') }}</label>
 						<input type="file" id="images" name="images[]" multiple accept="image/*" class="mt-1 block w-full">
 					</div>
-					<button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">{{ t('PRODUCT_ADD') }}</button>
+					<button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">{{ i18n.t('	PRODUCT_ADD') }}</button>
 				</form>
 			</div>
 
 			<!-- Product List -->
 			<div class="bg-white p-6 rounded-lg shadow-md">
-				<h2 class="text-2xl font-semibold mb-4">{{ t('PRODUCTS_TITLE') }}</h2>
+				<h2 class="text-2xl font-semibold mb-4">{{ i18n.t('	PRODUCTS_TITLE') }}</h2>
 				{% if products %}
 					<table class="w-full table-auto">
 						<thead>
 							<tr class="bg-gray-200">
-								<th class="px-4 py-2">{{ t('NAME') }}</th>
-								<th class="px-4 py-2">{{ t('TYPE') }}</th>
-								<th class="px-4 py-2">{{ t('PRICE') }} (TL)</th>
-								<th class="px-4 py-2">{{ t('PRODUCT_TOP_SALE') }}</th>
-								<th class="px-4 py-2">{{ t('ACTIONS') }}</th>
+								<th class="px-4 py-2">{{ i18n.t('	NAME') }}</th>
+								<th class="px-4 py-2">{{ i18n.t('	TYPE') }}</th>
+								<th class="px-4 py-2">{{ i18n.t('	PRICE') }} (TL)</th>
+								<th class="px-4 py-2">{{ i18n.t('	PRODUCT_TOP_SALE') }}</th>
+								<th class="px-4 py-2">{{ i18n.t('	ACTIONS') }}</th>
 							</tr>
 						</thead>
 						<tbody>
 							{% for product in products %}
 								<tr>
 									<td class="border px-4 py-2">{{ product.name }}{% if product.features.is_top_sale %} 🔥{% endif %}</td>
-									<td class="border px-4 py-2">{{ t('PRODUCT_TYPE_' + product.type.upper()) }}</td>
+									<td class="border px-4 py-2">{{ i18n.t('	PRODUCT_TYPE_' + product.type.upper()) }}</td>
 									<td class="border px-4 py-2">{{ product.price }}</td>
-									<td class="border px-4 py-2">{{ t('YES') if product.features.is_top_sale else t('NO') }}</td>
+									<td class="border px-4 py-2">{{ i18n.t('	YES') if product.features.is_top_sale else i18n.t('	NO') }}</td>
 									<td class="border px-4 py-2">
-										<a href="/dashboard/edit_product/{{ product.id }}" class="text-blue-600 hover:underline">{{ t('PRODUCT_EDIT') }}</a>
-										<a href="/dashboard/delete_product/{{ product.id }}" class="text-red-600 hover:underline ml-2" onclick="return confirm('{{ t('PRODUCT_DELETE_CONFIRM') }}')">{{ t('PRODUCT_DELETE') }}</a>
+										<a href="/dashboard/edit_product/{{ product.id }}" class="text-blue-600 hover:underline">{{ i18n.t('	PRODUCT_EDIT') }}</a>
+										<a href="/dashboard/delete_product/{{ product.id }}" class="text-red-600 hover:underline ml-2" onclick="return confirm('{{ i18n.t('	PRODUCT_DELETE_CONFIRM') }}')">{{ i18n.t('	PRODUCT_DELETE') }}</a>
 									</td>
 								</tr>
 							{% endfor %}
 						</tbody>
 					</table>
 				{% else %}
-					<p class="text-gray-600">{{ t('NO_PRODUCTS') }}</p>
+					<p class="text-gray-600">{{ i18n.t('	NO_PRODUCTS') }}</p>
 				{% endif %}
 			</div>
 		</div>
@@ -127,17 +127,17 @@
 		<!-- Orders Tab -->
 		<div id="orders" class="tab-content hidden mt-6">
 			<div class="bg-white p-6 rounded-lg shadow-md">
-				<h2 class="text-2xl font-semibold mb-4">{{ t('ORDERS_TITLE') }}</h2>
+				<h2 class="text-2xl font-semibold mb-4">{{ i18n.t('	ORDERS_TITLE') }}</h2>
 				{% if orders %}
 					<table class="w-full table-auto">
 						<thead>
 							<tr class="bg-gray-200">
-								<th class="px-4 py-2">{{ t('ORDER_ID') }}</th>
-								<th class="px-4 py-2">{{ t('PRODUCT_NAME') }}</th>
-								<th class="px-4 py-2">{{ t('QUANTITY') }}</th>
-								<th class="px-4 py-2">{{ t('TOTAL_PRICE') }} (TL)</th>
-								<th class="px-4 py-2">{{ t('STATUS') }}</th>
-								<th class="px-4 py-2">{{ t('ACTIONS') }}</th>
+								<th class="px-4 py-2">{{ i18n.t('	ORDER_ID') }}</th>
+								<th class="px-4 py-2">{{ i18n.t('	PRODUCT_NAME') }}</th>
+								<th class="px-4 py-2">{{ i18n.t('	QUANTITY') }}</th>
+								<th class="px-4 py-2">{{ i18n.t('	TOTAL_PRICE') }} (TL)</th>
+								<th class="px-4 py-2">{{ i18n.t('	STATUS') }}</th>
+								<th class="px-4 py-2">{{ i18n.t('	ACTIONS') }}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -147,11 +147,11 @@
 									<td class="border px-4 py-2">{{ order.product_name }}</td>
 									<td class="border px-4 py-2">{{ order.quantity }}</td>
 									<td class="border px-4 py-2">{{ order.total_price }}</td>
-									<td class="border px-4 py-2">{{ t('ORDER_STATUS_' + order.status.upper()) }}</td>
+									<td class="border px-4 py-2">{{ i18n.t('	ORDER_STATUS_' + order.status.upper()) }}</td>
 									<td class="border px-4 py-2">
-										<a href="/dashboard/order/{{ order.id }}" class="text-blue-600 hover:underline">{{ t('ORDER_DETAILS') }}</a>
+										<a href="/dashboard/order/{{ order.id }}" class="text-blue-600 hover:underline">{{ i18n.t('	ORDER_DETAILS') }}</a>
 										{% if order.status in ['pending', 'pending_payment'] %}
-											<a href="/dashboard/cancel_order/{{ order.id }}" class="text-red-600 hover:underline ml-2" onclick="return confirm('{{ t('ORDER_CANCEL_CONFIRM') }}')">{{ t('CANCEL') }}</a>
+											<a href="/dashboard/cancel_order/{{ order.id }}" class="text-red-600 hover:underline ml-2" onclick="return confirm('{{ i18n.t('	ORDER_CANCEL_CONFIRM') }}')">{{ i18n.t('	CANCEL') }}</a>
 										{% endif %}
 									</td>
 								</tr>
@@ -159,7 +159,7 @@
 						</tbody>
 					</table>
 				{% else %}
-					<p class="text-gray-600">{{ t('NO_ORDERS') }}</p>
+					<p class="text-gray-600">{{ i18n.t('	NO_ORDERS') }}</p>
 				{% endif %}
 			</div>
 		</div>
@@ -167,18 +167,18 @@
 		<!-- Statistics Tab -->
 		<div id="statistics" class="tab-content hidden mt-6">
 			<div class="bg-white p-6 rounded-lg shadow-md">
-				<h2 class="text-2xl font-semibold mb-4">{{ t('STATISTICS_TITLE') }}</h2>
+				<h2 class="text-2xl font-semibold mb-4">{{ i18n.t('	STATISTICS_TITLE') }}</h2>
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 					<div class="bg-gray-100 p-4 rounded-lg">
-						<h3 class="text-lg font-medium">{{ t('STATISTICS_TOTAL_REVENUE') }}</h3>
+						<h3 class="text-lg font-medium">{{ i18n.t('	STATISTICS_TOTAL_REVENUE') }}</h3>
 						<p class="text-2xl">{{ stats.total_revenue }} TL</p>
 					</div>
 					<div class="bg-gray-100 p-4 rounded-lg">
-						<h3 class="text-lg font-medium">{{ t('STATISTICS_TOTAL_REFUNDS') }}</h3>
+						<h3 class="text-lg font-medium">{{ i18n.t('	STATISTICS_TOTAL_REFUNDS') }}</h3>
 						<p class="text-2xl">{{ stats.total_refunds }} TL</p>
 					</div>
 					<div class="bg-gray-100 p-4 rounded-lg">
-						<h3 class="text-lg font-medium">{{ t('STATISTICS_TOTAL_TAXES') }}</h3>
+						<h3 class="text-lg font-medium">{{ i18n.t('	STATISTICS_TOTAL_TAXES') }}</h3>
 						<p class="text-2xl">{{ stats.total_taxes }} TL</p>
 					</div>
 				</div>
@@ -188,25 +188,25 @@
 		<!-- Configuration Tab -->
 		<div id="configuration" class="tab-content hidden mt-6">
 			<div class="bg-white p-6 rounded-lg shadow-md">
-				<h2 class="text-2xl font-semibold mb-4">{{ t('CONFIGURATION_TITLE') }}</h2>
+				<h2 class="text-2xl font-semibold mb-4">{{ i18n.t('	CONFIGURATION_TITLE') }}</h2>
 				<form action="/dashboard/update_config" method="POST" class="space-y-4">
 					<div>
-						<label for="email" class="block text-sm font-medium text-gray-700">{{ t('CONFIGURATION_PAPARA_EMAIL') }}</label>
+						<label for="email" class="block text-sm font-medium text-gray-700">{{ i18n.t('	CONFIGURATION_PAPARA_EMAIL') }}</label>
 						<input type="email" id="email" name="email" value="{{ user.email }}" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
 					</div>
 					<div>
-						<label for="email_password" class="block text-sm font-medium text-gray-700">{{ t('CONFIGURATION_EMAIL_PASSWORD') }}</label>
+						<label for="email_password" class="block text-sm font-medium text-gray-700">{{ i18n.t('	CONFIGURATION_EMAIL_PASSWORD') }}</label>
 						<input type="password" id="email_password" name="email_password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
 					</div>
 					<div>
-						<label for="phone" class="block text-sm font-medium text-gray-700">{{ t('CONFIGURATION_PHONE') }}</label>
+						<label for="phone" class="block text-sm font-medium text-gray-700">{{ i18n.t('	CONFIGURATION_PHONE') }}</label>
 						<input type="tel" id="phone" name="phone" value="{{ user.phone }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
 					</div>
 					<div>
-						<label for="main_group" class="block text-sm font-medium text-gray-700">{{ t('CONFIGURATION_MAIN_GROUP') }}</label>
+						<label for="main_group" class="block text-sm font-medium text-gray-700">{{ i18n.t('	CONFIGURATION_MAIN_GROUP') }}</label>
 						<input type="number" id="main_group" name="main_group" value="{{ user.main_group }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
 					</div>
-					<button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">{{ t('CONFIGURATION_SAVE') }}</button>
+					<button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">{{ i18n.t('	CONFIGURATION_SAVE') }}</button>
 				</form>
 			</div>
 		</div>
