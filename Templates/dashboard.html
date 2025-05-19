@@ -42,6 +42,7 @@
 			<div class="tab{% if not command_usage %} active{% endif %}" data-tab="config">{{ i18n.t('CONFIG_TAB', lang) }}</div>
 			<div class="tab" data-tab="users">{{ i18n.t('USERS_TAB', lang) }}</div>
 			<div class="tab" data-tab="groups">{{ i18n.t('GROUPS_TAB', lang) }}</div>
+			<div class="tab" data-tab="products">{{ i18n.t('PRODUCTS_TAB', lang) }}</div>
 			{% if github_info.url %}
 				<div class="tab" data-tab="github">{{ i18n.t('GITHUB_TRAFFIC_TAB', lang) }}</div>
 			{% endif %}
@@ -283,6 +284,78 @@
 					{% endfor %}
 					{% if current_page < groups_total_pages %}
 						<a href="#" hx-get="/{{ lang }}/groups?page={{ current_page + 1 }}">{{ i18n.t('NEXT_PAGE', lang) }}</a>
+					{% endif %}
+				{% endif %}
+			</div>
+		</div>
+		<!-- Products Tab -->
+		<div id="products" class="tab-content" hx-target="this" hx-swap="innerHTML">
+			<h3>{{ i18n.t('PRODUCTS_TAB', lang) }}</h3>
+			<div class="mb-3">
+				<label for="product-filter" class="form-label">{{ i18n.t('FILTER_BY_USER', lang) }}</label>
+				<select class="form-select" id="product-filter" hx-get="/{{ lang }}/products" hx-trigger="change">
+					<option value="">{{ i18n.t('ALL_USERS', lang) }}</option>
+					{% for user in users %}
+						<option value="{{ user.user_id }}">{{ user.username }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<table class="table table-dark">
+				<thead>
+					<tr>
+						<th>{{ i18n.t('PRODUCT_ID', lang) }}</th>
+						<th>{{ i18n.t('NAME', lang) }}</th>
+						<th>{{ i18n.t('PRICE', lang) }}</th>
+						<th>{{ i18n.t('TYPE', lang) }}</th>
+						<th>{{ i18n.t('QUANTITY', lang) }}</th>
+						<th>{{ i18n.t('SELLER', lang) }}</th>
+						<th>{{ i18n.t('ACTIONS', lang) }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% if products %}
+						{% for product in products %}
+							<tr>
+								<td>{{ product.id }}</td>
+								<td>{{ product.name }}</td>
+								<td>{{ product.price }} TL</td>
+								<td>{{ i18n.t('PRODUCT_TYPE_' + product.type.upper(), lang) }}</td>
+								<td>{{ product.quantity if product.quantity is not none else i18n.t('NA', lang) }}</td>
+								<td>
+									{% for user in users %}
+										{% if user.user_id == product.created_by %}
+											{{ user.username }}
+										{% endif %}
+									{% endfor %}
+								</td>
+								<td>
+									<a href="/{{ lang }}/view_product/{{ product.id }}" class="btn btn-sm btn-info">{{ i18n.t('VIEW', lang) }}</a>
+									{% if is_admin or current_user.user_id == product.created_by %}
+										<a href="/{{ lang }}/edit_product/{{ product.id }}" class="btn btn-sm btn-primary">{{ i18n.t('EDIT', lang) }}</a>
+										<form method="post" action="/{{ lang }}/toggle_product/{{ product.id }}" style="display: inline-block;">
+											<button type="submit" class="btn btn-sm btn-warning">
+												{{ i18n.t('DEACTIVATE' if product.active else 'ACTIVATE', lang) }}
+											</button>
+										</form>
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+					{% else %}
+						<tr><td colspan="7">{{ i18n.t('NO_PRODUCTS_FOUND', lang) }}</td></tr>
+					{% endif %}
+				</tbody>
+			</table>
+			<div id="products-pagination">
+				{% if products_total_pages > 1 %}
+					{% if current_page > 1 %}
+						<a href="#" hx-get="/{{ lang }}/products?page={{ current_page - 1 }}">{{ i18n.t('PREVIOUS_PAGE', lang) }}</a>
+					{% endif %}
+					{% for p in range(1, products_total_pages + 1) %}
+						<a href="#" hx-get="/{{ lang }}/products?page={{ p }}" {% if p == current_page %}class="active"{% endif %}>{{ p }}</a>
+					{% endfor %}
+					{% if current_page < products_total_pages %}
+						<a href="#" hx-get="/{{ lang }}/products?page={{ current_page + 1 }}">{{ i18n.t('NEXT_PAGE', lang) }}</a>
 					{% endif %}
 				{% endif %}
 			</div>

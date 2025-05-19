@@ -27,7 +27,7 @@ class PaparaCommand:
 			entry_points=[CommandHandler('papara', self.papara_command)],
 			states={
 				SELECTING_ACTION: [
-					CallbackQueryHandler(self.add_credits, pattern=r'^add_credits$'),
+					CallbackQueryHandler(self.add_balance, pattern=r'^add_balance$'),
 					CallbackQueryHandler(self.check_payment, pattern=r'^check_payment$'),
 					CallbackQueryHandler(self.view_balance, pattern=r'^view_balance$'),
 					CallbackQueryHandler(self.cancel_papara, pattern=r'^cancel$')
@@ -59,9 +59,9 @@ class PaparaCommand:
 
 		self.db.increment_command_usage('papara', user_id, update.effective_chat.id)
 		keyboard = [
-			[InlineKeyboardButton(self.i18n.t('PAYMENT_TYPE_BALANCE', language), callback_data="add_credits")],
+			[InlineKeyboardButton(self.i18n.t('PAYMENT_TYPE_BALANCE', language), callback_data="add_balance")],
 			[InlineKeyboardButton(self.i18n.t('CHECK_STATUS', language), callback_data="check_payment")],
-			[InlineKeyboardButton(self.i18n.t('CREDITS', language), callback_data="view_balance")],
+			[InlineKeyboardButton(self.i18n.t('VIEW_BALANCE', language), callback_data="view_balance")],
 			[InlineKeyboardButton(self.i18n.t('CANCEL_BUTTON', language), callback_data="cancel")]
 		]
 		reply_markup = InlineKeyboardMarkup(keyboard)
@@ -72,7 +72,7 @@ class PaparaCommand:
 		)
 		return SELECTING_ACTION
 
-	async def add_credits(self, update: Update, context: CallbackContext) -> int:
+	async def add_balance(self, update: Update, context: CallbackContext) -> int:
 		query = update.callback_query
 		await query.answer()
 		user_id = update.effective_user.id
@@ -93,7 +93,7 @@ class PaparaCommand:
 				await update.message.reply_text(self.i18n.t('PAPARA_AMOUNT_TOO_HIGH', language))
 				return ENTERING_AMOUNT
 
-			payment_details = self.db.create_payment_request(user_id, amount)
+			payment_details = self.db.create_papara_payment(user_id, amount)
 			if not payment_details:
 				await update.message.reply_text(self.i18n.t('PAPARA_PAYMENT_ERROR', language))
 				return ConversationHandler.END
@@ -160,15 +160,13 @@ class PaparaCommand:
 			await update.message.reply_text(
 				self.i18n.t('PAPARA_PAYMENT_CONFIRMED', language,
 							payment_id=payment['payment_id'],
-							amount=payment['amount'],
-							credits_added=payment['credits_added'])
+							amount=payment['amount'])
 			)
 		elif status == 'verified':
 			await update.message.reply_text(
 				self.i18n.t('PAPARA_PAYMENT_VERIFIED', language,
 							payment_id=payment['payment_id'],
-							amount=payment['amount'],
-							credits_added=payment['credits_added'])
+							amount=payment['amount'])
 			)
 		elif status == 'pending':
 			await update.message.reply_text(
@@ -198,9 +196,9 @@ class PaparaCommand:
 		user_id = update.effective_user.id
 		language = self.db.get_user_language(user_id) or 'en'
 
-		credits = self.db.get_user_credits(user_id)
+		balance = self.db.get_user_balance(user_id)
 		await query.edit_message_text(
-			self.i18n.t('PAPARA_BALANCE', language, credits=credits)
+			self.i18n.t('PAPARA_BALANCE', language, balance=balance)
 		)
 		return ConversationHandler.END
 

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" {{ 'dir="rtl"' if lang in ['ar', 'he'] else '' }}>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{ i18n.t('EDIT_PRODUCT_TITLE', lang) }}</title>
+	<link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+	<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+	<link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+	<link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+	<div class="particles" id="particles-js"></div>
+	<div class="language-switcher">
+		<select onchange="window.location.href='/{{ lang }}/edit_product/{{ product.id }}/' + this.value">
+			{% for code in ['en', 'tr', 'ar', 'he', 'la'] %}
+				<option value="{{ code }}" {{ 'selected' if code == lang else '' }}>{{ i18n.t('LANGUAGE_NAME_' + code.upper(), lang) }}</option>
+			{% endfor %}
+		</select>
+	</div>
+	<div class="logo-container">
+		<div class="logo">NumberFansBot</div>
+		<div class="tagline">{{ i18n.t('TAGLINE', lang) }}</div>
+	</div>
+	<div class="container mt-5">
+		<div class="row">
+			<div class="col-md-8 offset-md-2">
+				<div class="card bg-dark text-light">
+					<div class="card-header">
+						<h2>{{ i18n.t('EDIT_PRODUCT_TITLE', lang) }}</h2>
+					</div>
+					<div class="card-body">
+						{% with messages = get_flashed_messages(with_categories=true) %}
+							{% if messages %}
+								{% for category, message in messages %}
+									<div class="alert {{ 'alert-success' if category == 'success' else 'alert-danger' }}">{{ message }}</div>
+								{% endfor %}
+							{% endif %}
+						{% endwith %}
+						
+						<form method="POST" action="{{ url_for('edit_product', lang=lang, product_id=product.id) }}">
+							<div class="mb-3">
+								<label for="name" class="form-label">{{ i18n.t('PRODUCT_NAME', lang) }}</label>
+								<input type="text" class="form-control" id="name" name="name" value="{{ product.name }}" required>
+							</div>
+							
+							<div class="mb-3">
+								<label for="description" class="form-label">{{ i18n.t('PRODUCT_DESCRIPTION', lang) }}</label>
+								<textarea class="form-control" id="description" name="description" rows="5" required>{{ product.description }}</textarea>
+							</div>
+							
+							<div class="mb-3">
+								<label for="price" class="form-label">{{ i18n.t('PRODUCT_PRICE', lang) }}</label>
+								<div class="input-group">
+									<input type="number" class="form-control" id="price" name="price" value="{{ product.price }}" step="0.01" min="0" required>
+									<span class="input-group-text">TL</span>
+								</div>
+							</div>
+							
+							<div class="mb-3">
+								<label for="type" class="form-label">{{ i18n.t('PRODUCT_TYPE', lang) }}</label>
+								<select class="form-select" id="type" name="type" required>
+									<option value="physical" {{ 'selected' if product.type == 'physical' else '' }}>{{ i18n.t('PRODUCT_TYPE_PHYSICAL', lang) }}</option>
+									<option value="digital" {{ 'selected' if product.type == 'digital' else '' }}>{{ i18n.t('PRODUCT_TYPE_DIGITAL', lang) }}</option>
+									<option value="service" {{ 'selected' if product.type == 'service' else '' }}>{{ i18n.t('PRODUCT_TYPE_SERVICE', lang) }}</option>
+								</select>
+							</div>
+							
+							<div class="mb-3">
+								<label for="quantity" class="form-label">{{ i18n.t('PRODUCT_QUANTITY', lang) }}</label>
+								<input type="number" class="form-control" id="quantity" name="quantity" value="{{ product.quantity if product.quantity is not none else '' }}" min="0">
+								<small class="text-muted">{{ i18n.t('PRODUCT_QUANTITY_HELP', lang) }}</small>
+							</div>
+							
+							<div class="mb-3">
+								<label for="image_url" class="form-label">{{ i18n.t('PRODUCT_IMAGE_URL', lang) }}</label>
+								<input type="url" class="form-control" id="image_url" name="image_url" value="{{ product.image_url if product.image_url else '' }}">
+								<small class="text-muted">{{ i18n.t('PRODUCT_IMAGE_URL_HELP', lang) }}</small>
+							</div>
+							
+							<div class="mb-3 form-check">
+								<input type="checkbox" class="form-check-input" id="active" name="active" {{ 'checked' if product.active else '' }}>
+								<label class="form-check-label" for="active">{{ i18n.t('PRODUCT_ACTIVE', lang) }}</label>
+							</div>
+							
+							<div class="d-flex justify-content-between">
+								<a href="{{ url_for('get_products', lang=lang) }}" class="btn btn-secondary">{{ i18n.t('CANCEL', lang) }}</a>
+								<button type="submit" class="btn btn-primary">{{ i18n.t('SAVE', lang) }}</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+	<script>
+		// Initialize particles.js
+		particlesJS('particles-js', {
+			"particles": {
+				"number": {
+					"value": 80,
+					"density": {
+						"enable": true,
+						"value_area": 800
+					}
+				},
+				"color": {
+					"value": "#ffffff"
+				},
+				"shape": {
+					"type": "circle",
+					"stroke": {
+						"width": 0,
+						"color": "#000000"
+					},
+					"polygon": {
+						"nb_sides": 5
+					},
+					"image": {
+						"src": "img/github.svg",
+						"width": 100,
+						"height": 100
+					}
+				},
+				"opacity": {
+					"value": 0.5,
+					"random": false,
+					"anim": {
+						"enable": false,
+						"speed": 1,
+						"opacity_min": 0.1,
+						"sync": false
+					}
+				},
+				"size": {
+					"value": 3,
+					"random": true,
+					"anim": {
+						"enable": false,
+						"speed": 40,
+						"size_min": 0.1,
+						"sync": false
+					}
+				},
+				"line_linked": {
+					"enable": true,
+					"distance": 150,
+					"color": "#ffffff",
+					"opacity": 0.4,
+					"width": 1
+				},
+				"move": {
+					"enable": true,
+					"speed": 6,
+					"direction": "none",
+					"random": false,
+					"straight": false,
+					"out_mode": "out",
+					"bounce": false,
+					"attract": {
+						"enable": false,
+						"rotateX": 600,
+						"rotateY": 1200
+					}
+				}
+			},
+			"interactivity": {
+				"detect_on": "canvas",
+				"events": {
+					"onhover": {
+						"enable": true,
+						"mode": "grab"
+					},
+					"onclick": {
+						"enable": true,
+						"mode": "push"
+					},
+					"resize": true
+				},
+				"modes": {
+					"grab": {
+						"distance": 140,
+						"line_linked": {
+							"opacity": 1
+						}
+					},
+					"bubble": {
+						"distance": 400,
+						"size": 40,
+						"duration": 2,
+						"opacity": 8,
+						"speed": 3
+					},
+					"repulse": {
+						"distance": 200,
+						"duration": 0.4
+					},
+					"push": {
+						"particles_nb": 4
+					},
+					"remove": {
+						"particles_nb": 2
+					}
+				}
+			},
+			"retina_detect": true
+		});
+	</script>
+</body>
+</html>

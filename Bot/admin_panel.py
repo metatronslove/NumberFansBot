@@ -276,12 +276,15 @@ def index(lang="en"):
 
 	# Check if user is admin and redirect to appropriate dashboard
 	user_id = session.get("user_id")
+	is_admin = False
 	if user_id:
 		query = "SELECT is_admin FROM users WHERE user_id = %s"
 		db.cursor.execute(query, (user_id,))
 		user = db.cursor.fetchone()
-		if user and not user['is_admin']:
-			return redirect(url_for("user_dashboard", lang=lang))
+		if user:
+			is_admin = user['is_admin']
+			if not is_admin:
+				return redirect(url_for("user_dashboard", lang=lang))
 
 	# Handle Users tab pagination and search
 	users_page = int(request.args.get("users_page", 1))
@@ -305,6 +308,27 @@ def index(lang="en"):
 	groups_page = int(request.args.get("groups_page", 1))
 	groups_search = request.args.get("groups_search", "")
 	groups, groups_total_pages = db.get_groups_paginated(groups_page, 50, groups_search)
+
+	# Handle Products tab pagination and search
+	products_page = int(request.args.get("products_page", 1))
+	products_search = request.args.get("products_search", "")
+	filter_user_id = request.args.get("filter_user_id")
+
+	if filter_user_id and filter_user_id.isdigit():
+		filter_user_id = int(filter_user_id)
+	else:
+		filter_user_id = None
+
+	products = db.get_available_products(
+		search_terms=products_search,
+		active_only=False,
+		limit=50,
+		offset=(products_page - 1) * 50,
+		user_id=filter_user_id
+	)
+
+	products_count = db.get_products_count(user_id=filter_user_id)
+	products_total_pages = (products_count + 50 - 1) // 50
 
 	# Validate and parse github_pages_url
 	github_info = {
@@ -353,8 +377,12 @@ def index(lang="en"):
 		current_page=users_page,
 		groups=groups,
 		groups_total_pages=groups_total_pages,
+		products=products,
+		products_total_pages=products_total_pages,
 		command_usage=command_usage,
-		github_info=github_info
+		github_info=github_info,
+		is_admin=is_admin,
+		current_user={"user_id": user_id}
 	)
 
 @flask_app.route("/<lang>/login", methods=["GET", "POST"])
@@ -496,6 +524,39 @@ def view_file(lang="en"):
 	except Exception as e:
 		logger.error(f"Error reading file: {str(e)}")
 		return jsonify({"error": f"Failed to read file: {str(e)}"}), 500
+
+@flask_app.route("/<lang>/view_product/<int:product_id>")
+def view_product(lang="en", product_id=None):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+
+	i18n = I18n()
+	db = Database()
+
+	product = db.get_product_by_id(product_id)
+	if not product:
+		flash(i18n.t("PRODUCT_NOT_FOUND", lang), "error")
+		return redirect(url_for("index", lang=lang))
+
+	# Get seller information
+	seller = None
+	if product['created_by']:
+		query = "SELECT username FROM users WHERE user_id = %s"
+		db.cursor.execute(query, (product['created_by'],))
+		seller_data = db.cursor.fetchone()
+		if seller_data:
+			seller = seller_data['username']
+
+	return render_template(
+		"view_product.html",
+		lang=lang,
+		i18n=i18n,
+		product=product,
+		seller=seller
+	)
 
 # Dosya Düzenleme
 @flask_app.route("/<lang>/files/edit", methods=["POST"])
@@ -1865,7 +1926,7 @@ def edit_product(lang="en", product_id=None):
 		product=product
 	)
 
-@flask_app.route("/<lang>/toggle_product/<int:product_id>")
+@flask_app.route("/<lang>/toggle_product/<int:product_id>", methods=["POST"])
 def toggle_product(lang="en", product_id=None):
 	if "username" not in session:
 		return redirect(url_for("login", lang=lang))
@@ -1876,28 +1937,31 @@ def toggle_product(lang="en", product_id=None):
 	i18n = I18n()
 	db = Database()
 
+	# Check if user is admin or product owner
 	user_id = session.get("user_id")
-	if not user_id:
-		return redirect(url_for("login", lang=lang))
+	query = "SELECT is_admin FROM users WHERE user_id = %s"
+	db.cursor.execute(query, (user_id,))
+	user = db.cursor.fetchone()
+	is_admin = user and user['is_admin']
 
-	product = db.get_product_by_id(product_id, user_id)
-
+	product = db.get_product_by_id(product_id)
 	if not product:
 		flash(i18n.t("PRODUCT_NOT_FOUND", lang), "error")
-		return redirect(url_for("user_dashboard", lang=lang))
+		return redirect(url_for("get_products", lang=lang))
 
-	# Toggle product active status
-	success, is_active = db.toggle_product_active(user_id, product_id)
+	# Check if user has permission to toggle
+	if not is_admin and product['created_by'] != user_id:
+		flash(i18n.t("PERMISSION_DENIED", lang), "error")
+		return redirect(url_for("get_products", lang=lang))
 
+	success = db.toggle_product_active(product_id)
 	if success:
-		if is_active:
-			flash(i18n.t("PRODUCT_ACTIVATED", lang), "success")
-		else:
-			flash(i18n.t("PRODUCT_DEACTIVATED", lang), "success")
+		status = "deactivated" if not product['active'] else "activated"
+		flash(i18n.t("PRODUCT_TOGGLED", lang, status=status), "success")
 	else:
-		flash(i18n.t("UPDATE_ERROR", lang), "error")
+		flash(i18n.t("PRODUCT_TOGGLE_ERROR", lang), "error")
 
-	return redirect(url_for("user_dashboard", lang=lang))
+	return redirect(url_for("get_products", lang=lang))
 
 @dashboard.route('/dashboard')
 def user_dashboard():

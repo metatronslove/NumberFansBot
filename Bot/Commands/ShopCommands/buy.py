@@ -213,11 +213,11 @@ class BuyCommand:
 		quantity = context.user_data['selected_quantity']
 		address = context.user_data['selected_address']
 		total_price = float(product['price']) * quantity
-		user_credits = self.db.get_user_credits(user_id)
+		user_balance = self.db.get_user_balance(user_id)
 
-		if user_credits < total_price:
+		if user_balance < total_price:
 			await query.edit_message_text(
-				self.i18n.t('BUY_INSUFFICIENT_CREDITS', language, required=total_price, balance=user_credits)
+				self.i18n.t('BUY_INSUFFICIENT_BALANCE', language, required=total_price, balance=user_balance)
 			)
 			return ConversationHandler.END
 
@@ -233,7 +233,11 @@ class BuyCommand:
 			await query.edit_message_text(self.i18n.t('BUY_ORDER_ERROR', language))
 			return ConversationHandler.END
 
-		self.db.add_credits(user_id, -int(total_price))
+		# Deduct from balance
+		if not self.db.subtract_balance(user_id, total_price):
+			await query.edit_message_text(self.i18n.t('BUY_PAYMENT_ERROR', language))
+			return ConversationHandler.END
+
 		if product['quantity'] is not None:
 			self.db.update_product_quantity(product['id'], product['quantity'] - quantity)
 
