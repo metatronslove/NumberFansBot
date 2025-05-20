@@ -165,6 +165,7 @@ select, .language-switcher select, .form-select {
 
 .form-control:focus {
 	border-color: rgba(72,255,0,.25);
+	color: rgba(200,200,200,0.66);
 	box-shadow: 0 0 5px rgba(72, 255, 0, 0.5);
 }
 
