@@ -1390,6 +1390,7 @@ function updateUsers(search, page) {
 		.then(html => {
 			document.getElementById('users').innerHTML = html;
 			searchinput.value = search;
+			searchinput.focus();
 		})
 		.catch(error => {
 			console.error('Error:', error);
@@ -1413,6 +1414,7 @@ function updateGroups(search, page) {
 		.then(html => {
 			document.getElementById('groups').innerHTML = html;
 			searchinput.value = search;
+			searchinput.focus();
 		})
 		.catch(error => {
 			console.error('Error:', error);
@@ -1440,6 +1442,7 @@ function updateProducts(search, filterUserId, page) {
 		.then(html => {
 			document.getElementById('products').innerHTML = html;
 			searchinput.value = search;
+			searchinput.focus();
 		})
 		.catch(error => {
 			console.error('Error:', error);
@@ -1471,6 +1474,8 @@ document
 				if (e.target.matches('input[name="users_search"]')) {
 					const search = e.target.value;
 					updateUsers(search, 1);
+					e.target.focus();
+					e.target.click();
 				}
 			}, 120), true);
 			// Groups search input
@@ -1478,6 +1483,8 @@ document
 				if (e.target.matches('input[name="groups_search"]')) {
 					const search = e.target.value;
 					updateGroups(search, 1);
+					e.target.focus();
+					e.target.click();
 				}
 			}, 120), true);
 			// Products search input and filter
@@ -1486,6 +1493,8 @@ document
 					const search = document.querySelector('#products input[name="products_search"]').value;
 					const filterUserId = document.querySelector('#products select[name="filter_user_id"]').value;
 					updateProducts(search, filterUserId, 1);
+					e.target.focus();
+					e.target.click();
 				}
 			}, 120), true);
 		}
