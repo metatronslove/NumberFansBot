@@ -70,6 +70,10 @@ center img {
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+#command-usage-chart {
+	max-height: 300px;
+}
+
 .nav-item {
 	display: flex;
 }

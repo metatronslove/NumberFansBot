@@ -1293,7 +1293,7 @@ async function main() {
 		const ctx = document.createElement('canvas');
 		ctx.id = 'command-usage-chart';
 		ctx.style.width = '100%';
-		ctx.style.height = '400px';
+		ctx.style.height = '300px';
 		document
 			.querySelector('#commands')
 			.insertBefore(ctx, document.querySelector('#commands-table'));
@@ -1306,7 +1306,7 @@ async function main() {
 				datasets: [{
 					label: `{{i18n.t('COMMAND_USAGE_PERCENTAGE', lang)}}`,
 					data: percentages,
-					backgroundColor: 'rgba(72, 255, 0, 0.6)',
+					backgroundColor: 'rgba(72, 255, 0, 0.2)',
 					borderColor: '#48ff00',
 					borderWidth: 1
 				}]
