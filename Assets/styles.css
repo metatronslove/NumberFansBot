@@ -52,12 +52,20 @@ center img {
 	z-index: 1000;
 }
 
-.language-switcher select, .form-select {
+select, .language-switcher select, .form-select {
 	background-color: rgba(42,42,42,.5);
 	color: rgba(200,200,200,0.66);
 	border: 1px solid #48ff00;
 	padding: 5px;
 	border-radius: 4px;
+}
+
+.time-range-selector, .per-page-selector {
+	padding: 5px;
+	font-weight: bold;
+	select {
+		margin-left: 5px;
+	}
 }
 
 .status-container {
