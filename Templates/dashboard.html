@@ -1387,7 +1387,7 @@ function updateUsers(search, page) {
 			return response.text();
 		})
 		.then(html => {
-			document.getElementById('users-tab').innerHTML = html;
+			document.getElementById('users').innerHTML = html;
 		})
 		.catch(error => {
 			console.error('Error:', error);
@@ -1408,7 +1408,7 @@ function updateGroups(search, page) {
 			return response.text();
 		})
 		.then(html => {
-			document.getElementById('groups-tab').innerHTML = html;
+			document.getElementById('groups').innerHTML = html;
 		})
 		.catch(error => {
 			console.error('Error:', error);
@@ -1433,7 +1433,7 @@ function updateProducts(search, filterUserId, page) {
 			return response.text();
 		})
 		.then(html => {
-			document.getElementById('products-tab').innerHTML = html;
+			document.getElementById('products').innerHTML = html;
 		})
 		.catch(error => {
 			console.error('Error:', error);
