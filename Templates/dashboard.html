@@ -1370,150 +1370,202 @@ function hexToRgb(hex) {
 
 // Debounce function to limit API calls
 function forceFocusOnLoad(element) {
-	if (document.getElementById('users').classList.contains('active')) {
-		if (element != document.querySelector('input[name=users_search]')) return;
-	} else if (document.getElementById('groups').classList.contains('active')) {
-		if (element != document.querySelector('input[name=groups_search]')) return;
-	} else if (document.getElementById('products').classList.contains('active')) {
-		if (element != document.querySelector('input[name=products_search]')) return;
-	}
-	element.autofocus = false;
-	element.dispatchEvent(new MouseEvent("dblclick"));
-	setTimeout(function() {
-		element.focus();
-	}, 0);
-	element.autofocus = true;
+    // Aktif sekme kontrolü
+    if (document.getElementById('users').classList.contains('active')) {
+        if (element !== document.querySelector('input[name=users_search]')) return;
+    } else if (document.getElementById('groups').classList.contains('active')) {
+        if (element !== document.querySelector('input[name=groups_search]')) return;
+    } else if (document.getElementById('products').classList.contains('active')) {
+        if (element !== document.querySelector('input[name=products_search]')) return;
+    }
+    // Doğrudan odaklan
+    if (element) {
+        element.focus();
+        console.log('Odaklanılan input:', element.name);
+    } else {
+        console.error('Input elementi bulunamadı!');
+    }
 }
 
-function debounce(element, func, wait) {
-	let timeout;
-	return function(...args) {
-		clearTimeout(timeout);
-		timeout = setTimeout(() => func.apply(this, args), wait);
-		forceFocusOnLoad(element);
-	};
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
 }
 
-// Users search and pagination
 function updateUsers(search, page) {
-	const button = document.querySelector('#users-search-form button');
-	const searchinput = document.querySelector('input[name=users_search]');
-	button.classList.add('loading');
-	fetch('/{{ lang }}/users?search=' + encodeURIComponent(search) + '&page=' + page)
-		.then(response => {
-			if (!response.ok) throw new Error('Network response was not ok');
-			return response.text();
-		})
-		.then(html => {
-			document.getElementById('users').innerHTML = html;
-			searchinput.value = search;
-		})
-		.catch(error => {
-			console.error('Error:', error);
-			alert('An error occurred while fetching users');
-		})
-		.finally(() => {
-			button.classList.remove('loading');
-			forceFocusOnLoad(searchinput);
-		});
+    const button = document.querySelector('#users-search-form button');
+    const searchInput = document.querySelector('input[name=users_search]');
+    if (!searchInput) {
+        console.error('users_search input bulunamadı!');
+        return;
+    }
+    button.classList.add('loading');
+    fetch(`/{{ lang }}/users?search=${encodeURIComponent(search)}&page=${page}`)
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.text();
+        })
+        .then(html => {
+            document.getElementById('users').innerHTML = html;
+            // Yeni input'u bul
+            const newSearchInput = document.querySelector('input[name=users_search]');
+            if (newSearchInput) {
+                newSearchInput.value = search;
+                forceFocusOnLoad(newSearchInput);
+            } else {
+                console.error('Yeni users_search input bulunamadı!');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while fetching users');
+        })
+        .finally(() => {
+            button.classList.remove('loading');
+        });
 }
 
-// Groups search and pagination
+// Benzer şekilde updateGroups ve updateProducts için
 function updateGroups(search, page) {
-	const button = document.querySelector('#groups-search-form button');
-	const searchinput = document.querySelector('input[name=groups_search]');
-	button.classList.add('loading');
-	fetch('/{{ lang }}/groups?search=' + encodeURIComponent(search) + '&page=' + page)
-		.then(response => {
-			if (!response.ok) throw new Error('Network response was not ok');
-			return response.text();
-		})
-		.then(html => {
-			document.getElementById('groups').innerHTML = html;
-			searchinput.value = search;
-		})
-		.catch(error => {
-			console.error('Error:', error);
-			alert('An error occurred while fetching groups');
-		})
-		.finally(() => {
-			button.classList.remove('loading');
-			forceFocusOnLoad(searchinput);
-		});
+    const button = document.querySelector('#groups-search-form button');
+    const searchInput = document.querySelector('input[name=groups_search]');
+    if (!searchInput) {
+        console.error('groups_search input bulunamadı!');
+        return;
+    }
+    button.classList.add('loading');
+    fetch(`/{{ lang }}/groups?search=${encodeURIComponent(search)}&page=${page}`)
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.text();
+        })
+        .then(html => {
+            document.getElementById('groups').innerHTML = html;
+            const newSearchInput = document.querySelector('input[name=groups_search]');
+            if (newSearchInput) {
+                newSearchInput.value = search;
+                forceFocusOnLoad(newSearchInput);
+            } else {
+                console.error('Yeni groups_search input bulunamadı!');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while fetching groups');
+        })
+        .finally(() => {
+            button.classList.remove('loading');
+        });
 }
 
-// Products search and pagination
 function updateProducts(search, filterUserId, page) {
-	const button = document.querySelector('#products-search-form button');
-	const searchinput = document.querySelector('input[name=products_search]');
-	button.classList.add('loading');
-	let url = '/{{ lang }}/products?search=' + encodeURIComponent(search) + '&page=' + page;
-	if (filterUserId) {
-		url += '&filter_user_id=' + filterUserId;
-	}
-	fetch(url)
-		.then(response => {
-			if (!response.ok) throw new Error('Network response was not ok');
-			return response.text();
-		})
-		.then(html => {
-			document.getElementById('products').innerHTML = html;
-			searchinput.value = search;
-		})
-		.catch(error => {
-			console.error('Error:', error);
-			alert('An error occurred while fetching products');
-		})
-		.finally(() => {
-			button.classList.remove('loading');
-			forceFocusOnLoad(searchinput);
-		});
+    const button = document.querySelector('#products-search-form button');
+    const searchInput = document.querySelector('input[name=products_search]');
+    if (!searchInput) {
+        console.error('products_search input bulunamadı!');
+        return;
+    }
+    button.classList.add('loading');
+    let url = `/{{ lang }}/products?search=${encodeURIComponent(search)}&page=${page}`;
+    if (filterUserId) {
+        url += `&filter_user_id=${filterUserId}`;
+    }
+    fetch(url)
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.text();
+        })
+        .then(html => {
+            document.getElementById('products').innerHTML = html;
+            const newSearchInput = document.querySelector('input[name=products_search]');
+            if (newSearchInput) {
+                newSearchInput.value = search;
+                forceFocusOnLoad(newSearchInput);
+            } else {
+                console.error('Yeni products_search input bulunamadı!');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while fetching products');
+        })
+        .finally(() => {
+            button.classList.remove('loading');
+        });
 }
 
 document
-	.addEventListener('DOMContentLoaded', function() {
+	.addEventListener('DOMContentLoaded', function() {// Sekme değiştirme
 		document.querySelectorAll('.nav-link').forEach(tab => {
 			tab.addEventListener('click', () => {
 				document.querySelectorAll('.nav-link').forEach(t => t.classList.remove('active'));
-				document.querySelectorAll('.tab-pane').forEach(c => c.classList.remove('active'));
-				document.querySelectorAll('.tab-pane').forEach(c => c.classList.remove('show'));
+				document.querySelectorAll('.tab-pane').forEach(c => c.classList.remove('active', 'show'));
 				document.querySelectorAll('.tab-pane').forEach(c => c.classList.add('hide'));
 				tab.classList.add('active');
-				document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
+				document.getElementById(tab.getAttribute('data-tab')).classList.add('active', 'show');
 				document.getElementById(tab.getAttribute('data-tab')).classList.remove('hide');
-				document.getElementById(tab.getAttribute('data-tab')).classList.add('show');
+				// Sekme değiştiğinde input'a odaklan
+				const input = document.querySelector(`input[name=${tab.getAttribute('data-tab')}_search]`);
+				if (input) forceFocusOnLoad(input);
 			});
 		});
-		let searchformevents = ['keyup', 'change'];
-		for (let event = 0; event < searchformevents.length; event++) {
-			// Users search input
-			document.getElementById('users').addEventListener(searchformevents[event], debounce(document.querySelector('input[name=users_search]'), function(e) {
-				if (e.target.matches('input[name="users_search"]')) {
-					const search = e.target.value;
-					updateUsers(search, 1);
-				}
-			}, 120), true);
-			// Groups search input
-			document.getElementById('groups').addEventListener(searchformevents[event], debounce(document.querySelector('input[name=groups_search]'), function(e) {
-				if (e.target.matches('input[name="groups_search"]')) {
-					const search = e.target.value;
-					updateGroups(search, 1);
-				}
-			}, 120), true);
-			// Products search input and filter
-			document.getElementById('products').addEventListener(searchformevents[event], debounce(document.querySelector('input[name=products_search]'), function(e) {
-				if (e.target.matches('input[name="products_search"]') || e.target.matches('select[name="filter_user_id"]')) {
-					const search = document.querySelector('#products input[name="products_search"]').value;
-					const filterUserId = document.querySelector('#products select[name="filter_user_id"]').value;
-					updateProducts(search, filterUserId, 1);
-				}
-			}, 120), true);
+
+		// Arama input'ları için olay dinleyicileri
+		const searchFormEvents = ['keyup', 'change'];
+		const inputs = {
+			users: document.querySelector('input[name=users_search]'),
+			groups: document.querySelector('input[name=groups_search]'),
+			products: document.querySelector('input[name=products_search]')
+		};
+
+		if (inputs.users) {
+			searchFormEvents.forEach(event => {
+				inputs.users.addEventListener(event, debounce(function(e) {
+					if (e.target.matches('input[name="users_search"]')) {
+						updateUsers(e.target.value, 1);
+					}
+				}, 120));
+			});
 		}
-		let searchformfocusevents = ['input', 'reset', 'load', 'blur', 'keydown'];
-		for (let event = 0; event < searchformevents.length; event++) {
-			document.querySelector('input[name=users_search]').addEventListener(searchformfocusevents[event], forceFocusOnLoad(document.querySelector('input[name=users_search]')));
-			document.querySelector('input[name=groups_search]').addEventListener(searchformfocusevents[event], forceFocusOnLoad(document.querySelector('input[name=groups_search]')));
-			document.querySelector('input[name=products_search]').addEventListener(searchformfocusevents[event], forceFocusOnLoad(document.querySelector('input[name=products_search]')));
+
+		if (inputs.groups) {
+			searchFormEvents.forEach(event => {
+				inputs.groups.addEventListener(event, debounce(function(e) {
+					if (e.target.matches('input[name="groups_search"]')) {
+						updateGroups(e.target.value, 1);
+					}
+				}, 120));
+			});
+		}
+
+		if (inputs.products) {
+			searchFormEvents.forEach(event => {
+				inputs.products.addEventListener(event, debounce(function(e) {
+					if (e.target.matches('input[name="products_search"]') || e.target.matches('select[name="filter_user_id"]')) {
+						const search = document.querySelector('#products input[name="products_search"]').value;
+						const filterUserId = document.querySelector('#products select[name="filter_user_id"]').value;
+						updateProducts(search, filterUserId, 1);
+					}
+				}, 120));
+			});
+		}
+		const searchFormFocusEvents = ['input', 'keydown', 'focus']; // Gereksiz olayları kaldırdık
+		const inputs = {
+			users: document.querySelector('input[name=users_search]'),
+			groups: document.querySelector('input[name=groups_search]'),
+			products: document.querySelector('input[name=products_search]')
+		};
+
+		// Her input için olay dinleyicileri ekle
+		for (const input of Object.values(inputs)) {
+			if (input) {
+				searchFormFocusEvents.forEach(event => {
+					input.addEventListener(event, () => forceFocusOnLoad(input));
+				});
+			}
 		}
 		// Initialize CodeMirror editor
 		const editorElement = document.getElementById('editor');
