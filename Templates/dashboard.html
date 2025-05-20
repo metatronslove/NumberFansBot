@@ -38,31 +38,31 @@
 		<ul class="nav nav-tabs mb-4">
 		{% if command_usage %}
 			<li class="nav-item">
-				<a class="nav-link" data-bs-toggle="tab" href="#commands">{{ i18n.t('COMMANDS_TAB', lang) }}</a>
+				<a class="nav-link" data-bs-toggle="tab" href="#commands" data-tab="commands">{{ i18n.t('COMMANDS_TAB', lang) }}</a>
 			</li>
 		{% endif %}
 			<li class="nav-item">
-				<a class="nav-link" data-bs-toggle="tab" href="#config">{{ i18n.t('CONFIG_TAB', lang) }}</a>
+				<a class="nav-link" data-bs-toggle="tab" href="#config" data-tab="config">{{ i18n.t('CONFIG_TAB', lang) }}</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link active" data-bs-toggle="tab" href="#users">{{ i18n.t('USERS_TAB', lang) }}</a>
+				<a class="nav-link active" data-bs-toggle="tab" href="#users" data-tab="users">{{ i18n.t('USERS_TAB', lang) }}</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" data-bs-toggle="tab" href="#groups">{{ i18n.t('GROUPS_TAB', lang) }}</a>
+				<a class="nav-link" data-bs-toggle="tab" href="#groups" data-tab="groups">{{ i18n.t('GROUPS_TAB', lang) }}</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" data-bs-toggle="tab" href="#products">{{ i18n.t('PRODUCTS_TAB', lang) }}</a>
+				<a class="nav-link" data-bs-toggle="tab" href="#products" data-tab="products">{{ i18n.t('PRODUCTS_TAB', lang) }}</a>
 			</li>
 		{% if github_info.url %}
 			<li class="nav-item">
-				<a class="nav-link" data-bs-toggle="tab" href="#github-traffic">{{ i18n.t('GITHUB_TRAFFIC_TAB', lang) }}</a>
+				<a class="nav-link" data-bs-toggle="tab" href="#github-traffic" data-tab="github-traffic">{{ i18n.t('GITHUB_TRAFFIC_TAB', lang) }}</a>
 			</li>
 		{% endif %}
 			<li class="nav-item">
-				<a class="nav-link" data-bs-toggle="tab" href="#files">{{ i18n.t('FILES_TAB', lang) }}</a>
+				<a class="nav-link" data-bs-toggle="tab" href="#files" data-tab="files">{{ i18n.t('FILES_TAB', lang) }}</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" data-bs-toggle="tab" href="#install">{{ i18n.t('INSTALL_TAB', lang) }}</a>
+				<a class="nav-link" data-bs-toggle="tab" href="#install" data-tab="install">{{ i18n.t('INSTALL_TAB', lang) }}</a>
 			</li>
 		</ul>
 		<div class="tab-pane fade" id="commands">
@@ -1354,27 +1354,6 @@ async function main() {
 	loadFileTree();
 }
 
-// Update URL hash and toggle tab visibility on click
-function setActiveTab(tabId) {
-	// Tüm tab'ları ve içerikleri devre dışı bırak
-	document.querySelectorAll('.tab').forEach(tab => {
-		tab.classList.remove('active');
-	});
-	document.querySelectorAll('.tab-content').forEach(content => {
-		content.classList.remove('active');
-	});
-
-	// Seçili tab'ı ve içeriği aktif yap
-	const activeTab = document.querySelector(`.tab[data-tab="${tabId}"]`);
-	const activeContent = document.getElementById(tabId);
-
-	if (activeTab) activeTab.classList.add('active');
-	if (activeContent) activeContent.classList.add('active');
-
-	// URL hash'ini güncelle
-	window.location.hash = tabId;
-}
-
 // Hex'i RGB'ye çeviren yardımcı fonksiyon
 function hexToRgb(hex) {
 	const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -1465,18 +1444,18 @@ function updateProducts(search, filterUserId, page) {
 		});
 }
 
-document.body.addEventListener('htmx:afterSwap', function(evt) {
-	// HTMX isteği tamamlandığında hangi tab'ta olduğumuzu kontrol et
-	const activeTab = document.querySelector('.tab.active');
-	if (activeTab) {
-		const tabId = activeTab.dataset.tab;
-		setActiveTab(tabId);
-	}
-});
-
-
 document
 	.addEventListener('DOMContentLoaded', function() {
+		document.querySelectorAll('.nav-link').forEach(tab => {
+			tab.addEventListener('click', () => {
+				document.querySelectorAll('.nav-link').forEach(t => t.classList.remove('active'));
+				document.querySelectorAll('.tab-pane').forEach(c => c.classList.remove('active'));
+				document.querySelectorAll('.tab-pane').forEach(c => c.classList.remove('show'));
+				tab.classList.add('active');
+				document.getElementById(tab.dataset.tab).classList.add('active');
+				document.getElementById(tab.dataset.tab).classList.add('show');
+			});
+		});
 		// Users search input
 		document.getElementById('users').addEventListener('input', debounce(function(e) {
 			if (e.target.matches('input[name="users_search"]')) {
@@ -1526,7 +1505,7 @@ document
 			.getElementById('time-range')
 			.addEventListener('change', displayRepos);
 		document
-			.querySelector('.tab[data-tab="files"]')
+			.querySelector('.nav-link[href="files"]')
 			.addEventListener('click', loadFileTree);
 		document
 			.getElementById('create-file-form')
