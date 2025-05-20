@@ -1552,13 +1552,7 @@ document
 				}, 120));
 			});
 		}
-		const searchFormFocusEvents = ['input', 'keydown', 'focus']; // Gereksiz olayları kaldırdık
-		const inputs = {
-			users: document.querySelector('input[name=users_search]'),
-			groups: document.querySelector('input[name=groups_search]'),
-			products: document.querySelector('input[name=products_search]')
-		};
-
+		const searchFormFocusEvents = ['input', 'keydown', 'focus'];
 		// Her input için olay dinleyicileri ekle
 		for (const input of Object.values(inputs)) {
 			if (input) {
