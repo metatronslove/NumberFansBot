@@ -1452,8 +1452,8 @@ document
 				document.querySelectorAll('.tab-pane').forEach(c => c.classList.remove('active'));
 				document.querySelectorAll('.tab-pane').forEach(c => c.classList.remove('show'));
 				tab.classList.add('active');
-				document.getElementById(tab.dataset.tab).classList.add('active');
-				document.getElementById(tab.dataset.tab).classList.add('show');
+				document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
+				document.getElementById(tab.getAttribute('data-tab')).classList.add('show');
 			});
 		});
 		// Users search input
