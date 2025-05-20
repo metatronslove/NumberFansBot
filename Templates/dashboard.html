@@ -1370,6 +1370,13 @@ function hexToRgb(hex) {
 
 // Debounce function to limit API calls
 function forceFocusOnLoad(element) {
+	if (document.getElementById('users').classList.contains('active')) {
+		if (element != document.querySelector('input[name=users_search]')) return;
+	} else if (document.getElementById('groups').classList.contains('active')) {
+		if (element != document.querySelector('input[name=groups_search]')) return;
+	} else if (document.getElementById('products').classList.contains('active')) {
+		if (element != document.querySelector('input[name=products_search]')) return;
+	}
 	element.autofocus = false;
 	element.dispatchEvent(new MouseEvent("dblclick"));
 	setTimeout(function() {
@@ -1502,7 +1509,7 @@ document
 				}
 			}, 120), true);
 		}
-		let searchformfocusevents = ['input', 'reset', 'load', 'blur'];
+		let searchformfocusevents = ['input', 'reset', 'load', 'blur', 'keydown'];
 		for (let event = 0; event < searchformevents.length; event++) {
 			document.querySelector('input[name=users_search]').addEventListener(searchformfocusevents[event], forceFocusOnLoad(document.querySelector('input[name=users_search]')));
 			document.querySelector('input[name=groups_search]').addEventListener(searchformfocusevents[event], forceFocusOnLoad(document.querySelector('input[name=groups_search]')));
