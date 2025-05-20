@@ -847,6 +847,9 @@
   "SEARCH_PRODUCTS": "Search Products",
   "LOAD": "Load",
   "NO_PRODUCTS_FOUND": "No products found",
+  "PRODUCT_ID": "Product ID",
+  "ALL_USERS": "All users",
+  "SELLER": "Seller",
   "COMMAND_ALIASES": {
 	"abjad": ["abjad"],
 	"huddam": ["huddam"],
