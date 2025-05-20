@@ -2,7 +2,7 @@
 		<div id="products-tab" class="my-joy">
 			<form id="products-search-form" class="mb-3">
 				<div class="input-group">
-					<input type="text" name="products_search" class="form-control" placeholder="{{ i18n.t('SEARCH_PRODUCTS', lang) }}" value="{{ search }}" autofocus>
+					<input type="text" name="products_search" class="form-control" placeholder="{{ i18n.t('SEARCH_PRODUCTS', lang) }}" value="{{ search }}">
 					<select name="filter_user_id" class="form-select">
 						<option value="">{{ i18n.t('ALL_USERS', lang) }}</option>
 						{% for user in users %}

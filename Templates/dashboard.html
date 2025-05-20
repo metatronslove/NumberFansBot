@@ -1369,11 +1369,21 @@ function hexToRgb(hex) {
 }
 
 // Debounce function to limit API calls
-function debounce(func, wait) {
+function forceFocusOnLoad(element) {
+	element.autofocus = false;
+	element.dispatchEvent(new MouseEvent("dblclick"));
+	setTimeout(function() {
+		element.focus();
+	}, 0);
+	element.autofocus = true;
+}
+
+function debounce(element, func, wait) {
 	let timeout;
 	return function(...args) {
 		clearTimeout(timeout);
 		timeout = setTimeout(() => func.apply(this, args), wait);
+		forceFocusOnLoad(element);
 	};
 }
 
@@ -1390,7 +1400,6 @@ function updateUsers(search, page) {
 		.then(html => {
 			document.getElementById('users').innerHTML = html;
 			searchinput.value = search;
-			searchinput.focus();
 		})
 		.catch(error => {
 			console.error('Error:', error);
@@ -1398,6 +1407,7 @@ function updateUsers(search, page) {
 		})
 		.finally(() => {
 			button.classList.remove('loading');
+			forceFocusOnLoad(searchinput);
 		});
 }
 
@@ -1414,7 +1424,6 @@ function updateGroups(search, page) {
 		.then(html => {
 			document.getElementById('groups').innerHTML = html;
 			searchinput.value = search;
-			searchinput.focus();
 		})
 		.catch(error => {
 			console.error('Error:', error);
@@ -1422,6 +1431,7 @@ function updateGroups(search, page) {
 		})
 		.finally(() => {
 			button.classList.remove('loading');
+			forceFocusOnLoad(searchinput);
 		});
 }
 
@@ -1442,7 +1452,6 @@ function updateProducts(search, filterUserId, page) {
 		.then(html => {
 			document.getElementById('products').innerHTML = html;
 			searchinput.value = search;
-			searchinput.focus();
 		})
 		.catch(error => {
 			console.error('Error:', error);
@@ -1450,6 +1459,7 @@ function updateProducts(search, filterUserId, page) {
 		})
 		.finally(() => {
 			button.classList.remove('loading');
+			forceFocusOnLoad(searchinput);
 		});
 }
 
@@ -1467,36 +1477,36 @@ document
 				document.getElementById(tab.getAttribute('data-tab')).classList.add('show');
 			});
 		});
-		let searchformevents = ['input', 'change', 'keyup'];
-		for (event = 0; event < searchformevents.length; event++) {
+		let searchformevents = ['keyup', 'change'];
+		for (let event = 0; event < searchformevents.length; event++) {
 			// Users search input
-			document.getElementById('users').addEventListener(searchformevents[event], debounce(function(e) {
+			document.getElementById('users').addEventListener(searchformevents[event], debounce(document.querySelector('input[name=users_search]'), function(e) {
 				if (e.target.matches('input[name="users_search"]')) {
 					const search = e.target.value;
 					updateUsers(search, 1);
-					e.target.focus();
-					e.target.click();
 				}
 			}, 120), true);
 			// Groups search input
-			document.getElementById('groups').addEventListener(searchformevents[event], debounce(function(e) {
+			document.getElementById('groups').addEventListener(searchformevents[event], debounce(document.querySelector('input[name=groups_search]'), function(e) {
 				if (e.target.matches('input[name="groups_search"]')) {
 					const search = e.target.value;
 					updateGroups(search, 1);
-					e.target.focus();
-					e.target.click();
 				}
 			}, 120), true);
 			// Products search input and filter
-			document.getElementById('products').addEventListener(searchformevents[event], debounce(function(e) {
+			document.getElementById('products').addEventListener(searchformevents[event], debounce(document.querySelector('input[name=products_search]'), function(e) {
 				if (e.target.matches('input[name="products_search"]') || e.target.matches('select[name="filter_user_id"]')) {
 					const search = document.querySelector('#products input[name="products_search"]').value;
 					const filterUserId = document.querySelector('#products select[name="filter_user_id"]').value;
 					updateProducts(search, filterUserId, 1);
-					e.target.focus();
-					e.target.click();
 				}
 			}, 120), true);
+		}
+		let searchformfocusevents = ['input', 'reset', 'load', 'blur'];
+		for (let event = 0; event < searchformevents.length; event++) {
+			document.querySelector('input[name=users_search]').addEventListener(searchformfocusevents[event], forceFocusOnLoad(document.querySelector('input[name=users_search]')));
+			document.querySelector('input[name=groups_search]').addEventListener(searchformfocusevents[event], forceFocusOnLoad(document.querySelector('input[name=groups_search]')));
+			document.querySelector('input[name=products_search]').addEventListener(searchformfocusevents[event], forceFocusOnLoad(document.querySelector('input[name=products_search]')));
 		}
 		// Initialize CodeMirror editor
 		const editorElement = document.getElementById('editor');
