@@ -105,7 +105,7 @@ async def get_tax_rates(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 	user_id = update.effective_user.id
 	language = Database().get_user_language(user_id)
 	try:
-		tax_input = update.message.text  # Format: "KDV:20,ÖTV:5"
+		tax_input = update.message.text	# Format: "KDV:20,ÖTV:5"
 		tax_rates = []
 		for tax in tax_input.split(','):
 			if tax:

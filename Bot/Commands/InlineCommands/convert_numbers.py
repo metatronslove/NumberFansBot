@@ -75,7 +75,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("CONVERTNUMBERS_INVALID_FORMAT_DESC", language, format=params["format"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("CONVERTNUMBERS_INVALID_FORMAT_MESSAGE", language, format=params["format"],
-							   valid=", ".join(valid_formats)),
+								 valid=", ".join(valid_formats)),
 						parse_mode="Markdown"
 					)
 				)

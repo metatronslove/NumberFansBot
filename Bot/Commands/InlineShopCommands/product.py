@@ -11,7 +11,7 @@ class ProductInlineCommand:
 	def __init__(self):
 		self.db = Database()
 		self.i18n = I18n()
-		self.bot_username = "@EgrigoreBot"  # Replace with actual bot username or config
+		self.bot_username = "@EgrigoreBot"	# Replace with actual bot username or config
 
 	def register_handlers(self, application: Application):
 		application.add_handler(InlineQueryHandler(self.inline_product, pattern=r'^product'))
@@ -30,7 +30,7 @@ class ProductInlineCommand:
 		# Extract product ID if any (after "product" keyword)
 		product_id = None
 		try:
-			if len(query) > 8:  # "product " + at least one digit
+			if len(query) > 8:	# "product " + at least one digit
 				product_id = int(query[8:].strip())
 		except ValueError:
 			pass
@@ -72,11 +72,11 @@ class ProductInlineCommand:
 				features_text = "\n".join([f"• {feature}" for feature in features]) if features else ""
 
 				message_content = self.i18n.t('PRODUCT_DETAILS', language,
-											  product_name=product['name'],
-											  price_text=price_text,
-											  product_type=product['type'].capitalize(),
-											  availability=availability,
-											  description=description)
+												product_name=product['name'],
+												price_text=price_text,
+												product_type=product['type'].capitalize(),
+												availability=availability,
+												description=description)
 
 				if features_text:
 					message_content += self.i18n.t('PRODUCT_FEATURES', language, features_text=features_text)

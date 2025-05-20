@@ -134,7 +134,7 @@ class MagicSquareGenerator:
 	def rotate_matrix(self, matrix, repeat):
 		n = len(matrix)
 		rotated = [[matrix[i][j] for j in range(n)] for i in range(n)]
-		for _ in range(repeat % 4):  # Normalize rotations
+		for _ in range(repeat % 4):	# Normalize rotations
 			temp = [[0] * n for _ in range(n)]
 			for i in range(n):
 				for j in range(n):
@@ -212,7 +212,7 @@ class MagicSquareGenerator:
 
 	def check_magic_square(self, magic_square, expected_sum):
 		n = len(magic_square)
-		expected_sum = int(expected_sum)  # Ensure expected_sum is integer
+		expected_sum = int(expected_sum)	# Ensure expected_sum is integer
 		for i in range(n):
 			row_sum = sum(int(float(cell)) if str(cell).replace('.', '').isdigit() else 0 for cell in magic_square[i])
 			if row_sum != expected_sum:

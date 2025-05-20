@@ -225,7 +225,7 @@ def register_handlers():
 		raise
 	finally:
 		if 'db' in locals():
-			db.__del__()  # Ensure database connection is closed
+			db.__del__()	# Ensure database connection is closed
 try:
 	register_handlers()
 	logger.info("All handlers registered successfully")
@@ -256,7 +256,7 @@ def get_fields():
 	]
 
 # File Management Routes
-PROJECT_ROOT = Path(__file__).parent.parent  # Root directory of the project
+PROJECT_ROOT = Path(__file__).parent.parent	# Root directory of the project
 
 @flask_app.route("/<lang>")
 @flask_app.route("/")
@@ -677,7 +677,7 @@ def install(lang="en"):
 		telegram_token = config.telegram_token or request.form.get("telegram_token")
 		mysql_host = config.mysql_host or request.form.get("mysql_host")
 		mysql_user = config.mysql_user or request.form.get("mysql_user")
-		mysql_port = config.mysql_port or request.form.get("mysql_port", "3306")  # Default port
+		mysql_port = config.mysql_port or request.form.get("mysql_port", "3306")	# Default port
 		mysql_password = config.mysql_password or request.form.get("mysql_password")
 		mysql_database = config.mysql_database or request.form.get("mysql_database")
 		bot_username = request.form.get("bot_username")
@@ -758,7 +758,7 @@ def file_tree(lang="en"):
 						"name": item.name,
 						"path": relative_path,
 						"type": "directory",
-						"children": build_file_tree(item, prefix + "  ")
+						"children": build_file_tree(item, prefix + "	")
 					})
 				else:
 					tree.append({
@@ -1226,7 +1226,7 @@ def list_files(lang="en"):
 						"name": item.name,
 						"path": relative_path,
 						"type": "directory",
-						"children": build_file_tree(item, prefix + "  ")
+						"children": build_file_tree(item, prefix + "	")
 					})
 				else:
 					tree.append({
@@ -1298,7 +1298,7 @@ def reload_file(lang="en"):
 				if templates_path in file_abs_path.parents or file_abs_path.parent == templates_path:
 					# Get relative path from templates folder
 					template_name = str(file_abs_path.relative_to(templates_path))
-					flask_app.jinja_env.get_template(template_name)  # Trigger reload
+					flask_app.jinja_env.get_template(template_name)	# Trigger reload
 					logger.info(f"Reloaded template: {file_path}")
 					return jsonify({"message": i18n.t("TEMPLATE_RELOADED", lang)})
 				else:
@@ -2000,7 +2000,7 @@ def toggle_product(lang="en", product_id=None):
 
 @dashboard.route('/dashboard')
 def user_dashboard():
-	user_id = session.get('user_id')  # Telegram oturumundan al
+	user_id = session.get('user_id')	# Telegram oturumundan al
 	db = Database()
 	products = db.get_available_products(created_by=user_id)
 	orders = db.get_user_orders(user_id)

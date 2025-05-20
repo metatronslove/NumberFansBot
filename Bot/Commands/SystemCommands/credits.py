@@ -19,7 +19,7 @@ async def credits_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 	user_id = user.id
 	db = Database()
 	i18n = I18n()
-	language = db.get_user_language(user_id)  # Use database-stored language
+	language = db.get_user_language(user_id)	# Use database-stored language
 	# await handle_credits(update, context) because credits MUST NOT decrement credits
 	db.set_user_attribute(user_id, "last_interaction", datetime.now())
 	db.increment_command_usage("credits", user_id, query.chat_id)

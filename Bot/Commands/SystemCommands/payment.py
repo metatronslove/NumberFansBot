@@ -52,7 +52,7 @@ async def payment_handle(update: Update, context: ContextTypes.DEFAULT_TYPE)	:
 		return
 
 	# Check for Easter egg phrase
-	easter_egg_phrase = config.teskilat_creditentials   # Hardcoded for security
+	easter_egg_phrase = config.teskilat_creditentials	 # Hardcoded for security
 	args = context.args
 	if args and " ".join(args).lower() == easter_egg_phrase.lower():
 		if db.is_teskilat(user_id):
@@ -162,7 +162,7 @@ async def handle_payment_callback(update: Update, context: ContextTypes.DEFAULT_
 				payload="credit_500",
 				provider_token=Config().payment_provider_token,
 				currency="USD",
-				prices=[LabeledPrice("500 Credits", 200)],  # $2.00
+				prices=[LabeledPrice("500 Credits", 200)],	# $2.00
 				start_parameter="credit-purchase"
 			)
 		except Exception as e:

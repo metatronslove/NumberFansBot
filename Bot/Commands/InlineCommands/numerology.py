@@ -86,7 +86,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("NUMEROLOGY_INVALID_ALPHABET_DESC", language, alphabet=params["alphabet"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("NUMEROLOGY_INVALID_ALPHABET_MESSAGE", language, alphabet=params["alphabet"],
-							   valid=", ".join(valid_alphabets)),
+								 valid=", ".join(valid_alphabets)),
 						parse_mode="Markdown"
 					)
 				)
@@ -101,7 +101,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("NUMEROLOGY_INVALID_METHOD_DESC", language, method=params["method"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("NUMEROLOGY_INVALID_METHOD_MESSAGE", language, method=params["method"],
-							   valid=", ".join(valid_methods)),
+								 valid=", ".join(valid_methods)),
 						parse_mode="Markdown"
 					)
 				)

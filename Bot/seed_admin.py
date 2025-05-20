@@ -26,7 +26,7 @@ def seed_admin():
 		'user': config.mysql_user or 'avnadmin',
 		'password': config.mysql_password or 'real-password',
 		'database': config.mysql_database or 'numberfansbot',
-		'ssl_ca': os.environ.get('MYSQL_SSL_CA', '/code/ca.pem')  # Path to Aiven CA certificate
+		'ssl_ca': os.environ.get('MYSQL_SSL_CA', '/code/ca.pem')	# Path to Aiven CA certificate
 	}
 
 	try:
@@ -45,7 +45,7 @@ def seed_admin():
 			return
 
 		# Hash the admin password
-		password = os.environ.get('ADMIN_PASS')  # Use env var or default
+		password = os.environ.get('ADMIN_PASS')	# Use env var or default
 		hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 		# Insert admin user, including chat_id

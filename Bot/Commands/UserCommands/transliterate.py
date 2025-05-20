@@ -258,7 +258,7 @@ async def show_suggestions(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		# Perform transliteration
 		result = transliteration.transliterate(text, target_lang, source_lang)
 		primary = result["primary"]
-		alternatives = result["alternatives"][:4]  # Limit to 4 alternatives to avoid clutter
+		alternatives = result["alternatives"][:4]	# Limit to 4 alternatives to avoid clutter
 		suggestions = [primary] + alternatives
 
 		# Store primary transliteration
@@ -448,7 +448,7 @@ async def show_history(update: Update, context: ContextTypes.DEFAULT_TYPE):
 		else:
 			history_str = "\n".join([
 				f"{item['original']} -> {item['transliterated']} ({item['target_lang']})"
-				for item in history[:10]  # Limit to 10 entries
+				for item in history[:10]	# Limit to 10 entries
 			])
 			response = i18n.t("TRANSLITERATION_HISTORY_RESULT", language, history=history_str)
 
@@ -459,7 +459,7 @@ async def show_history(update: Update, context: ContextTypes.DEFAULT_TYPE):
 					f"{item['transliterated']} ({item['target_lang']})",
 					callback_data=f"history_select_{urllib.parse.quote(item['transliterated'])}"
 				)
-			] for item in history[:5]  # Limit to 5 buttons to avoid clutter
+			] for item in history[:5]	# Limit to 5 buttons to avoid clutter
 		]
 		keyboard.append([
 			InlineKeyboardButton(
@@ -649,7 +649,7 @@ def get_transliterate_conversation_handler():
 				HISTORY: [CallbackQueryHandler(handle_history_selection)]
 			},
 			fallbacks=[CommandHandler("cancel", transliterate_cancel),
-					   MessageHandler(filters.Regex(r'^/.*'), timeout)]
+						 MessageHandler(filters.Regex(r'^/.*'), timeout)]
 		)
 		logger.info("Transliterate conversation handler initialized successfully")
 		return handler

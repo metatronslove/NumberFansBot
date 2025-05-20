@@ -699,7 +699,7 @@ class Database:
 			self.cursor = self.conn.cursor(dictionary=True)
 
 	def update_user_address(self, user_id: int, address_id: str, name: str = None, address: str = None,
-						   city: str = None, is_default: bool = None) -> bool:
+							 city: str = None, is_default: bool = None) -> bool:
 		"""Update an existing address for a user"""
 		addresses = self.get_user_addresses(user_id)
 		updated = False
@@ -758,7 +758,7 @@ class Database:
 		if product_type:
 			conditions.append("type = %s")
 			params.append(product_type)
-		if user_id:  # Add this condition
+		if user_id:	# Add this condition
 			conditions.append("created_by = %s")
 			params.append(user_id)
 
@@ -790,7 +790,7 @@ class Database:
 		"""Get product details by ID"""
 		query = """
 		SELECT id, name, description, price, quantity, type, image_url, features, active,
-			   created_at, updated_at, created_by
+				 created_at, updated_at, created_by
 		FROM `products`
 		WHERE id = %s
 		"""
@@ -808,8 +808,8 @@ class Database:
 			self.cursor = self.conn.cursor(dictionary=True)
 
 	def create_product(self, name: str, price: float, product_type: str, description: str = None,
-					  quantity: int = None, image_url: str = None, features: list = None,
-					  active: bool = True, created_by: int = None) -> int:
+						quantity: int = None, image_url: str = None, features: list = None,
+						active: bool = True, created_by: int = None) -> int:
 		"""Create a new product"""
 		query = """
 		INSERT INTO `products` (name, description, price, quantity, type, image_url, features, active, created_by)
@@ -828,8 +828,8 @@ class Database:
 			self.cursor = self.conn.cursor(dictionary=True)
 
 	def update_product(self, product_id: int, name: str = None, price: float = None,
-					  product_type: str = None, description: str = None, quantity: int = None,
-					  image_url: str = None, features: list = None, active: bool = None) -> bool:
+						product_type: str = None, description: str = None, quantity: int = None,
+						image_url: str = None, features: list = None, active: bool = None) -> bool:
 		"""Update an existing product"""
 		set_parts = []
 		params = []

@@ -112,7 +112,7 @@ class PaparaPaymentHandler:
 			email_pass = user['email_password']
 
 			# Connect to email server
-			mail = imaplib.IMAP4_SSL("imap.gmail.com")  # Adjust for other email providers
+			mail = imaplib.IMAP4_SSL("imap.gmail.com")	# Adjust for other email providers
 			mail.login(email_user, email_pass)
 			mail.select('inbox')
 
@@ -259,7 +259,7 @@ class PaparaPaymentHandler:
 					expiry_days = 30
 				elif duration == 'annually':
 					expiry_days = 365
-				else:  # lifetime
+				else:	# lifetime
 					expiry_days = None
 
 				# Create or update membership

@@ -94,16 +94,16 @@ class OrdersCommand:
 		}.get(order['status'], '❓')
 
 		message = self.i18n.t('ORDERS_DETAILS', language,
-							  status_emoji=status_emoji,
-							  order_id=order['id'],
-							  product_name=order['product_name'],
-							  quantity=order['quantity'],
-							  total_price=order['total_price'],
-							  status=order['status'],
-							  order_date=order['order_date'],
-							  address_name=order['address_name'],
-							  address=order['address'],
-							  city=order['city'])
+								status_emoji=status_emoji,
+								order_id=order['id'],
+								product_name=order['product_name'],
+								quantity=order['quantity'],
+								total_price=order['total_price'],
+								status=order['status'],
+								order_date=order['order_date'],
+								address_name=order['address_name'],
+								address=order['address'],
+								city=order['city'])
 
 		if order['status'] == 'pending_payment':
 			message += self.i18n.t('ORDERS_PENDING_PAYMENT', language)

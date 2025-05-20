@@ -379,7 +379,7 @@ class Abjad:
 	def get_scale_word(self, chunk: int, lang: str, index: int) -> str:
 		word = self.SCALE_MAP.get(lang, [""])[index]
 		if lang == "TURKISH" and chunk == 1 and index == 1:
-			return "bin"  # Türkçede 'bir bin' denmez
+			return "bin"	# Türkçede 'bir bin' denmez
 		return word
 
 	def join_parts(self, parts: List[str], lang: str) -> str:
@@ -673,10 +673,10 @@ class Abjad:
 		return res
 
 	def generate_name(self, number: Union[int, str], htype: str = 'ulvi', method: int = 1,
-					  language: str = 'arabic', mode: str = 'regular') -> str:
+						language: str = 'arabic', mode: str = 'regular') -> str:
 		language = language.lower()
 		htype = htype.upper()
-		self._current_mode = mode  # store mode for use in generation
+		self._current_mode = mode	# store mode for use in generation
 		suffix_map = {
 			'arabic': {'ULVI':'ئيل','SUFLI':'يوش','ŞER':'طيش'},
 			'hebrew': {'ULVI':'אל','SUFLI':'וש','ŞER':'טש'},

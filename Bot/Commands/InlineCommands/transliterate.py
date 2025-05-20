@@ -77,7 +77,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("TRANSLITERATE_INVALID_SOURCE_DESC", language, source=params["source"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("TRANSLITERATE_INVALID_SOURCE_MESSAGE", language, source=params["source"],
-							   valid=", ".join(valid_languages)),
+								 valid=", ".join(valid_languages)),
 						parse_mode="Markdown"
 					)
 				)
@@ -92,7 +92,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("TRANSLITERATE_INVALID_TARGET_DESC", language, target=params["target"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("TRANSLITERATE_INVALID_TARGET_MESSAGE", language, target=params["target"],
-							   valid=", ".join(valid_languages)),
+								 valid=", ".join(valid_languages)),
 						parse_mode="Markdown"
 					)
 				)

@@ -104,7 +104,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("BASTET_INVALID_ALPHABET_DESC", language, alphabet=params["alphabet"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("BASTET_INVALID_ALPHABET_MESSAGE", language, alphabet=params["alphabet"],
-							   valid=", ".join(alphabet_map.keys())),
+								 valid=", ".join(alphabet_map.keys())),
 						parse_mode="Markdown"
 					)
 				)
@@ -119,7 +119,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("BASTET_INVALID_TYPE_DESC", language, type=params["type"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("BASTET_INVALID_TYPE_MESSAGE", language, type=params["type"],
-							   valid=", ".join(type_map.keys())),
+								 valid=", ".join(type_map.keys())),
 						parse_mode="Markdown"
 					)
 				)

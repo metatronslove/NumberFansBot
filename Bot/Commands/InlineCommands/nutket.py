@@ -75,7 +75,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("NUTKET_INVALID_LANGUAGE_DESC", language, language=params["language"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("NUTKET_INVALID_LANGUAGE_MESSAGE", language, language=params["language"],
-							   valid=", ".join(valid_languages)),
+								 valid=", ".join(valid_languages)),
 						parse_mode="Markdown"
 					)
 				)

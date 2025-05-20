@@ -38,8 +38,8 @@ class Config:
 		self.mysql_host = self._config.get('mysql', {}).get('host') or os.getenv('MYSQL_HOST', 'mysql-numberfansbot-numberfansbot.j.aivencloud.com')
 		self.mysql_user = self._config.get('mysql', {}).get('user') or os.getenv('MYSQL_USER', 'avnadmin')
 		self.mysql_port = self._config.get('mysql', {}).get('user') or os.getenv('MYSQL_PORT', 28236)
-		self.mysql_password = self._config.get('mysql', {}).get('password') or os.getenv('MYSQL_PASSWORD', 'your_password_here')  # Replace with actual password
-		self.mysql_database = self._config.get('mysql', {}).get('database') or os.getenv('MYSQL_DATABASE', 'numberfansbot')  # Replace with actual database name
+		self.mysql_password = self._config.get('mysql', {}).get('password') or os.getenv('MYSQL_PASSWORD', 'your_password_here')	# Replace with actual password
+		self.mysql_database = self._config.get('mysql', {}).get('database') or os.getenv('MYSQL_DATABASE', 'numberfansbot')	# Replace with actual database name
 		self.github_username = self._config.get('github_username') or os.getenv('GITHUB_USERNAME')
 		self.github_token = self._config.get('github_token') or os.getenv('GITHUB_TOKEN')
 		self.github_repo = self._config.get('github_repo') or os.getenv('GITHUB_REPO')
@@ -83,7 +83,7 @@ class Config:
 			self._config.update(config_data)
 			with open('Config/config.yml', 'w') as f:
 				yaml.dump(self._config, f)
-			self._load_attributes()  # Reload attributes after saving
+			self._load_attributes()	# Reload attributes after saving
 		except Exception as e:
 			logger.error(f"Failed to save config.yml: {str(e)}")
 			raise

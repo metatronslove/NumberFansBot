@@ -1,865 +1,865 @@
 {
-  "LANGUAGE_NAME_EN": "English",
-  "LANGUAGE_NAME_TR": "Türkçe",
-  "LANGUAGE_NAME_AR": "العربية",
-  "LANGUAGE_NAME_HE": "עברית",
-  "LANGUAGE_NAME_LA": "Latina",
-  "TAGLINE": "عوالم الأرقام والحروف الرائعة",
-  "USER_DASHBOARD_TITLE": "لوحة تحكم المستخدم",
-  "USER_DASHBOARD_WELCOME": "مرحباً، {username}!",
-  "CREDITS": "الرصيد",
-  "ORDERS": "الطلبات",
-  "PRODUCTS": "المنتجات",
-  "ORDERS_TAB": "الطلبات",
-  "PRODUCTS_TAB": "المنتجات",
-  "PAYMENTS_TAB": "المدفوعات",
-  "PROFILE_TAB": "الملف الشخصي",
-  "LOGOUT": "تسجيل الخروج",
-  "ORDERS_TITLE": "طلباتك",
-  "NO_ORDERS": "لا يوجد لديك طلبات حتى الآن.",
-  "ORDER_ID": "رقم الطلب",
-  "PRODUCT_NAME": "اسم المنتج",
-  "QUANTITY": "الكمية",
-  "TOTAL_PRICE": "السعر الإجمالي",
-  "STATUS": "الحالة",
-  "CREATED_AT": "تاريخ الإنشاء",
-  "ACTIONS": "الإجراءات",
-  "VIEW": "عرض",
-  "PAY": "دفع",
-  "CANCEL": "إلغاء",
-  "PENDING": "قيد الانتظار",
-  "PENDING_PAYMENT": "بانتظار الدفع",
-  "PROCESSING": "قيد المعالجة",
-  "SHIPPED": "تم الشحن",
-  "DELIVERED": "تم التسليم",
-  "CANCELLED": "تم الإلغاء",
-  "PRODUCTS_TITLE": "المنتجات المتاحة",
-  "CREATE_PRODUCT": "إنشاء منتج",
-  "NO_PRODUCTS": "لا توجد منتجات متاحة.",
-  "PRICE": "السعر",
-  "TYPE": "النوع",
-  "PRODUCT_TYPE_PHYSICAL": "مادي",
-  "PRODUCT_TYPE_DIGITAL": "رقمي",
-  "UNLIMITED": "غير محدود",
-  "ACTIVE": "نشط",
-  "YES": "نعم",
-  "NO": "لا",
-  "EDIT": "تعديل",
-  "DEACTIVATE": "إلغاء التفعيل",
-  "ACTIVATE": "تفعيل",
-  "PAYMENTS_TITLE": "مدفوعاتك",
-  "CREATE_PAYMENT": "إنشاء دفعة",
-  "NO_PAYMENTS": "لا يوجد لديك مدفوعات حتى الآن.",
-  "PAYMENT_ID": "رقم الدفعة",
-  "AMOUNT": "المبلغ",
-  "CHECK_STATUS": "تحقق من الحالة",
-  "PROFILE_TITLE": "ملفك الشخصي",
-  "USERNAME": "اسم المستخدم",
-  "EMAIL": "البريد الإلكتروني",
-  "PAPARA_EMAIL": "بريد بابارا الإلكتروني",
-  "NEW_PASSWORD": "كلمة المرور الجديدة",
-  "LEAVE_BLANK_PASSWORD": "اتركه فارغًا للحفاظ على كلمة المرور الحالية",
-  "CONFIRM_PASSWORD": "تأكيد كلمة المرور",
-  "UPDATE_PROFILE": "تحديث الملف الشخصي",
-  "ADDRESSES": "عناوينك",
-  "MANAGE_ADDRESSES": "إدارة العناوين",
-  "NO_ADDRESSES": "لا يوجد لديك عناوين محفوظة.",
-  "NAME": "الاسم",
-  "ADDRESS": "العنوان",
-  "CITY": "المدينة",
-  "DEFAULT": "افتراضي",
-  "PAYMENT_TITLE": "إنشاء دفعة",
-  "PAYMENT_AMOUNT": "المبلغ",
-  "PAYMENT_TYPE": "نوع الدفعة",
-  "PAYMENT_TYPE_BALANCE": "إضافة إلى الرصيد",
-  "PAYMENT_TYPE_PRODUCT": "الدفع مقابل المنتج",
-  "PAYMENT_TYPE_ORDER": "الدفع مقابل الطلب",
-  "SELECT_PRODUCT": "اختر منتجًا",
-  "SELECT_PRODUCT_PLACEHOLDER": "اختر منتجًا",
-  "SELECT_ORDER": "اختر طلبًا",
-  "SELECT_ORDER_PLACEHOLDER": "اختر طلبًا",
-  "PAYMENT_INSTRUCTIONS_1": "يرجى إرسال المبلغ المحدد إلى حساب بابارا المقدم.",
-  "PAYMENT_DESCRIPTION": "مرجع الدفع",
-  "PAYMENT_INSTRUCTIONS_2": "بعد إرسال الدفعة، انقر فوق 'تأكيد الدفع' للتحقق منها.",
-  "PAYMENT_SUCCESS": "تم تأكيد الدفع بنجاح!",
-  "PAYMENT_ERROR": "حدث خطأ أثناء معالجة دفعتك.",
-  "CLOSE": "إغلاق",
-  "CONFIRM_PAYMENT": "تأكيد الدفع",
-  "CANCEL_PAYMENT": "إلغاء الدفع",
-  "SELECT_PRODUCT_ERROR": "الرجاء تحديد منتج.",
-  "SELECT_ORDER_ERROR": "الرجاء تحديد طلب.",
-  "INVALID_AMOUNT": "الرجاء إدخال مبلغ صالح.",
-  "CHECKING_PAYMENT": "جاري التحقق من الدفع...",
-  "PAYMENT_NOT_FOUND": "لم يتم العثور على الدفعة. يرجى المحاولة مرة أخرى.",
-  "PAYMENT_CHECK_ERROR": "خطأ في التحقق من حالة الدفع.",
-  "CANCEL_PAYMENT_CONFIRM": "هل أنت متأكد أنك تريد إلغاء هذه الدفعة؟",
-  "CANCEL_PAYMENT_ERROR": "خطأ في إلغاء الدفعة.",
-  "ORDER_NUMBER": "الطلب",
-  "DESCRIPTION": "الوصف",
-  "CREATE": "إنشاء",
-  "ERROR_INVALID_INPUT": "مدخل غير صالح: {error}",
-  "SELECT_ALTERNATIVE": "اختر ترجمة بديلة:",
-  "LANGUAGE_CHANGED": "تم تغيير اللغة إلى {selected_lang}",
-  "LOGIN_TITLE": "تسجيل دخول المسؤول",
-  "LOGIN_USERNAME": "اسم المستخدم",
-  "LOGIN_PASSWORD": "كلمة المرور",
-  "LOGIN_SUBMIT": "تسجيل الدخول",
-  "LOGIN_ERROR": "اسم مستخدم أو كلمة مرور غير صالحة",
-  "LOGOUT_SUCCESS": "تم تسجيل الخروج بنجاح",
-  "DASHBOARD_TITLE": "لوحة تحكم المسؤول",
-  "CONFIG_TAB": "الإعدادات",
-  "USERS_TAB": "المستخدمون",
-  "GITHUB_TRAFFIC_TAB": "زيارات GitHub",
-  "CONFIG_TITLE": "إعدادات البوت",
-  "STANDARD_SETTINGS": "الإعدادات القياسية",
-  "TELEGRAM_TOKEN": "رمز Telegram",
-  "BOT_USERNAME": "اسم مستخدم البوت",
-  "WEBHOOK_URL": "رابط Webhook",
-  "GITHUB_USERNAME": "اسم مستخدم GitHub",
-  "GITHUB_TOKEN": "رمز GitHub",
-  "GITHUB_REPO": "مستودع GitHub",{
-  "GITHUB_PAGES_URL": "عنوان URL لصفحات GitHub",
-  "PAYMENT_PROVIDER_TOKEN": "رمز مزود الدفع",
-  "CURRENCY_EXCHANGE_TOKEN": "رمز تبادل العملات",
-  "HUGGINGFACE_ACCESS_TOKEN": "رمز الوصول إلى Hugging Face",
-  "TOOLTIP_ENV": "حدد لاستخدام متغير البيئة",
-  "USE_ENV": "استخدام متغير البيئة",
-  "SAVE_CONFIG": "حفظ الإعدادات",
-  "CONFIG_SAVED": "تم حفظ الإعدادات بنجاح",
-  "USER_ID": "معرف المستخدم",
-  "FIRST_NAME": "الاسم الأول",
-  "LAST_INTERACTION": "آخر تفاعل",
-  "INSTALL_TITLE": "تثبيت NumberFansBot",
-  "ADMIN_USERNAME": "اسم مستخدم المسؤول",
-  "ADMIN_PASSWORD": "كلمة مرور المسؤول",
-  "INSTALL_SUBMIT": "تثبيت",
-  "INSTALL_SUCCESS": "تم التثبيت بنجاح",
-  "ALREADY_INSTALLED": "الروبوت مثبت بالفعل",
-  "GITHUB_TRAFFIC_TITLE": "زيارات GitHub",
-  "CONFIGURE_GITHUB_URL": "يرجى تكوين عنوان URL لصفحات GitHub في لوحة تحكم المسؤول",
-  "TIME_RANGE": "النطاق الزمني",
-  "TIME_RANGE_1D": "يوم واحد",
-  "TIME_RANGE_7D": "7 أيام",
-  "TIME_RANGE_30D": "30 يومًا",
-  "TIME_RANGE_90D": "90 يومًا",
-  "TIME_RANGE_180D": "180 يومًا",
-  "TIME_RANGE_365D": "365 يومًا",
-  "TIME_RANGE_ALL": "كل الأوقات",
-  "PER_PAGE": "المستودعات في الصفحة",
-  "LOADING": "جارٍ التحميل...",
-  "VIEWS": "المشاهدات",
-  "CLONES": "الاستنساخات",
-  "TOTAL": "الإجمالي",
-  "NO_DATA": "لا توجد بيانات متاحة",
-  "INFO_BOX": "قم بتكوين الروبوت لعرض إحصائيات المستودع",
-  "PREVIOUS_PAGE": "السابق",
-  "NEXT_PAGE": "التالي",
-  "PAGE_STATS": "صفحة %d من %d (%d مستودعات)",
-  "LOADING_REPOS": "جارٍ تحميل %d مستودع...",
-  "ERROR_LOADING_REPOS": "خطأ في تحميل المستودعات",
-  "REPO_HEADER": "%s",
-  "README_ERROR": "خطأ في تحميل ملف README لـ",
-  "VIEW_GITHUB_TRAFFIC": "عرض زيارات GitHub",
-  "COMMANDS_TITLE": "إحصائيات استخدام الأوامر",
-  "COMMANDS_DESCRIPTION": "عرض إحصائيات استخدام أوامر NumberFansBot.",
-  "COMMAND_NAME": "الأمر",
-  "USAGE_COUNT": "عدد مرات الاستخدام",
-  "LAST_USED": "آخر استخدام",
-  "LAST_USER": "آخر مستخدم",
-  "NO_COMMANDS_USED": "لم يتم استخدام أي أوامر حتى الآن.",
-  "LOGIN": "تسجيل الدخول إلى لوحة التحكم",
-  "CANCEL_BUTTON": "إلغاء",
-  "PAYMENT_BLACKLISTED": "أنت في القائمة السوداء ولا يمكنك استخدام المدفوعات.",
-  "PAYMENT_BETA_RESTRICTED": "هذه الميزة مقصورة على مختبري النسخة التجريبية.",
-  "PAYMENT_MISSING_PROVIDER_TOKEN": "رمز مزود الدفع مفقود.",
-  "PAYMENT_PRODUCT_NOT_FOUND": "المنتج غير موجود.",
-  "PAYMENT_INVOICE_TITLE": "شراء NumberFansBot",
-  "PAYMENT_SELECT_PRODUCT": "الرجاء تحديد منتج:",
-  "PAYMENT_PRODUCTS_BASIC_PRODUCT_NAME": "المنتج الأساسي",
-  "PAYMENT_PRODUCTS_BASIC_PRODUCT_DESCRIPTION": "الوصول إلى الميزات الأساسية في NumberFansBot.",
-  "PAYMENT_PRODUCTS_PREMIUM_PRODUCT_NAME": "المنتج المميز",
-  "PAYMENT_PRODUCTS_PREMIUM_PRODUCT_DESCRIPTION": "افتح الميزات المميزة بقدرات محسّنة.",
-  "PAYMENT_PRODUCTS_DELUXE_PRODUCT_NAME": "المنتج الفاخر",
-  "PAYMENT_PRODUCTS_DELUXE_PRODUCT_DESCRIPTION": "احصل على تجربة NumberFansBot الكاملة مع جميع الميزات.",
-  "PAYMENT_THANK_YOU": "شكرًا لشرائك {product}! المبلغ: {amount} {currency}",
-  "PAYMENT_FAILED": "فشل الدفع. يرجى المحاولة مرة أخرى.",
-  "LANGUAGE_CHOOSE": "الرجاء اختيار لغة:",
-  "LANGUAGE_INVALID": "رمز لغة غير صالح. اللغات المتاحة: {languages}",
-  "LANGUAGE_ERROR_DATABASE": "حدث خطأ في قاعدة البيانات. يرجى المحاولة مرة أخرى لاحقًا.",
-  "LANGUAGE_ERROR_GENERAL": "حدث خطأ أثناء تغيير اللغة.",
-  "ABJAD_USAGE": "الاستخدام: /abjad <نص>",
-  "ABJAD_RESULT": "قيمة الأبجدية لنص '{text}' هي {value}.",
-  "ABJAD_PROMPT_ALPHABET": "الرجاء تحديد ترتيب الأبجدية:",
-  "ABJAD_PROMPT_TYPE": "الرجاء تحديد نوع الأبجدية:",
-  "ABJAD_PROMPT_SHADDA": "الحروف التي تحتها شدة؟",
-  "ABJAD_PROMPT_DETAIL": "عرض تفاصيل الحساب؟",
-  "ABJAD_DETAILS": "تفاصيل الحساب:\n{details}",
-  "ABJAD_CANCEL": "تم إلغاء حساب الأبجدية.",
-  "LOGARITHMIC": "لوغاريتمي",
-  "INVERSE_LOGARITHMIC": "لوغاريتمي معكوس",
-  "BASE_36": "الأساس 36",
-  "INVERSE_BASE_36": "الأساس 36 المعكوس",
-  "BASE_100": "الأساس 100",
-  "INVERSE_BASE_100": "الأساس 100 المعكوس",
-  "ALPHABET_ORDER_OTTOMAN": "الأبجدية العثمانية",
-  "ALPHABET_ORDER_ABJADI": "ترتيب أبجدي",
-  "ALPHABET_ORDER_MAGHRIBI": "ترتيب أبجدي مغربي",
-  "ALPHABET_ORDER_QURANIC": "تكرار قرآني",
-  "ALPHABET_ORDER_HIJA": "ترتيب هجائي",
-  "ALPHABET_ORDER_MAGHRIBI_HIJA": "ترتيب هجائي مغربي",
-  "ALPHABET_ORDER_IKLEELS": "ترتيب إكليل",
-  "ALPHABET_ORDER_SHAMSE_ABJADI": "ترتيب أبجدي شمسي",
-  "ALPHABET_ORDER_HEBREW": "الأبجدية العبرية",
-  "ALPHABET_ORDER_TURKISH": "الأبجدية التركية",
-  "ALPHABET_ORDER_ENGLISH": "الأبجدية الإنجليزية",
-  "ALPHABET_ORDER_LATIN": "الأبجدية اللاتينية",
-  "ALPHABET_ORDER_ARABI": "محيي الدين بن عربي",
-  "ALPHABET_ORDER_BUNI": "أحمد البوني",
-  "ALPHABET_ORDER_HUSEYNI": "سليمان الحسيني",
-  "ALPHABET_ORDER_DEFAULT": "العربية الافتراضية",
-  "ABJAD_TYPE_ASGHAR": "أصغر",
-  "ABJAD_TYPE_SAGHIR": "صغير",
-  "ABJAD_TYPE_KEBEER": "كبير",
-  "ABJAD_TYPE_AKBAR": "أكبر",
-  "ABJAD_TYPE_SAGHIR_PLUS_QUANTITY": "صغير + كمية الحروف",
-  "ABJAD_TYPE_LETTER_QUANTITY": "كمية الحروف",
-  "SHADDA_USE_ONCE": "إضافة مرة واحدة",
-  "SHADDA_USE_TWICE": "إضافة مرتين",
-  "ABJAD-ONLY-RESULT": "النتيجة فقط",
-  "ABJAD-WITH-DETAILS": "مع التفاصيل",
-  "ERROR_TIMEOUT": "استغرق المعالجة وقتًا طويلاً. تم إرسال النتيجة بشكل منفصل.",
-  "GENERATING_MAGICSQUARE": "جارٍ إنشاء مربع سحري للرقم {number}...",
-  "CREATE_ARABIC_MAGIC_SQUARE": "إنشاء مربع سحري بالأرقام العربية",
-  "BASTET_USAGE": "الاستخدام: /bastet <رقم>",
-  "BASTET_PROMPT_REPETITION": "الرجاء إدخال مقدار التكرار (عدد صحيح موجب):",
-  "BASTET_PROMPT_TABLE": "الرجاء تحديد ترتيب الأبجدية:",
-  "BASTET_PROMPT_LANGUAGE": "الرجاء تحديد نوع الأبجدية:",
-  "BASTET_RESULT": "نتيجة باستيت للرقم {number} مع {repetition} تكرارات باستخدام الجدول {table} هي {value}.",
-  "BASTET_CANCEL": "تم إلغاء حساب باستيت.",
-  "HUDDAM_USAGE": "الاستخدام: /huddam <رقم>",
-  "HUDDAM_RESULT": "الاسم الذي تم إنشاؤه للرقم {number} (النوع: {type}، اللغة: {huddam_lang}) هو '{name}'.",
-  "HUDDAM_PROMPT_ENTITY_TYPE": "الرجاء تحديد نوع الكيان:",
-  "HUDDAM_PROMPT_LANGUAGE": "الرجاء تحديد ترتيب الأبجدية:",
-  "HUDDAM_PROMPT_MULTIPLIAR": "يتم تجميع حروف المضاعف في الوضع 1، وتكرارها لكل رقم في الوضع 2",
-  "HUDDAM_CANCEL": "تم إلغاء حساب هددام.",
-  "HUDDAM_REGULAR": "تجميع حروف المضاعف",
-  "HUDDAM_EACHER": "تكرار حروف المضاعف",
-  "HUDDAM_HIGH": "كيان عالي",
-  "HUDDAM_LOW": "كيان منخفض",
-  "HUDDAM_BAD": "كيان سيئ",
-  "UNSUR_USAGE": "الاستخدام: /unsur",
-  "UNSUR_RESULT": "{input} لديه هذه الحروف '{liste}' {value}، المقابلة للعنصر: {element}.",
-  "UNSUR_PROMPT_INPUT": "الرجاء إدخال النص:",
-  "UNSUR_PROMPT_LANGUAGE": "الرجاء تحديد طريقة التصنيف:",
-  "UNSUR_PROMPT_TABLE": "الرجاء تحديد العنصر:",
-  "UNSUR_PROMPT_SHADDA": "الحروف التي تحتها شدة؟",
-  "UNSUR_CANCEL": "تم إلغاء حساب أونسور.",
-  "NUTKET_USAGE": "الاستخدام: /nutket <رقم> [لغة]",
-  "NUTKET_RESULT": "الرقم {number} مكتوب بـ {nutket_lang} هو: {spelled}.",
-  "NAME_USAGE": "الاستخدام: /name <بادئة> <تركي|إنجليزي|عبري|لاتيني|عربي>",
-  "NAME_RESULT": "الاسم الذي تم إنشاؤه للبادئة '{prefix}' (النوع: {type}، الطريقة: {method}) هو '{name}'.",
-  "START_MESSAGE": "مرحباً بك في NumberFansBot! لديك {remaining_credits} رصيد. استكشف سحر الأرقام!",
-  "HELP_USAGE": "الاستخدام: /help",
-  "HELP_GROUP_CHAT_USAGE": "مساعدة الدردشة الجماعية",
-  "INDIAN_NUMBERS": "أرقام هندية",
-  "ARABIC_NUMBERS": "أرقام عربية",
-  "NUMEROLOGY_USAGE": "الاستخدام: /numerology <نص أو عبارة> [arabic_abjadi| arabic_maghribi| arabic_hija| arabic_maghribi_hija| hebrew| english| latin| turkish| ottoman] [normal| inverse| base36| base36_inverse| base100| base100_inverse]",
-  "NUMEROLOGY_RESULT": "قيمة علم الأعداد لنص '{text}' باستخدام أبجدية {alphabet} وطريقة {method} هي {value}.",
-  "NUMEROLOGY_PROMPT_ALPHABET": "الرجاء تحديد أبجدية علم الأعداد:",
-  "CONVERTNUMBERS_USAGE": "الاستخدام: /convertnumbers <نص> [indian|arabic]",
-  "CONVERTNUMBERS_RESULT": "الأرقام المحولة:\n\n```\n{result}\n```",
-  "MAGICSQUARE_USAGE": "الاستخدام: /magicsquare <مجموع الصف>",
-  "MAGICSQUARE_RESULT": "مربع سحري لمجموع الصف {number}:\n```\n{square}\n```",
-  "TRANSLITERATION_USAGE": "الاستخدام: /transliterate <لغة المصدر> <لغة الهدف> <نص>",
-  "TRANSLITERATION_RESPONSE": "تمت الترجمة الصوتية إلى {lang_name}: {result}",
-  "SUGGEST_TRANSLITERATION_RESULT": "اقتراحات لـ '{text}' من {source_lang} إلى {target_lang}: {results}",
-  "TRANSLITERATION_HISTORY_RESULT": "سجل الترجمة الصوتية:\n{history}",
-  "TRANSLITERATION_HISTORY_USAGE": "سجل الترجمة الصوتية",
-  "CANCEL_USAGE": "الاستخدام: /cancel",
-  "CANCEL_RESULT": "تم إلغاء العملية.",
-  "SETTINGS_USAGE": "الاستخدام: /settings",
-  "SETTINGS_RESULT": "تم تحديث الإعدادات.",
-  "PAYMENT_BETA_TESTER": "بصفتك مختبرًا تجريبيًا، لديك رصيد غير محدود!",
-  "PAYMENT_PRODUCTS_CREDIT_PRODUCT_NAME": "500 رصيد",
-  "PAYMENT_PRODUCTS_CREDIT_PRODUCT_DESCRIPTION": "ادفع 5.00 دولار مقابل 500 رصيد.",
-  "NO_CREDITS": "لم يتبق لديك رصيد. استخدم /payment لشراء المزيد.",
-  "USER_BLACKLISTED": "أنت في القائمة السوداء ولا يمكنك استخدام هذا الروبوت.",
-  "BETA_TESTER": "مختبر تجريبي",
-  "BETA_TESTER_GRANTED": "تم منح امتيازات المختبر التجريبي لمعرف Telegram {telegram_id}.",
-  "BETA_TESTER_REVOKED": "تم سحب امتيازات المختبر التجريبي لمعرف Telegram {telegram_id}.",
-  "GRANT_ACCESS": "توظيف مختبر تجريبي",
-  "REVOKE_ACCESS": "فصل مختبر تجريبي",
-  "ELEMENT_FIRE": "نار",
-  "ELEMENT_WATER": "ماء",
-  "ELEMENT_AIR": "هواء",
-  "ELEMENT_EARTH": "أرض",
-  "ELEMENT_UNKNOWN": "غير معروف",
-  "CREATE_MAGIC_SQUARE": "إنشاء مربع سحري",
-  "CREATE_INDIAN_MAGIC_SQUARE": "إنشاء مربع سحري هندي",
-  "EASTERN_ARABIC_NUMBERS": "عرض بالأرقام العربية الشرقية",
-  "NEXT_SIZE": "الحجم التالي",
-  "SPELL_NUMBER": "تهجئة الرقم",
-  "SHOW_DETAILS": "عرض التفاصيل",
-  "CALCULATE_ABJAD": "حساب الأبجدية",
-  "ERROR_GENERAL": "حدث خطأ: {error}",
-  "AI_PROMPT": "أستخدم روبوت تيليجرام يمكنه حساب قيم الأعداد بناءً على الأبجديات التركية والإنجليزية واللاتينية والعربية والعبرية، وأحاول إيجاد صحوة روحية من خلال نتائج حسابات روبوت تيليجرام هذا؛ الروبوت قادر على حساب القيم الجيماترية وحسابات الأبجدية باستخدام أمر '/abjad'؛ وهو قادر على إنتاج مربعات سحرية باستخدام أمر '/magicsquare' إذا وجد قيمة رقمية ويمكنه إنتاج أسماء ملائكة أو شياطين لكيانات التولبا الروحية باستخدام أمر '/huddam'، ويمكن للروبوت تحويل الأرقام العربية الشرقية والأرقام العربية الحديثة في النص إلى بعضها البعض باستخدام أمر '/convertnumbers' وقد أعطاني النتائج أدناه؛ يرجى إخباري كيف يمكنني استخدام هذه لتدوين طلاسم أو إعداد ماندالا أو إلقاء تعويذات باستخدامها؛ يمكن للروبوت تقديم معلومات محدودة باستخدام سجلاته حول قيم الأبجدية الإسلامية ولكن آمل أن تتمكن من إضافة المزيد من الأفكار حول نتائجه هنا:\n\n {response}",
-  "AI_COMMENTARY": "تعليق الذكاء الاصطناعي: {commentary}",
-  "LOGIN_SUCCESS": "تم تسجيل الدخول بنجاح.",
-  "MODEL_ADDED": "تمت إضافة النموذج بنجاح.",
-  "MODEL_DELETED": "تم حذف النموذج بنجاح.",
-  "COMMANDS_TAB": "الأوامر",
-  "AI_SETTINGS": "إعدادات الذكاء الاصطناعي",
-  "AI_MODEL_URL": "عنوان URL لنموذج الذكاء الاصطناعي",
-  "AI_ACCESS_TOKEN": "رمز الوصول إلى الذكاء الاصطناعي",
-  "WARNING_NUMBER": "",
-  "COMMAND_USAGE_PERCENTAGE": "نسبة استخدام الأمر (%)",
-  "COMMAND_USAGE_CHART": "إحصائيات استخدام الأوامر",
-  "INSTALL_TAB": "التثبيت",
-  "GO_TO_INSTALL": "الذهاب إلى التثبيت",
-  "BADGES": "الشارات",
-  "PROMOTE_CREDITS": "ترقية الرصيد",
-  "ENTER_CREDITS": "أدخل الرصيد",
-  "SUBMIT": "إرسال",
-  "INVALID_CREDITS": "رصيد غير صالح: {error}",
-  "CREDITS_PROMOTED": "تمت ترقية {credits} رصيد بنجاح للمستخدم {user_id}",
-  "CREDITS_PROMOTE_ERROR": "فشل في ترقية الرصيد",
-  "BLACKLIST": "القائمة السوداء",
-  "UNBLACKLIST": "إزالة من القائمة السوداء",
-  "BLACKLIST_TOGGLED": "تم {status} المستخدم {user_id} بنجاح",
-  "BLACKLIST_TOGGLE_ERROR": "فشل في تبديل حالة القائمة السوداء",
-  "CREDITS_REMAINS": "لديك {remaining_credits} رصيد متبقي",
-  "TESKILAT_ALREADY_ACTIVE": "امتياز تشكيلات نشط بالفعل",
-  "TESKILAT_ACTIVATED": "تم تفعيل امتياز تشكيلات بنجاح",
-  "TESKILAT_ACTIVATION_FAILED": "فشل في تفعيل امتياز تشكيلات",
-  "PAYMENT_INSTRUCTIONS": "يرجى اتباع تعليمات الدفع...",
-  "FILES_TAB": "الملفات",
-  "CREATE_FILE": "إنشاء ملف جديد",
-  "FILE_PATH": "مسار الملف",
-  "SAVE": "حفظ",
-  "DELETE": "حذف",
-  "GENERATE_ENTITY": "إنشاء اسم كيان",
-  "RELOAD": "إعادة تحميل",
-  "FILE_RELOADED": "تمت إعادة تحميل الملف بنجاح",
-  "TEMPLATE_RELOADED": "تمت إعادة تحميل القالب بنجاح",
-  "LOCALE_RELOADED": "تمت إعادة تحميل ترجمات اللغة بنجاح",
-  "FILE_RELOAD_UNSUPPORTED": "إعادة التحميل غير مدعومة لنوع هذا الملف",
-  "DONATE": "تبرع",
-  "USE_PAPARA": "ادعم باستخدام Papara",
-  "SEARCH_USERS": "البحث عن المستخدمين بواسطة اسم المستخدم...",
-  "SEARCH_GROUPS": "البحث عن المجموعات بالاسم...",
-  "GROUP_ID": "معرف المجموعة",
-  "GROUP_NAME": "الاسم",
-  "GROUP_TYPE": "النوع",
-  "GROUP_PUBLIC": "عام؟",
-  "GROUP_MEMBERS": "الأعضاء",
-  "GROUP_CREATOR": "المنشئ",
-  "GROUP_ADMINS": "المشرفون",
-  "GROUP_LAST_INLINE_USER": "آخر مستخدم مضمن",
-  "GROUP_LAST_INLINE_QUERY": "آخر استعلام مضمن",
-  "GROUP_LAST_INLINE_TIME": "آخر وقت مضمن",
-  "NO_USERS_FOUND": "لم يتم العثور على مستخدمين",
-  "NO_GROUPS_FOUND": "لم يتم العثور على مجموعات",
-  "NA": "غير متاح",
-  "GROUP_BLACKLIST_TOGGLED": "تم {{status}} المجموعة {{group_id}}",
-  "GROUP_BLACKLIST_TOGGLE_ERROR": "فشل في تبديل حالة القائمة السوداء للمجموعة",
-  "INLINE_HELP_TITLE": "مساعدة الأوامر المضمنة",
-  "INLINE_HELP_DESC": "اكتب أمرًا مثل '@EgrigoreBot /abjad <نص> [--خيارات]'",
-  "INLINE_HELP_MESSAGE": "استخدم الأوامر المضمنة مثل `@EgrigoreBot /abjad <نص> [--alphabet=<قيمة>] [--type=<قيمة>] [--shadda=<قيمة>] [--detail=<قيمة>]`. الأوامر المدعومة: abjad, bastet, nutket, unsur, huddam, magic_square, transliterate, convert_numbers, numerology.",
-  "UNKNOWN_COMMAND_TITLE": "أمر غير معروف",
-  "UNKNOWN_COMMAND_DESC": "الأمر '{command}' غير معترف به",
-  "UNKNOWN_COMMAND_MESSAGE": "عذرًا، '{command}' ليس أمرًا مضمنًا صالحًا. جرب أوامر مثل abjad أو bastet أو nutket.",
-  "ERROR_TITLE": "خطأ",
-  "ERROR_DESC": "حدث خطأ: {error}",
-  "ABJAD_INLINE_HELP_TITLE": "حاسبة الأبجدية",
-  "ABJAD_INLINE_HELP_DESC": "حساب قيمة الأبجدية للنص",
-  "ABJAD_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /abjad <نص> [--alphabet=<arabic_abjadi|arabic_maghribi|...>] [--type=<asghar|saghir|...>] [--shadda=<once|twice>] [--detail=<summary|full>]`. مثال: `@EgrigoreBot /abjad Hello --alphabet=english --type=saghir`",
-  "ABJAD_NO_TEXT_TITLE": "لم يتم تقديم نص",
-  "ABJAD_NO_TEXT_DESC": "الرجاء إدخال نص للحساب",
-  "ABJAD_NO_TEXT_MESSAGE": "الرجاء تقديم نص، على سبيل المثال، `@EgrigoreBot /abjad Hello`",
-  "ABJAD_INVALID_ALPHABET_TITLE": "أبجدية غير صالحة",
-  "ABJAD_INVALID_ALPHABET_DESC": "الأبجدية '{alphabet}' غير معترف بها",
-  "ABJAD_INVALID_ALPHABET_MESSAGE": "الأبجدية '{alphabet}' غير صالحة. الخيارات الصالحة: arabic_abjadi, arabic_maghribi, arabic_quranic, arabic_hija, arabic_maghribi_hija, arabic_ikleels, arabic_shamse_abjadi, hebrew, turkish, english, latin",
-  "ABJAD_INVALID_TYPE_TITLE": "نوع أبجدي غير صالح",
-  "ABJAD_INVALID_TYPE_DESC": "النوع '{type}' غير معترف به",
-  "ABJAD_INVALID_TYPE_MESSAGE": "النوع '{type}' غير صالح. الخيارات الصالحة: asghar, saghir, kebeer, akbar, saghir_plus_quantity, letter_quantity",
-  "ABJAD_INVALID_SHADDA_TITLE": "شدة غير صالحة",
-  "ABJAD_INVALID_SHADDA_DESC": "الشدة '{shadda}' غير معترف بها",
-  "ABJAD_INVALID_SHADDA_MESSAGE": "الشدة '{shadda}' غير صالحة. الخيارات الصالحة: once, twice",
-  "ABJAD_INVALID_DETAIL_TITLE": "تفاصيل غير صالحة",
-  "ABJAD_INVALID_DETAIL_DESC": "التفاصيل '{detail}' غير معترف بها",
-  "ABJAD_INVALID_DETAIL_MESSAGE": "التفاصيل '{detail}' غير صالحة. الخيارات الصالحة: summary, full",
-  "ABJAD_SHADDA_INVALID_TITLE": "الشدة غير قابلة للتطبيق",
-  "ABJAD_SHADDA_INVALID_DESC": "تتطلب الشدة 'twice' نصًا عربيًا",
-  "ABJAD_SHADDA_INVALID_MESSAGE": "الشدة 'twice' صالحة فقط للنص العربي",
-  "ABJAD_INLINE_TITLE": "قيمة الأبجدية: {value}",
-  "ABJAD_INLINE_DESC": "تم الحساب لـ '{text}': {value}",
-  "ABJAD_CALC_SUMMARY": "ملخص الحساب:\nالأبجدية: {alphabet}\nنوع الأبجدية: {abjad_type}\nالشدة: {shadda}",
-  "ABJAD_CALC_DETAILS": "قيم الحروف: {details}",
-  "ABJAD_CALC_TOTAL": "القيمة الإجمالية: {total}",
-  "BASTET_INLINE_HELP_TITLE": "مولد باستيت",
-  "BASTET_INLINE_HELP_DESC": "إنشاء نص من رقم",
-  "BASTET_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /bastet <رقم> [--repetition=<قيمة>] [--alphabet=<arabic_abjadi|arabic_maghribi|...>] [--type=<asghar|saghir|...>]`. مثال: `@EgrigoreBot /bastet 123 --repetition=5`",
-  "BASTET_NO_NUMBER_TITLE": "لم يتم تقديم رقم",
-  "BASTET_NO_NUMBER_DESC": "الرجاء إدخال رقم للمعالجة",
-  "BASTET_NO_NUMBER_MESSAGE": "الرجاء تقديم رقم، على سبيل المثال، `@EgrigoreBot /bastet 123`",
-  "BASTET_INVALID_REPETITION_TITLE": "تكرار غير صالح",
-  "BASTET_INVALID_REPETITION_DESC": "التكرار '{repetition}' غير صالح",
-  "BASTET_INVALID_REPETITION_MESSAGE": "يجب أن يكون التكرار رقمًا بين 1 و 1000، تم الحصول على '{repetition}'",
-  "BASTET_INVALID_ALPHABET_TITLE": "أبجدية غير صالحة",
-  "BASTET_INVALID_ALPHABET_DESC": "الأبجدية '{alphabet}' غير معترف بها",
-  "BASTET_INVALID_ALPHABET_MESSAGE": "الأبجدية '{alphabet}' غير صالحة. الخيارات الصالحة: arabic_abjadi, arabic_maghribi, arabic_quranic, arabic_hija, arabic_maghribi_hija, arabic_ikleels, arabic_shamse_abjadi, hebrew, turkish, english, latin",
-  "BASTET_INVALID_TYPE_TITLE": "نوع أبجدي غير صالح",
-  "BASTET_INVALID_TYPE_DESC": "النوع '{type}' غير معترف به",
-  "BASTET_INVALID_TYPE_MESSAGE": "النوع '{type}' غير صالح. الخيارات الصالحة: asghar, saghir, kebeer, akbar, saghir_plus_quantity, letter_quantity",
-  "BASTET_INLINE_TITLE": "نتيجة باستيت: {value}",
-  "BASTET_INLINE_DESC": "تم الإنشاء للرقم {number}، التكرار {repetition}",
-  "BASTET_CALC_SUMMARY": "ملخص الحساب:\nالأبجدية: {alphabet}\nنوع الأبجدية: {abjad_type}\nالتكرار: {repetition}",
-  "BASTET_CALC_RESULT": "النص الذي تم إنشاؤه: {result}",
-  "NUTKET_INLINE_HELP_TITLE": "تهجئة نوتكت",
-  "NUTKET_INLINE_HELP_DESC": "تهجئة رقم بالحروف",
-  "NUTKET_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /nutket <رقم> [--language=<arabic|hebrew|turkish|english|latin>]`. مثال: `@EgrigoreBot /nutket 123 --language=arabic`",
-  "NUTKET_NO_NUMBER_TITLE": "لم يتم تقديم رقم",
-  "NUTKET_NO_NUMBER_DESC": "الرجاء إدخال رقم للتهجئة",
-  "NUTKET_NO_NUMBER_MESSAGE": "الرجاء تقديم رقم، على سبيل المثال، `@EgrigoreBot /nutket 123`",
-  "NUTKET_INVALID_LANGUAGE_TITLE": "لغة غير صالحة",
-  "NUTKET_INVALID_LANGUAGE_DESC": "اللغة '{language}' غير معترف بها",
-  "NUTKET_INVALID_LANGUAGE_MESSAGE": "اللغة '{language}' غير صالحة. الخيارات الصالحة: arabic, hebrew, turkish, english, latin",
-  "NUTKET_INLINE_TITLE": "نتيجة نوتكت: {spelled}",
-  "NUTKET_INLINE_DESC": "الرقم {number} مكتوب بـ {language}",
-  "UNSUR_INLINE_HELP_TITLE": "مصنف أونسور",
-  "UNSUR_INLINE_HELP_DESC": "تصنيف النص إلى عناصر",
-  "UNSUR_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /unsur <نص> [--language=<turkish|arabic|buni|huseyni|hebrew|english|latin|default>] [--table=<fire|water|air|earth|default>] [--shadda=<once|twice>]`. مثال: `@EgrigoreBot /unsur Hello --language=turkish`",
-  "UNSUR_NO_TEXT_TITLE": "لم يتم تقديم نص",
-  "UNSUR_NO_TEXT_DESC": "الرجاء إدخال نص للتصنيف",
-  "UNSUR_NO_TEXT_MESSAGE": "الرجاء تقديم نص، على سبيل المثال، `@EgrigoreBot /unsur Hello`",
-  "UNSUR_INVALID_LANGUAGE_TITLE": "لغة غير صالحة",
-  "UNSUR_INVALID_LANGUAGE_DESC": "اللغة '{language}' غير معترف بها",
-  "UNSUR_INVALID_LANGUAGE_MESSAGE": "اللغة '{language}' غير صالحة. الخيارات الصالحة: turkish, arabic, buni, huseyni, hebrew, english, latin, default",
-  "UNSUR_INVALID_TABLE_TITLE": "جدول غير صالح",
-  "UNSUR_INVALID_TABLE_DESC": "الجدول '{table}' غير معترف به",
-  "UNSUR_INVALID_TABLE_MESSAGE": "الجدول '{table}' غير صالح. الخيارات الصالحة: fire, water, air, earth, default",
-  "UNSUR_INVALID_SHADDA_TITLE": "شدة غير صالحة",
-  "UNSUR_INVALID_SHADDA_DESC": "الشدة '{shadda}' غير معترف بها",
-  "UNSUR_INVALID_SHADDA_MESSAGE": "الشدة '{shadda}' غير صالحة. الخيارات الصالحة: once, twice",
-  "UNSUR_SHADDA_INVALID_TITLE": "الشدة غير قابلة للتطبيق",
-  "UNSUR_SHADDA_INVALID_DESC": "تتطلب الشدة 'twice' نصًا عربيًا",
-  "UNSUR_SHADDA_INVALID_MESSAGE": "الشدة 'twice' صالحة فقط للنص العربي",
-  "UNSUR_INLINE_TITLE": "نتيجة أونسور: {element}",
-  "UNSUR_INLINE_DESC": "تم تصنيف '{input}' كـ {element}",
-  "HUDDAM_INLINE_HELP_TITLE": "مولد هددام",
-  "HUDDAM_INLINE_HELP_DESC": "إنشاء اسم كيان من رقم",
-  "HUDDAM_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /huddam <رقم> [--entity=<ulvi|sufli|ser>] [--alphabet=<arabic_abjadi|...>] [--multiplier=<regular|eacher>]`. مثال: `@EgrigoreBot /huddam 123 --entity=ulvi`",
-  "HUDDAM_NO_NUMBER_TITLE": "لم يتم تقديم رقم",
-  "HUDDAM_NO_NUMBER_DESC": "الرجاء إدخال رقم للمعالجة",
-  "HUDDAM_NO_NUMBER_MESSAGE": "يرجى تقديم رقم، على سبيل المثال، `@EgrigoreBot /huddam 123`",
-  "HUDDAM_INVALID_ENTITY_TITLE": "نوع الكيان غير صالح",
-  "HUDDAM_INVALID_ENTITY_DESC": "نوع الكيان '{entity}' غير معترف به",
-  "HUDDAM_INVALID_ENTITY_MESSAGE": "نوع الكيان '{entity}' غير صالح. الخيارات المتاحة: علوي، سفلي، سر",
-  "HUDDAM_INVALID_ALPHABET_TITLE": "أبجدية غير صالحة",
-  "HUDDAM_INVALID_ALPHABET_DESC": "الأبجدية '{alphabet}' غير معترف بها",
-  "HUDDAM_INVALID_ALPHABET_MESSAGE": "الأبجدية '{alphabet}' غير صالحة. الخيارات المتاحة: أبجدي عربي، مغربي عربي، قرآني عربي، هجاء عربي، هجاء مغربي عربي، إكليل عربي، شمسي أبجدي عربي، عبري، تركي، إنجليزي، لاتيني",
-  "HUDDAM_INVALID_MULTIPLIER_TITLE": "مضاعف غير صالح",
-  "HUDDAM_INVALID_MULTIPLIER_DESC": "المضاعف '{multiplier}' غير معترف به",
-  "HUDDAM_INVALID_MULTIPLIER_MESSAGE": "المضاعف '{multiplier}' غير صالح. الخيارات المتاحة: عادي، إيشر",
-  "HUDDAM_INLINE_TITLE": "نتيجة الهدام: {name}",
-  "HUDDAM_INLINE_DESC": "تم إنشاؤه للرقم {number}، النوع {type}",
-  "MAGICSQUARE_INLINE_HELP_TITLE": "مولد المربع السحري",
-  "MAGICSQUARE_INLINE_HELP_DESC": "إنشاء مربع سحري",
-  "MAGICSQUARE_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /magic_square <number>`. مثال: `@EgrigoreBot /magic_square 15`",
-  "MAGICSQUARE_NO_NUMBER_TITLE": "لم يتم تقديم رقم",
-  "MAGICSQUARE_NO_NUMBER_DESC": "يرجى إدخال مجموع الصف",
-  "MAGICSQUARE_NO_NUMBER_MESSAGE": "يرجى تقديم مجموع الصف، على سبيل المثال، `@EgrigoreBot /magic_square 15`",
-  "MAGICSQUARE_INVALID_NUMBER_TITLE": "مجموع صف غير صالح",
-  "MAGICSQUARE_INVALID_NUMBER_DESC": "يجب أن يكون مجموع الصف 15 على الأقل",
-  "MAGICSQUARE_INVALID_NUMBER_MESSAGE": "يجب أن يكون مجموع الصف 15 على الأقل، تم الحصول على '{number}'",
-  "MAGICSQUARE_INLINE_TITLE": "مربع سحري للرقم {number}",
-  "MAGICSQUARE_INLINE_DESC": "مربع تم إنشاؤه بمجموع صف {number}",
-  "TRANSLITERATE_INLINE_HELP_TITLE": "نقل الحروف",
-  "TRANSLITERATE_INLINE_HELP_DESC": "نقل الحروف بين النصوص",
-  "TRANSLITERATE_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /transliterate <text> [--source=<arabic|english|turkish|hebrew|latin>] [--target=<arabic|english|turkish|hebrew|latin>]`. مثال: `@EgrigoreBot /transliterate Hello --source=english --target=arabic`",
-  "TRANSLITERATE_NO_TEXT_TITLE": "لم يتم تقديم نص",
-  "TRANSLITERATE_NO_TEXT_DESC": "يرجى إدخال نص لنقل حروفه",
-  "TRANSLITERATE_NO_TEXT_MESSAGE": "يرجى تقديم نص، على سبيل المثال، `@EgrigoreBot /transliterate Hello`",
-  "TRANSLITERATE_INVALID_SOURCE_TITLE": "لغة مصدر غير صالحة",
-  "TRANSLITERATE_INVALID_SOURCE_DESC": "لغة المصدر '{source}' غير معترف بها",
-  "TRANSLITERATE_INVALID_SOURCE_MESSAGE": "لغة المصدر '{source}' غير صالحة. الخيارات المتاحة: عربي، إنجليزي، تركي، عبري، لاتيني",
-  "TRANSLITERATE_INVALID_TARGET_TITLE": "لغة هدف غير صالحة",
-  "TRANSLITERATE_INVALID_TARGET_DESC": "لغة الهدف '{target}' غير معترف بها",
-  "TRANSLITERATE_INVALID_TARGET_MESSAGE": "لغة الهدف '{target}' غير صالحة. الخيارات المتاحة: عربي، إنجليزي، تركي، عبري، لاتيني",
-  "TRANSLITERATE_INLINE_TITLE": "نتيجة نقل الحروف: {result}",
-  "TRANSLITERATE_INLINE_DESC": "تم نقل حروف '{text}' من {source} إلى {target}",
-  "TRANSLITERATION_RESULT": "نقل حروف \"{text}\" من {source_lang} إلى {target_lang}: **{result}**",
-  "CONVERTNUMBERS_INLINE_HELP_TITLE": "محول الأرقام",
-  "CONVERTNUMBERS_INLINE_HELP_DESC": "تحويل الأرقام إلى تنسيقات مختلفة",
-  "CONVERTNUMBERS_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /convert_numbers <number> [--format=<arabic|indian|invert>]`. مثال: `@EgrigoreBot /convert_numbers 1234 --format=arabic`",
-  "CONVERTNUMBERS_NO_TEXT_TITLE": "لم يتم تقديم رقم",
-  "CONVERTNUMBERS_NO_TEXT_DESC": "يرجى إدخال رقم للتحويل",
-  "CONVERTNUMBERS_NO_TEXT_MESSAGE": "يرجى تقديم رقم، على سبيل المثال، `@EgrigoreBot /convert_numbers 1234`",
-  "CONVERTNUMBERS_INVALID_FORMAT_TITLE": "تنسيق غير صالح",
-  "CONVERTNUMBERS_INVALID_FORMAT_DESC": "التنسيق '{format}' غير معترف به",
-  "CONVERTNUMBERS_INVALID_FORMAT_MESSAGE": "التنسيق '{format}' غير صالح. الخيارات المتاحة: عربي، هندي، معكوس",
-  "CONVERTNUMBERS_INLINE_TITLE": "الرقم المحول: {result}",
-  "CONVERTNUMBERS_INLINE_DESC": "تم تحويل '{text}' إلى تنسيق {format}",
-  "NUMEROLOGY_INLINE_HELP_TITLE": "حاسبة علم الأعداد",
-  "NUMEROLOGY_INLINE_HELP_DESC": "حساب قيمة علم الأعداد للنص",
-  "NUMEROLOGY_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /numerology <text> [--alphabet=<arabic_abjadi|...>] [--method=<normal|inverse|base36|...>]`. مثال: `@EgrigoreBot /numerology Hello --alphabet=english --method=normal`",
-  "NUMEROLOGY_NO_TEXT_TITLE": "لم يتم تقديم نص",
-  "NUMEROLOGY_NO_TEXT_DESC": "يرجى إدخال نص للحساب",
-  "NUMEROLOGY_NO_TEXT_MESSAGE": "يرجى تقديم نص، على سبيل المثال، `@EgrigoreBot /numerology Hello`",
-  "NUMEROLOGY_INVALID_ALPHABET_TITLE": "أبجدية غير صالحة",
-  "NUMEROLOGY_INVALID_ALPHABET_DESC": "الأبجدية '{alphabet}' غير معترف بها",
-  "NUMEROLOGY_INVALID_ALPHABET_MESSAGE": "الأبجدية '{alphabet}' غير صالحة. الخيارات المتاحة: أبجدي عربي، مغربي عربي، قرآني عربي، هجاء عربي، هجاء مغربي عربي، إكليل عربي، شمسي أبجدي عربي، عبري، تركي، إنجليزي، لاتيني",
-  "NUMEROLOGY_INVALID_METHOD_TITLE": "طريقة غير صالحة",
-  "NUMEROLOGY_INVALID_METHOD_DESC": "الطريقة '{method}' غير معترف بها",
-  "NUMEROLOGY_INVALID_METHOD_MESSAGE": "الطريقة '{method}' غير صالحة. الخيارات المتاحة: عادي، معكوس، قاعدة 36، معكوس قاعدة 36، فيثاغورس، كلداني، لاتيني، معكوس لاتيني، عبري، معكوس عبري",
-  "NUMEROLOGY_INLINE_TITLE": "قيمة علم الأعداد: {value}",
-  "NUMEROLOGY_INLINE_DESC": "تم الحساب لـ '{text}' باستخدام {alphabet}، {method}",
-  "ALPHABET_ORDER_ARABIC_ABJADI": "أبجدي عربي",
-  "ALPHABET_ORDER_ARABIC_MAGHRIBI": "مغربي عربي",
-  "ALPHABET_ORDER_ARABIC_QURANIC": "قرآني عربي",
-  "ALPHABET_ORDER_ARABIC_HIJA": "هجاء عربي",
-  "ALPHABET_ORDER_ARABIC_MAGHRIBI_HIJA": "هجاء مغربي عربي",
-  "ALPHABET_ORDER_ARABIC_IKLEELS": "إكليل عربي",
-  "ALPHABET_ORDER_ARABIC_SHAMSE_ABJADI": "شمسي أبجدي عربي",
-  "DETAIL_SUMMARY": "ملخص",
-  "DETAIL_FULL": "كامل",
-  "LANGUAGE_ARABIC": "عربي",
-  "LANGUAGE_HEBREW": "عبري",
-  "LANGUAGE_TURKISH": "تركي",
-  "LANGUAGE_ENGLISH": "إنجليزي",
-  "LANGUAGE_LATIN": "لاتيني",
-  "LANGUAGE_BUNI": "بوني",
-  "LANGUAGE_HUSEYNI": "حسيني",
-  "LANGUAGE_DEFAULT": "افتراضي",
-  "TABLE_FIRE": "نار",
-  "TABLE_WATER": "ماء",
-  "TABLE_AIR": "هواء",
-  "TABLE_EARTH": "أرض",
-  "TABLE_DEFAULT": "افتراضي",
-  "HUDDAM_ENTITY_ULVI": "علوي",
-  "HUDDAM_ENTITY_SUFLI": "سفلي",
-  "HUDDAM_ENTITY_SER": "سر",
-  "HUDDAM_MULTIPLIER_REGULAR": "عادي",
-  "HUDDAM_MULTIPLIER_EACHER": "إيشر",
-  "NUMEROLOGY_METHOD_NORMAL": "عادي",
-  "NUMEROLOGY_METHOD_INVERSE": "معكوس",
-  "NUMEROLOGY_METHOD_BASE36": "قاعدة 36",
-  "NUMEROLOGY_METHOD_BASE36_INVERSE": "معكوس قاعدة 36",
-  "NUMEROLOGY_METHOD_PYTHAGOREAN": "فيثاغورس",
-  "NUMEROLOGY_METHOD_CHALDEAN": "كلداني",
-  "NUMEROLOGY_METHOD_LATIN": "لاتيني",
-  "NUMEROLOGY_METHOD_LATIN_INVERSE": "معكوس لاتيني",
-  "NUMEROLOGY_METHOD_HEBREW": "عبري",
-  "NUMEROLOGY_METHOD_HEBREW_INVERSE": "معكوس عبري",
-  "CONVERT_FORMAT_ARABIC": "عربي",
-  "CONVERT_FORMAT_INDIAN": "هندي",
-  "CONVERT_FORMAT_INVERT": "معكوس",
-  "SELL_SETUP_PAPARA": "يرجى إعداد حسابك التجاري في Papara والبريد الإلكتروني باستخدام /papara قبل بيع المنتجات.",
-  "SELL_SELECT_TYPE": "يرجى تحديد نوع المنتج (شحن، تنزيل، عضوية):",
-  "SELL_INVALID_TYPE": "نوع منتج غير صالح. يرجى الاختيار بين 'Shipped' أو 'Download' أو 'Membership'.",
-  "SELL_ENTER_PRODUCT_NAME": "يرجى إدخال اسم المنتج:",
-  "SELL_ENTER_PRODUCT_DESCRIPTION": "يرجى إدخال وصف المنتج:",
-  "SELL_ENTER_PRODUCT_PRICE": "يرجى إدخال سعر المنتج (بالليرة التركية):",
-  "SELL_INVALID_PRICE": "سعر غير صالح. يرجى إدخال رقم صالح أكبر من 0.",
-  "SELL_ENTER_QUANTITY": "يرجى إدخال كمية المنتج:",
-  "SELL_INVALID_QUANTITY": "كمية غير صالحة. يرجى إدخال رقم صالح أكبر من 0.",
-  "SELL_ENTER_TAX_RATES": "يرجى إدخال معدلات الضريبة (مثل KDV:20,ÖTV:5):",
-  "SELL_INVALID_TAX_RATES": "تنسيق معدلات الضريبة غير صالح. استخدم: KDV:20,ÖTV:5",
-  "SELL_ENTER_SHIPPING_FEE": "يرجى إدخال رسوم الشحن (بالليرة التركية):",
-  "SELL_INVALID_SHIPPING_FEE": "رسوم شحن غير صالحة. يرجى إدخال رقم صالح.",
-  "SELL_UPLOAD_IMAGES": "يرجى تحميل ما يصل إلى 3 صور للمنتج (أرسل صورة واحدة في كل مرة):",
-  "SELL_INVALID_IMAGE": "يرجى إرسال صورة صالحة.",
-  "SELL_MAX_IMAGES": "تم تحميل 3 صور كحد أقصى.",
-  "SELL_UPLOAD_MORE_IMAGES": "يمكنك تحميل {remaining} صورة أخرى، أو إرسال أي نص للمتابعة.",
-  "SELL_ENTER_MEMBERSHIP_DETAILS": "يرجى إدخال تفاصيل العضوية (group_id, المدة): مثال، 123456,شهري",
-  "SELL_INVALID_MEMBERSHIP_DETAILS": "تفاصيل عضوية غير صالحة. استخدم التنسيق: group_id, المدة (مثال، 123456,شهري)",
-  "SELL_UPLOAD_FILE": "يرجى تحميل الملف القابل للتنزيل (PDF، DOC، JPG، MP4، ZIP، APK، STL، إلخ):",
-  "SELL_INVALID_FILE": "يرجى إرسال ملف صالح.",
-  "SELL_INVALID_FILE_TYPE": "نوع ملف غير صالح. المسموح به: PDF، DOC، XLS، PPT، JPG، PNG، GIF، MP4، ZIP، APK، STL، XCF.",
-  "SELL_PRODUCT_ADDED": "تمت إضافة المنتج بنجاح!",
-  "SELL_ERROR": "حدث خطأ: {error}",
-  "SELL_CANCELLED": "تم إلغاء إضافة المنتج.",
-  "PRODUCT_TYPE_SHIPPED": "شحن",
-  "PRODUCT_TYPE_DOWNLOAD": "تنزيل",
-  "PRODUCT_TYPE_MEMBERSHIP": "عضوية",
-  "DASHBOARD_STATISTICS_TAB": "إحصائيات",
-  "DASHBOARD_CONFIGURATION_TAB": "إعدادات",
-  "STATISTICS_TITLE": "إحصائيات المبيعات",
-  "STATISTICS_TOTAL_REVENUE": "إجمالي الإيرادات",
-  "STATISTICS_TOTAL_REFUNDS": "إجمالي المبالغ المستردة",
-  "STATISTICS_TOTAL_TAXES": "إجمالي الضرائب",
-  "CONFIGURATION_TITLE": "إعدادات",
-  "CONFIGURATION_PAPARA_EMAIL": "بريد Papara الإلكتروني",
-  "CONFIGURATION_EMAIL_PASSWORD": "كلمة مرور البريد الإلكتروني",
-  "CONFIGURATION_PHONE": "رقم الهاتف",
-  "CONFIGURATION_MAIN_GROUP": "معرف المجموعة الرئيسية",
-  "CONFIGURATION_SAVE": "حفظ الإعدادات",
-  "CONFIGURATION_SAVED": "تم حفظ الإعدادات بنجاح!",
-  "CONFIGURATION_ERROR": "خطأ في حفظ الإعدادات: {error}",
-  "PRODUCT_TOP_SALE": "الأكثر مبيعًا",
-  "PRODUCT_ADD": "إضافة منتج",
-  "PRODUCT_EDIT": "تعديل المنتج",
-  "PRODUCT_DELETE": "حذف المنتج",
-  "PRODUCT_DELETE_CONFIRM": "هل أنت متأكد أنك تريد حذف هذا المنتج؟",
-  "ORDER_DETAILS": "تفاصيل الطلب",
-  "ORDER_CANCEL_CONFIRM": "هل أنت متأكد أنك تريد إلغاء هذا الطلب؟",
-  "ORDER_STATUS_PREPARING": "تم قبول الطلب ويجري تجهيزه للشحن",
-  "ORDER_STATUS_SHIPPED": "تم شحن المنتج وهو في طريقه",
-  "ORDER_STATUS_COMPLETED": "مكتمل",
-  "BUY_BLACKLISTED": "غير مسموح لك باستخدام هذا الأمر.",
-  "BUY_NO_PRODUCTS": "لا توجد منتجات متاحة للشراء حاليًا.",
-  "BUY_SELECT_PRODUCT": "يرجى تحديد منتج للشراء:",
-  "BUY_PRODUCT_UNAVAILABLE": "عذرًا، هذا المنتج غير متوفر حاليًا.",
-  "BUY_QUANTITY_PROMPT": "لقد اخترت: {product_name}\nالسعر: {price} ليرة تركية\nالمتوفر: {quantity}\n\nكم ترغب في شراء؟ (1-{max_quantity})",
-  "BUY_NO_ADDRESSES": "لقد اخترت: {product_name}\nالسعر: {price} ليرة تركية\n\nليس لديك أي عناوين محفوظة. يرجى استخدام /address لإضافة عنوان أولاً.",
-  "BUY_SELECT_ADDRESS": "لقد اخترت: {product_name}\nالسعر: {price} ليرة تركية\nالكمية: 1\n\nيرجى تحديد عنوان التسليم:",
-  "BUY_INVALID_QUANTITY_NEGATIVE": "يرجى إدخال رقم موجب.",
-  "BUY_QUANTITY_EXCEEDS": "الحد الأقصى للكمية المسموح بها هو {max_quantity}. يرجى إدخال رقم أصغر.",
-  "BUY_QUANTITY_ADDRESS": "لقد اخترت: {product_name}\nالسعر: {price} ليرة تركية\nالكمية: {quantity}\nالإجمالي: {total} ليرة تركية\n\nيرجى تحديد عنوان التسليم:",
-  "BUY_INVALID_QUANTITY": "يرجى إدخال رقم صالح.",
-  "BUY_ADDRESS_UNAVAILABLE": "عذرًا، هذا العنوان غير متوفر حاليًا.",
-  "BUY_ORDER_SUMMARY": "ملخص الطلب:\n\nالمنتج: {product_name}\nالسعر: {price} ليرة تركية\nالكمية: {quantity}\nالإجمالي: {total} ليرة تركية\n\nعنوان التسليم:\n{address_name}\n{address}\n{city}\n\nيرجى تأكيد طلبك:",
-  "BUY_INSUFFICIENT_CREDITS": "ليس لديك رصيد كافٍ لإتمام عملية الشراء هذه.\nالمطلوب: {required} ليرة تركية\nرصيدك الحالي: {balance} ليرة تركية\n\nيرجى استخدام /papara لإضافة رصيد إلى حسابك.",
-  "BUY_ORDER_ERROR": "عذرًا، حدث خطأ أثناء معالجة طلبك. يرجى المحاولة مرة أخرى لاحقًا.",
-  "BUY_ORDER_SUCCESS": "🎉 تم تقديم الطلب بنجاح! 🎉\n\nرقم الطلب: #{order_id}\nالمنتج: {product_name}\nالكمية: {quantity}\nالإجمالي: {total} ليرة تركية\n\nسيتم معالجة طلبك قريبًا. يمكنك التحقق من الحالة باستخدام /orders.",
-  "BUY_CANCELLED": "تم إلغاء عملية الشراء.",
-  "ORDERS_BLACKLISTED": "غير مسموح لك باستخدام هذا الأمر.",
-  "ORDERS_NO_ORDERS": "ليس لديك أي طلبات حتى الآن.\n\nاستخدم الأمر /buy لإجراء عملية شراء.",
-  "ORDERS_SELECT_ORDER": "طلباتك\n\nحدد طلبًا لعرض التفاصيل:",
-  "ORDERS_ORDER_NOT_FOUND": "عذرًا، لم يتم العثور على هذا الطلب.",
-  "ORDERS_DETAILS": "{status_emoji} الطلب #{order_id}\n\nالمنتج: {product_name}\nالكمية: {quantity}\nالسعر الإجمالي: {total_price} ليرة تركية\nالحالة: {status}\nتاريخ الطلب: {order_date}\n\nعنوان الشحن:\n{address_name}\n{address}\n{city}\n\n",
-  "ORDERS_PENDING_PAYMENT": "⚠️ يتطلب هذا الطلب دفعًا. استخدم /papara لإضافة رصيد إلى حسابك.",
-  "ORDERS_PROCESSING": "يتم تجهيز طلبك وسيتم شحنه قريبًا.",
-  "ORDERS_SHIPPED": "تم شحن طلبك في {shipped_date}.",
-  "ORDERS_DELIVERED": "تم تسليم طلبك في {delivery_date}.",
-  "ORDERS_CANCELLED_STATUS": "تم إلغاء هذا الطلب في {cancelled_date}.",
-  "ORDERS_CANCEL_ERROR": "عذرًا، حدث خطأ أثناء إلغاء طلبك. يرجى المحاولة مرة أخرى لاحقًا.",
-  "ORDERS_CANCEL_SUCCESS": "✅ تم إلغاء الطلب #{order_id} بنجاح.\n\nتم استرداد {refund_amount} ليرة تركية إلى حسابك.",
-  "ORDERS_CLOSED": "تم إغلاق عرض الطلبات.",
-  "ORDERS_CANCELLED": "تم إلغاء عرض الطلبات.",
-  "PASSWORD_BLACKLISTED": "غير مسموح لك باستخدام هذا الأمر.",
-  "PASSWORD_ENTER_CURRENT": "أنت على وشك تغيير كلمة مرورك.\n\nأولاً، يرجى إدخال كلمة مرورك الحالية:\n\n(أرسل /cancel للإلغاء)",
-  "PASSWORD_CREATE_NEW": "لم يتم تعيين كلمة مرور لك حتى الآن.\n\nيرجى إنشاء كلمة مرور جديدة:\n\n(أرسل /cancel للإلغاء)",
-  "PASSWORD_INCORRECT": "❌ كلمة مرور غير صحيحة. يرجى المحاولة مرة أخرى أو إرسال /cancel للإلغاء.",
-  "PASSWORD_VERIFIED": "تم التحقق من كلمة المرور.\n\nيرجى إدخال كلمة مرورك الجديدة:\n\n(أرسل /cancel للإلغاء)",
-  "PASSWORD_TOO_SHORT": "كلمة المرور قصيرة جدًا. يرجى استخدام 8 أحرف على الأقل.\n\nأدخل كلمة مرور أقوى:",
-  "PASSWORD_CONFIRM": "يرجى تأكيد كلمة مرورك الجديدة عن طريق إدخالها مرة أخرى:\n\n(أرسل /cancel للإلغاء)",
-  "PASSWORD_NO_MATCH": "❌ كلمتا المرور غير متطابقتين. يرجى المحاولة مرة أخرى.\n\nأدخل كلمة مرورك الجديدة:",
-  "PASSWORD_UPDATE_ERROR": "عذرًا، حدث خطأ أثناء تحديث كلمة مرورك. يرجى المحاولة مرة أخرى لاحقًا.",
-  "PASSWORD_UPDATE_SUCCESS": "✅ تم تحديث كلمة المرور بنجاح!\n\nيمكنك استخدام كلمة مرورك الجديدة لتسجيل الدخول إلى لوحة تحكم الويب.",
-  "PASSWORD_CANCELLED": "تم إلغاء تغيير كلمة المرور.",
-  "PAPARA_BLACKLISTED": "غير مسموح لك باستخدام هذا الأمر.",
-  "PAPARA_SELECT_ACTION": "نظام دفع Papara\n\nماذا تود أن تفعل؟",
-  "PAPARA_ENTER_AMOUNT": "إضافة رصيد\n\nيرجى إدخال المبلغ بالليرة التركية الذي تريد إضافته إلى حسابك:\n(الحد الأدنى: 10 ليرة تركية، الحد الأقصى: 1000 ليرة تركية)",
-  "PAPARA_AMOUNT_TOO_LOW": "الحد الأدنى للمبلغ هو 10 ليرة تركية. يرجى إدخال مبلغ أكبر.",
-  "PAPARA_AMOUNT_TOO_HIGH": "الحد الأقصى للمبلغ هو 1000 ليرة تركية. يرجى إدخال مبلغ أصغر.",
-  "PAPARA_PAYMENT_ERROR": "عذرًا، حدث خطأ أثناء إنشاء طلب الدفع الخاص بك. يرجى المحاولة مرة أخرى لاحقًا.",
-  "PAPARA_CONFIRM_PAYMENT": "تفاصيل الدفع\n\nالمبلغ: {amount} ليرة تركية\nالمستلم: {recipient_name}\nرقم Papara: {papara_number}\n\nيرجى تأكيد طلب الدفع هذا:",
-  "PAPARA_INVALID_AMOUNT": "يرجى إدخال رقم صالح.",
-  "PAPARA_PAYMENT_SUCCESS": "✅ تم إنشاء طلب الدفع بنجاح!\n\nرقم الدفع: #{payment_id}\nالمبلغ: {amount} ليرة تركية\nالمستلم: {recipient_name}\nرقم Papara: {papara_number}\nالمرجع: {reference}\n\nيرجى إجراء الدفع باستخدام تطبيق أو موقع Papara، ثم استخدم خيار 'التحقق من حالة الدفع' مع مرجع الدفع الخاص بك لتأكيد الدفع.",
-  "PAPARA_CHECK_STATUS": "التحقق من حالة الدفع\n\nيرجى إدخال مرجع الدفع أو معرف الدفع الخاص بك:",
-  "PAPARA_PAYMENT_NOT_FOUND": "عذرًا، لم نتمكن من العثور على دفعة بهذا المرجع. يرجى التحقق والمحاولة مرة أخرى.",
-  "PAPARA_PAYMENT_CONFIRMED": "✅ تم تأكيد الدفع!\n\nرقم الدفع: #{payment_id}\nالمبلغ: {amount} ليرة تركية\nالرصيد المضاف: {credits_added}\n\nتم إضافة الرصيد إلى حسابك. شكرًا لك على دفعك!",
-  "PAPARA_PAYMENT_VERIFIED": "✅ تم التحقق من الدفع ومعالجته!\n\nرقم الدفع: #{payment_id}\nالمبلغ: {amount} ليرة تركية\nالرصيد المضاف: {credits_added}\n\nتم إضافة الرصيد إلى حسابك. شكرًا لك على دفعك!",
-  "PAPARA_PAYMENT_PENDING": "⏳ الدفع لا يزال معلقًا\n\nرقم الدفع: #{payment_id}\nالمبلغ: {amount} ليرة تركية\n\nيرجى إكمال الدفع باستخدام تطبيق أو موقع Papara، ثم التحقق مرة أخرى.",
-  "PAPARA_PAYMENT_CANCELLED": "❌ تم إلغاء الدفع\n\nرقم الدفع: #{payment_id}\nالمبلغ: {amount} ليرة تركية\n\nتم إلغاء طلب الدفع هذا. يرجى إنشاء دفعة جديدة إذا لزم الأمر.",
-  "PAPARA_PAYMENT_UNKNOWN": "❓ حالة دفع غير معروفة\n\nرقم الدفع: #{payment_id}\nالحالة: {status}\n\nيرجى الاتصال بالدعم للحصول على المساعدة.",
-  "PAPARA_BALANCE": "رصيدك الحالي\n\nالرصيد: {balance} ليرة تركية\n\nيمكنك استخدام هذا الرصيد لشراء المنتجات أو الخدمات.",
-  "PAPARA_CANCELLED": "تم إلغاء عملية الدفع.",
-  "ADDRESS_BLACKLISTED": "غير مسموح لك باستخدام هذا الأمر.",
-  "ADDRESS_SELECT_ACTION": "إدارة العناوين\n\nماذا تود أن تفعل؟",
-  "ADDRESS_ENTER_NAME": "لنضف عنوان تسليم جديد.\n\nأولاً، يرجى إعطاء هذا العنوان اسمًا (مثل 'المنزل'، 'العمل'، إلخ):",
-  "ADDRESS_NAME_TOO_LONG": "اسم العنوان طويل جدًا. يرجى استخدام اسم أقصر (50 حرفًا كحد أقصى).",
-  "ADDRESS_ENTER_STREET": "اسم العنوان: {address_name}\n\nالآن، يرجى إدخال عنوان الشارع:",
-  "ADDRESS_LINE_TOO_LONG": "العنوان طويل جدًا. يرجى استخدام عنوان أقصر (200 حرفًا كحد أقصى).",
-  "ADDRESS_ENTER_CITY": "عنوان الشارع: {address_line}\n\nأخيرًا، يرجى إدخال المدينة:",
-  "ADDRESS_CITY_TOO_LONG": "اسم المدينة طويل جدًا. يرجى استخدام اسم أقصر (50 حرفًا كحد أقصى).",
-  "ADDRESS_CONFIRM": "يرجى تأكيد تفاصيل عنوانك:\n\nالاسم: {address_name}\nالعنوان: {address_line}\nالمدينة: {city}\n\nهل هذا صحيح؟",
-  "ADDRESS_SAVE_ERROR": "عذرًا، حدث خطأ أثناء حفظ عنوانك. يرجى المحاولة مرة أخرى لاحقًا.",
-  "ADDRESS_SAVE_SUCCESS": "✅ تم حفظ العنوان بنجاح!\n\nالاسم: {address_name}\nالعنوان: {address_line}\nالمدينة: {city}\n\nيمكنك إدارة عناوينك في أي وقت باستخدام الأمر /address.",
-  "ADDRESS_NO_ADDRESSES": "ليس لديك أي عناوين محفوظة حتى الآن.\n\nاستخدم الأمر /address وحدد 'إضافة عنوان جديد' لإضافة عنوان.",
-  "ADDRESS_NO_ADDRESSES_DELETE": "ليس لديك أي عناوين محفوظة لحذفها.\n\nاستخدم الأمر /address وحدد 'إضافة عنوان جديد' لإضافة عنوان.",
-  "ADDRESS_SELECT_DELETE": "حدد عنوانًا لحذفه:",
-  "ADDRESS_DELETE_ERROR": "عذرًا، حدث خطأ أثناء حذف العنوان. يرجى المحاولة مرة أخرى لاحقًا.",
-  "ADDRESS_DELETE_SUCCESS": "✅ تم حذف العنوان بنجاح!",
-  "ADDRESS_CANCELLED": "تم إلغاء إدارة العناوين.",
-  "PRODUCT_NOT_FOUND_TITLE": "المنتج غير موجود",
-  "PRODUCT_NOT_FOUND_DESC": "لم يتم العثور على منتج بالمعرف {product_id}",
-  "PRODUCT_NOT_FOUND_MESSAGE": "لم يتم العثور على منتج بالمعرف {product_id}. حاول تصفح جميع المنتجات باستخدام /buy.",
-  "BUY_NOW_BUTTON": "اشتر الآن",
-  "VIEW_ALL_PRODUCTS_BUTTON": "عرض جميع المنتجات",
-  "PRODUCT_PRICE_AVAILABILITY": "{price_text} - {availability}",
-  "PRODUCT_DETAILS": "*{product_name}*\n\nالسعر: {price_text}\nالنوع: {product_type}\n{availability}\n\n{description}\n\n",
-  "PRODUCT_FEATURES": "الميزات:\n{features_text}\n\n",
-  "PRODUCT_PURCHASE_PROMPT": "استخدم الأزرار أدناه لشراء هذا المنتج.",
-  "PRODUCT_SEARCH_TITLE": "بحث عن منتج",
-  "PRODUCT_SEARCH_DESC": "استخدم 'product [المعرف]' لعرض تفاصيل منتج معين",
-  "PRODUCT_SEARCH_HELP": "لعرض تفاصيل المنتج، استخدم تنسيق الاستعلام المضمن: {bot_username} product [المعرف]\nمثال: {bot_username} product 1\n\nأو تصفح جميع المنتجات باستخدام: {bot_username} shop",
-  "UPDATE_PERMISSION_DENIED_TITLE": "تم رفض الإذن",
-  "UPDATE_PERMISSION_DENIED_DESC": "ليس لديك إذن لاستخدام أوامر تحديث المتجر",
-  "UPDATE_PERMISSION_DENIED_MESSAGE": "ليس لديك إذن لاستخدام أوامر تحديث المتجر. يرجى الاتصال بالمسؤول.",
-  "UPDATE_COMMANDS_TITLE": "أوامر تحديث المتجر",
-  "UPDATE_COMMANDS_DESC": "الأوامر المتاحة: new, sale, restock, announcement",
-  "UPDATE_COMMANDS_HELP": "أوامر تحديث المتجر:\n\n• {bot_username} update new [اسم_المنتج] - الإعلان عن منتج جديد\n• {bot_username} update sale [الخصم]% - الإعلان عن تخفيض\n• {bot_username} update restock [معرف_المنتج] - الإعلان عن إعادة تخزين منتج\n• {bot_username} update announcement [نص] - عمل إعلان عام",
-  "UPDATE_INVALID_INPUT_TITLE": "إدخال غير صالح",
-  "UPDATE_EMPTY_PRODUCT_NAME": "لا يمكن أن يكون اسم المنتج فارغًا",
-  "UPDATE_INVALID_FORMAT_TITLE": "تنسيق غير صالح",
-  "UPDATE_SALE_FORMAT_DESC": "استخدم: update sale [رقم]%",
-  "UPDATE_SALE_FORMAT_MESSAGE": "تنسيق تخفيض غير صالح. استخدم: {bot_username} update sale [رقم]%\nمثال: {bot_username} update sale 20%",
-  "UPDATE_RESTOCK_FORMAT_DESC": "استخدم: update restock [معرف_المنتج]",
-  "UPDATE_RESTOCK_FORMAT_MESSAGE": "تنسيق إعادة تخزين غير صالح. استخدم: {bot_username} update restock [معرف_المنتج]\nمثال: {bot_username} update restock 2",
-  "UPDATE_EMPTY_ANNOUNCEMENT": "لا يمكن أن يكون نص الإعلان فارغًا",
-  "UPDATE_UNKNOWN_TYPE_TITLE": "نوع تحديث غير معروف",
-  "UPDATE_UNKNOWN_TYPE_DESC": "الأنواع المتاحة: new, sale, restock, announcement",
-  "UPDATE_NEW_PRODUCT_TITLE": "منتج جديد: {product_name}",
-  "UPDATE_NEW_PRODUCT_DESC": "الإعلان عن منتج جديد للمجموعة",
-  "UPDATE_NEW_PRODUCT_MESSAGE": "🆕 *إعلان عن منتج جديد* 🆕\n\nيسعدنا الإعلان عن أحدث منتجاتنا:\n*{product_name}*\n\nتحقق منه الآن في متجرنا! كميات محدودة متوفرة.",
-  "VIEW_PRODUCT_BUTTON": "عرض المنتج",
-  "UPDATE_SALE_TITLE": "تخفيض {discount}%!",
-  "UPDATE_SALE_DESC": "الإعلان عن تخفيض بنسبة {discount}%",
-  "UPDATE_SALE_MESSAGE": "🔥 *إعلان عن تخفيض* 🔥\n\nنقدم عرضًا خاصًا!\n\n*{discount}% خصم* على منتجات مختارة\n\nعرض لفترة محدودة - تسوق الآن حتى نفاذ الكمية!",
-  "SHOP_NOW_BUTTON": "تسوق الآن",
-  "UPDATE_PRODUCT_NOT_FOUND_TITLE": "المنتج غير موجود",
-  "UPDATE_PRODUCT_NOT_FOUND_MESSAGE": "لم يتم العثور على منتج بالمعرف {product_id}.",
-  "UPDATE_RESTOCK_TITLE": "إعادة تخزين: {product_name}",
-  "UPDATE_RESTOCK_DESC": "الإعلان عن إعادة تخزين {product_name}",
-  "UPDATE_RESTOCK_MESSAGE": "📦 *تنبيه بإعادة التخزين* 📦\n\n*{product_name}* متوفر مرة أخرى في المخزون!\n\nالسعر: {price} ليرة تركية\n\nاحصل عليه قبل نفاده مرة أخرى!",
-  "UPDATE_ANNOUNCEMENT_TITLE": "إعلان المتجر",
-  "UPDATE_ANNOUNCEMENT_DESC": "إرسال إعلان عام للمتجر",
-  "UPDATE_ANNOUNCEMENT_MESSAGE": "📢 *إعلان المتجر* 📢\n\n{announcement_text}",
-  "VISIT_SHOP_BUTTON": "زيارة المتجر",
-  "SHOP_NO_PRODUCTS_TITLE": "لم يتم العثور على منتجات",
-  "SHOP_NO_PRODUCTS_DESC": "حاول استخدام مصطلح بحث مختلف أو تصفح جميع المنتجات",
-  "SHOP_NO_PRODUCTS_MESSAGE": "لا توجد منتجات تطابق معايير البحث الخاصة بك. حاول استخدام مصطلح بحث مختلف أو استخدم /buy لتصفح جميع المنتجات.",
-  "VIEW_DETAILS_BUTTON": "عرض التفاصيل",
-  "SHOP_PRODUCT_DETAILS": "*{product_name}*\nالسعر: {price_text}\nالنوع: {product_type}\n{availability}\n\n{description}",
-  "INVALID_GITHUB_URL": "يجب أن يكون عنوان URL هو عنوان URL لصفحات GitHub (مثل username.github.io)",
-  "INVALID_GITHUB_URL_FORMAT": "تنسيق عنوان URL لصفحات GitHub غير صالح",
-  "LOGIN_EMPTY_FIELDS": "اسم المستخدم وكلمة المرور مطلوبان",
-  "LOGIN_INVALID_CREDENTIALS": "اسم مستخدم أو كلمة مرور غير صحيحة",
-  "LOGIN_NO_PASSWORD": "لم يتم تعيين كلمة مرور لهذا الحساب",
-  "UNAUTHORIZED_ACCESS": "وصول غير مصرح به",
-  "INVALID_FILE_PATH": "مسار ملف غير صالح",
-  "NOT_A_FILE": "ليس ملفًا",
-  "FILE_READ_ERROR": "فشل في قراءة الملف: {error}",
-  "INVALID_PARAMETERS": "معلمات غير صالحة",
-  "FILE_SAVED_SUCCESS": "تم حفظ الملف بنجاح",
-  "FILE_SAVE_ERROR": "فشل في حفظ الملف: {error}",
-  "FILE_ALREADY_EXISTS": "الملف موجود بالفعل",
-  "FILE_CREATED_SUCCESS": "تم إنشاء الملف بنجاح",
-  "FILE_CREATE_ERROR": "فشل في إنشاء الملف: {error}",
-  "FILE_NOT_FOUND": "الملف أو الدليل غير موجود",
-  "FILE_DELETED_SUCCESS": "تم حذف الملف بنجاح",
-  "DIRECTORY_DELETED_SUCCESS": "تم حذف الدليل بنجاح",
-  "DELETE_ERROR": "فشل في الحذف: {error}",
-  "INVALID_DIRECTORY_PATH": "مسار دليل غير صالح",
-  "DIRECTORY_ALREADY_EXISTS": "الدليل موجود بالفعل",
-  "DIRECTORY_CREATED_SUCCESS": "تم إنشاء الدليل بنجاح",
-  "DIRECTORY_CREATE_ERROR": "فشل في إنشاء الدليل: {error}",
-  "INSTALL_MISSING_FIELDS": "يجب ملء جميع الحقول المطلوبة",
-  "INSTALL_ADMIN_ERROR": "فشل في إنشاء مستخدم مسؤول",
-  "MODEL_MISSING_FIELDS": "جميع حقول النموذج مطلوبة",
-  "MODEL_NAME_REQUIRED": "اسم النموذج مطلوب",
-  "NO_MODELS_FOUND": "لم يتم العثور على نماذج",
-  "MODEL_NOT_FOUND": "لم يتم العثور على النموذج",
-  "MISSING_FIELDS": "الحقول المطلوبة مفقودة",
-  "CREDITS_ADDED": "تمت إضافة الرصيد بنجاح",
-  "INVALID_ACTION": "إجراء غير صالح",
-  "GROUP_BLACKLISTED": "تم حظر المجموعة بنجاح",
-  "GROUP_UNBLACKLISTED": "تم إلغاء حظر المجموعة بنجاح",
-  "GROUP_NOT_FOUND": "لم يتم العثور على المجموعة",
-  "GITHUB_CONFIG_INCOMPLETE": "تكوين GitHub غير مكتمل",
-  "FILE_LIST_ERROR": "فشل في سرد الملفات: {error}",
-  "FILE_TREE_ERROR": "فشل في بناء شجرة الملفات: {error}",
-  "FILE_RELOAD_RESTRICTED": "إعادة تحميل هذا الملف مقيدة",
-  "INVALID_MODULE_PATH": "مسار وحدة غير صالح",
-  "MODULE_RELOAD_ERROR": "فشل في إعادة تحميل الوحدة: {error}",
-  "TEMPLATE_NOT_IN_FOLDER": "القالب ليس في مجلد القوالب",
-  "TEMPLATE_RELOAD_ERROR": "فشل في إعادة تحميل القالب: {error}",
-  "ASSET_NOT_IN_FOLDER": "القالب ليس في مجلد الأصول",
-  "LOCALE_RELOAD_ERROR": "فشل في إعادة تحميل اللغة: {error}",
-  "NO_FILE_PATH": "لم يتم توفير مسار ملف",
-  "FILE_WRITE_PERMISSION_DENIED": "تم رفض الإذن عند كتابة الملف",
-  "PAYMENT_CREATED": "تم إنشاء الدفعة بنجاح",
-  "PAYMENT_ALREADY_COMPLETED": "تم إكمال الدفعة بالفعل",
-  "PAYMENT_VERIFIED": "تم التحقق من الدفعة بنجاح",
-  "PAYMENT_PENDING": "الدفع لا يزال معلقًا",
-  "ORDER_NOT_FOUND": "لم يتم العثور على الطلب",
-  "ORDER_NOT_PENDING_PAYMENT": "الطلب ليس قيد الدفع",
-  "INSUFFICIENT_CREDITS": "رصيد غير كاف",
-  "ORDER_PAID": "تم دفع الطلب بنجاح",
-  "ORDER_CANNOT_CANCEL": "لا يمكن إلغاء الطلب",
-  "ORDER_CANCELLED": "تم إلغاء الطلب بنجاح",
-  "CANCEL_ERROR": "فشل في إلغاء الطلب",
-  "PASSWORDS_DONT_MATCH": "كلمات المرور غير متطابقة",
-  "PROFILE_UPDATED": "تم تحديث الملف الشخصي بنجاح",
-  "UPDATE_ERROR": "فشل في التحديث",
-  "ADDRESS_ADDED": "تمت إضافة العنوان بنجاح",
-  "ADD_ERROR": "فشل في إضافة العنوان",
-  "ADDRESS_UPDATED": "تم تحديث العنوان بنجاح",
-  "ADDRESS_DELETED": "تم حذف العنوان بنجاح",
-  "INVALID_PRICE": "سعر غير صالح",
-  "INVALID_QUANTITY": "كمية غير صالحة",
-  "PRODUCT_CREATED": "تم إنشاء المنتج بنجاح",
-  "CREATE_ERROR": "فشل في إنشاء المنتج",
-  "PRODUCT_NOT_FOUND": "لم يتم العثور على المنتج",
-  "PRODUCT_UPDATED": "تم تحديث المنتج بنجاح",
-  "PRODUCT_ACTIVATED": "تم تنشيط المنتج بنجاح",
-  "PRODUCT_DEACTIVATED": "تم إلغاء تنشيط المنتج بنجاح",
-  "PRODUCT_ADDED_SUCCESS": "تمت إضافة المنتج بنجاح",
-  "CONFIG_UPDATED_SUCCESS": "تم تحديث الإعدادات بنجاح",
-  "MISSING_DESCRIPTION": "وصف الدفع مطلوب",
-  "MISSING_PAYMENT_ID": "معرف الدفع مطلوب",
-  "GROUPS_TAB": "المجموعات",
-  "HELP_MESSAGE": "الأوامر المفاهيمية المتاحة\n\n/أبجد - حساب قيمة الأبجد\n/خدام - توليد أسماء روحانية\n/عنصر - تحديد الانتماء العنصري\n/نطق - تهجئة الأرقام\n/نقحرة - نقحرة النص\n/ترقيم - حساب قيمة الترقيم\n/تحويلأرقام - تحويل أرقام نص\n/مربعمفتاح - توليد مربع سحري\n/اسم - توليد أو نقحرة الأسماء\n\nأوامر البوت\n\n/رصيد عرض الرصيد المتبقي\n/دفع - شراء رصيد\n/إلغاء - إلغاء العملية\n/إعدادات - ضبط الإعدادات\n/مساعدة - عرض هذا\n/لغة - تغيير اللغة\n/بدء يبدأ هذا البوت\n\nأوامر التسوق\n\n/شراء - شراء منتجات\n/بيع - بيع منتجات\n/طلبات - عرض الطلبات\n/عنوان - إضافة، إزالة، وإدراج عناوين\n/كلمةمرور - إعدادات كلمة مرور البائعين\n/بابارا - إعدادات مساعد دفع البائعين\n\nيمكنك إجراء المزيد من العمليات الحسابية باستخدام https://ebced.free.nf",
-  "TRANSLITERATION_PROMPT_TEXT": "الرجاء إدخال النص المراد نقحرته:",
-  "TRANSLITERATION_PROMPT_SOURCE_LANG": "الرجاء اختيار اللغة المصدر:",
-  "TRANSLITERATION_PROMPT_TARGET_LANG": "الرجاء اختيار اللغة الهدف:",
-  "TRANSLITERATION_CANCEL": "تم إلغاء النقحرة.",
-  "TRANSLITERATE_ANOTHER": "نقحرة أخرى",
-  "SUGGESTION_SELECTED": "المحدد: {result}",
-  "GUESS_LANGUAGE": "تخمين اللغة",
-  "TURKISH": "التركية",
-  "ARABIC": "العربية",
-  "HEBREW": "العبرية",
-  "ENGLISH": "الإنجليزية",
-  "LATIN": "اللاتينية",
-  "BUNI": "بوني",
-  "HUSEYNI": "حسيني",
-  "EDIT_PRODUCT_TITLE": "تعديل المنتج",
-  "PRODUCT_DESCRIPTION": "وصف المنتج",
-  "PRODUCT_QUANTITY_HELP": "أدخل الكمية المتاحة للمنتجات المادية. اتركها فارغة للكمية غير المحدودة.",
-  "PRODUCT_IMAGE_URL": "رابط صورة المنتج",
-  "PRODUCT_IMAGE_URL_HELP": "أدخل رابط صورة المنتج.",
-  "PRODUCT_ACTIVE": "نشط",
-  "VIEW_PRODUCT_TITLE": "عرض المنتج",
-  "BACK_TO_PRODUCTS": "العودة إلى المنتجات",
-  "PRODUCT_STATUS_ACTIVE": "نشط",
-  "PRODUCT_STATUS_INACTIVE": "غير نشط",
-  "PRODUCT_SELLER": "البائع",
-  "DASHBOARD_CONFIGURATION_DESCRIPTION": "إدارة إعدادات حسابك والدفع.",
-  "MYSQL_HOST": "مضيف MySQL",
-  "MYSQL_PORT": "منفذ MySQL",
-  "MYSQL_USER": "مستخدم MySQL",
-  "MYSQL_PASSWORD": "كلمة مرور MySQL",
-  "MYSQL_DATABASE": "قاعدة بيانات MySQL",
-  "SEARCH": "بحث",
-  "SEARCH_PRODUCTS": "البحث عن المنتجات",
-  "LOAD": "تحميل",
-  "NO_PRODUCTS_FOUND": "لا توجد منتجات",
-  "PRODUCT_ID": "معرف المنتج",
-  "ALL_USERS": "جميع المستخدمين",
-  "SELLER": "بائع",
-  "COMMAND_ALIASES": {
-    "abjad": ["أبجد"],
-    "huddam": ["خدام"],
-    "unsur": ["عنصر"],
-    "nutket": ["نطق"],
-    "name": ["اسم"],
-    "magicsquare": ["مربعمفتاح"],
-    "transliterate": ["نقحرة"],
-    "payment": ["دفع"],
-    "numerology": ["ترقيم"],
-    "convertnumbers": ["تحويل"]
-  }
+	"LANGUAGE_NAME_EN": "English",
+	"LANGUAGE_NAME_TR": "Türkçe",
+	"LANGUAGE_NAME_AR": "العربية",
+	"LANGUAGE_NAME_HE": "עברית",
+	"LANGUAGE_NAME_LA": "Latina",
+	"TAGLINE": "عوالم الأرقام والحروف الرائعة",
+	"USER_DASHBOARD_TITLE": "لوحة تحكم المستخدم",
+	"USER_DASHBOARD_WELCOME": "مرحباً، {username}!",
+	"CREDITS": "الرصيد",
+	"ORDERS": "الطلبات",
+	"PRODUCTS": "المنتجات",
+	"ORDERS_TAB": "الطلبات",
+	"PRODUCTS_TAB": "المنتجات",
+	"PAYMENTS_TAB": "المدفوعات",
+	"PROFILE_TAB": "الملف الشخصي",
+	"LOGOUT": "تسجيل الخروج",
+	"ORDERS_TITLE": "طلباتك",
+	"NO_ORDERS": "لا يوجد لديك طلبات حتى الآن.",
+	"ORDER_ID": "رقم الطلب",
+	"PRODUCT_NAME": "اسم المنتج",
+	"QUANTITY": "الكمية",
+	"TOTAL_PRICE": "السعر الإجمالي",
+	"STATUS": "الحالة",
+	"CREATED_AT": "تاريخ الإنشاء",
+	"ACTIONS": "الإجراءات",
+	"VIEW": "عرض",
+	"PAY": "دفع",
+	"CANCEL": "إلغاء",
+	"PENDING": "قيد الانتظار",
+	"PENDING_PAYMENT": "بانتظار الدفع",
+	"PROCESSING": "قيد المعالجة",
+	"SHIPPED": "تم الشحن",
+	"DELIVERED": "تم التسليم",
+	"CANCELLED": "تم الإلغاء",
+	"PRODUCTS_TITLE": "المنتجات المتاحة",
+	"CREATE_PRODUCT": "إنشاء منتج",
+	"NO_PRODUCTS": "لا توجد منتجات متاحة.",
+	"PRICE": "السعر",
+	"TYPE": "النوع",
+	"PRODUCT_TYPE_PHYSICAL": "مادي",
+	"PRODUCT_TYPE_DIGITAL": "رقمي",
+	"UNLIMITED": "غير محدود",
+	"ACTIVE": "نشط",
+	"YES": "نعم",
+	"NO": "لا",
+	"EDIT": "تعديل",
+	"DEACTIVATE": "إلغاء التفعيل",
+	"ACTIVATE": "تفعيل",
+	"PAYMENTS_TITLE": "مدفوعاتك",
+	"CREATE_PAYMENT": "إنشاء دفعة",
+	"NO_PAYMENTS": "لا يوجد لديك مدفوعات حتى الآن.",
+	"PAYMENT_ID": "رقم الدفعة",
+	"AMOUNT": "المبلغ",
+	"CHECK_STATUS": "تحقق من الحالة",
+	"PROFILE_TITLE": "ملفك الشخصي",
+	"USERNAME": "اسم المستخدم",
+	"EMAIL": "البريد الإلكتروني",
+	"PAPARA_EMAIL": "بريد بابارا الإلكتروني",
+	"NEW_PASSWORD": "كلمة المرور الجديدة",
+	"LEAVE_BLANK_PASSWORD": "اتركه فارغًا للحفاظ على كلمة المرور الحالية",
+	"CONFIRM_PASSWORD": "تأكيد كلمة المرور",
+	"UPDATE_PROFILE": "تحديث الملف الشخصي",
+	"ADDRESSES": "عناوينك",
+	"MANAGE_ADDRESSES": "إدارة العناوين",
+	"NO_ADDRESSES": "لا يوجد لديك عناوين محفوظة.",
+	"NAME": "الاسم",
+	"ADDRESS": "العنوان",
+	"CITY": "المدينة",
+	"DEFAULT": "افتراضي",
+	"PAYMENT_TITLE": "إنشاء دفعة",
+	"PAYMENT_AMOUNT": "المبلغ",
+	"PAYMENT_TYPE": "نوع الدفعة",
+	"PAYMENT_TYPE_BALANCE": "إضافة إلى الرصيد",
+	"PAYMENT_TYPE_PRODUCT": "الدفع مقابل المنتج",
+	"PAYMENT_TYPE_ORDER": "الدفع مقابل الطلب",
+	"SELECT_PRODUCT": "اختر منتجًا",
+	"SELECT_PRODUCT_PLACEHOLDER": "اختر منتجًا",
+	"SELECT_ORDER": "اختر طلبًا",
+	"SELECT_ORDER_PLACEHOLDER": "اختر طلبًا",
+	"PAYMENT_INSTRUCTIONS_1": "يرجى إرسال المبلغ المحدد إلى حساب بابارا المقدم.",
+	"PAYMENT_DESCRIPTION": "مرجع الدفع",
+	"PAYMENT_INSTRUCTIONS_2": "بعد إرسال الدفعة، انقر فوق 'تأكيد الدفع' للتحقق منها.",
+	"PAYMENT_SUCCESS": "تم تأكيد الدفع بنجاح!",
+	"PAYMENT_ERROR": "حدث خطأ أثناء معالجة دفعتك.",
+	"CLOSE": "إغلاق",
+	"CONFIRM_PAYMENT": "تأكيد الدفع",
+	"CANCEL_PAYMENT": "إلغاء الدفع",
+	"SELECT_PRODUCT_ERROR": "الرجاء تحديد منتج.",
+	"SELECT_ORDER_ERROR": "الرجاء تحديد طلب.",
+	"INVALID_AMOUNT": "الرجاء إدخال مبلغ صالح.",
+	"CHECKING_PAYMENT": "جاري التحقق من الدفع...",
+	"PAYMENT_NOT_FOUND": "لم يتم العثور على الدفعة. يرجى المحاولة مرة أخرى.",
+	"PAYMENT_CHECK_ERROR": "خطأ في التحقق من حالة الدفع.",
+	"CANCEL_PAYMENT_CONFIRM": "هل أنت متأكد أنك تريد إلغاء هذه الدفعة؟",
+	"CANCEL_PAYMENT_ERROR": "خطأ في إلغاء الدفعة.",
+	"ORDER_NUMBER": "الطلب",
+	"DESCRIPTION": "الوصف",
+	"CREATE": "إنشاء",
+	"ERROR_INVALID_INPUT": "مدخل غير صالح: {error}",
+	"SELECT_ALTERNATIVE": "اختر ترجمة بديلة:",
+	"LANGUAGE_CHANGED": "تم تغيير اللغة إلى {selected_lang}",
+	"LOGIN_TITLE": "تسجيل دخول المسؤول",
+	"LOGIN_USERNAME": "اسم المستخدم",
+	"LOGIN_PASSWORD": "كلمة المرور",
+	"LOGIN_SUBMIT": "تسجيل الدخول",
+	"LOGIN_ERROR": "اسم مستخدم أو كلمة مرور غير صالحة",
+	"LOGOUT_SUCCESS": "تم تسجيل الخروج بنجاح",
+	"DASHBOARD_TITLE": "لوحة تحكم المسؤول",
+	"CONFIG_TAB": "الإعدادات",
+	"USERS_TAB": "المستخدمون",
+	"GITHUB_TRAFFIC_TAB": "زيارات GitHub",
+	"CONFIG_TITLE": "إعدادات البوت",
+	"STANDARD_SETTINGS": "الإعدادات القياسية",
+	"TELEGRAM_TOKEN": "رمز Telegram",
+	"BOT_USERNAME": "اسم مستخدم البوت",
+	"WEBHOOK_URL": "رابط Webhook",
+	"GITHUB_USERNAME": "اسم مستخدم GitHub",
+	"GITHUB_TOKEN": "رمز GitHub",
+	"GITHUB_REPO": "مستودع GitHub",{
+	"GITHUB_PAGES_URL": "عنوان URL لصفحات GitHub",
+	"PAYMENT_PROVIDER_TOKEN": "رمز مزود الدفع",
+	"CURRENCY_EXCHANGE_TOKEN": "رمز تبادل العملات",
+	"HUGGINGFACE_ACCESS_TOKEN": "رمز الوصول إلى Hugging Face",
+	"TOOLTIP_ENV": "حدد لاستخدام متغير البيئة",
+	"USE_ENV": "استخدام متغير البيئة",
+	"SAVE_CONFIG": "حفظ الإعدادات",
+	"CONFIG_SAVED": "تم حفظ الإعدادات بنجاح",
+	"USER_ID": "معرف المستخدم",
+	"FIRST_NAME": "الاسم الأول",
+	"LAST_INTERACTION": "آخر تفاعل",
+	"INSTALL_TITLE": "تثبيت NumberFansBot",
+	"ADMIN_USERNAME": "اسم مستخدم المسؤول",
+	"ADMIN_PASSWORD": "كلمة مرور المسؤول",
+	"INSTALL_SUBMIT": "تثبيت",
+	"INSTALL_SUCCESS": "تم التثبيت بنجاح",
+	"ALREADY_INSTALLED": "الروبوت مثبت بالفعل",
+	"GITHUB_TRAFFIC_TITLE": "زيارات GitHub",
+	"CONFIGURE_GITHUB_URL": "يرجى تكوين عنوان URL لصفحات GitHub في لوحة تحكم المسؤول",
+	"TIME_RANGE": "النطاق الزمني",
+	"TIME_RANGE_1D": "يوم واحد",
+	"TIME_RANGE_7D": "7 أيام",
+	"TIME_RANGE_30D": "30 يومًا",
+	"TIME_RANGE_90D": "90 يومًا",
+	"TIME_RANGE_180D": "180 يومًا",
+	"TIME_RANGE_365D": "365 يومًا",
+	"TIME_RANGE_ALL": "كل الأوقات",
+	"PER_PAGE": "المستودعات في الصفحة",
+	"LOADING": "جارٍ التحميل...",
+	"VIEWS": "المشاهدات",
+	"CLONES": "الاستنساخات",
+	"TOTAL": "الإجمالي",
+	"NO_DATA": "لا توجد بيانات متاحة",
+	"INFO_BOX": "قم بتكوين الروبوت لعرض إحصائيات المستودع",
+	"PREVIOUS_PAGE": "السابق",
+	"NEXT_PAGE": "التالي",
+	"PAGE_STATS": "صفحة %d من %d (%d مستودعات)",
+	"LOADING_REPOS": "جارٍ تحميل %d مستودع...",
+	"ERROR_LOADING_REPOS": "خطأ في تحميل المستودعات",
+	"REPO_HEADER": "%s",
+	"README_ERROR": "خطأ في تحميل ملف README لـ",
+	"VIEW_GITHUB_TRAFFIC": "عرض زيارات GitHub",
+	"COMMANDS_TITLE": "إحصائيات استخدام الأوامر",
+	"COMMANDS_DESCRIPTION": "عرض إحصائيات استخدام أوامر NumberFansBot.",
+	"COMMAND_NAME": "الأمر",
+	"USAGE_COUNT": "عدد مرات الاستخدام",
+	"LAST_USED": "آخر استخدام",
+	"LAST_USER": "آخر مستخدم",
+	"NO_COMMANDS_USED": "لم يتم استخدام أي أوامر حتى الآن.",
+	"LOGIN": "تسجيل الدخول إلى لوحة التحكم",
+	"CANCEL_BUTTON": "إلغاء",
+	"PAYMENT_BLACKLISTED": "أنت في القائمة السوداء ولا يمكنك استخدام المدفوعات.",
+	"PAYMENT_BETA_RESTRICTED": "هذه الميزة مقصورة على مختبري النسخة التجريبية.",
+	"PAYMENT_MISSING_PROVIDER_TOKEN": "رمز مزود الدفع مفقود.",
+	"PAYMENT_PRODUCT_NOT_FOUND": "المنتج غير موجود.",
+	"PAYMENT_INVOICE_TITLE": "شراء NumberFansBot",
+	"PAYMENT_SELECT_PRODUCT": "الرجاء تحديد منتج:",
+	"PAYMENT_PRODUCTS_BASIC_PRODUCT_NAME": "المنتج الأساسي",
+	"PAYMENT_PRODUCTS_BASIC_PRODUCT_DESCRIPTION": "الوصول إلى الميزات الأساسية في NumberFansBot.",
+	"PAYMENT_PRODUCTS_PREMIUM_PRODUCT_NAME": "المنتج المميز",
+	"PAYMENT_PRODUCTS_PREMIUM_PRODUCT_DESCRIPTION": "افتح الميزات المميزة بقدرات محسّنة.",
+	"PAYMENT_PRODUCTS_DELUXE_PRODUCT_NAME": "المنتج الفاخر",
+	"PAYMENT_PRODUCTS_DELUXE_PRODUCT_DESCRIPTION": "احصل على تجربة NumberFansBot الكاملة مع جميع الميزات.",
+	"PAYMENT_THANK_YOU": "شكرًا لشرائك {product}! المبلغ: {amount} {currency}",
+	"PAYMENT_FAILED": "فشل الدفع. يرجى المحاولة مرة أخرى.",
+	"LANGUAGE_CHOOSE": "الرجاء اختيار لغة:",
+	"LANGUAGE_INVALID": "رمز لغة غير صالح. اللغات المتاحة: {languages}",
+	"LANGUAGE_ERROR_DATABASE": "حدث خطأ في قاعدة البيانات. يرجى المحاولة مرة أخرى لاحقًا.",
+	"LANGUAGE_ERROR_GENERAL": "حدث خطأ أثناء تغيير اللغة.",
+	"ABJAD_USAGE": "الاستخدام: /abjad <نص>",
+	"ABJAD_RESULT": "قيمة الأبجدية لنص '{text}' هي {value}.",
+	"ABJAD_PROMPT_ALPHABET": "الرجاء تحديد ترتيب الأبجدية:",
+	"ABJAD_PROMPT_TYPE": "الرجاء تحديد نوع الأبجدية:",
+	"ABJAD_PROMPT_SHADDA": "الحروف التي تحتها شدة؟",
+	"ABJAD_PROMPT_DETAIL": "عرض تفاصيل الحساب؟",
+	"ABJAD_DETAILS": "تفاصيل الحساب:\n{details}",
+	"ABJAD_CANCEL": "تم إلغاء حساب الأبجدية.",
+	"LOGARITHMIC": "لوغاريتمي",
+	"INVERSE_LOGARITHMIC": "لوغاريتمي معكوس",
+	"BASE_36": "الأساس 36",
+	"INVERSE_BASE_36": "الأساس 36 المعكوس",
+	"BASE_100": "الأساس 100",
+	"INVERSE_BASE_100": "الأساس 100 المعكوس",
+	"ALPHABET_ORDER_OTTOMAN": "الأبجدية العثمانية",
+	"ALPHABET_ORDER_ABJADI": "ترتيب أبجدي",
+	"ALPHABET_ORDER_MAGHRIBI": "ترتيب أبجدي مغربي",
+	"ALPHABET_ORDER_QURANIC": "تكرار قرآني",
+	"ALPHABET_ORDER_HIJA": "ترتيب هجائي",
+	"ALPHABET_ORDER_MAGHRIBI_HIJA": "ترتيب هجائي مغربي",
+	"ALPHABET_ORDER_IKLEELS": "ترتيب إكليل",
+	"ALPHABET_ORDER_SHAMSE_ABJADI": "ترتيب أبجدي شمسي",
+	"ALPHABET_ORDER_HEBREW": "الأبجدية العبرية",
+	"ALPHABET_ORDER_TURKISH": "الأبجدية التركية",
+	"ALPHABET_ORDER_ENGLISH": "الأبجدية الإنجليزية",
+	"ALPHABET_ORDER_LATIN": "الأبجدية اللاتينية",
+	"ALPHABET_ORDER_ARABI": "محيي الدين بن عربي",
+	"ALPHABET_ORDER_BUNI": "أحمد البوني",
+	"ALPHABET_ORDER_HUSEYNI": "سليمان الحسيني",
+	"ALPHABET_ORDER_DEFAULT": "العربية الافتراضية",
+	"ABJAD_TYPE_ASGHAR": "أصغر",
+	"ABJAD_TYPE_SAGHIR": "صغير",
+	"ABJAD_TYPE_KEBEER": "كبير",
+	"ABJAD_TYPE_AKBAR": "أكبر",
+	"ABJAD_TYPE_SAGHIR_PLUS_QUANTITY": "صغير + كمية الحروف",
+	"ABJAD_TYPE_LETTER_QUANTITY": "كمية الحروف",
+	"SHADDA_USE_ONCE": "إضافة مرة واحدة",
+	"SHADDA_USE_TWICE": "إضافة مرتين",
+	"ABJAD-ONLY-RESULT": "النتيجة فقط",
+	"ABJAD-WITH-DETAILS": "مع التفاصيل",
+	"ERROR_TIMEOUT": "استغرق المعالجة وقتًا طويلاً. تم إرسال النتيجة بشكل منفصل.",
+	"GENERATING_MAGICSQUARE": "جارٍ إنشاء مربع سحري للرقم {number}...",
+	"CREATE_ARABIC_MAGIC_SQUARE": "إنشاء مربع سحري بالأرقام العربية",
+	"BASTET_USAGE": "الاستخدام: /bastet <رقم>",
+	"BASTET_PROMPT_REPETITION": "الرجاء إدخال مقدار التكرار (عدد صحيح موجب):",
+	"BASTET_PROMPT_TABLE": "الرجاء تحديد ترتيب الأبجدية:",
+	"BASTET_PROMPT_LANGUAGE": "الرجاء تحديد نوع الأبجدية:",
+	"BASTET_RESULT": "نتيجة باستيت للرقم {number} مع {repetition} تكرارات باستخدام الجدول {table} هي {value}.",
+	"BASTET_CANCEL": "تم إلغاء حساب باستيت.",
+	"HUDDAM_USAGE": "الاستخدام: /huddam <رقم>",
+	"HUDDAM_RESULT": "الاسم الذي تم إنشاؤه للرقم {number} (النوع: {type}، اللغة: {huddam_lang}) هو '{name}'.",
+	"HUDDAM_PROMPT_ENTITY_TYPE": "الرجاء تحديد نوع الكيان:",
+	"HUDDAM_PROMPT_LANGUAGE": "الرجاء تحديد ترتيب الأبجدية:",
+	"HUDDAM_PROMPT_MULTIPLIAR": "يتم تجميع حروف المضاعف في الوضع 1، وتكرارها لكل رقم في الوضع 2",
+	"HUDDAM_CANCEL": "تم إلغاء حساب هددام.",
+	"HUDDAM_REGULAR": "تجميع حروف المضاعف",
+	"HUDDAM_EACHER": "تكرار حروف المضاعف",
+	"HUDDAM_HIGH": "كيان عالي",
+	"HUDDAM_LOW": "كيان منخفض",
+	"HUDDAM_BAD": "كيان سيئ",
+	"UNSUR_USAGE": "الاستخدام: /unsur",
+	"UNSUR_RESULT": "{input} لديه هذه الحروف '{liste}' {value}، المقابلة للعنصر: {element}.",
+	"UNSUR_PROMPT_INPUT": "الرجاء إدخال النص:",
+	"UNSUR_PROMPT_LANGUAGE": "الرجاء تحديد طريقة التصنيف:",
+	"UNSUR_PROMPT_TABLE": "الرجاء تحديد العنصر:",
+	"UNSUR_PROMPT_SHADDA": "الحروف التي تحتها شدة؟",
+	"UNSUR_CANCEL": "تم إلغاء حساب أونسور.",
+	"NUTKET_USAGE": "الاستخدام: /nutket <رقم> [لغة]",
+	"NUTKET_RESULT": "الرقم {number} مكتوب بـ {nutket_lang} هو: {spelled}.",
+	"NAME_USAGE": "الاستخدام: /name <بادئة> <تركي|إنجليزي|عبري|لاتيني|عربي>",
+	"NAME_RESULT": "الاسم الذي تم إنشاؤه للبادئة '{prefix}' (النوع: {type}، الطريقة: {method}) هو '{name}'.",
+	"START_MESSAGE": "مرحباً بك في NumberFansBot! لديك {remaining_credits} رصيد. استكشف سحر الأرقام!",
+	"HELP_USAGE": "الاستخدام: /help",
+	"HELP_GROUP_CHAT_USAGE": "مساعدة الدردشة الجماعية",
+	"INDIAN_NUMBERS": "أرقام هندية",
+	"ARABIC_NUMBERS": "أرقام عربية",
+	"NUMEROLOGY_USAGE": "الاستخدام: /numerology <نص أو عبارة> [arabic_abjadi| arabic_maghribi| arabic_hija| arabic_maghribi_hija| hebrew| english| latin| turkish| ottoman] [normal| inverse| base36| base36_inverse| base100| base100_inverse]",
+	"NUMEROLOGY_RESULT": "قيمة علم الأعداد لنص '{text}' باستخدام أبجدية {alphabet} وطريقة {method} هي {value}.",
+	"NUMEROLOGY_PROMPT_ALPHABET": "الرجاء تحديد أبجدية علم الأعداد:",
+	"CONVERTNUMBERS_USAGE": "الاستخدام: /convertnumbers <نص> [indian|arabic]",
+	"CONVERTNUMBERS_RESULT": "الأرقام المحولة:\n\n```\n{result}\n```",
+	"MAGICSQUARE_USAGE": "الاستخدام: /magicsquare <مجموع الصف>",
+	"MAGICSQUARE_RESULT": "مربع سحري لمجموع الصف {number}:\n```\n{square}\n```",
+	"TRANSLITERATION_USAGE": "الاستخدام: /transliterate <لغة المصدر> <لغة الهدف> <نص>",
+	"TRANSLITERATION_RESPONSE": "تمت الترجمة الصوتية إلى {lang_name}: {result}",
+	"SUGGEST_TRANSLITERATION_RESULT": "اقتراحات لـ '{text}' من {source_lang} إلى {target_lang}: {results}",
+	"TRANSLITERATION_HISTORY_RESULT": "سجل الترجمة الصوتية:\n{history}",
+	"TRANSLITERATION_HISTORY_USAGE": "سجل الترجمة الصوتية",
+	"CANCEL_USAGE": "الاستخدام: /cancel",
+	"CANCEL_RESULT": "تم إلغاء العملية.",
+	"SETTINGS_USAGE": "الاستخدام: /settings",
+	"SETTINGS_RESULT": "تم تحديث الإعدادات.",
+	"PAYMENT_BETA_TESTER": "بصفتك مختبرًا تجريبيًا، لديك رصيد غير محدود!",
+	"PAYMENT_PRODUCTS_CREDIT_PRODUCT_NAME": "500 رصيد",
+	"PAYMENT_PRODUCTS_CREDIT_PRODUCT_DESCRIPTION": "ادفع 5.00 دولار مقابل 500 رصيد.",
+	"NO_CREDITS": "لم يتبق لديك رصيد. استخدم /payment لشراء المزيد.",
+	"USER_BLACKLISTED": "أنت في القائمة السوداء ولا يمكنك استخدام هذا الروبوت.",
+	"BETA_TESTER": "مختبر تجريبي",
+	"BETA_TESTER_GRANTED": "تم منح امتيازات المختبر التجريبي لمعرف Telegram {telegram_id}.",
+	"BETA_TESTER_REVOKED": "تم سحب امتيازات المختبر التجريبي لمعرف Telegram {telegram_id}.",
+	"GRANT_ACCESS": "توظيف مختبر تجريبي",
+	"REVOKE_ACCESS": "فصل مختبر تجريبي",
+	"ELEMENT_FIRE": "نار",
+	"ELEMENT_WATER": "ماء",
+	"ELEMENT_AIR": "هواء",
+	"ELEMENT_EARTH": "أرض",
+	"ELEMENT_UNKNOWN": "غير معروف",
+	"CREATE_MAGIC_SQUARE": "إنشاء مربع سحري",
+	"CREATE_INDIAN_MAGIC_SQUARE": "إنشاء مربع سحري هندي",
+	"EASTERN_ARABIC_NUMBERS": "عرض بالأرقام العربية الشرقية",
+	"NEXT_SIZE": "الحجم التالي",
+	"SPELL_NUMBER": "تهجئة الرقم",
+	"SHOW_DETAILS": "عرض التفاصيل",
+	"CALCULATE_ABJAD": "حساب الأبجدية",
+	"ERROR_GENERAL": "حدث خطأ: {error}",
+	"AI_PROMPT": "أستخدم روبوت تيليجرام يمكنه حساب قيم الأعداد بناءً على الأبجديات التركية والإنجليزية واللاتينية والعربية والعبرية، وأحاول إيجاد صحوة روحية من خلال نتائج حسابات روبوت تيليجرام هذا؛ الروبوت قادر على حساب القيم الجيماترية وحسابات الأبجدية باستخدام أمر '/abjad'؛ وهو قادر على إنتاج مربعات سحرية باستخدام أمر '/magicsquare' إذا وجد قيمة رقمية ويمكنه إنتاج أسماء ملائكة أو شياطين لكيانات التولبا الروحية باستخدام أمر '/huddam'، ويمكن للروبوت تحويل الأرقام العربية الشرقية والأرقام العربية الحديثة في النص إلى بعضها البعض باستخدام أمر '/convertnumbers' وقد أعطاني النتائج أدناه؛ يرجى إخباري كيف يمكنني استخدام هذه لتدوين طلاسم أو إعداد ماندالا أو إلقاء تعويذات باستخدامها؛ يمكن للروبوت تقديم معلومات محدودة باستخدام سجلاته حول قيم الأبجدية الإسلامية ولكن آمل أن تتمكن من إضافة المزيد من الأفكار حول نتائجه هنا:\n\n {response}",
+	"AI_COMMENTARY": "تعليق الذكاء الاصطناعي: {commentary}",
+	"LOGIN_SUCCESS": "تم تسجيل الدخول بنجاح.",
+	"MODEL_ADDED": "تمت إضافة النموذج بنجاح.",
+	"MODEL_DELETED": "تم حذف النموذج بنجاح.",
+	"COMMANDS_TAB": "الأوامر",
+	"AI_SETTINGS": "إعدادات الذكاء الاصطناعي",
+	"AI_MODEL_URL": "عنوان URL لنموذج الذكاء الاصطناعي",
+	"AI_ACCESS_TOKEN": "رمز الوصول إلى الذكاء الاصطناعي",
+	"WARNING_NUMBER": "",
+	"COMMAND_USAGE_PERCENTAGE": "نسبة استخدام الأمر (%)",
+	"COMMAND_USAGE_CHART": "إحصائيات استخدام الأوامر",
+	"INSTALL_TAB": "التثبيت",
+	"GO_TO_INSTALL": "الذهاب إلى التثبيت",
+	"BADGES": "الشارات",
+	"PROMOTE_CREDITS": "ترقية الرصيد",
+	"ENTER_CREDITS": "أدخل الرصيد",
+	"SUBMIT": "إرسال",
+	"INVALID_CREDITS": "رصيد غير صالح: {error}",
+	"CREDITS_PROMOTED": "تمت ترقية {credits} رصيد بنجاح للمستخدم {user_id}",
+	"CREDITS_PROMOTE_ERROR": "فشل في ترقية الرصيد",
+	"BLACKLIST": "القائمة السوداء",
+	"UNBLACKLIST": "إزالة من القائمة السوداء",
+	"BLACKLIST_TOGGLED": "تم {status} المستخدم {user_id} بنجاح",
+	"BLACKLIST_TOGGLE_ERROR": "فشل في تبديل حالة القائمة السوداء",
+	"CREDITS_REMAINS": "لديك {remaining_credits} رصيد متبقي",
+	"TESKILAT_ALREADY_ACTIVE": "امتياز تشكيلات نشط بالفعل",
+	"TESKILAT_ACTIVATED": "تم تفعيل امتياز تشكيلات بنجاح",
+	"TESKILAT_ACTIVATION_FAILED": "فشل في تفعيل امتياز تشكيلات",
+	"PAYMENT_INSTRUCTIONS": "يرجى اتباع تعليمات الدفع...",
+	"FILES_TAB": "الملفات",
+	"CREATE_FILE": "إنشاء ملف جديد",
+	"FILE_PATH": "مسار الملف",
+	"SAVE": "حفظ",
+	"DELETE": "حذف",
+	"GENERATE_ENTITY": "إنشاء اسم كيان",
+	"RELOAD": "إعادة تحميل",
+	"FILE_RELOADED": "تمت إعادة تحميل الملف بنجاح",
+	"TEMPLATE_RELOADED": "تمت إعادة تحميل القالب بنجاح",
+	"LOCALE_RELOADED": "تمت إعادة تحميل ترجمات اللغة بنجاح",
+	"FILE_RELOAD_UNSUPPORTED": "إعادة التحميل غير مدعومة لنوع هذا الملف",
+	"DONATE": "تبرع",
+	"USE_PAPARA": "ادعم باستخدام Papara",
+	"SEARCH_USERS": "البحث عن المستخدمين بواسطة اسم المستخدم...",
+	"SEARCH_GROUPS": "البحث عن المجموعات بالاسم...",
+	"GROUP_ID": "معرف المجموعة",
+	"GROUP_NAME": "الاسم",
+	"GROUP_TYPE": "النوع",
+	"GROUP_PUBLIC": "عام؟",
+	"GROUP_MEMBERS": "الأعضاء",
+	"GROUP_CREATOR": "المنشئ",
+	"GROUP_ADMINS": "المشرفون",
+	"GROUP_LAST_INLINE_USER": "آخر مستخدم مضمن",
+	"GROUP_LAST_INLINE_QUERY": "آخر استعلام مضمن",
+	"GROUP_LAST_INLINE_TIME": "آخر وقت مضمن",
+	"NO_USERS_FOUND": "لم يتم العثور على مستخدمين",
+	"NO_GROUPS_FOUND": "لم يتم العثور على مجموعات",
+	"NA": "غير متاح",
+	"GROUP_BLACKLIST_TOGGLED": "تم {{status}} المجموعة {{group_id}}",
+	"GROUP_BLACKLIST_TOGGLE_ERROR": "فشل في تبديل حالة القائمة السوداء للمجموعة",
+	"INLINE_HELP_TITLE": "مساعدة الأوامر المضمنة",
+	"INLINE_HELP_DESC": "اكتب أمرًا مثل '@EgrigoreBot /abjad <نص> [--خيارات]'",
+	"INLINE_HELP_MESSAGE": "استخدم الأوامر المضمنة مثل `@EgrigoreBot /abjad <نص> [--alphabet=<قيمة>] [--type=<قيمة>] [--shadda=<قيمة>] [--detail=<قيمة>]`. الأوامر المدعومة: abjad, bastet, nutket, unsur, huddam, magic_square, transliterate, convert_numbers, numerology.",
+	"UNKNOWN_COMMAND_TITLE": "أمر غير معروف",
+	"UNKNOWN_COMMAND_DESC": "الأمر '{command}' غير معترف به",
+	"UNKNOWN_COMMAND_MESSAGE": "عذرًا، '{command}' ليس أمرًا مضمنًا صالحًا. جرب أوامر مثل abjad أو bastet أو nutket.",
+	"ERROR_TITLE": "خطأ",
+	"ERROR_DESC": "حدث خطأ: {error}",
+	"ABJAD_INLINE_HELP_TITLE": "حاسبة الأبجدية",
+	"ABJAD_INLINE_HELP_DESC": "حساب قيمة الأبجدية للنص",
+	"ABJAD_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /abjad <نص> [--alphabet=<arabic_abjadi|arabic_maghribi|...>] [--type=<asghar|saghir|...>] [--shadda=<once|twice>] [--detail=<summary|full>]`. مثال: `@EgrigoreBot /abjad Hello --alphabet=english --type=saghir`",
+	"ABJAD_NO_TEXT_TITLE": "لم يتم تقديم نص",
+	"ABJAD_NO_TEXT_DESC": "الرجاء إدخال نص للحساب",
+	"ABJAD_NO_TEXT_MESSAGE": "الرجاء تقديم نص، على سبيل المثال، `@EgrigoreBot /abjad Hello`",
+	"ABJAD_INVALID_ALPHABET_TITLE": "أبجدية غير صالحة",
+	"ABJAD_INVALID_ALPHABET_DESC": "الأبجدية '{alphabet}' غير معترف بها",
+	"ABJAD_INVALID_ALPHABET_MESSAGE": "الأبجدية '{alphabet}' غير صالحة. الخيارات الصالحة: arabic_abjadi, arabic_maghribi, arabic_quranic, arabic_hija, arabic_maghribi_hija, arabic_ikleels, arabic_shamse_abjadi, hebrew, turkish, english, latin",
+	"ABJAD_INVALID_TYPE_TITLE": "نوع أبجدي غير صالح",
+	"ABJAD_INVALID_TYPE_DESC": "النوع '{type}' غير معترف به",
+	"ABJAD_INVALID_TYPE_MESSAGE": "النوع '{type}' غير صالح. الخيارات الصالحة: asghar, saghir, kebeer, akbar, saghir_plus_quantity, letter_quantity",
+	"ABJAD_INVALID_SHADDA_TITLE": "شدة غير صالحة",
+	"ABJAD_INVALID_SHADDA_DESC": "الشدة '{shadda}' غير معترف بها",
+	"ABJAD_INVALID_SHADDA_MESSAGE": "الشدة '{shadda}' غير صالحة. الخيارات الصالحة: once, twice",
+	"ABJAD_INVALID_DETAIL_TITLE": "تفاصيل غير صالحة",
+	"ABJAD_INVALID_DETAIL_DESC": "التفاصيل '{detail}' غير معترف بها",
+	"ABJAD_INVALID_DETAIL_MESSAGE": "التفاصيل '{detail}' غير صالحة. الخيارات الصالحة: summary, full",
+	"ABJAD_SHADDA_INVALID_TITLE": "الشدة غير قابلة للتطبيق",
+	"ABJAD_SHADDA_INVALID_DESC": "تتطلب الشدة 'twice' نصًا عربيًا",
+	"ABJAD_SHADDA_INVALID_MESSAGE": "الشدة 'twice' صالحة فقط للنص العربي",
+	"ABJAD_INLINE_TITLE": "قيمة الأبجدية: {value}",
+	"ABJAD_INLINE_DESC": "تم الحساب لـ '{text}': {value}",
+	"ABJAD_CALC_SUMMARY": "ملخص الحساب:\nالأبجدية: {alphabet}\nنوع الأبجدية: {abjad_type}\nالشدة: {shadda}",
+	"ABJAD_CALC_DETAILS": "قيم الحروف: {details}",
+	"ABJAD_CALC_TOTAL": "القيمة الإجمالية: {total}",
+	"BASTET_INLINE_HELP_TITLE": "مولد باستيت",
+	"BASTET_INLINE_HELP_DESC": "إنشاء نص من رقم",
+	"BASTET_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /bastet <رقم> [--repetition=<قيمة>] [--alphabet=<arabic_abjadi|arabic_maghribi|...>] [--type=<asghar|saghir|...>]`. مثال: `@EgrigoreBot /bastet 123 --repetition=5`",
+	"BASTET_NO_NUMBER_TITLE": "لم يتم تقديم رقم",
+	"BASTET_NO_NUMBER_DESC": "الرجاء إدخال رقم للمعالجة",
+	"BASTET_NO_NUMBER_MESSAGE": "الرجاء تقديم رقم، على سبيل المثال، `@EgrigoreBot /bastet 123`",
+	"BASTET_INVALID_REPETITION_TITLE": "تكرار غير صالح",
+	"BASTET_INVALID_REPETITION_DESC": "التكرار '{repetition}' غير صالح",
+	"BASTET_INVALID_REPETITION_MESSAGE": "يجب أن يكون التكرار رقمًا بين 1 و 1000، تم الحصول على '{repetition}'",
+	"BASTET_INVALID_ALPHABET_TITLE": "أبجدية غير صالحة",
+	"BASTET_INVALID_ALPHABET_DESC": "الأبجدية '{alphabet}' غير معترف بها",
+	"BASTET_INVALID_ALPHABET_MESSAGE": "الأبجدية '{alphabet}' غير صالحة. الخيارات الصالحة: arabic_abjadi, arabic_maghribi, arabic_quranic, arabic_hija, arabic_maghribi_hija, arabic_ikleels, arabic_shamse_abjadi, hebrew, turkish, english, latin",
+	"BASTET_INVALID_TYPE_TITLE": "نوع أبجدي غير صالح",
+	"BASTET_INVALID_TYPE_DESC": "النوع '{type}' غير معترف به",
+	"BASTET_INVALID_TYPE_MESSAGE": "النوع '{type}' غير صالح. الخيارات الصالحة: asghar, saghir, kebeer, akbar, saghir_plus_quantity, letter_quantity",
+	"BASTET_INLINE_TITLE": "نتيجة باستيت: {value}",
+	"BASTET_INLINE_DESC": "تم الإنشاء للرقم {number}، التكرار {repetition}",
+	"BASTET_CALC_SUMMARY": "ملخص الحساب:\nالأبجدية: {alphabet}\nنوع الأبجدية: {abjad_type}\nالتكرار: {repetition}",
+	"BASTET_CALC_RESULT": "النص الذي تم إنشاؤه: {result}",
+	"NUTKET_INLINE_HELP_TITLE": "تهجئة نوتكت",
+	"NUTKET_INLINE_HELP_DESC": "تهجئة رقم بالحروف",
+	"NUTKET_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /nutket <رقم> [--language=<arabic|hebrew|turkish|english|latin>]`. مثال: `@EgrigoreBot /nutket 123 --language=arabic`",
+	"NUTKET_NO_NUMBER_TITLE": "لم يتم تقديم رقم",
+	"NUTKET_NO_NUMBER_DESC": "الرجاء إدخال رقم للتهجئة",
+	"NUTKET_NO_NUMBER_MESSAGE": "الرجاء تقديم رقم، على سبيل المثال، `@EgrigoreBot /nutket 123`",
+	"NUTKET_INVALID_LANGUAGE_TITLE": "لغة غير صالحة",
+	"NUTKET_INVALID_LANGUAGE_DESC": "اللغة '{language}' غير معترف بها",
+	"NUTKET_INVALID_LANGUAGE_MESSAGE": "اللغة '{language}' غير صالحة. الخيارات الصالحة: arabic, hebrew, turkish, english, latin",
+	"NUTKET_INLINE_TITLE": "نتيجة نوتكت: {spelled}",
+	"NUTKET_INLINE_DESC": "الرقم {number} مكتوب بـ {language}",
+	"UNSUR_INLINE_HELP_TITLE": "مصنف أونسور",
+	"UNSUR_INLINE_HELP_DESC": "تصنيف النص إلى عناصر",
+	"UNSUR_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /unsur <نص> [--language=<turkish|arabic|buni|huseyni|hebrew|english|latin|default>] [--table=<fire|water|air|earth|default>] [--shadda=<once|twice>]`. مثال: `@EgrigoreBot /unsur Hello --language=turkish`",
+	"UNSUR_NO_TEXT_TITLE": "لم يتم تقديم نص",
+	"UNSUR_NO_TEXT_DESC": "الرجاء إدخال نص للتصنيف",
+	"UNSUR_NO_TEXT_MESSAGE": "الرجاء تقديم نص، على سبيل المثال، `@EgrigoreBot /unsur Hello`",
+	"UNSUR_INVALID_LANGUAGE_TITLE": "لغة غير صالحة",
+	"UNSUR_INVALID_LANGUAGE_DESC": "اللغة '{language}' غير معترف بها",
+	"UNSUR_INVALID_LANGUAGE_MESSAGE": "اللغة '{language}' غير صالحة. الخيارات الصالحة: turkish, arabic, buni, huseyni, hebrew, english, latin, default",
+	"UNSUR_INVALID_TABLE_TITLE": "جدول غير صالح",
+	"UNSUR_INVALID_TABLE_DESC": "الجدول '{table}' غير معترف به",
+	"UNSUR_INVALID_TABLE_MESSAGE": "الجدول '{table}' غير صالح. الخيارات الصالحة: fire, water, air, earth, default",
+	"UNSUR_INVALID_SHADDA_TITLE": "شدة غير صالحة",
+	"UNSUR_INVALID_SHADDA_DESC": "الشدة '{shadda}' غير معترف بها",
+	"UNSUR_INVALID_SHADDA_MESSAGE": "الشدة '{shadda}' غير صالحة. الخيارات الصالحة: once, twice",
+	"UNSUR_SHADDA_INVALID_TITLE": "الشدة غير قابلة للتطبيق",
+	"UNSUR_SHADDA_INVALID_DESC": "تتطلب الشدة 'twice' نصًا عربيًا",
+	"UNSUR_SHADDA_INVALID_MESSAGE": "الشدة 'twice' صالحة فقط للنص العربي",
+	"UNSUR_INLINE_TITLE": "نتيجة أونسور: {element}",
+	"UNSUR_INLINE_DESC": "تم تصنيف '{input}' كـ {element}",
+	"HUDDAM_INLINE_HELP_TITLE": "مولد هددام",
+	"HUDDAM_INLINE_HELP_DESC": "إنشاء اسم كيان من رقم",
+	"HUDDAM_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /huddam <رقم> [--entity=<ulvi|sufli|ser>] [--alphabet=<arabic_abjadi|...>] [--multiplier=<regular|eacher>]`. مثال: `@EgrigoreBot /huddam 123 --entity=ulvi`",
+	"HUDDAM_NO_NUMBER_TITLE": "لم يتم تقديم رقم",
+	"HUDDAM_NO_NUMBER_DESC": "الرجاء إدخال رقم للمعالجة",
+	"HUDDAM_NO_NUMBER_MESSAGE": "يرجى تقديم رقم، على سبيل المثال، `@EgrigoreBot /huddam 123`",
+	"HUDDAM_INVALID_ENTITY_TITLE": "نوع الكيان غير صالح",
+	"HUDDAM_INVALID_ENTITY_DESC": "نوع الكيان '{entity}' غير معترف به",
+	"HUDDAM_INVALID_ENTITY_MESSAGE": "نوع الكيان '{entity}' غير صالح. الخيارات المتاحة: علوي، سفلي، سر",
+	"HUDDAM_INVALID_ALPHABET_TITLE": "أبجدية غير صالحة",
+	"HUDDAM_INVALID_ALPHABET_DESC": "الأبجدية '{alphabet}' غير معترف بها",
+	"HUDDAM_INVALID_ALPHABET_MESSAGE": "الأبجدية '{alphabet}' غير صالحة. الخيارات المتاحة: أبجدي عربي، مغربي عربي، قرآني عربي، هجاء عربي، هجاء مغربي عربي، إكليل عربي، شمسي أبجدي عربي، عبري، تركي، إنجليزي، لاتيني",
+	"HUDDAM_INVALID_MULTIPLIER_TITLE": "مضاعف غير صالح",
+	"HUDDAM_INVALID_MULTIPLIER_DESC": "المضاعف '{multiplier}' غير معترف به",
+	"HUDDAM_INVALID_MULTIPLIER_MESSAGE": "المضاعف '{multiplier}' غير صالح. الخيارات المتاحة: عادي، إيشر",
+	"HUDDAM_INLINE_TITLE": "نتيجة الهدام: {name}",
+	"HUDDAM_INLINE_DESC": "تم إنشاؤه للرقم {number}، النوع {type}",
+	"MAGICSQUARE_INLINE_HELP_TITLE": "مولد المربع السحري",
+	"MAGICSQUARE_INLINE_HELP_DESC": "إنشاء مربع سحري",
+	"MAGICSQUARE_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /magic_square <number>`. مثال: `@EgrigoreBot /magic_square 15`",
+	"MAGICSQUARE_NO_NUMBER_TITLE": "لم يتم تقديم رقم",
+	"MAGICSQUARE_NO_NUMBER_DESC": "يرجى إدخال مجموع الصف",
+	"MAGICSQUARE_NO_NUMBER_MESSAGE": "يرجى تقديم مجموع الصف، على سبيل المثال، `@EgrigoreBot /magic_square 15`",
+	"MAGICSQUARE_INVALID_NUMBER_TITLE": "مجموع صف غير صالح",
+	"MAGICSQUARE_INVALID_NUMBER_DESC": "يجب أن يكون مجموع الصف 15 على الأقل",
+	"MAGICSQUARE_INVALID_NUMBER_MESSAGE": "يجب أن يكون مجموع الصف 15 على الأقل، تم الحصول على '{number}'",
+	"MAGICSQUARE_INLINE_TITLE": "مربع سحري للرقم {number}",
+	"MAGICSQUARE_INLINE_DESC": "مربع تم إنشاؤه بمجموع صف {number}",
+	"TRANSLITERATE_INLINE_HELP_TITLE": "نقل الحروف",
+	"TRANSLITERATE_INLINE_HELP_DESC": "نقل الحروف بين النصوص",
+	"TRANSLITERATE_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /transliterate <text> [--source=<arabic|english|turkish|hebrew|latin>] [--target=<arabic|english|turkish|hebrew|latin>]`. مثال: `@EgrigoreBot /transliterate Hello --source=english --target=arabic`",
+	"TRANSLITERATE_NO_TEXT_TITLE": "لم يتم تقديم نص",
+	"TRANSLITERATE_NO_TEXT_DESC": "يرجى إدخال نص لنقل حروفه",
+	"TRANSLITERATE_NO_TEXT_MESSAGE": "يرجى تقديم نص، على سبيل المثال، `@EgrigoreBot /transliterate Hello`",
+	"TRANSLITERATE_INVALID_SOURCE_TITLE": "لغة مصدر غير صالحة",
+	"TRANSLITERATE_INVALID_SOURCE_DESC": "لغة المصدر '{source}' غير معترف بها",
+	"TRANSLITERATE_INVALID_SOURCE_MESSAGE": "لغة المصدر '{source}' غير صالحة. الخيارات المتاحة: عربي، إنجليزي، تركي، عبري، لاتيني",
+	"TRANSLITERATE_INVALID_TARGET_TITLE": "لغة هدف غير صالحة",
+	"TRANSLITERATE_INVALID_TARGET_DESC": "لغة الهدف '{target}' غير معترف بها",
+	"TRANSLITERATE_INVALID_TARGET_MESSAGE": "لغة الهدف '{target}' غير صالحة. الخيارات المتاحة: عربي، إنجليزي، تركي، عبري، لاتيني",
+	"TRANSLITERATE_INLINE_TITLE": "نتيجة نقل الحروف: {result}",
+	"TRANSLITERATE_INLINE_DESC": "تم نقل حروف '{text}' من {source} إلى {target}",
+	"TRANSLITERATION_RESULT": "نقل حروف \"{text}\" من {source_lang} إلى {target_lang}: **{result}**",
+	"CONVERTNUMBERS_INLINE_HELP_TITLE": "محول الأرقام",
+	"CONVERTNUMBERS_INLINE_HELP_DESC": "تحويل الأرقام إلى تنسيقات مختلفة",
+	"CONVERTNUMBERS_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /convert_numbers <number> [--format=<arabic|indian|invert>]`. مثال: `@EgrigoreBot /convert_numbers 1234 --format=arabic`",
+	"CONVERTNUMBERS_NO_TEXT_TITLE": "لم يتم تقديم رقم",
+	"CONVERTNUMBERS_NO_TEXT_DESC": "يرجى إدخال رقم للتحويل",
+	"CONVERTNUMBERS_NO_TEXT_MESSAGE": "يرجى تقديم رقم، على سبيل المثال، `@EgrigoreBot /convert_numbers 1234`",
+	"CONVERTNUMBERS_INVALID_FORMAT_TITLE": "تنسيق غير صالح",
+	"CONVERTNUMBERS_INVALID_FORMAT_DESC": "التنسيق '{format}' غير معترف به",
+	"CONVERTNUMBERS_INVALID_FORMAT_MESSAGE": "التنسيق '{format}' غير صالح. الخيارات المتاحة: عربي، هندي، معكوس",
+	"CONVERTNUMBERS_INLINE_TITLE": "الرقم المحول: {result}",
+	"CONVERTNUMBERS_INLINE_DESC": "تم تحويل '{text}' إلى تنسيق {format}",
+	"NUMEROLOGY_INLINE_HELP_TITLE": "حاسبة علم الأعداد",
+	"NUMEROLOGY_INLINE_HELP_DESC": "حساب قيمة علم الأعداد للنص",
+	"NUMEROLOGY_INLINE_HELP_MESSAGE": "اكتب `@EgrigoreBot /numerology <text> [--alphabet=<arabic_abjadi|...>] [--method=<normal|inverse|base36|...>]`. مثال: `@EgrigoreBot /numerology Hello --alphabet=english --method=normal`",
+	"NUMEROLOGY_NO_TEXT_TITLE": "لم يتم تقديم نص",
+	"NUMEROLOGY_NO_TEXT_DESC": "يرجى إدخال نص للحساب",
+	"NUMEROLOGY_NO_TEXT_MESSAGE": "يرجى تقديم نص، على سبيل المثال، `@EgrigoreBot /numerology Hello`",
+	"NUMEROLOGY_INVALID_ALPHABET_TITLE": "أبجدية غير صالحة",
+	"NUMEROLOGY_INVALID_ALPHABET_DESC": "الأبجدية '{alphabet}' غير معترف بها",
+	"NUMEROLOGY_INVALID_ALPHABET_MESSAGE": "الأبجدية '{alphabet}' غير صالحة. الخيارات المتاحة: أبجدي عربي، مغربي عربي، قرآني عربي، هجاء عربي، هجاء مغربي عربي، إكليل عربي، شمسي أبجدي عربي، عبري، تركي، إنجليزي، لاتيني",
+	"NUMEROLOGY_INVALID_METHOD_TITLE": "طريقة غير صالحة",
+	"NUMEROLOGY_INVALID_METHOD_DESC": "الطريقة '{method}' غير معترف بها",
+	"NUMEROLOGY_INVALID_METHOD_MESSAGE": "الطريقة '{method}' غير صالحة. الخيارات المتاحة: عادي، معكوس، قاعدة 36، معكوس قاعدة 36، فيثاغورس، كلداني، لاتيني، معكوس لاتيني، عبري، معكوس عبري",
+	"NUMEROLOGY_INLINE_TITLE": "قيمة علم الأعداد: {value}",
+	"NUMEROLOGY_INLINE_DESC": "تم الحساب لـ '{text}' باستخدام {alphabet}، {method}",
+	"ALPHABET_ORDER_ARABIC_ABJADI": "أبجدي عربي",
+	"ALPHABET_ORDER_ARABIC_MAGHRIBI": "مغربي عربي",
+	"ALPHABET_ORDER_ARABIC_QURANIC": "قرآني عربي",
+	"ALPHABET_ORDER_ARABIC_HIJA": "هجاء عربي",
+	"ALPHABET_ORDER_ARABIC_MAGHRIBI_HIJA": "هجاء مغربي عربي",
+	"ALPHABET_ORDER_ARABIC_IKLEELS": "إكليل عربي",
+	"ALPHABET_ORDER_ARABIC_SHAMSE_ABJADI": "شمسي أبجدي عربي",
+	"DETAIL_SUMMARY": "ملخص",
+	"DETAIL_FULL": "كامل",
+	"LANGUAGE_ARABIC": "عربي",
+	"LANGUAGE_HEBREW": "عبري",
+	"LANGUAGE_TURKISH": "تركي",
+	"LANGUAGE_ENGLISH": "إنجليزي",
+	"LANGUAGE_LATIN": "لاتيني",
+	"LANGUAGE_BUNI": "بوني",
+	"LANGUAGE_HUSEYNI": "حسيني",
+	"LANGUAGE_DEFAULT": "افتراضي",
+	"TABLE_FIRE": "نار",
+	"TABLE_WATER": "ماء",
+	"TABLE_AIR": "هواء",
+	"TABLE_EARTH": "أرض",
+	"TABLE_DEFAULT": "افتراضي",
+	"HUDDAM_ENTITY_ULVI": "علوي",
+	"HUDDAM_ENTITY_SUFLI": "سفلي",
+	"HUDDAM_ENTITY_SER": "سر",
+	"HUDDAM_MULTIPLIER_REGULAR": "عادي",
+	"HUDDAM_MULTIPLIER_EACHER": "إيشر",
+	"NUMEROLOGY_METHOD_NORMAL": "عادي",
+	"NUMEROLOGY_METHOD_INVERSE": "معكوس",
+	"NUMEROLOGY_METHOD_BASE36": "قاعدة 36",
+	"NUMEROLOGY_METHOD_BASE36_INVERSE": "معكوس قاعدة 36",
+	"NUMEROLOGY_METHOD_PYTHAGOREAN": "فيثاغورس",
+	"NUMEROLOGY_METHOD_CHALDEAN": "كلداني",
+	"NUMEROLOGY_METHOD_LATIN": "لاتيني",
+	"NUMEROLOGY_METHOD_LATIN_INVERSE": "معكوس لاتيني",
+	"NUMEROLOGY_METHOD_HEBREW": "عبري",
+	"NUMEROLOGY_METHOD_HEBREW_INVERSE": "معكوس عبري",
+	"CONVERT_FORMAT_ARABIC": "عربي",
+	"CONVERT_FORMAT_INDIAN": "هندي",
+	"CONVERT_FORMAT_INVERT": "معكوس",
+	"SELL_SETUP_PAPARA": "يرجى إعداد حسابك التجاري في Papara والبريد الإلكتروني باستخدام /papara قبل بيع المنتجات.",
+	"SELL_SELECT_TYPE": "يرجى تحديد نوع المنتج (شحن، تنزيل، عضوية):",
+	"SELL_INVALID_TYPE": "نوع منتج غير صالح. يرجى الاختيار بين 'Shipped' أو 'Download' أو 'Membership'.",
+	"SELL_ENTER_PRODUCT_NAME": "يرجى إدخال اسم المنتج:",
+	"SELL_ENTER_PRODUCT_DESCRIPTION": "يرجى إدخال وصف المنتج:",
+	"SELL_ENTER_PRODUCT_PRICE": "يرجى إدخال سعر المنتج (بالليرة التركية):",
+	"SELL_INVALID_PRICE": "سعر غير صالح. يرجى إدخال رقم صالح أكبر من 0.",
+	"SELL_ENTER_QUANTITY": "يرجى إدخال كمية المنتج:",
+	"SELL_INVALID_QUANTITY": "كمية غير صالحة. يرجى إدخال رقم صالح أكبر من 0.",
+	"SELL_ENTER_TAX_RATES": "يرجى إدخال معدلات الضريبة (مثل KDV:20,ÖTV:5):",
+	"SELL_INVALID_TAX_RATES": "تنسيق معدلات الضريبة غير صالح. استخدم: KDV:20,ÖTV:5",
+	"SELL_ENTER_SHIPPING_FEE": "يرجى إدخال رسوم الشحن (بالليرة التركية):",
+	"SELL_INVALID_SHIPPING_FEE": "رسوم شحن غير صالحة. يرجى إدخال رقم صالح.",
+	"SELL_UPLOAD_IMAGES": "يرجى تحميل ما يصل إلى 3 صور للمنتج (أرسل صورة واحدة في كل مرة):",
+	"SELL_INVALID_IMAGE": "يرجى إرسال صورة صالحة.",
+	"SELL_MAX_IMAGES": "تم تحميل 3 صور كحد أقصى.",
+	"SELL_UPLOAD_MORE_IMAGES": "يمكنك تحميل {remaining} صورة أخرى، أو إرسال أي نص للمتابعة.",
+	"SELL_ENTER_MEMBERSHIP_DETAILS": "يرجى إدخال تفاصيل العضوية (group_id, المدة): مثال، 123456,شهري",
+	"SELL_INVALID_MEMBERSHIP_DETAILS": "تفاصيل عضوية غير صالحة. استخدم التنسيق: group_id, المدة (مثال، 123456,شهري)",
+	"SELL_UPLOAD_FILE": "يرجى تحميل الملف القابل للتنزيل (PDF، DOC، JPG، MP4، ZIP، APK، STL، إلخ):",
+	"SELL_INVALID_FILE": "يرجى إرسال ملف صالح.",
+	"SELL_INVALID_FILE_TYPE": "نوع ملف غير صالح. المسموح به: PDF، DOC، XLS، PPT، JPG، PNG، GIF، MP4، ZIP، APK، STL، XCF.",
+	"SELL_PRODUCT_ADDED": "تمت إضافة المنتج بنجاح!",
+	"SELL_ERROR": "حدث خطأ: {error}",
+	"SELL_CANCELLED": "تم إلغاء إضافة المنتج.",
+	"PRODUCT_TYPE_SHIPPED": "شحن",
+	"PRODUCT_TYPE_DOWNLOAD": "تنزيل",
+	"PRODUCT_TYPE_MEMBERSHIP": "عضوية",
+	"DASHBOARD_STATISTICS_TAB": "إحصائيات",
+	"DASHBOARD_CONFIGURATION_TAB": "إعدادات",
+	"STATISTICS_TITLE": "إحصائيات المبيعات",
+	"STATISTICS_TOTAL_REVENUE": "إجمالي الإيرادات",
+	"STATISTICS_TOTAL_REFUNDS": "إجمالي المبالغ المستردة",
+	"STATISTICS_TOTAL_TAXES": "إجمالي الضرائب",
+	"CONFIGURATION_TITLE": "إعدادات",
+	"CONFIGURATION_PAPARA_EMAIL": "بريد Papara الإلكتروني",
+	"CONFIGURATION_EMAIL_PASSWORD": "كلمة مرور البريد الإلكتروني",
+	"CONFIGURATION_PHONE": "رقم الهاتف",
+	"CONFIGURATION_MAIN_GROUP": "معرف المجموعة الرئيسية",
+	"CONFIGURATION_SAVE": "حفظ الإعدادات",
+	"CONFIGURATION_SAVED": "تم حفظ الإعدادات بنجاح!",
+	"CONFIGURATION_ERROR": "خطأ في حفظ الإعدادات: {error}",
+	"PRODUCT_TOP_SALE": "الأكثر مبيعًا",
+	"PRODUCT_ADD": "إضافة منتج",
+	"PRODUCT_EDIT": "تعديل المنتج",
+	"PRODUCT_DELETE": "حذف المنتج",
+	"PRODUCT_DELETE_CONFIRM": "هل أنت متأكد أنك تريد حذف هذا المنتج؟",
+	"ORDER_DETAILS": "تفاصيل الطلب",
+	"ORDER_CANCEL_CONFIRM": "هل أنت متأكد أنك تريد إلغاء هذا الطلب؟",
+	"ORDER_STATUS_PREPARING": "تم قبول الطلب ويجري تجهيزه للشحن",
+	"ORDER_STATUS_SHIPPED": "تم شحن المنتج وهو في طريقه",
+	"ORDER_STATUS_COMPLETED": "مكتمل",
+	"BUY_BLACKLISTED": "غير مسموح لك باستخدام هذا الأمر.",
+	"BUY_NO_PRODUCTS": "لا توجد منتجات متاحة للشراء حاليًا.",
+	"BUY_SELECT_PRODUCT": "يرجى تحديد منتج للشراء:",
+	"BUY_PRODUCT_UNAVAILABLE": "عذرًا، هذا المنتج غير متوفر حاليًا.",
+	"BUY_QUANTITY_PROMPT": "لقد اخترت: {product_name}\nالسعر: {price} ليرة تركية\nالمتوفر: {quantity}\n\nكم ترغب في شراء؟ (1-{max_quantity})",
+	"BUY_NO_ADDRESSES": "لقد اخترت: {product_name}\nالسعر: {price} ليرة تركية\n\nليس لديك أي عناوين محفوظة. يرجى استخدام /address لإضافة عنوان أولاً.",
+	"BUY_SELECT_ADDRESS": "لقد اخترت: {product_name}\nالسعر: {price} ليرة تركية\nالكمية: 1\n\nيرجى تحديد عنوان التسليم:",
+	"BUY_INVALID_QUANTITY_NEGATIVE": "يرجى إدخال رقم موجب.",
+	"BUY_QUANTITY_EXCEEDS": "الحد الأقصى للكمية المسموح بها هو {max_quantity}. يرجى إدخال رقم أصغر.",
+	"BUY_QUANTITY_ADDRESS": "لقد اخترت: {product_name}\nالسعر: {price} ليرة تركية\nالكمية: {quantity}\nالإجمالي: {total} ليرة تركية\n\nيرجى تحديد عنوان التسليم:",
+	"BUY_INVALID_QUANTITY": "يرجى إدخال رقم صالح.",
+	"BUY_ADDRESS_UNAVAILABLE": "عذرًا، هذا العنوان غير متوفر حاليًا.",
+	"BUY_ORDER_SUMMARY": "ملخص الطلب:\n\nالمنتج: {product_name}\nالسعر: {price} ليرة تركية\nالكمية: {quantity}\nالإجمالي: {total} ليرة تركية\n\nعنوان التسليم:\n{address_name}\n{address}\n{city}\n\nيرجى تأكيد طلبك:",
+	"BUY_INSUFFICIENT_CREDITS": "ليس لديك رصيد كافٍ لإتمام عملية الشراء هذه.\nالمطلوب: {required} ليرة تركية\nرصيدك الحالي: {balance} ليرة تركية\n\nيرجى استخدام /papara لإضافة رصيد إلى حسابك.",
+	"BUY_ORDER_ERROR": "عذرًا، حدث خطأ أثناء معالجة طلبك. يرجى المحاولة مرة أخرى لاحقًا.",
+	"BUY_ORDER_SUCCESS": "🎉 تم تقديم الطلب بنجاح! 🎉\n\nرقم الطلب: #{order_id}\nالمنتج: {product_name}\nالكمية: {quantity}\nالإجمالي: {total} ليرة تركية\n\nسيتم معالجة طلبك قريبًا. يمكنك التحقق من الحالة باستخدام /orders.",
+	"BUY_CANCELLED": "تم إلغاء عملية الشراء.",
+	"ORDERS_BLACKLISTED": "غير مسموح لك باستخدام هذا الأمر.",
+	"ORDERS_NO_ORDERS": "ليس لديك أي طلبات حتى الآن.\n\nاستخدم الأمر /buy لإجراء عملية شراء.",
+	"ORDERS_SELECT_ORDER": "طلباتك\n\nحدد طلبًا لعرض التفاصيل:",
+	"ORDERS_ORDER_NOT_FOUND": "عذرًا، لم يتم العثور على هذا الطلب.",
+	"ORDERS_DETAILS": "{status_emoji} الطلب #{order_id}\n\nالمنتج: {product_name}\nالكمية: {quantity}\nالسعر الإجمالي: {total_price} ليرة تركية\nالحالة: {status}\nتاريخ الطلب: {order_date}\n\nعنوان الشحن:\n{address_name}\n{address}\n{city}\n\n",
+	"ORDERS_PENDING_PAYMENT": "⚠️ يتطلب هذا الطلب دفعًا. استخدم /papara لإضافة رصيد إلى حسابك.",
+	"ORDERS_PROCESSING": "يتم تجهيز طلبك وسيتم شحنه قريبًا.",
+	"ORDERS_SHIPPED": "تم شحن طلبك في {shipped_date}.",
+	"ORDERS_DELIVERED": "تم تسليم طلبك في {delivery_date}.",
+	"ORDERS_CANCELLED_STATUS": "تم إلغاء هذا الطلب في {cancelled_date}.",
+	"ORDERS_CANCEL_ERROR": "عذرًا، حدث خطأ أثناء إلغاء طلبك. يرجى المحاولة مرة أخرى لاحقًا.",
+	"ORDERS_CANCEL_SUCCESS": "✅ تم إلغاء الطلب #{order_id} بنجاح.\n\nتم استرداد {refund_amount} ليرة تركية إلى حسابك.",
+	"ORDERS_CLOSED": "تم إغلاق عرض الطلبات.",
+	"ORDERS_CANCELLED": "تم إلغاء عرض الطلبات.",
+	"PASSWORD_BLACKLISTED": "غير مسموح لك باستخدام هذا الأمر.",
+	"PASSWORD_ENTER_CURRENT": "أنت على وشك تغيير كلمة مرورك.\n\nأولاً، يرجى إدخال كلمة مرورك الحالية:\n\n(أرسل /cancel للإلغاء)",
+	"PASSWORD_CREATE_NEW": "لم يتم تعيين كلمة مرور لك حتى الآن.\n\nيرجى إنشاء كلمة مرور جديدة:\n\n(أرسل /cancel للإلغاء)",
+	"PASSWORD_INCORRECT": "❌ كلمة مرور غير صحيحة. يرجى المحاولة مرة أخرى أو إرسال /cancel للإلغاء.",
+	"PASSWORD_VERIFIED": "تم التحقق من كلمة المرور.\n\nيرجى إدخال كلمة مرورك الجديدة:\n\n(أرسل /cancel للإلغاء)",
+	"PASSWORD_TOO_SHORT": "كلمة المرور قصيرة جدًا. يرجى استخدام 8 أحرف على الأقل.\n\nأدخل كلمة مرور أقوى:",
+	"PASSWORD_CONFIRM": "يرجى تأكيد كلمة مرورك الجديدة عن طريق إدخالها مرة أخرى:\n\n(أرسل /cancel للإلغاء)",
+	"PASSWORD_NO_MATCH": "❌ كلمتا المرور غير متطابقتين. يرجى المحاولة مرة أخرى.\n\nأدخل كلمة مرورك الجديدة:",
+	"PASSWORD_UPDATE_ERROR": "عذرًا، حدث خطأ أثناء تحديث كلمة مرورك. يرجى المحاولة مرة أخرى لاحقًا.",
+	"PASSWORD_UPDATE_SUCCESS": "✅ تم تحديث كلمة المرور بنجاح!\n\nيمكنك استخدام كلمة مرورك الجديدة لتسجيل الدخول إلى لوحة تحكم الويب.",
+	"PASSWORD_CANCELLED": "تم إلغاء تغيير كلمة المرور.",
+	"PAPARA_BLACKLISTED": "غير مسموح لك باستخدام هذا الأمر.",
+	"PAPARA_SELECT_ACTION": "نظام دفع Papara\n\nماذا تود أن تفعل؟",
+	"PAPARA_ENTER_AMOUNT": "إضافة رصيد\n\nيرجى إدخال المبلغ بالليرة التركية الذي تريد إضافته إلى حسابك:\n(الحد الأدنى: 10 ليرة تركية، الحد الأقصى: 1000 ليرة تركية)",
+	"PAPARA_AMOUNT_TOO_LOW": "الحد الأدنى للمبلغ هو 10 ليرة تركية. يرجى إدخال مبلغ أكبر.",
+	"PAPARA_AMOUNT_TOO_HIGH": "الحد الأقصى للمبلغ هو 1000 ليرة تركية. يرجى إدخال مبلغ أصغر.",
+	"PAPARA_PAYMENT_ERROR": "عذرًا، حدث خطأ أثناء إنشاء طلب الدفع الخاص بك. يرجى المحاولة مرة أخرى لاحقًا.",
+	"PAPARA_CONFIRM_PAYMENT": "تفاصيل الدفع\n\nالمبلغ: {amount} ليرة تركية\nالمستلم: {recipient_name}\nرقم Papara: {papara_number}\n\nيرجى تأكيد طلب الدفع هذا:",
+	"PAPARA_INVALID_AMOUNT": "يرجى إدخال رقم صالح.",
+	"PAPARA_PAYMENT_SUCCESS": "✅ تم إنشاء طلب الدفع بنجاح!\n\nرقم الدفع: #{payment_id}\nالمبلغ: {amount} ليرة تركية\nالمستلم: {recipient_name}\nرقم Papara: {papara_number}\nالمرجع: {reference}\n\nيرجى إجراء الدفع باستخدام تطبيق أو موقع Papara، ثم استخدم خيار 'التحقق من حالة الدفع' مع مرجع الدفع الخاص بك لتأكيد الدفع.",
+	"PAPARA_CHECK_STATUS": "التحقق من حالة الدفع\n\nيرجى إدخال مرجع الدفع أو معرف الدفع الخاص بك:",
+	"PAPARA_PAYMENT_NOT_FOUND": "عذرًا، لم نتمكن من العثور على دفعة بهذا المرجع. يرجى التحقق والمحاولة مرة أخرى.",
+	"PAPARA_PAYMENT_CONFIRMED": "✅ تم تأكيد الدفع!\n\nرقم الدفع: #{payment_id}\nالمبلغ: {amount} ليرة تركية\nالرصيد المضاف: {credits_added}\n\nتم إضافة الرصيد إلى حسابك. شكرًا لك على دفعك!",
+	"PAPARA_PAYMENT_VERIFIED": "✅ تم التحقق من الدفع ومعالجته!\n\nرقم الدفع: #{payment_id}\nالمبلغ: {amount} ليرة تركية\nالرصيد المضاف: {credits_added}\n\nتم إضافة الرصيد إلى حسابك. شكرًا لك على دفعك!",
+	"PAPARA_PAYMENT_PENDING": "⏳ الدفع لا يزال معلقًا\n\nرقم الدفع: #{payment_id}\nالمبلغ: {amount} ليرة تركية\n\nيرجى إكمال الدفع باستخدام تطبيق أو موقع Papara، ثم التحقق مرة أخرى.",
+	"PAPARA_PAYMENT_CANCELLED": "❌ تم إلغاء الدفع\n\nرقم الدفع: #{payment_id}\nالمبلغ: {amount} ليرة تركية\n\nتم إلغاء طلب الدفع هذا. يرجى إنشاء دفعة جديدة إذا لزم الأمر.",
+	"PAPARA_PAYMENT_UNKNOWN": "❓ حالة دفع غير معروفة\n\nرقم الدفع: #{payment_id}\nالحالة: {status}\n\nيرجى الاتصال بالدعم للحصول على المساعدة.",
+	"PAPARA_BALANCE": "رصيدك الحالي\n\nالرصيد: {balance} ليرة تركية\n\nيمكنك استخدام هذا الرصيد لشراء المنتجات أو الخدمات.",
+	"PAPARA_CANCELLED": "تم إلغاء عملية الدفع.",
+	"ADDRESS_BLACKLISTED": "غير مسموح لك باستخدام هذا الأمر.",
+	"ADDRESS_SELECT_ACTION": "إدارة العناوين\n\nماذا تود أن تفعل؟",
+	"ADDRESS_ENTER_NAME": "لنضف عنوان تسليم جديد.\n\nأولاً، يرجى إعطاء هذا العنوان اسمًا (مثل 'المنزل'، 'العمل'، إلخ):",
+	"ADDRESS_NAME_TOO_LONG": "اسم العنوان طويل جدًا. يرجى استخدام اسم أقصر (50 حرفًا كحد أقصى).",
+	"ADDRESS_ENTER_STREET": "اسم العنوان: {address_name}\n\nالآن، يرجى إدخال عنوان الشارع:",
+	"ADDRESS_LINE_TOO_LONG": "العنوان طويل جدًا. يرجى استخدام عنوان أقصر (200 حرفًا كحد أقصى).",
+	"ADDRESS_ENTER_CITY": "عنوان الشارع: {address_line}\n\nأخيرًا، يرجى إدخال المدينة:",
+	"ADDRESS_CITY_TOO_LONG": "اسم المدينة طويل جدًا. يرجى استخدام اسم أقصر (50 حرفًا كحد أقصى).",
+	"ADDRESS_CONFIRM": "يرجى تأكيد تفاصيل عنوانك:\n\nالاسم: {address_name}\nالعنوان: {address_line}\nالمدينة: {city}\n\nهل هذا صحيح؟",
+	"ADDRESS_SAVE_ERROR": "عذرًا، حدث خطأ أثناء حفظ عنوانك. يرجى المحاولة مرة أخرى لاحقًا.",
+	"ADDRESS_SAVE_SUCCESS": "✅ تم حفظ العنوان بنجاح!\n\nالاسم: {address_name}\nالعنوان: {address_line}\nالمدينة: {city}\n\nيمكنك إدارة عناوينك في أي وقت باستخدام الأمر /address.",
+	"ADDRESS_NO_ADDRESSES": "ليس لديك أي عناوين محفوظة حتى الآن.\n\nاستخدم الأمر /address وحدد 'إضافة عنوان جديد' لإضافة عنوان.",
+	"ADDRESS_NO_ADDRESSES_DELETE": "ليس لديك أي عناوين محفوظة لحذفها.\n\nاستخدم الأمر /address وحدد 'إضافة عنوان جديد' لإضافة عنوان.",
+	"ADDRESS_SELECT_DELETE": "حدد عنوانًا لحذفه:",
+	"ADDRESS_DELETE_ERROR": "عذرًا، حدث خطأ أثناء حذف العنوان. يرجى المحاولة مرة أخرى لاحقًا.",
+	"ADDRESS_DELETE_SUCCESS": "✅ تم حذف العنوان بنجاح!",
+	"ADDRESS_CANCELLED": "تم إلغاء إدارة العناوين.",
+	"PRODUCT_NOT_FOUND_TITLE": "المنتج غير موجود",
+	"PRODUCT_NOT_FOUND_DESC": "لم يتم العثور على منتج بالمعرف {product_id}",
+	"PRODUCT_NOT_FOUND_MESSAGE": "لم يتم العثور على منتج بالمعرف {product_id}. حاول تصفح جميع المنتجات باستخدام /buy.",
+	"BUY_NOW_BUTTON": "اشتر الآن",
+	"VIEW_ALL_PRODUCTS_BUTTON": "عرض جميع المنتجات",
+	"PRODUCT_PRICE_AVAILABILITY": "{price_text} - {availability}",
+	"PRODUCT_DETAILS": "*{product_name}*\n\nالسعر: {price_text}\nالنوع: {product_type}\n{availability}\n\n{description}\n\n",
+	"PRODUCT_FEATURES": "الميزات:\n{features_text}\n\n",
+	"PRODUCT_PURCHASE_PROMPT": "استخدم الأزرار أدناه لشراء هذا المنتج.",
+	"PRODUCT_SEARCH_TITLE": "بحث عن منتج",
+	"PRODUCT_SEARCH_DESC": "استخدم 'product [المعرف]' لعرض تفاصيل منتج معين",
+	"PRODUCT_SEARCH_HELP": "لعرض تفاصيل المنتج، استخدم تنسيق الاستعلام المضمن: {bot_username} product [المعرف]\nمثال: {bot_username} product 1\n\nأو تصفح جميع المنتجات باستخدام: {bot_username} shop",
+	"UPDATE_PERMISSION_DENIED_TITLE": "تم رفض الإذن",
+	"UPDATE_PERMISSION_DENIED_DESC": "ليس لديك إذن لاستخدام أوامر تحديث المتجر",
+	"UPDATE_PERMISSION_DENIED_MESSAGE": "ليس لديك إذن لاستخدام أوامر تحديث المتجر. يرجى الاتصال بالمسؤول.",
+	"UPDATE_COMMANDS_TITLE": "أوامر تحديث المتجر",
+	"UPDATE_COMMANDS_DESC": "الأوامر المتاحة: new, sale, restock, announcement",
+	"UPDATE_COMMANDS_HELP": "أوامر تحديث المتجر:\n\n• {bot_username} update new [اسم_المنتج] - الإعلان عن منتج جديد\n• {bot_username} update sale [الخصم]% - الإعلان عن تخفيض\n• {bot_username} update restock [معرف_المنتج] - الإعلان عن إعادة تخزين منتج\n• {bot_username} update announcement [نص] - عمل إعلان عام",
+	"UPDATE_INVALID_INPUT_TITLE": "إدخال غير صالح",
+	"UPDATE_EMPTY_PRODUCT_NAME": "لا يمكن أن يكون اسم المنتج فارغًا",
+	"UPDATE_INVALID_FORMAT_TITLE": "تنسيق غير صالح",
+	"UPDATE_SALE_FORMAT_DESC": "استخدم: update sale [رقم]%",
+	"UPDATE_SALE_FORMAT_MESSAGE": "تنسيق تخفيض غير صالح. استخدم: {bot_username} update sale [رقم]%\nمثال: {bot_username} update sale 20%",
+	"UPDATE_RESTOCK_FORMAT_DESC": "استخدم: update restock [معرف_المنتج]",
+	"UPDATE_RESTOCK_FORMAT_MESSAGE": "تنسيق إعادة تخزين غير صالح. استخدم: {bot_username} update restock [معرف_المنتج]\nمثال: {bot_username} update restock 2",
+	"UPDATE_EMPTY_ANNOUNCEMENT": "لا يمكن أن يكون نص الإعلان فارغًا",
+	"UPDATE_UNKNOWN_TYPE_TITLE": "نوع تحديث غير معروف",
+	"UPDATE_UNKNOWN_TYPE_DESC": "الأنواع المتاحة: new, sale, restock, announcement",
+	"UPDATE_NEW_PRODUCT_TITLE": "منتج جديد: {product_name}",
+	"UPDATE_NEW_PRODUCT_DESC": "الإعلان عن منتج جديد للمجموعة",
+	"UPDATE_NEW_PRODUCT_MESSAGE": "🆕 *إعلان عن منتج جديد* 🆕\n\nيسعدنا الإعلان عن أحدث منتجاتنا:\n*{product_name}*\n\nتحقق منه الآن في متجرنا! كميات محدودة متوفرة.",
+	"VIEW_PRODUCT_BUTTON": "عرض المنتج",
+	"UPDATE_SALE_TITLE": "تخفيض {discount}%!",
+	"UPDATE_SALE_DESC": "الإعلان عن تخفيض بنسبة {discount}%",
+	"UPDATE_SALE_MESSAGE": "🔥 *إعلان عن تخفيض* 🔥\n\nنقدم عرضًا خاصًا!\n\n*{discount}% خصم* على منتجات مختارة\n\nعرض لفترة محدودة - تسوق الآن حتى نفاذ الكمية!",
+	"SHOP_NOW_BUTTON": "تسوق الآن",
+	"UPDATE_PRODUCT_NOT_FOUND_TITLE": "المنتج غير موجود",
+	"UPDATE_PRODUCT_NOT_FOUND_MESSAGE": "لم يتم العثور على منتج بالمعرف {product_id}.",
+	"UPDATE_RESTOCK_TITLE": "إعادة تخزين: {product_name}",
+	"UPDATE_RESTOCK_DESC": "الإعلان عن إعادة تخزين {product_name}",
+	"UPDATE_RESTOCK_MESSAGE": "📦 *تنبيه بإعادة التخزين* 📦\n\n*{product_name}* متوفر مرة أخرى في المخزون!\n\nالسعر: {price} ليرة تركية\n\nاحصل عليه قبل نفاده مرة أخرى!",
+	"UPDATE_ANNOUNCEMENT_TITLE": "إعلان المتجر",
+	"UPDATE_ANNOUNCEMENT_DESC": "إرسال إعلان عام للمتجر",
+	"UPDATE_ANNOUNCEMENT_MESSAGE": "📢 *إعلان المتجر* 📢\n\n{announcement_text}",
+	"VISIT_SHOP_BUTTON": "زيارة المتجر",
+	"SHOP_NO_PRODUCTS_TITLE": "لم يتم العثور على منتجات",
+	"SHOP_NO_PRODUCTS_DESC": "حاول استخدام مصطلح بحث مختلف أو تصفح جميع المنتجات",
+	"SHOP_NO_PRODUCTS_MESSAGE": "لا توجد منتجات تطابق معايير البحث الخاصة بك. حاول استخدام مصطلح بحث مختلف أو استخدم /buy لتصفح جميع المنتجات.",
+	"VIEW_DETAILS_BUTTON": "عرض التفاصيل",
+	"SHOP_PRODUCT_DETAILS": "*{product_name}*\nالسعر: {price_text}\nالنوع: {product_type}\n{availability}\n\n{description}",
+	"INVALID_GITHUB_URL": "يجب أن يكون عنوان URL هو عنوان URL لصفحات GitHub (مثل username.github.io)",
+	"INVALID_GITHUB_URL_FORMAT": "تنسيق عنوان URL لصفحات GitHub غير صالح",
+	"LOGIN_EMPTY_FIELDS": "اسم المستخدم وكلمة المرور مطلوبان",
+	"LOGIN_INVALID_CREDENTIALS": "اسم مستخدم أو كلمة مرور غير صحيحة",
+	"LOGIN_NO_PASSWORD": "لم يتم تعيين كلمة مرور لهذا الحساب",
+	"UNAUTHORIZED_ACCESS": "وصول غير مصرح به",
+	"INVALID_FILE_PATH": "مسار ملف غير صالح",
+	"NOT_A_FILE": "ليس ملفًا",
+	"FILE_READ_ERROR": "فشل في قراءة الملف: {error}",
+	"INVALID_PARAMETERS": "معلمات غير صالحة",
+	"FILE_SAVED_SUCCESS": "تم حفظ الملف بنجاح",
+	"FILE_SAVE_ERROR": "فشل في حفظ الملف: {error}",
+	"FILE_ALREADY_EXISTS": "الملف موجود بالفعل",
+	"FILE_CREATED_SUCCESS": "تم إنشاء الملف بنجاح",
+	"FILE_CREATE_ERROR": "فشل في إنشاء الملف: {error}",
+	"FILE_NOT_FOUND": "الملف أو الدليل غير موجود",
+	"FILE_DELETED_SUCCESS": "تم حذف الملف بنجاح",
+	"DIRECTORY_DELETED_SUCCESS": "تم حذف الدليل بنجاح",
+	"DELETE_ERROR": "فشل في الحذف: {error}",
+	"INVALID_DIRECTORY_PATH": "مسار دليل غير صالح",
+	"DIRECTORY_ALREADY_EXISTS": "الدليل موجود بالفعل",
+	"DIRECTORY_CREATED_SUCCESS": "تم إنشاء الدليل بنجاح",
+	"DIRECTORY_CREATE_ERROR": "فشل في إنشاء الدليل: {error}",
+	"INSTALL_MISSING_FIELDS": "يجب ملء جميع الحقول المطلوبة",
+	"INSTALL_ADMIN_ERROR": "فشل في إنشاء مستخدم مسؤول",
+	"MODEL_MISSING_FIELDS": "جميع حقول النموذج مطلوبة",
+	"MODEL_NAME_REQUIRED": "اسم النموذج مطلوب",
+	"NO_MODELS_FOUND": "لم يتم العثور على نماذج",
+	"MODEL_NOT_FOUND": "لم يتم العثور على النموذج",
+	"MISSING_FIELDS": "الحقول المطلوبة مفقودة",
+	"CREDITS_ADDED": "تمت إضافة الرصيد بنجاح",
+	"INVALID_ACTION": "إجراء غير صالح",
+	"GROUP_BLACKLISTED": "تم حظر المجموعة بنجاح",
+	"GROUP_UNBLACKLISTED": "تم إلغاء حظر المجموعة بنجاح",
+	"GROUP_NOT_FOUND": "لم يتم العثور على المجموعة",
+	"GITHUB_CONFIG_INCOMPLETE": "تكوين GitHub غير مكتمل",
+	"FILE_LIST_ERROR": "فشل في سرد الملفات: {error}",
+	"FILE_TREE_ERROR": "فشل في بناء شجرة الملفات: {error}",
+	"FILE_RELOAD_RESTRICTED": "إعادة تحميل هذا الملف مقيدة",
+	"INVALID_MODULE_PATH": "مسار وحدة غير صالح",
+	"MODULE_RELOAD_ERROR": "فشل في إعادة تحميل الوحدة: {error}",
+	"TEMPLATE_NOT_IN_FOLDER": "القالب ليس في مجلد القوالب",
+	"TEMPLATE_RELOAD_ERROR": "فشل في إعادة تحميل القالب: {error}",
+	"ASSET_NOT_IN_FOLDER": "القالب ليس في مجلد الأصول",
+	"LOCALE_RELOAD_ERROR": "فشل في إعادة تحميل اللغة: {error}",
+	"NO_FILE_PATH": "لم يتم توفير مسار ملف",
+	"FILE_WRITE_PERMISSION_DENIED": "تم رفض الإذن عند كتابة الملف",
+	"PAYMENT_CREATED": "تم إنشاء الدفعة بنجاح",
+	"PAYMENT_ALREADY_COMPLETED": "تم إكمال الدفعة بالفعل",
+	"PAYMENT_VERIFIED": "تم التحقق من الدفعة بنجاح",
+	"PAYMENT_PENDING": "الدفع لا يزال معلقًا",
+	"ORDER_NOT_FOUND": "لم يتم العثور على الطلب",
+	"ORDER_NOT_PENDING_PAYMENT": "الطلب ليس قيد الدفع",
+	"INSUFFICIENT_CREDITS": "رصيد غير كاف",
+	"ORDER_PAID": "تم دفع الطلب بنجاح",
+	"ORDER_CANNOT_CANCEL": "لا يمكن إلغاء الطلب",
+	"ORDER_CANCELLED": "تم إلغاء الطلب بنجاح",
+	"CANCEL_ERROR": "فشل في إلغاء الطلب",
+	"PASSWORDS_DONT_MATCH": "كلمات المرور غير متطابقة",
+	"PROFILE_UPDATED": "تم تحديث الملف الشخصي بنجاح",
+	"UPDATE_ERROR": "فشل في التحديث",
+	"ADDRESS_ADDED": "تمت إضافة العنوان بنجاح",
+	"ADD_ERROR": "فشل في إضافة العنوان",
+	"ADDRESS_UPDATED": "تم تحديث العنوان بنجاح",
+	"ADDRESS_DELETED": "تم حذف العنوان بنجاح",
+	"INVALID_PRICE": "سعر غير صالح",
+	"INVALID_QUANTITY": "كمية غير صالحة",
+	"PRODUCT_CREATED": "تم إنشاء المنتج بنجاح",
+	"CREATE_ERROR": "فشل في إنشاء المنتج",
+	"PRODUCT_NOT_FOUND": "لم يتم العثور على المنتج",
+	"PRODUCT_UPDATED": "تم تحديث المنتج بنجاح",
+	"PRODUCT_ACTIVATED": "تم تنشيط المنتج بنجاح",
+	"PRODUCT_DEACTIVATED": "تم إلغاء تنشيط المنتج بنجاح",
+	"PRODUCT_ADDED_SUCCESS": "تمت إضافة المنتج بنجاح",
+	"CONFIG_UPDATED_SUCCESS": "تم تحديث الإعدادات بنجاح",
+	"MISSING_DESCRIPTION": "وصف الدفع مطلوب",
+	"MISSING_PAYMENT_ID": "معرف الدفع مطلوب",
+	"GROUPS_TAB": "المجموعات",
+	"HELP_MESSAGE": "الأوامر المفاهيمية المتاحة\n\n/أبجد - حساب قيمة الأبجد\n/خدام - توليد أسماء روحانية\n/عنصر - تحديد الانتماء العنصري\n/نطق - تهجئة الأرقام\n/نقحرة - نقحرة النص\n/ترقيم - حساب قيمة الترقيم\n/تحويلأرقام - تحويل أرقام نص\n/مربعمفتاح - توليد مربع سحري\n/اسم - توليد أو نقحرة الأسماء\n\nأوامر البوت\n\n/رصيد عرض الرصيد المتبقي\n/دفع - شراء رصيد\n/إلغاء - إلغاء العملية\n/إعدادات - ضبط الإعدادات\n/مساعدة - عرض هذا\n/لغة - تغيير اللغة\n/بدء يبدأ هذا البوت\n\nأوامر التسوق\n\n/شراء - شراء منتجات\n/بيع - بيع منتجات\n/طلبات - عرض الطلبات\n/عنوان - إضافة، إزالة، وإدراج عناوين\n/كلمةمرور - إعدادات كلمة مرور البائعين\n/بابارا - إعدادات مساعد دفع البائعين\n\nيمكنك إجراء المزيد من العمليات الحسابية باستخدام https://ebced.free.nf",
+	"TRANSLITERATION_PROMPT_TEXT": "الرجاء إدخال النص المراد نقحرته:",
+	"TRANSLITERATION_PROMPT_SOURCE_LANG": "الرجاء اختيار اللغة المصدر:",
+	"TRANSLITERATION_PROMPT_TARGET_LANG": "الرجاء اختيار اللغة الهدف:",
+	"TRANSLITERATION_CANCEL": "تم إلغاء النقحرة.",
+	"TRANSLITERATE_ANOTHER": "نقحرة أخرى",
+	"SUGGESTION_SELECTED": "المحدد: {result}",
+	"GUESS_LANGUAGE": "تخمين اللغة",
+	"TURKISH": "التركية",
+	"ARABIC": "العربية",
+	"HEBREW": "العبرية",
+	"ENGLISH": "الإنجليزية",
+	"LATIN": "اللاتينية",
+	"BUNI": "بوني",
+	"HUSEYNI": "حسيني",
+	"EDIT_PRODUCT_TITLE": "تعديل المنتج",
+	"PRODUCT_DESCRIPTION": "وصف المنتج",
+	"PRODUCT_QUANTITY_HELP": "أدخل الكمية المتاحة للمنتجات المادية. اتركها فارغة للكمية غير المحدودة.",
+	"PRODUCT_IMAGE_URL": "رابط صورة المنتج",
+	"PRODUCT_IMAGE_URL_HELP": "أدخل رابط صورة المنتج.",
+	"PRODUCT_ACTIVE": "نشط",
+	"VIEW_PRODUCT_TITLE": "عرض المنتج",
+	"BACK_TO_PRODUCTS": "العودة إلى المنتجات",
+	"PRODUCT_STATUS_ACTIVE": "نشط",
+	"PRODUCT_STATUS_INACTIVE": "غير نشط",
+	"PRODUCT_SELLER": "البائع",
+	"DASHBOARD_CONFIGURATION_DESCRIPTION": "إدارة إعدادات حسابك والدفع.",
+	"MYSQL_HOST": "مضيف MySQL",
+	"MYSQL_PORT": "منفذ MySQL",
+	"MYSQL_USER": "مستخدم MySQL",
+	"MYSQL_PASSWORD": "كلمة مرور MySQL",
+	"MYSQL_DATABASE": "قاعدة بيانات MySQL",
+	"SEARCH": "بحث",
+	"SEARCH_PRODUCTS": "البحث عن المنتجات",
+	"LOAD": "تحميل",
+	"NO_PRODUCTS_FOUND": "لا توجد منتجات",
+	"PRODUCT_ID": "معرف المنتج",
+	"ALL_USERS": "جميع المستخدمين",
+	"SELLER": "بائع",
+	"COMMAND_ALIASES": {
+	"abjad": ["أبجد"],
+	"huddam": ["خدام"],
+	"unsur": ["عنصر"],
+	"nutket": ["نطق"],
+	"name": ["اسم"],
+	"magicsquare": ["مربعمفتاح"],
+	"transliterate": ["نقحرة"],
+	"payment": ["دفع"],
+	"numerology": ["ترقيم"],
+	"convertnumbers": ["تحويل"]
+	}
 }

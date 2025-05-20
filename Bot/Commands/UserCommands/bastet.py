@@ -106,7 +106,7 @@ async def bastet_repetition(update: Update, context: ContextTypes.DEFAULT_TYPE)	
 		language = db.get_user_language(user_id)
 
 		repetition = update.message.text.strip()
-		if not repetition.isdigit() or int(repetition) < 1 or int(repetition) > 1000:  # Add upper limit
+		if not repetition.isdigit() or int(repetition) < 1 or int(repetition) > 1000:	# Add upper limit
 			await send_long_message(
 				i18n.t("ERROR_INVALID_INPUT", language, error="Repetition must be a positive integer between 1 and 1000"),
 				parse_mode=ParseMode.HTML,

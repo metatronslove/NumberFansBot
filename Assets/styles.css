@@ -17,7 +17,7 @@ input#name {
 }
 
 center img {
-  opacity: 0.5;
+	opacity: 0.5;
 }
 
 .particles {
@@ -137,7 +137,7 @@ select, .language-switcher select, .form-select {
 	}
 	label:nth-last-child(2) {
 		text-align: left;
-  }
+	}
 	.text-muted {
 		display: none;
 	}
@@ -153,7 +153,7 @@ select, .language-switcher select, .form-select {
 	}
 	input[name=users_search], input[name=groups_search], input[name=products_search] {
 		max-width: initial;
-    top: 2px;
+	top: 2px;
 	}
 }
 
@@ -485,23 +485,23 @@ section.tab-content {
 }
 
 .nav-tabs .nav-link {
-  font-weight: 500;
+	font-weight: 500;
 }
 
 .search-button.loading::after {
-  content: '';
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  border-top-color: transparent;
-  animation: spin 1s linear infinite;
-  margin-left: 10px;
+	content: '';
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	border: 2px solid #fff;
+	border-radius: 50%;
+	border-top-color: transparent;
+	animation: spin 1s linear infinite;
+	margin-left: 10px;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+	to { transform: rotate(360deg); }
 }
 
 /* Responsive design improvements */

@@ -82,7 +82,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("UNSUR_INVALID_LANGUAGE_DESC", language, language=params["language"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("UNSUR_INVALID_LANGUAGE_MESSAGE", language, language=params["language"],
-							   valid=", ".join(valid_languages)),
+								 valid=", ".join(valid_languages)),
 						parse_mode="Markdown"
 					)
 				)
@@ -97,7 +97,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("UNSUR_INVALID_TABLE_DESC", language, table=params["table"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("UNSUR_INVALID_TABLE_MESSAGE", language, table=params["table"],
-							   valid=", ".join(valid_tables)),
+								 valid=", ".join(valid_tables)),
 						parse_mode="Markdown"
 					)
 				)
@@ -112,7 +112,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("UNSUR_INVALID_SHADDA_DESC", language, shadda=params["shadda"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("UNSUR_INVALID_SHADDA_MESSAGE", language, shadda=params["shadda"],
-							   valid=", ".join(valid_shadda)),
+								 valid=", ".join(valid_shadda)),
 						parse_mode="Markdown"
 					)
 				)

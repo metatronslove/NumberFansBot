@@ -11,7 +11,7 @@ async def handle(update, context):
 	user = update.inline_query.from_user
 	db = Database()
 	i18n = I18n()
-	language = db.get_user_language(user.id) or "en"  # Default to English if not found
+	language = db.get_user_language(user.id) or "en"	# Default to English if not found
 
 	# Safely get chat_id, if available
 	chat_id = None
@@ -58,7 +58,7 @@ async def handle(update, context):
 			])
 			return
 
-	args = query.split()[1:]  # Skip "/magicsquare"
+	args = query.split()[1:]	# Skip "/magicsquare"
 
 	try:
 		# Validate input

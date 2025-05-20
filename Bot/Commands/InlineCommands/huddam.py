@@ -86,7 +86,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("HUDDAM_INVALID_ENTITY_DESC", language, entity=params["entity"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("HUDDAM_INVALID_ENTITY_MESSAGE", language, entity=params["entity"],
-							   valid=", ".join(valid_entities)),
+								 valid=", ".join(valid_entities)),
 						parse_mode="Markdown"
 					)
 				)
@@ -101,7 +101,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("HUDDAM_INVALID_ALPHABET_DESC", language, alphabet=params["alphabet"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("HUDDAM_INVALID_ALPHABET_MESSAGE", language, alphabet=params["alphabet"],
-							   valid=", ".join(valid_alphabets)),
+								 valid=", ".join(valid_alphabets)),
 						parse_mode="Markdown"
 					)
 				)
@@ -116,7 +116,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("HUDDAM_INVALID_MULTIPLIER_DESC", language, multiplier=params["multiplier"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("HUDDAM_INVALID_MULTIPLIER_MESSAGE", language, multiplier=params["multiplier"],
-							   valid=", ".join(valid_multipliers)),
+								 valid=", ".join(valid_multipliers)),
 						parse_mode="Markdown"
 					)
 				)

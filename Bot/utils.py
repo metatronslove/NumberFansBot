@@ -145,7 +145,7 @@ async def send_long_message(
 						parse_mode=parse_mode,
 						reply_markup=markup
 					)
-					continue  # Skip sending a new message for this chunk
+					continue	# Skip sending a new message for this chunk
 				except BadRequest as e:
 					if "Message is too long" not in str(e):
 						logger.warning(f"Failed to edit message: {e}")
@@ -236,7 +236,7 @@ async def register_user_if_not_exists(update: Update, context: ContextTypes.DEFA
 		language: The language code to set for the user (optional, defaults to 'en').
 	"""
 	if not user or not hasattr(user, 'id'):
-		return  # Silently skip if user is invalid
+		return	# Silently skip if user is invalid
 
 	db = Database()
 	if not db.check_if_user_exists(user.id):
@@ -256,7 +256,7 @@ async def chat_member_update(update: Update, context: ContextTypes.DEFAULT_TYPE)
 		chat = update.my_chat_member.chat
 		new_status = update.my_chat_member.new_chat_member.status
 		if chat.type in ["group", "supergroup", "channel"]:
-			db = Database()  # Your database class
+			db = Database()	# Your database class
 			db.add_group(chat.id, chat.title, datetime.now())
 
 			# Fetch detailed chat info
@@ -284,7 +284,7 @@ async def chat_member_update(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 async def chosen_inline_result(update: Update, context: ContextTypes.DEFAULT_TYPE):
 	result = update.chosen_inline_result
-	if result.inline_message_id:  # Only store if sent to a chat
+	if result.inline_message_id:	# Only store if sent to a chat
 		if 'inline_usages' not in context.bot_data:
 			context.bot_data['inline_usages'] = {}
 		context.bot_data['inline_usages'][result.inline_message_id] = {
@@ -361,7 +361,7 @@ async def handle_credits(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def check_credits(update, context):
 	update, context, query, user, query_message = await uptodate_query(update, context)
 	if not query_message or not user:
-		return True  # Allow callback queries or channel posts
+		return True	# Allow callback queries or channel posts
 
 	user_id = user.id
 	command = query.text.split()[0].lower() if hasattr(query, 'text') and query.text else ""

@@ -54,7 +54,7 @@ class ElementClassifier:
 	}
 
 	def __init__(self):
-		self.shadda_char = '\u0651'  # Arabic shadda (U+0651)
+		self.shadda_char = '\u0651'	# Arabic shadda (U+0651)
 		self.valid_guides = ['TURKCE', 'ARABI', 'BUNI', 'HUSEYNI', 'HEBREW', 'ENGLISH', 'LATIN']
 		self.valid_elements = ['fire', 'air', 'water', 'earth']
 

@@ -46,7 +46,7 @@ class Transliteration:
 		for lang, chars in self.numerology.alphabets.items():
 			if first_char in chars:
 				return lang if lang != "arabic_hija" else "arabic"
-		return "english"  # Default fallback
+		return "english"	# Default fallback
 
 	def transliterate(self, text: str, target_lang: str, source_lang: Optional[str] = None) -> Dict[str, any]:
 		"""
@@ -76,8 +76,8 @@ class Transliteration:
 			raise ValueError(f"No transliteration mapping from {source_lang} to {target_lang}")
 
 		# Generate transliterations
-		results = {text: {"score": 0, "used": []}}  # Start with original text
-		chars = list(text)  # Split into characters
+		results = {text: {"score": 0, "used": []}}	# Start with original text
+		chars = list(text)	# Split into characters
 		for char in chars:
 			mappings = map_data.get(char, map_data.get(char.upper(), map_data.get(char.lower(), [char])))
 			new_results = {}
@@ -101,7 +101,7 @@ class Transliteration:
 			raise ValueError(f"No valid transliterations found for '{text}' from {source_lang} to {target_lang}")
 
 		primary = sorted_results[0][0]
-		alternatives = [res[0] for res in sorted_results[1:]]  # All alternatives
+		alternatives = [res[0] for res in sorted_results[1:]]	# All alternatives
 
 		# Store transliterations
 		for translit in [primary] + alternatives:

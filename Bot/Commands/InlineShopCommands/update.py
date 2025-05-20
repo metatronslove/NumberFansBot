@@ -12,7 +12,7 @@ class UpdateInlineCommand:
 	def __init__(self):
 		self.db = Database()
 		self.i18n = I18n()
-		self.bot_username = "@EgrigoreBot"  # Replace with actual bot username or config
+		self.bot_username = "@EgrigoreBot"	# Replace with actual bot username or config
 
 	def register_handlers(self, application: Application):
 		application.add_handler(InlineQueryHandler(self.inline_update, pattern=r'^update'))
@@ -62,7 +62,7 @@ class UpdateInlineCommand:
 
 			if update_type == "new" and len(parts) > 2:
 				# New product announcement
-				product_name = " ".join(parts[2:]).strip()[:100]  # Limit length
+				product_name = " ".join(parts[2:]).strip()[:100]	# Limit length
 				if not product_name:
 					results = [self.create_error_result(language, self.i18n.t('UPDATE_EMPTY_PRODUCT_NAME', language))]
 				else:
@@ -103,7 +103,7 @@ class UpdateInlineCommand:
 					]
 			elif update_type == "announcement" and len(parts) > 2:
 				# General announcement
-				announcement_text = " ".join(parts[2:]).strip()[:500]  # Limit length
+				announcement_text = " ".join(parts[2:]).strip()[:500]	# Limit length
 				if not announcement_text:
 					results = [self.create_error_result(language, self.i18n.t('UPDATE_EMPTY_ANNOUNCEMENT', language))]
 				else:

@@ -11,7 +11,7 @@ class ShopInlineCommand:
 	def __init__(self):
 		self.db = Database()
 		self.i18n = I18n()
-		self.bot_username = "@EgrigoreBot"  # Replace with actual bot username or config
+		self.bot_username = "@EgrigoreBot"	# Replace with actual bot username or config
 
 	def register_handlers(self, application: Application):
 		application.add_handler(InlineQueryHandler(self.inline_shop, pattern=r'^shop'))

@@ -93,7 +93,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("ABJAD_INVALID_ALPHABET_DESC", language, alphabet=params["alphabet"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("ABJAD_INVALID_ALPHABET_MESSAGE", language, alphabet=params["alphabet"],
-							   valid=", ".join(alphabet_map.keys())),
+								 valid=", ".join(alphabet_map.keys())),
 						parse_mode="Markdown"
 					)
 				)
@@ -108,7 +108,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("ABJAD_INVALID_TYPE_DESC", language, type=params["type"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("ABJAD_INVALID_TYPE_MESSAGE", language, type=params["type"],
-							   valid=", ".join(type_map.keys())),
+								 valid=", ".join(type_map.keys())),
 						parse_mode="Markdown"
 					)
 				)
@@ -123,7 +123,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("ABJAD_INVALID_SHADDA_DESC", language, shadda=params["shadda"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("ABJAD_INVALID_SHADDA_MESSAGE", language, shadda=params["shadda"],
-							   valid=", ".join(shadda_map.keys())),
+								 valid=", ".join(shadda_map.keys())),
 						parse_mode="Markdown"
 					)
 				)
@@ -138,7 +138,7 @@ async def handle(update, context, query_text, language):
 					description=i18n.t("ABJAD_INVALID_DETAIL_DESC", language, detail=params["detail"]),
 					input_message_content=InputTextMessageContent(
 						i18n.t("ABJAD_INVALID_DETAIL_MESSAGE", language, detail=params["detail"],
-							   valid=", ".join(detail_map.keys())),
+								 valid=", ".join(detail_map.keys())),
 						parse_mode="Markdown"
 					)
 				)
