@@ -899,18 +899,13 @@ def delete_model(lang="en"):
 def get_users(lang="en"):
 	if "username" not in session:
 		return redirect(url_for("login", lang=lang))
-
 	if lang not in AVAILABLE_LANGUAGES:
 		lang = "en"
-
 	i18n = I18n()
 	db = Database()
-
 	page = int(request.args.get("page", 1))
 	search = request.args.get("search", "")
-
 	users, total_pages = db.get_users_paginated(page, 50, search)
-
 	for user in users:
 		badges = []
 		if user['is_admin']:
@@ -924,36 +919,52 @@ def get_users(lang="en"):
 		if user['is_blacklisted']:
 			badges.append('🚫')
 		user['badges'] = ' '.join(badges)
-
 	return render_template(
-		"dashboard.html",
+		"users_partial.html",
 		lang=lang,
 		i18n=i18n,
 		users=users,
 		users_total_pages=total_pages,
-		current_page=page
+		current_page=page,
+		search=search
+	)
+
+@flask_app.route("/<lang>/groups")
+def get_groups(lang="en"):
+	if "username" not in session:
+		return redirect(url_for("login", lang=lang))
+	if lang not in AVAILABLE_LANGUAGES:
+		lang = "en"
+	i18n = I18n()
+	db = Database()
+	page = int(request.args.get("page", 1))
+	search = request.args.get("search", "")
+	groups, total_pages = db.get_groups_paginated(page, 50, search)
+	return render_template(
+		"groups_partial.html",
+		lang=lang,
+		i18n=i18n,
+		groups=groups,
+		groups_total_pages=total_pages,
+		current_page=page,
+		search=search
 	)
 
 @flask_app.route("/<lang>/products")
 def get_products(lang="en"):
 	if "username" not in session:
 		return redirect(url_for("login", lang=lang))
-
 	if lang not in AVAILABLE_LANGUAGES:
 		lang = "en"
-
 	i18n = I18n()
 	db = Database()
-
 	page = int(request.args.get("page", 1))
 	search = request.args.get("search", "")
 	filter_user_id = request.args.get("filter_user_id")
-
 	if filter_user_id and filter_user_id.isdigit():
 		filter_user_id = int(filter_user_id)
 	else:
 		filter_user_id = None
-
 	products = db.get_available_products(
 		search_terms=search,
 		active_only=False,
@@ -961,22 +972,16 @@ def get_products(lang="en"):
 		offset=(page - 1) * 50,
 		user_id=filter_user_id
 	)
-
 	products_count = db.get_products_count(user_id=filter_user_id)
 	total_pages = (products_count + 50 - 1) // 50
-
-	# Get users for seller information
 	users, _ = db.get_users()
-
-	# Check if current user is admin
 	user_id = session.get("user_id")
 	query = "SELECT is_admin FROM users WHERE user_id = %s"
 	db.cursor.execute(query, (user_id,))
 	user = db.cursor.fetchone()
 	is_admin = user and user['is_admin']
-
 	return render_template(
-		"dashboard.html",
+		"products_partial.html",
 		lang=lang,
 		i18n=i18n,
 		products=products,
@@ -984,32 +989,9 @@ def get_products(lang="en"):
 		current_page=page,
 		users=users,
 		is_admin=is_admin,
-		current_user={"user_id": user_id}
-	)
-
-@flask_app.route("/<lang>/groups")
-def get_groups(lang="en"):
-	if "username" not in session:
-		return redirect(url_for("login", lang=lang))
-
-	if lang not in AVAILABLE_LANGUAGES:
-		lang = "en"
-
-	i18n = I18n()
-	db = Database()
-
-	page = int(request.args.get("page", 1))
-	search = request.args.get("search", "")
-
-	groups, total_pages = db.get_groups_paginated(page, 50, search)
-
-	return render_template(
-		"dashboard.html",
-		lang=lang,
-		i18n=i18n,
-		groups=groups,
-		groups_total_pages=total_pages,
-		current_page=page
+		current_user={"user_id": user_id},
+		search=search,
+		filter_user_id=filter_user_id
 	)
 
 @flask_app.route("/<lang>/promote_credits", methods=["POST"])

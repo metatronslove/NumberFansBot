@@ -259,7 +259,6 @@
   "NAME_USAGE": "Kullanım: /name <ön ek> <türkçe|ingilizce|ibranice|latince|arapça>",
   "NAME_RESULT": "'{prefix}' ön eki için oluşturulan isim (tür: {type}, yöntem: {method}) '{name}'.",
   "START_MESSAGE": "NumberFansBot'a hoş geldiniz! {remaining_credits} krediniz var. Sayıların büyüsünü keşfedin!",
-  "HELP_MESSAGE": "Kavramsal komutlar:\n\n/abjad - Ebced değerini hesapla\n/huddam - Ruhani isimler üret\n/unsur - Elementel yakınlığı belirle\n/nutket - Sayıları hecele\n/transliterate - Metni harf çevirisi yap\n/language - Dili değiştir\n/numerology - Numeroloji değerini hesapla\n/convertnumbers - Bir yazı sisteminin sayılarını dönüştür\n/magicsquare - Sihirli kare oluştur\n/name - İsimleri üret veya harf çevirisi yap\n\nBot komutları\n\n/credits - Kalan kredileri görüntüle\n/payment - Kredi satın al\n/cancel - İşlemi iptal et\n/settings - Ayarları düzenle\n/help - Bunu görüntüle\n/start - Bu botu başlat\n\nAlışveriş komutları\n\n/buy - ürün satın al\n/sell - ürün sat\n/orders - siparişleri görüntüle\n/address - adres ekle, kaldır ve listele\n/password - satıcı şifre ayarları\n/papara - satıcı ödeme yardımcısı ayarları\n\nDaha fazla hesaplama için https://ebced.free.nf adresini kullanabilirsiniz.",
   "HELP_USAGE": "Kullanım: /help",
   "HELP_GROUP_CHAT_USAGE": "Grup Sohbet Yardımı",
   "INDIAN_NUMBERS": "Hint Rakamları",
@@ -812,36 +811,52 @@
   "MISSING_DESCRIPTION": "Ödeme açıklaması gereklidir",
   "MISSING_PAYMENT_ID": "Ödeme ID'si gereklidir",
   "GROUPS_TAB": "Gruplar",
+  "HELP_MESSAGE": "Mevcut kavramsal komutlar:\n\n/ebced - Ebced değeri hesapla\n/hüddam - Ruhani isimler oluştur\n/unsur - Element uyumu belirle\n/nütket - Sayıları hecele\n/çevriyazı - Metni çevriyaz\n/nümeroloji - Nümeroloji değeri hesapla\n/sayıçevir - Bir yazı tipindeki sayıları dönüştür\n/sihirlikare - Sihirli kare oluştur\n/isim - İsimler oluştur veya çevriyaz\n\nBot komutları\n\n/kredi Kalan kredileri görüntüle\n/ödeme - Kredi satın al\n/iptal - İşlemi iptal et\n/ayarlar - Ayarları düzenle\n/yardım - Bunu görüntüle\n/dil - Dili değiştir\n/başlat Bu botu başlatır\n\nAlışveriş komutları\n\n/satınal - ürün satın al\n/sat - ürün sat\n/siparişler - siparişleri görüntüle\n/adres - adres ekle, kaldır ve listele\n/şifre - satıcı şifre ayarları\n/papara - satıcı ödeme yardımcısı ayarları\n\nhttps://ebced.free.nf adresinden daha fazla hesaplama yapabilirsiniz",
+  "TRANSLITERATION_PROMPT_TEXT": "Lütfen çevriyazılacak metni girin:",
+  "TRANSLITERATION_PROMPT_SOURCE_LANG": "Lütfen kaynak dili seçin:",
+  "TRANSLITERATION_PROMPT_TARGET_LANG": "Lütfen hedef dili seçin:",
+  "TRANSLITERATION_CANCEL": "Çevriyazı iptal edildi.",
+  "TRANSLITERATE_ANOTHER": "Başka Bir Metni Çevriyaz",
+  "SUGGESTION_SELECTED": "Seçilen: {result}",
+  "GUESS_LANGUAGE": "Dili Tahmin Et",
+  "TURKISH": "Türkçe",
+  "ARABIC": "Arapça",
+  "HEBREW": "İbranice",
+  "ENGLISH": "İngilizce",
+  "LATIN": "Latince",
+  "BUNI": "Buni",
+  "HUSEYNI": "Hüseyni",
+  "EDIT_PRODUCT_TITLE": "Ürünü Düzenle",
+  "PRODUCT_DESCRIPTION": "Ürün Açıklaması",
+  "PRODUCT_QUANTITY_HELP": "Fiziksel ürünler için mevcut adedi girin. Sınırsız için boş bırakın.",
+  "PRODUCT_IMAGE_URL": "Ürün Görseli URL'si",
+  "PRODUCT_IMAGE_URL_HELP": "Ürün görselinin URL'sini girin.",
+  "PRODUCT_ACTIVE": "Aktif",
+  "VIEW_PRODUCT_TITLE": "Ürünü Görüntüle",
+  "BACK_TO_PRODUCTS": "Ürünlere Geri Dön",
+  "PRODUCT_STATUS_ACTIVE": "Aktif",
+  "PRODUCT_STATUS_INACTIVE": "Pasif",
+  "PRODUCT_SELLER": "Satıcı",
+  "DASHBOARD_CONFIGURATION_DESCRIPTION": "Hesap ve ödeme ayarlarınızı yönetin.",
+  "MYSQL_HOST": "MySQL Sunucusu",
+  "MYSQL_PORT": "MySQL Portu",
+  "MYSQL_USER": "MySQL Kullanıcı",
+  "MYSQL_PASSWORD": "MySQL Şifre",
+  "MYSQL_DATABASE": "MySQL Veritabanı",
+  "SEARCH": "Ara",
+  "SEARCH_PRODUCTS": "Ürün Ara",
+  "LOAD": "Yükle",
+  "NO_PRODUCTS_FOUND": "Ürün bulunamadı",
   "COMMAND_ALIASES": {
-	"abjad": [
-	  "abjad"
-	],
-	"huddam": [
-	  "huddâm"
-	],
-	"unsur": [
-	  "unsur"
-	],
-	"nutket": [
-	  "nutket"
-	],
-	"name": [
-	  "name"
-	],
-	"magicsquare": [
-	  "magicsq"
-	],
-	"transliterate": [
-	  "translit"
-	],
-	"payment": [
-	  "pay"
-	],
-	"numerology": [
-	  "numerology"
-	],
-	"convertnumbers": [
-	  "convert"
-	]
+    "abjad": ["ebced"],
+    "huddam": ["hüddam"],
+    "unsur": ["unsur"],
+    "nutket": ["nütket"],
+    "name": ["isim"],
+    "magicsquare": ["sihirlikare"],
+    "transliterate": ["çevriyazı"],
+    "payment": ["ödeme"],
+    "numerology": ["nümeroloji"],
+    "convertnumbers": ["sayıçevir"]
   }
 }

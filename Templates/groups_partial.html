@@ -1,0 +1,73 @@
+		<h3>{{ i18n.t('GROUPS_TAB', lang) }}</h3>
+		<div id="groups-tab" class="tab-pane">
+			<form id="groups-search-form" class="mb-3">
+				<div class="input-group">
+					<input type="text" name="groups_search" class="form-control" placeholder="{{ i18n.t('SEARCH_GROUPS', lang) }}" value="{{ search }}">
+						<button type="submit" class="btn btn-primary">{{ i18n.t('SEARCH', lang) }}</button>
+					</div>
+			</form>
+			<table class="table table-dark">
+				<thead>
+					<tr>
+						<th style="text-align: left;">{{ i18n.t('GROUP_ID', lang) }}</th>
+						<th style="text-align: left;">{{ i18n.t('GROUP_NAME', lang) }}</th>
+						<th style="text-align: center;">{{ i18n.t('GROUP_TYPE', lang) }}</th>
+						<th style="text-align: center;">{{ i18n.t('GROUP_PUBLIC', lang) }}</th>
+						<th style="text-align: center;">{{ i18n.t('GROUP_MEMBERS', lang) }}</th>
+						<th style="text-align: center;">{{ i18n.t('GROUP_CREATOR', lang) }}</th>
+						<th style="text-align: center;">{{ i18n.t('GROUP_ADMINS', lang) }}</th>
+						<th style="text-align: right;">{{ i18n.t('GROUP_LAST_INLINE_USER', lang) }}</th>
+						<th style="text-align: right;">{{ i18n.t('GROUP_LAST_INLINE_QUERY', lang) }}</th>
+						<th style="text-align: right;">{{ i18n.t('GROUP_LAST_INLINE_TIME', lang) }}</th>
+						<th style="text-align: right;">{{ i18n.t('BLACKLIST', lang) }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% if groups %}
+						{% for group in groups %}
+							<tr>
+								<td style="text-align: left;">{{ group.group_id }}</td>
+								<td style="text-align: left;">{{ group.group_name }}</td>
+								<td style="text-align: center;">{{ group.type }}</td>
+								<td style="text-align: center;">{{ i18n.t('YES' if group.is_public else 'NO', lang) }}</td>
+								<td style="text-align: center;">{{ group.member_count if group.member_count else i18n.t('NA', lang) }}</td>
+								<td style="text-align: center;">{{ group.creator_id if group.creator_id else i18n.t('NA', lang) }}</td>
+								<td style="text-align: center;">{{ group.admins if group.admins else i18n.t('NA', lang) }}</td>
+								<td style="text-align: right;">{{ group.last_inline_username if group.last_inline_username else i18n.t('NA', lang) }}</td>
+								<td style="text-align: right;">{{ group.last_inline_query if group.last_inline_query else i18n.t('NA', lang) }}</td>
+								<td style="text-align: right;">{{ group.last_inline_timestamp.strftime('%Y-%m-%d %H:%M:%S') if group.last_inline_timestamp else i18n.t('NA', lang) }}</td>
+								<td style="text-align: right;">
+									<form action="{{ url_for('toggle_group_blacklist', lang=lang) }}" method="POST">
+										<input type="hidden" name="group_id" value="{{ group.group_id }}">
+										<button type="submit" class="btn btn-sm btn-{{ 'danger' if group.is_blacklisted else 'warning' }}">{{ i18n.t('UNBLACKLIST' if group.is_blacklisted else 'BLACKLIST', lang) }}</button>
+									</form>
+								</td>
+							</tr>
+						{% endfor %}
+					{% else %}
+						<tr><td colspan="11">{{ i18n.t('NO_GROUPS_FOUND', lang) }}</td></tr>
+					{% endif %}
+				</tbody>
+			</table>
+			{% if groups_total_pages > 1 %}
+			<nav>
+				<ul class="pagination">
+				{% if current_page > 1 %}
+					<li class="page-item">
+						<a class="page-link" href="#" onclick="updateGroups('{{ search }}', {{ current_page - 1 }})">{{ i18n.t('PREVIOUS_PAGE', lang) }}</a>
+					</li>
+				{% endif %}
+				{% for p in range(1, groups_total_pages + 1) %}
+					<li class="page-item {{ 'active' if p == current_page else '' }}">
+						<a class="page-link" href="#" onclick="updateGroups('{{ search }}', {{ p }})">{{ p }}</a>
+					</li>
+				{% endfor %}
+				{% if current_page < groups_total_pages %}
+					<li class="page-item">
+						<a class="page-link" href="#" onclick="updateGroups('{{ search }}', {{ current_page + 1 }})">{{ i18n.t('NEXT_PAGE', lang) }}</a>
+					</li>
+				{% endif %}
+				</ul>
+			</nav>
+			{% endif %}
+		</div>

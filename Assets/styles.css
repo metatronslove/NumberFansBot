@@ -462,6 +462,26 @@ section.tab-content {
 	margin-top: 20px;
 }
 
+.nav-tabs .nav-link {
+  font-weight: 500;
+}
+
+.search-button.loading::after {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+  margin-left: 10px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* Responsive design improvements */
 @media (max-width: 768px) {
 	.files-tab-content {

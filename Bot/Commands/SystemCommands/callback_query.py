@@ -208,8 +208,8 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			number, nutket_lang = int(parts[0]), parts[1]
 			await nutket.nutket_handle(update, context, number=number, nutket_lang=nutket_lang)
 		elif data.startswith("abjad_text_"):
-			parts = data[len("abjad_text_"):]
-			if len(parts) != 1:
+			parts = data[len("abjad_text_"):].split("_")
+			if len(parts) < 1:
 				await send_long_message(
 					i18n.t("ERROR_INVALID_INPUT", language, error="Invalid abjad_text callback data"),
 					parse_mode=ParseMode.HTML,
@@ -219,7 +219,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				)
 				await query.answer()
 				return
-			textg = arts[0]
+			text = parts[0]
 			await abjad.abjad_start(update, context, text=text)
 		elif data.startswith("payment_select_"):
 			await payment_handle(update, context)
@@ -230,10 +230,10 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			await numerology.numerology_handle(update, context, alphabet=alphabet, method=method, text=text)
 		elif data.startswith("convertnumbers_"):
 			parts = data[len("convertnumbers_"):].split("_")
-			encoded_text, format_type = parts[0], parts[1]
+			encoded_text = parts[0]
+			format_type = parts[1]
 			text = urllib.parse.unquote(encoded_text)
-			format_type = parts[0]
-			await convert_numbers_handle(update, context, text=text, alt_format=format_type)
+			await convert_numbers.convert_numbers_handle(update, context, text=text, alt_format=format_type)
 		elif data.startswith("settings_lang_"):
 			new_language = data[len("settings_lang_"):]
 			if new_language in transliteration.valid_languages:

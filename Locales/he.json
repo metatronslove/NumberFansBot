@@ -259,7 +259,6 @@
   "NAME_USAGE": "שימוש: /name <קידומת> <טורקית|אנגלית|עברית|לטינית|ערבית>",
   "NAME_RESULT": "השם שנוצר עבור הקידומת '{prefix}' (סוג: {type}, שיטה: {method}) הוא '{name}'.",
   "START_MESSAGE": "ברוכים הבאים ל-NumberFansBot! יש לך {remaining_credits} קרדיטים. חקור את קסם המספרים!",
-  "HELP_MESSAGE": "פקודות מושגיות זמינות:\n\n/abjad - חשב ערך אבג'ד\n/huddam - צור שמות רוחניים\n/unsur - קבע זיקה יסודית\n/nutket - איית מספרים\n/transliterate - תעתק טקסט\n/language - שנה שפה\n/numerology - חשב ערך נומרולוגי\n/convertnumbers - המר מספרים של מערכת כתיבה\n/magicsquare - צור ריבוע קסם\n/name - צור או תעתק שמות\n\nפקודות בוט\n\n/credits - הצג קרדיטים שנותרו\n/payment - רכוש קרדיטים\n/cancel - בטל פעולה\n/settings - התאם הגדרות\n/help - הצג זאת\n/start - הפעל בוט זה\n\nפקודות קנייה\n\n/buy - קנה מוצרים\n/sell - מכור מוצרים\n/orders - הצג הזמנות\n/address - הוסף, הסר ורשום כתובות\n/password - הגדרות סיסמת מוכרים\n/papara - הגדרות עוזר תשלומים למוכרים\n\nבאפשרותך לבצע חישובים נוספים באמצעות https://ebced.free.nf",
   "HELP_USAGE": "שימוש: /help",
   "HELP_GROUP_CHAT_USAGE": "עזרה בצ'אט קבוצתי",
   "INDIAN_NUMBERS": "ספרות הודיות",
@@ -812,36 +811,52 @@
   "MISSING_DESCRIPTION": "תיאור התשלום נדרש",
   "MISSING_PAYMENT_ID": "מזהה התשלום נדרש",
   "GROUPS_TAB": "קבוצות",
+  "HELP_MESSAGE": "פקודות רעיוניות זמינות:\n\n/אבגד - חישוב ערך אבגד\n/חודם - יצירת שמות רוחניים\n/יסוד - קביעת זיקה יסודית\n/נוטקט - איות מספרים\n/תעתיק - תעתיק טקסט\n/נומרולוגיה - חישוב ערך נומרולוגי\n/המרמספרים - המרת מספרים של כתב\n/ריבועקסם - יצירת ריבוע קסם\n/שם - יצירת או תעתוק שמות\n\nפקודות בוט\n\n/קרדיטים הצגת קרדיטים שנותרו\n/תשלום - רכישת קרדיטים\n/ביטול - ביטול פעולה\n/הגדרות - התאמת הגדרות\n/עזרה - הצגת זה\n/שפה - שינוי שפה\n/התחל מפעיל את הבוט הזה\n\nפקודות קניות\n\n/קנה - קנה מוצרים\n/מכור - מכור מוצרים\n/הזמנות - הצג הזמנות\n/כתובת - הוסף, הסר ורשום כתובות\n/סיסמה - הגדרות סיסמת מוכרים\n/פאפארה - הגדרות עוזר תשלום למוכרים\n\nניתן לבצע חישובים נוספים באמצעות https://ebced.free.nf",
+  "TRANSLITERATION_PROMPT_TEXT": "אנא הזן את הטקסט לתעתיק:",
+  "TRANSLITERATION_PROMPT_SOURCE_LANG": "אנא בחר את שפת המקור:",
+  "TRANSLITERATION_PROMPT_TARGET_LANG": "אנא בחר את שפת היעד:",
+  "TRANSLITERATION_CANCEL": "התעתיק בוטל.",
+  "TRANSLITERATE_ANOTHER": "תעתק אחר",
+  "SUGGESTION_SELECTED": "נבחר: {result}",
+  "GUESS_LANGUAGE": "נחש שפה",
+  "TURKISH": "טורקית",
+  "ARABIC": "ערבית",
+  "HEBREW": "עברית",
+  "ENGLISH": "אנגלית",
+  "LATIN": "לטינית",
+  "BUNI": "בוני",
+  "HUSEYNI": "חוסייני",
+  "EDIT_PRODUCT_TITLE": "ערוך מוצר",
+  "PRODUCT_DESCRIPTION": "תיאור מוצר",
+  "PRODUCT_QUANTITY_HELP": "הזן את הכמות הזמינה עבור מוצרים פיזיים. השאר ריק עבור בלתי מוגבל.",
+  "PRODUCT_IMAGE_URL": "כתובת אתר תמונת מוצר",
+  "PRODUCT_IMAGE_URL_HELP": "הזן את כתובת האתר של תמונת המוצר.",
+  "PRODUCT_ACTIVE": "פעיל",
+  "VIEW_PRODUCT_TITLE": "הצג מוצר",
+  "BACK_TO_PRODUCTS": "חזרה למוצרים",
+  "PRODUCT_STATUS_ACTIVE": "פעיל",
+  "PRODUCT_STATUS_INACTIVE": "לא פעיל",
+  "PRODUCT_SELLER": "מוכר",
+  "DASHBOARD_CONFIGURATION_DESCRIPTION": "נהל את הגדרות החשבון והתשלום שלך.",
+  "MYSQL_HOST": "מארח MySQL",
+  "MYSQL_PORT": "פורט MySQL",
+  "MYSQL_USER": "משתמש MySQL",
+  "MYSQL_PASSWORD": "סיסמת MySQL",
+  "MYSQL_DATABASE": "מסד נתונים MySQL",
+  "SEARCH": "חיפוש",
+  "SEARCH_PRODUCTS": "חיפוש מוצרים",
+  "LOAD": "טען",
+  "NO_PRODUCTS_FOUND": "לא נמצאו מוצרים",
   "COMMAND_ALIASES": {
-	"abjad": [
-	  "abjad"
-	],
-	"huddam": [
-	  "huddâm"
-	],
-	"unsur": [
-	  "unsur"
-	],
-	"nutket": [
-	  "nutket"
-	],
-	"name": [
-	  "name"
-	],
-	"magicsquare": [
-	  "magicsq"
-	],
-	"transliterate": [
-	  "translit"
-	],
-	"payment": [
-	  "pay"
-	],
-	"numerology": [
-	  "numerology"
-	],
-	"convertnumbers": [
-	  "convert"
-	]
+    "abjad": ["אבגד"],
+    "huddam": ["חודם"],
+    "unsur": ["יסוד"],
+    "nutket": ["נוטקט"],
+    "name": ["שם"],
+    "magicsquare": ["ריבועקסם"],
+    "transliterate": ["תעתיק"],
+    "payment": ["תשלום"],
+    "numerology": ["נומרולוגיה"],
+    "convertnumbers": ["המר"]
   }
 }

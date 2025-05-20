@@ -259,7 +259,6 @@
   "NAME_USAGE": "Usus: /name <prefix> <turkish|english|hebrew|latin|arabic>",
   "NAME_RESULT": "Nomen generatum pro praefixo '{prefix}' (typus: {type}, modus: {method}) est '{name}'.",
   "START_MESSAGE": "Salve ad NumberFansBot! Habes {remaining_credits} credita. Explore magicam numerorum!",
-  "HELP_MESSAGE": "Mandata conceptionalia praesto:\n\n/abjad - Valor Abjad computa\n/huddam - Nomina spiritualia genera\n/unsur - Affinitatem elementalem determina\n/nutket - Numeros syllabis divide\n/transliterate - Textum translittera\n/language - Linguam muta\n/numerology - Valorem numerologiae computa\n/convertnumbers - Numeros scripturae converte\n/magicsquare - Quadratum magicum genera\n/name - Nomina genera vel translittera\n\nMandata roboti\n\n/credits - Credita reliqua vide\n/payment - Credita eme\n/cancel - Operationem abroga\n/settings - Configurationes accommoda\n/help - Hoc ostende\n/start - Hoc robotum incipe\n\nMandata emptionis\n\n/buy - producta eme\n/sell - producta vende\n/orders - ordines vide\n/address - inscribe, remove et enumera inscriptiones\n/password - configurationes tesserae venditorum\n/papara - configurationes adiutoris solutionis venditorum\n\nPlures calculationes facere potes utens https://ebced.free.nf",
   "HELP_USAGE": "Usus: /help",
   "HELP_GROUP_CHAT_USAGE": "Auxilium pro Disputatione Gregis",
   "INDIAN_NUMBERS": "Numeri Indici",
@@ -812,36 +811,52 @@
   "MISSING_DESCRIPTION": "Descriptio solutionis requiritur",
   "MISSING_PAYMENT_ID": "ID solutionis requiritur",
   "GROUPS_TAB": "Greces",
+  "HELP_MESSAGE": "Praecepta conceptualia praesto sunt:\n\n/abjad - Abjad valorem computa\n/huddam - Nomina spiritualia genera\n/unsur - Affinitatem elementarem determina\n/nutket - Numeros enarra\n/transliterate - Textum translitera\n/numerology - Numerologiam valorem computa\n/convertnumbers - Numeros scripti converte\n/magicsquare - Quadrum magicum genera\n/name - Nomina genera vel translitera\n\nPraecepta bot\n\n/credits Credita reliqua vide\n/payment - Credita eme\n/cancel - Operationem interrumpe\n/settings - Optiones compone\n/help - Hoc monstra\n/language - Linguam muta\n/start Hanc bot incipe\n\nPraecepta emendi\n\n/buy - emere res\n/sell - vendere res\n/orders - ordines videre\n/address - addere, removere et recensere adresses\n/password - venditoris tesserae optiones\n/papara - venditoris solutionis adiutoris optiones\n\nPlus calculi facere potes in https://ebced.free.nf",
+  "TRANSLITERATION_PROMPT_TEXT": "Quaeso, textum ad transliterandum inscribe:",
+  "TRANSLITERATION_PROMPT_SOURCE_LANG": "Quaeso, linguam fontem elige:",
+  "TRANSLITERATION_PROMPT_TARGET_LANG": "Quaeso, linguam destinatam elige:",
+  "TRANSLITERATION_CANCEL": "Transliteratio cancellata.",
+  "TRANSLITERATE_ANOTHER": "Aliud Translitera",
+  "SUGGESTION_SELECTED": "Selectum: {result}",
+  "GUESS_LANGUAGE": "Linguam Devina",
+  "TURKISH": "Turcica",
+  "ARABIC": "Arabica",
+  "HEBREW": "Hebraica",
+  "ENGLISH": "Anglica",
+  "LATIN": "Latina",
+  "BUNI": "Buni",
+  "HUSEYNI": "Huseyni",
+  "EDIT_PRODUCT_TITLE": "Productum Recense",
+  "PRODUCT_DESCRIPTION": "Descriptio Producti",
+  "PRODUCT_QUANTITY_HELP": "Intra quantitatem praesto pro productis physicis. Relinque vacuum pro infinitis.",
+  "PRODUCT_IMAGE_URL": "URL Imago Producti",
+  "PRODUCT_IMAGE_URL_HELP": "Intra URL imaginis producti.",
+  "PRODUCT_ACTIVE": "Activum",
+  "VIEW_PRODUCT_TITLE": "Productum Vide",
+  "BACK_TO_PRODUCTS": "Ad Producta Redi",
+  "PRODUCT_STATUS_ACTIVE": "Activum",
+  "PRODUCT_STATUS_INACTIVE": "Inactivum",
+  "PRODUCT_SELLER": "Venditor",
+  "DASHBOARD_CONFIGURATION_DESCRIPTION": "Rationem tuam et solutionis optiones gere.",
+  "MYSQL_HOST": "MySQL Host",
+  "MYSQL_PORT": "MySQL Portus",
+  "MYSQL_USER": "MySQL Usor",
+  "MYSQL_PASSWORD": "MySQL Tessera",
+  "MYSQL_DATABASE": "MySQL Databasis",
+  "SEARCH": "Quaere",
+  "SEARCH_PRODUCTS": "Quaere Producta",
+  "LOAD": "Carica",
+  "NO_PRODUCTS_FOUND": "Nulla producta inventa",
   "COMMAND_ALIASES": {
-	"abjad": [
-	  "abjad"
-	],
-	"huddam": [
-	  "huddâm"
-	],
-	"unsur": [
-	  "unsur"
-	],
-	"nutket": [
-	  "nutket"
-	],
-	"name": [
-	  "name"
-	],
-	"magicsquare": [
-	  "magicsq"
-	],
-	"transliterate": [
-	  "translit"
-	],
-	"payment": [
-	  "pay"
-	],
-	"numerology": [
-	  "numerology"
-	],
-	"convertnumbers": [
-	  "convert"
-	]
+    "abjad": ["abjad"],
+    "huddam": ["huddam"],
+    "unsur": ["unsur"],
+    "nutket": ["nutket"],
+    "name": ["nomen"],
+    "magicsquare": ["quadrummagicum"],
+    "transliterate": ["translitera"],
+    "payment": ["solutio"],
+    "numerology": ["numerologia"],
+    "convertnumbers": ["converte"]
   }
 }

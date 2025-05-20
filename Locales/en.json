@@ -259,7 +259,6 @@
   "NAME_USAGE": "Usage: /name <prefix> <turkish|english|hebrew|latin|arabic>",
   "NAME_RESULT": "Generated name for prefix '{prefix}' (type: {type}, method: {method}) is '{name}'.",
   "START_MESSAGE": "Welcome to NumberFansBot! You have {remaining_credits} credits. Explore the magic of numbers!",
-  "HELP_MESSAGE": "Available conceptial commands:\n\n/abjad - Calculate Abjad value\n/huddam - Generate spiritual names\n/unsur - Determine elemental affinity\n/nutket - Spell numbers\n/transliterate - Transliterate text\n/language - Change language\n/numerology - Calculate numerology value\n/convertnumbers - Convert numbers of a script\n/magicsquare - Generate magic square\n/name - Generate or transliterate names\n\nBot commands\n\n/credits View remaining credits\n/payment - Purchase credits\n/cancel - Cancel operation\n/settings - Adjust settings\n/help - Display this\n/start Starts this bot\n\nShopping commands\n\n/buy - buy products\n/sell - sell products\n/orders - view orders\n/address - add, remove and list addresses\n/password - sellers password settings\n/papara - sellers payment helper settings\n\nYou can do more calculations using https://ebced.free.nf",
   "HELP_USAGE": "Usage: /help",
   "HELP_GROUP_CHAT_USAGE": "Group Chat Help",
   "INDIAN_NUMBERS": "Indian Numbers",
@@ -812,36 +811,52 @@
   "MISSING_DESCRIPTION": "Payment description is required",
   "MISSING_PAYMENT_ID": "Payment ID is required",
   "GROUPS_TAB": "Groups",
+  "HELP_MESSAGE": "Available conceptial commands:\n\n/abjad - Calculate Abjad value\n/huddam - Generate spiritual names\n/unsur - Determine elemental affinity\n/nutket - Spell numbers\n/transliterate - Transliterate text\n/numerology - Calculate numerology value\n/convertnumbers - Convert numbers of a script\n/magicsquare - Generate magic square\n/name - Generate or transliterate names\n\nBot commands\n\n/credits View remaining credits\n/payment - Purchase credits\n/cancel - Cancel operation\n/settings - Adjust settings\n/help - Display this\n/language - Change language\n/start Starts this bot\n\nShopping commands\n\n/buy - buy products\n/sell - sell products\n/orders - view orders\n/address - add, remove and list addresses\n/password - sellers password settings\n/papara - sellers payment helper settings\n\nYou can do more calculations using https://ebced.free.nf",
+  "TRANSLITERATION_PROMPT_TEXT": "Please enter the text to transliterate:",
+  "TRANSLITERATION_PROMPT_SOURCE_LANG": "Please select the source language:",
+  "TRANSLITERATION_PROMPT_TARGET_LANG": "Please select the target language:",
+  "TRANSLITERATION_CANCEL": "Transliteration cancelled.",
+  "TRANSLITERATE_ANOTHER": "Transliterate Another",
+  "SUGGESTION_SELECTED": "Selected: {result}",
+  "GUESS_LANGUAGE": "Guess Language",
+  "TURKISH": "Turkish",
+  "ARABIC": "Arabic",
+  "HEBREW": "Hebrew",
+  "ENGLISH": "English",
+  "LATIN": "Latin",
+  "BUNI": "Buni",
+  "HUSEYNI": "Huseyni",
+  "EDIT_PRODUCT_TITLE": "Edit Product",
+  "PRODUCT_DESCRIPTION": "Product Description",
+  "PRODUCT_QUANTITY_HELP": "Enter the available quantity for physical products. Leave blank for unlimited.",
+  "PRODUCT_IMAGE_URL": "Product Image URL",
+  "PRODUCT_IMAGE_URL_HELP": "Enter the URL of the product image.",
+  "PRODUCT_ACTIVE": "Active",
+  "VIEW_PRODUCT_TITLE": "View Product",
+  "BACK_TO_PRODUCTS": "Back to Products",
+  "PRODUCT_STATUS_ACTIVE": "Active",
+  "PRODUCT_STATUS_INACTIVE": "Inactive",
+  "PRODUCT_SELLER": "Seller",
+  "DASHBOARD_CONFIGURATION_DESCRIPTION": "Manage your account and payment settings.",
+  "MYSQL_HOST": "MySQL Host",
+  "MYSQL_PORT": "MySQL Port",
+  "MYSQL_USER": "MySQL User",
+  "MYSQL_PASSWORD": "MySQL Password",
+  "MYSQL_DATABASE": "MySQL Database",
+  "SEARCH": "Search",
+  "SEARCH_PRODUCTS": "Search Products",
+  "LOAD": "Load",
+  "NO_PRODUCTS_FOUND": "No products found",
   "COMMAND_ALIASES": {
-	"abjad": [
-	  "abjad"
-	],
-	"huddam": [
-	  "huddâm"
-	],
-	"unsur": [
-	  "unsur"
-	],
-	"nutket": [
-	  "nutket"
-	],
-	"name": [
-	  "name"
-	],
-	"magicsquare": [
-	  "magicsq"
-	],
-	"transliterate": [
-	  "translit"
-	],
-	"payment": [
-	  "pay"
-	],
-	"numerology": [
-	  "numerology"
-	],
-	"convertnumbers": [
-	  "convert"
-	]
+	"abjad": ["abjad"],
+	"huddam": ["huddam"],
+	"unsur": ["unsur"],
+	"nutket": ["nutket"],
+	"name": ["name"],
+	"magicsquare": ["magicsquare"],
+	"transliterate": ["transliterate"],
+	"payment": ["payment"],
+	"numerology": ["numerology"],
+	"convertnumbers": ["convert"]
   }
 }
