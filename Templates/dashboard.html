@@ -26,7 +26,7 @@
 		<div class="logo">NumberFansBot</div>
 		<div class="tagline">{{ i18n.t('TAGLINE', lang) }}</div>
 	</div>
-	<div class="status-container">
+	<div class="status-container tab-content">
 		<h2>{{ i18n.t('DASHBOARD_TITLE', lang) }}</h2>
 		{% with messages = get_flashed_messages(with_categories=true) %}
 			{% if messages %}
@@ -35,24 +35,37 @@
 				{% endfor %}
 			{% endif %}
 		{% endwith %}
-		<div class="tabs">
-			{% if command_usage %}
-				<div class="tab active" data-tab="commands">{{ i18n.t('COMMANDS_TAB', lang) }}</div>
-			{% endif %}
-			<div class="tab{% if not command_usage %} active{% endif %}" data-tab="config">{{ i18n.t('CONFIG_TAB', lang) }}</div>
-			<div class="tab" data-tab="users">{{ i18n.t('USERS_TAB', lang) }}</div>
-			<div class="tab" data-tab="groups">{{ i18n.t('GROUPS_TAB', lang) }}</div>
-			<div class="tab" data-tab="products">{{ i18n.t('PRODUCTS_TAB', lang) }}</div>
-			{% if github_info.url %}
-				<div class="tab" data-tab="github">{{ i18n.t('GITHUB_TRAFFIC_TAB', lang) }}</div>
-			{% endif %}
-			<div class="tab" data-tab="files">{{ i18n.t('FILES_TAB', lang) }}</div>
-			<div class="tab" data-tab="install">{{ i18n.t('INSTALL_TAB', lang) }}</div>
-			<div class="link-tab" data-tab="logout">
-				<a href="{{ url_for('logout', lang=lang) }}" class="btn btn-secondary">{{ i18n.t('LOGOUT', lang) }}</a>
-			</div>
-		</div>
-		<div class="tab-content{% if command_usage %} active{% endif %}" id="commands">
+		<ul class="nav nav-tabs mb-4">
+		{% if command_usage %}
+			<li class="nav-item">
+				<a class="nav-link" data-bs-toggle="tab" href="#commands">{{ i18n.t('COMMANDS_TAB', lang) }}</a>
+			</li>
+		{% endif %}
+			<li class="nav-item">
+				<a class="nav-link" data-bs-toggle="tab" href="#config">{{ i18n.t('CONFIG_TAB', lang) }}</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link active" data-bs-toggle="tab" href="#users">{{ i18n.t('USERS_TAB', lang) }}</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" data-bs-toggle="tab" href="#groups">{{ i18n.t('GROUPS_TAB', lang) }}</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" data-bs-toggle="tab" href="#products">{{ i18n.t('PRODUCTS_TAB', lang) }}</a>
+			</li>
+		{% if github_info.url %}
+			<li class="nav-item">
+				<a class="nav-link" data-bs-toggle="tab" href="#github-traffic">{{ i18n.t('GITHUB_TRAFFIC_TAB', lang) }}</a>
+			</li>
+		{% endif %}
+			<li class="nav-item">
+				<a class="nav-link" data-bs-toggle="tab" href="#files">{{ i18n.t('FILES_TAB', lang) }}</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" data-bs-toggle="tab" href="#install">{{ i18n.t('INSTALL_TAB', lang) }}</a>
+			</li>
+		</ul>
+		<div class="tab-pane fade" id="commands">
 			<h2>{{ i18n.t('COMMANDS_TITLE', lang) }}</h2>
 			<p>{{ i18n.t('COMMANDS_DESCRIPTION', lang) }}</p>
 			{% if command_usage %}
@@ -78,7 +91,7 @@
 				</table>
 			{% endif %}
 		</div>
-		<div class="tab-content{% if not command_usage %} active{% endif %}" id="config">
+		<div class="tab-pane fade" id="config">
 			<h3>{{ i18n.t('CONFIG_TITLE', lang) }}</h3>
 			<form method="POST" action="{{ url_for('save_config_route', lang=lang) }}">
 				<h4>{{ i18n.t('STANDARD_SETTINGS', lang) }}</h4>
@@ -175,7 +188,7 @@
 			{% include 'products_partial.html' %}
 		</div>
 		<!-- Github Repo Traffic Viewer Tab (fork metatronslove's github-traffic-repo-viewer repository) -->
-		<div class="tab-content" id="github">
+		<div class="tab-pane fade" id="github">
 			{% if not github_info.url %}
 				<div class="alert alert-warning">{{ i18n.t('CONFIGURE_GITHUB_URL', lang) }}</div>
 			{% else %}
@@ -208,7 +221,7 @@
 				<div class="pagination" id="pagination"></div>
 			{% endif %}
 		</div>
-		<div class="tab-content" id="files">
+		<div class="tab-pane fade" id="files">
 			<h3>{{ i18n.t('FILES_TAB', lang) }}</h3>
 			<div class="create-file-form">
 				<form id="create-file-form">
@@ -234,7 +247,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="tab-content" id="install">
+		<div class="tab-pane fade" id="install">
 			<h3>{{ i18n.t('INSTALL_TITLE', lang) }}</h3>
 			<div class="install-form">
 				<form method="POST" action="{{ url_for('install', lang=lang) }}">
