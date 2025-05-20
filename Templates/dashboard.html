@@ -1288,11 +1288,7 @@ async function main() {
 		return;
 	}
 	displayRepos(); {% if command_usage %}
-	const commandUsage = {
-		{
-			command_usage | tojson
-		}
-	};
+	const commandUsage = {{command_usage|tojson}};
 	if (commandUsage && commandUsage.length > 0) {
 		const ctx = document.createElement('canvas');
 		ctx.id = 'command-usage-chart';
