@@ -52,7 +52,7 @@ center img {
 	z-index: 1000;
 }
 
-.language-switcher select {
+.language-switcher select, .form-select {
 	background-color: rgba(42,42,42,.5);
 	color: rgba(200,200,200,0.66);
 	border: 1px solid #48ff00;
@@ -118,6 +118,10 @@ center img {
 .tab-pane.active {
 	.mb-3 * {
 		display: inline-table;
+	}
+	.form-select {
+		min-width: min-content;
+		top: 2px;
 	}
 	label {
 		min-width: 16rem;
