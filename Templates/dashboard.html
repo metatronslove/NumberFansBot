@@ -1459,7 +1459,7 @@ document
 			});
 		});
 		// Users search input
-		document.getElementById('users').addEventListener('input', debounce(function(e) {
+		document.getElementById('users').addEventListener('change', debounce(function(e) {
 			if (e.target.matches('input[name="users_search"]')) {
 				const search = e.target.value;
 				updateUsers(search, 1);
@@ -1467,7 +1467,7 @@ document
 		}, 300), true);
 
 		// Groups search input
-		document.getElementById('groups').addEventListener('input', debounce(function(e) {
+		document.getElementById('groups').addEventListener('change', debounce(function(e) {
 			if (e.target.matches('input[name="groups_search"]')) {
 				const search = e.target.value;
 				updateGroups(search, 1);
@@ -1475,7 +1475,7 @@ document
 		}, 300), true);
 
 		// Products search input and filter
-		document.getElementById('products').addEventListener('input', debounce(function(e) {
+		document.getElementById('products').addEventListener('change', debounce(function(e) {
 			if (e.target.matches('input[name="products_search"]') || e.target.matches('select[name="filter_user_id"]')) {
 				const search = document.querySelector('#products input[name="products_search"]').value;
 				const filterUserId = document.querySelector('#products select[name="filter_user_id"]').value;
