@@ -187,8 +187,8 @@
 		<div id="products" class="tab-pane fade">
 			{% include 'products_partial.html' %}
 		</div>
-		<!-- Github Repo Traffic Viewer Tab (fork metatronslove's github-traffic-repo-viewer repository) -->
-		<div class="tab-pane fade" id="github">
+		<!-- Github Repo Traffic Viewer Tab (fork metatronslove github-traffic-repo-viewer repository) -->
+		<div class="tab-pane fade" id="github-traffic">
 			{% if not github_info.url %}
 				<div class="alert alert-warning">{{ i18n.t('CONFIGURE_GITHUB_URL', lang) }}</div>
 			{% else %}
@@ -1451,8 +1451,10 @@ document
 				document.querySelectorAll('.nav-link').forEach(t => t.classList.remove('active'));
 				document.querySelectorAll('.tab-pane').forEach(c => c.classList.remove('active'));
 				document.querySelectorAll('.tab-pane').forEach(c => c.classList.remove('show'));
+				document.querySelectorAll('.tab-pane').forEach(c => c.classList.add('hide'));
 				tab.classList.add('active');
 				document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
+				document.getElementById(tab.getAttribute('data-tab')).classList.remove('hide');
 				document.getElementById(tab.getAttribute('data-tab')).classList.add('show');
 			});
 		});

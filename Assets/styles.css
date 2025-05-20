@@ -103,8 +103,12 @@ center img {
 	border-bottom: 2px solid #48ff00;
 }
 
-.tab-pane {
+.tab-pane.hide {
 	display: none;
+}
+
+.tab-pane.show {
+	display: block;
 }
 
 .tab-pane.active {
@@ -113,25 +117,28 @@ center img {
 	}
 	label {
 		min-width: 16rem;
-	text-align: right;
+		text-align: right;
 	}
 	label:nth-last-child(2) {
 		text-align: left;
   }
 	.text-muted {
-	display: none;
+		display: none;
 	}
 	input{
 		background: rgba(40,40,56,.75);
 	}
 	input[type=text] {
 		max-width: calc(68vw - 16rem);
-	  min-width: 60vw;
+		min-width: 60vw;
 	}
 	input[type=checkbox]{
 		width: 1rem;
 	}
-	display: block;
+	input[name=users_search], input[name=groups_search], input[name=products_search] {
+		max-width: initial;
+    top: 2px;
+	}
 }
 
 .form-control {
