@@ -811,7 +811,6 @@
 	"MISSING_DESCRIPTION": "Payment description is required",
 	"MISSING_PAYMENT_ID": "Payment ID is required",
 	"GROUPS_TAB": "Groups",
-	"HELP_MESSAGE": "Available conceptial commands\n\n/abjad - Calculate Abjad value\n/huddam - Generate spiritual names\n/unsur - Determine elemental affinity\n/nutket - Spell numbers\n/transliterate - Transliterate text\n/numerology - Calculate numerology value\n/convertnumbers - Convert numbers of a script\n/magicsquare - Generate magic square\n/name - Generate or transliterate names\n\nBot commands\n\n/credits View remaining credits\n/payment - Purchase credits\n/cancel - Cancel operation\n/settings - Adjust settings\n/help - Display this\n/language - Change language\n/start Starts this bot\n\nShopping commands\n\n/buy - buy products\n/sell - sell products\n/orders - view orders\n/address - add, remove and list addresses\n/password - sellers password settings\n/papara - sellers payment helper settings\n\nYou can do more calculations using https://ebced.free.nf",
 	"TRANSLITERATION_PROMPT_TEXT": "Please enter the text to transliterate:",
 	"TRANSLITERATION_PROMPT_SOURCE_LANG": "Please select the source language:",
 	"TRANSLITERATION_PROMPT_TARGET_LANG": "Please select the target language:",
@@ -850,6 +849,7 @@
 	"PRODUCT_ID": "Product ID",
 	"ALL_USERS": "All users",
 	"SELLER": "Seller",
+	"HELP_MESSAGE": "Available conceptial commands\n\n/abjad - Calculate Abjad value\n/huddam - Generate spiritual names\n/unsur - Determine elemental affinity\n/nutket - Spell numbers\n/transliterate - Transliterate text\n/numerology - Calculate numerology value\n/convertnumbers - Convert numbers of a script\n/magicsquare - Generate magic square\n/name - Generate or transliterate names\n\nBot commands\n\n/credits View remaining credits\n/payment - Purchase credits\n/cancel - Cancel operation\n/settings - Adjust settings\n/help - Display this\n/language - Change language\n/start Starts this bot\n\nShopping commands\n\n/buy - buy products\n/sell - sell products\n/orders - view orders\n/address - add, remove and list addresses\n/password - sellers password settings\n/papara - sellers payment helper settings\n\nYou can do more calculations using https://ebced.free.nf",
 	"COMMAND_ALIASES": {
 	"abjad": ["abjad"],
 	"huddam": ["huddam"],
@@ -860,6 +860,18 @@
 	"transliterate": ["transliterate"],
 	"payment": ["payment"],
 	"numerology": ["numerology"],
-	"convertnumbers": ["convert"]
+	"convertnumbers": ["convert"],
+	"credits": ["credits"],
+	"cancel": ["cancel"],
+	"settings": ["settings"],
+	"help": ["help"],
+	"language": ["language"],
+	"start": ["start"],
+	"buy": ["buy"],
+	"sell": ["sell"],
+	"orders": ["orders"],
+	"address": ["address"],
+	"password": ["password"],
+	"papara": ["papara"]
 	}
 }

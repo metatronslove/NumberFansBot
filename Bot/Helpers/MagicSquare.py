@@ -23,11 +23,11 @@ class MagicSquareGenerator:
 			magic_square = self.rotate_matrix(magic_square, rotation // 90)
 		if mirror:
 			magic_square = self.mirror_flip(magic_square)
-		if output_format == "indian":
-			magic_square = [
-				[self.number_converter.indian(str(int(cell))) for cell in row]
-				for row in magic_square
-			]
+		#if output_format == "indian":
+		#	magic_square = [
+		#		[self.number_converter.indian(str(int(cell))) for cell in row]
+		#		for row in magic_square
+		#	]
 		if not self.check_magic_square(magic_square, row_sum):
 			return self.generate_magic_square((n + 1), row_sum, rotation, mirror, output_format)
 		return {"box": self.box_the_square(magic_square, 4, 1, 1, output_format), "size": n}

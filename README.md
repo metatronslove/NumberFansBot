@@ -15,25 +15,25 @@ Sevgili ziyaretçi eğer benim kendimden başka hiç bir şeye muhtaç olmayan T
 - **Kredi Sistemi**: Premium özellikler için esnek ödeme entegrasyonu
 
 ## 🛠️ Teknik Yapı
-| Bileşen		  | Teknoloji			   |
+| Bileşen			| Teknoloji				 |
 |------------------|-------------------------|
-| Backend		  | Python 3.10+			|
+| Backend			| Python 3.10+			|
 | Framework		| python-telegram-bot v20 |
-| Veritabanı	   | MySQL				   |
-| Web Arayüzü	  | Flask + Bootstrap	   |
-| Hosting		  | Render.com			  |
-| Ödeme Sistemi	| Papara API			  |
+| Veritabanı		 | MySQL					 |
+| Web Arayüzü		| Flask + Bootstrap		 |
+| Hosting			| Render.com				|
+| Ödeme Sistemi	| Papara API				|
 
 ## 📋 Komut Listesi
-| Komut		   | Açıklama						  | Örnek Kullanım			|
+| Komut			 | Açıklama							| Örnek Kullanım			|
 |-----------------|-----------------------------------|---------------------------|
 | `/abjad`		| Metnin ebced değerini hesaplar	| `/abjad selam`			|
-| `/bastet`	   | Sayısal tekrarlı hesaplama		| `/bastet 19`			  |
-| `/huddam`	   | Varlık ismi üretir				| `/huddam 36`			  |
+| `/bastet`		 | Sayısal tekrarlı hesaplama		| `/bastet 19`				|
+| `/huddam`		 | Varlık ismi üretir				| `/huddam 36`				|
 | `/unsur`		| Element analizi yapar			 | `/unsur ateş`			 |
-| `/magicsquare`  | Sihirli kare oluşturur			| `/magicsquare 15`		 |
-| `/nutket`	   | Sayıyı harflere çevirir		   | `/nutket 100`			 |
-| `/payment`	  | Kredi satın alma paneli		   | `/payment`				|
+| `/magicsquare`	| Sihirli kare oluşturur			| `/magicsquare 15`		 |
+| `/nutket`		 | Sayıyı harflere çevirir			 | `/nutket 100`			 |
+| `/payment`		| Kredi satın alma paneli			 | `/payment`				|
 
 ## 🚀 Kurulum Rehberi
 

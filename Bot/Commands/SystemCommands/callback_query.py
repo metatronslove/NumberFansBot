@@ -165,7 +165,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 			commentary = await get_ai_commentary(response, language)
 			if commentary:
 				response += "\n\n" + i18n.t("AI_COMMENTARY", language, commentary=commentary)
-			if output_numbering == "indian":
+			if output_numbering != "indian":
 				buttons = [
 					[
 						InlineKeyboardButton(
@@ -178,7 +178,7 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
 				buttons = [
 					[
 						InlineKeyboardButton(
-							i18n.t("CREATE_INDIAN_MAGIC_SQUARE", language),
+							i18n.t("CREATE_MAGIC_SQUARE", language),
 							callback_data=f"magic_square_{row_sum}",
 						)
 					]

@@ -1370,79 +1370,79 @@ function hexToRgb(hex) {
 
 // Debounce function to limit API calls
 function forceFocusOnLoad(element) {
-    if (!element) {
-        console.error('Input elementi bulunamadı!');
-        return;
-    }
-    element.focus();
-    const valueLength = element.value.length;
-    element.setSelectionRange(valueLength, valueLength);
-    console.log('Odaklanılan input:', element.name, 'İmleç pozisyonu:', valueLength);
+	if (!element) {
+		console.error('Input elementi bulunamadı!');
+		return;
+	}
+	element.focus();
+	const valueLength = element.value.length;
+	element.setSelectionRange(valueLength, valueLength);
+	console.log('Odaklanılan input:', element.name, 'İmleç pozisyonu:', valueLength);
 }
 
 function bindSearchEvents(input) {
-    if (!input) return;
-    const searchFormEvents = ['input', 'keyup'];
-    searchFormEvents.forEach(event => {
-        input.removeEventListener(event, handleSearch); // Eski dinleyicileri kaldır
-        input.addEventListener(event, handleSearch);
-    });
+	if (!input) return;
+	const searchFormEvents = ['input', 'keyup'];
+	searchFormEvents.forEach(event => {
+		input.removeEventListener(event, handleSearch); // Eski dinleyicileri kaldır
+		input.addEventListener(event, handleSearch);
+	});
 }
 
 function handleSearch(e) {
-    if (e.target.matches('input[name=users_search]')) {
-        updateUsers(e.target.value, 1);
-    } else if (e.target.matches('input[name=groups_search]')) {
-        updateGroups(e.target.value, 1);
-    } else if (e.target.matches('input[name=products_search]') || e.target.matches('select[name=filter_user_id]')) {
-        const search = document.querySelector('#products input[name=products_search]').value;
-        const filterUserId = document.querySelector('#products select[name=filter_user_id]').value;
-        updateProducts(search, filterUserId, 1);
-    }
+	if (e.target.matches('input[name=users_search]')) {
+		updateUsers(e.target.value, 1);
+	} else if (e.target.matches('input[name=groups_search]')) {
+		updateGroups(e.target.value, 1);
+	} else if (e.target.matches('input[name=products_search]') || e.target.matches('select[name=filter_user_id]')) {
+		const search = document.querySelector('#products input[name=products_search]').value;
+		const filterUserId = document.querySelector('#products select[name=filter_user_id]').value;
+		updateProducts(search, filterUserId, 1);
+	}
 }
 
 function debounce(func, wait) {
-    let timeout;
-    return function(...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), wait);
-    };
+	let timeout;
+	return function(...args) {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => func.apply(this, args), wait);
+	};
 }
 
 function updateUsers(search, page) {
-    const button = document.querySelector('#users-search-form button');
-    const searchInput = document.querySelector('input[name=users_search]');
-    if (!searchInput) {
-        console.error('users_search input bulunamadı!');
-        return;
-    }
-    button.classList.add('loading');
-    fetch(`/{{ lang }}/users?search=${encodeURIComponent(search)}&page=${page}`)
-        .then(response => {
-            if (!response.ok) throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
-            return response.text();
-        })
-        .then(html => {
-            document.getElementById('users').innerHTML = html;
-            const newSearchInput = document.querySelector('input[name=users_search]');
-            if (newSearchInput) {
-                if (newSearchInput.value !== search) {
-                    newSearchInput.value = search;
-                }
-                // Yeni input'a olay dinleyicilerini tekrar bağla
-                bindSearchEvents(newSearchInput);
-                forceFocusOnLoad(newSearchInput);
-            } else {
-                console.error('Yeni users_search input bulunamadı!');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Kullanıcılar yüklenirken hata oluştu: ' + error.message);
-        })
-        .finally(() => {
-            button.classList.remove('loading');
-        });
+	const button = document.querySelector('#users-search-form button');
+	const searchInput = document.querySelector('input[name=users_search]');
+	if (!searchInput) {
+		console.error('users_search input bulunamadı!');
+		return;
+	}
+	button.classList.add('loading');
+	fetch(`/{{ lang }}/users?search=${encodeURIComponent(search)}&page=${page}`)
+		.then(response => {
+			if (!response.ok) throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+			return response.text();
+		})
+		.then(html => {
+			document.getElementById('users').innerHTML = html;
+			const newSearchInput = document.querySelector('input[name=users_search]');
+			if (newSearchInput) {
+				if (newSearchInput.value !== search) {
+					newSearchInput.value = search;
+				}
+				// Yeni input'a olay dinleyicilerini tekrar bağla
+				bindSearchEvents(newSearchInput);
+				forceFocusOnLoad(newSearchInput);
+			} else {
+				console.error('Yeni users_search input bulunamadı!');
+			}
+		})
+		.catch(error => {
+			console.error('Error:', error);
+			alert('Kullanıcılar yüklenirken hata oluştu: ' + error.message);
+		})
+		.finally(() => {
+			button.classList.remove('loading');
+		});
 }
 
 // Benzer şekilde updateGroups ve updateProducts için
@@ -1464,9 +1464,9 @@ function updateGroups(search, page) {
 			const newSearchInput = document.querySelector('input[name=groups_search]');
 			if (newSearchInput) {
 				if (newSearchInput.value !== search) {
-                    newSearchInput.value = search; // Yalnızca farklıysa güncelle
-                }
-                bindSearchEvents(newSearchInput);
+					newSearchInput.value = search; // Yalnızca farklıysa güncelle
+				}
+				bindSearchEvents(newSearchInput);
 				forceFocusOnLoad(newSearchInput);
 			} else {
 				console.error('Yeni groups_search input bulunamadı!');
@@ -1503,9 +1503,9 @@ function updateProducts(search, filterUserId, page) {
 			const newSearchInput = document.querySelector('input[name=products_search]');
 			if (newSearchInput) {
 				if (newSearchInput.value !== search) {
-                    newSearchInput.value = search; // Yalnızca farklıysa güncelle
-                }
-                bindSearchEvents(newSearchInput);
+					newSearchInput.value = search; // Yalnızca farklıysa güncelle
+				}
+				bindSearchEvents(newSearchInput);
 				forceFocusOnLoad(newSearchInput);
 			} else {
 				console.error('Yeni products_search input bulunamadı!');

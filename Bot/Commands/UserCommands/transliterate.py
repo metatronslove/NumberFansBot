@@ -190,17 +190,17 @@ async def select_target_lang(update: Update, context: ContextTypes.DEFAULT_TYPE)
 				InlineKeyboardButton(i18n.t("LANGUAGE_NAME_AR", language), callback_data="target_lang_arabic")
 				if source_lang != "arabic" else None,
 				InlineKeyboardButton(i18n.t("LANGUAGE_NAME_EN", language), callback_data="target_lang_english")
-				if source_lang != "english" else None
+				if source_lang != "english" else None,
+				InlineKeyboardButton(i18n.t("LANGUAGE_NAME_LA", language), callback_data="target_lang_latin")
+				if source_lang in ["english", "arabic"] else None
 			],
 			[
 				InlineKeyboardButton(i18n.t("LANGUAGE_NAME_TR", language), callback_data="target_lang_turkish")
 				if source_lang != "turkish" else None,
 				InlineKeyboardButton(i18n.t("LANGUAGE_NAME_HE", language), callback_data="target_lang_hebrew")
-				if source_lang != "hebrew" else None
-			],
-			[
+				if source_lang != "hebrew" else None,
 				InlineKeyboardButton(i18n.t("LANGUAGE_NAME_LA", language), callback_data="target_lang_latin")
-				if source_lang != "latin" else None
+				if source_lang in ["turkish", "hebrew"] else None
 			],
 			[InlineKeyboardButton(i18n.t("CANCEL_BUTTON", language), callback_data="end_conversation")]
 		]
