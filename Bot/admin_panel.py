@@ -95,7 +95,8 @@ except Exception as e:
 	logger.error(f"Failed to schedule Telegram initialization: {str(e)}")
 	raise
 
-# Register handlersdef register_handlers():
+# Register handlers
+def register_handlers():
 	from .Commands.UserCommands.abjad import get_abjad_conversation_handler
 	from .Commands.UserCommands.bastet import get_bastet_conversation_handler
 	from .Commands.UserCommands.huddam import get_huddam_conversation_handler
