@@ -97,11 +97,11 @@ except Exception as e:
 
 # Register handlers
 def register_handlers():
-	from .Commands.UserCommands.abjad import get_abjad_conversation_handler
-	from .Commands.UserCommands.bastet import get_bastet_conversation_handler
-	from .Commands.UserCommands.huddam import get_huddam_conversation_handler
-	from .Commands.UserCommands.unsur import get_unsur_conversation_handler
-	from .Commands.UserCommands.transliterate import get_transliterate_conversation_handler
+	from .Commands.UserCommands.abjad import get_abjad_conversation_handler, abjad_start
+	from .Commands.UserCommands.bastet import get_bastet_conversation_handler, bastet_start
+	from .Commands.UserCommands.huddam import get_huddam_conversation_handler, huddam_start
+	from .Commands.UserCommands.unsur import get_unsur_conversation_handler, unsur_start
+	from .Commands.UserCommands.transliterate import get_transliterate_conversation_handler, transliterate_start
 	from .Commands.UserCommands import numerology as user_numerology
 	from .Commands.UserCommands import convert_numbers as user_convert_numbers
 	from .Commands.UserCommands import magic_square as user_magic_square
