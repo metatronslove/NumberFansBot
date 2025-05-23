@@ -117,7 +117,7 @@ def register_handlers():
 		magic_square, convert_numbers
 	)
 	from .Commands.ShopCommands.buy import BuyCommand
-	from .Commands.ShopCommands.sell import setup_sell_handler
+	from .Commands.ShopCommands.sell import setup_sell_handler, start_sell
 	from .Commands.ShopCommands.address import AddressCommand
 	from .Commands.ShopCommands.password import PasswordCommand
 	from .Commands.ShopCommands.orders import OrdersCommand
@@ -158,12 +158,12 @@ def register_handlers():
 			"huddam": huddam_start,
 			"unsur": unsur_start,
 			"transliterate": transliterate_start,
-			"buy": BuyCommand().handle,
-			"sell": setup_sell_handler,
-			"address": AddressCommand().handle,
-			"password": PasswordCommand().handle,
-			"orders": OrdersCommand().handle,
-			"papara": PaparaCommand().handle,
+			"buy": BuyCommand().buy_command,
+			"sell": start_sell,
+			"address": AddressCommand().address_command,
+			"password": PasswordCommand().password_command,
+			"orders": OrdersCommand().orders_command,
+			"papara": PaparaCommand().papara_command,
 		}
 
 		# MultilingualCommandRegistrar ile komutları kaydet
