@@ -224,11 +224,13 @@ CREATE EVENT IF NOT EXISTS `clean_transliteration_cache`
 3. Build komutu olarak `pip install -r requirements.txt` ekleyin (Dockerfile bunu hallediyor)
 4. Start komutu: `gunicorn admin_panel:app --worker-class gevent`
 
-## 💰 Bağış Desteği
-Bu proje eski bir bilgisayarda geliştirilmiştir. Daha fazla özellik ekleyebilmemiz için bağışlarınız büyük önem taşır; arkadaşlar, telegrama, render'a, sql veritabanına, internet faturasına, elektrik faturasına size dayatıldığı için para buluyorsunuz; bu kadar emek verdim bir 1000'lira etmiyor mu paylaştığım kodun size verdiği ilham siz bana nasıl çok görmüş iseniz hayat da size gerekeni çok göre meğer ki lutfu ikramdan cömertliğiniz soframa nimet olmuş ise benim ikramım cenabınıza ancak helâl ola öyle:
+## ☕ Destek Olun / Support
 
-**Papara**:
-[![Papara ile Destekle](https://img.shields.io/badge/Bağış%20Yap-%E2%9D%A4-blue)](https://ppr.ist/1T9dx8tUT)
+Projemi beğendiyseniz, bana bir kahve ısmarlayarak destek olabilirsiniz!
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/metatronslove)
+
+Teşekkürler! 🙏
 
 ## 🌐 Yönetici Paneli
 `https://your-render-url.com/en/login` adresinden erişebilirsiniz:
